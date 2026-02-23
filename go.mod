@@ -1,6 +1,11 @@
 module github.com/traefik/traefik/v2
 
-go 1.25.0
+// Only specify the major.minor version here.
+// CI workflows read this value via go-version-file and use check-latest
+// to automatically pick up the newest patch release.
+// Pinning a patch version would defeat that mechanism and require manual
+// bumps for every Go patch release.
+go 1.25
 
 require (
 	github.com/BurntSushi/toml v1.5.0
