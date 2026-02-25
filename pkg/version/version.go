@@ -1,26 +1,22 @@
 package version
 
 import (
-	"context"
 	"net/http"
-	"net/url"
 	"time"
 
-	"github.com/google/go-github/v28/github"
 	"github.com/gorilla/mux"
-	goversion "github.com/hashicorp/go-version"
 	"github.com/rs/zerolog/log"
 	"github.com/unrolled/render"
 )
 
 var (
-	// Version holds the current version of traefik.
+	// Version holds the current version of Hanzo Ingress.
 	Version = "dev"
-	// Codename holds the current version codename of traefik.
+	// Codename holds the current version codename of Hanzo Ingress.
 	Codename = "cheddar" // beta cheese
-	// BuildDate holds the build date of traefik.
+	// BuildDate holds the build date of Hanzo Ingress.
 	BuildDate = "I don't remember exactly"
-	// StartDate holds the start date of traefik.
+	// StartDate holds the start date of Hanzo Ingress.
 	StartDate = time.Now()
 	// DisableDashboardAd disables ad in the dashboard.
 	DisableDashboardAd = false
@@ -60,52 +56,5 @@ func (v Handler) Append(router *mux.Router) {
 		})
 }
 
-// CheckNewVersion checks if a new version is available.
-func CheckNewVersion() {
-	if Version == "dev" {
-		return
-	}
-
-	client := github.NewClient(nil)
-
-	updateURL, err := url.Parse("https://update.traefik.io/")
-	if err != nil {
-		log.Warn().Err(err).Msg("Error checking new version")
-		return
-	}
-	client.BaseURL = updateURL
-
-	releases, resp, err := client.Repositories.ListReleases(context.Background(), "traefik", "traefik", nil)
-	if err != nil {
-		log.Warn().Err(err).Msg("Error checking new version")
-		return
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		log.Warn().Msgf("Error checking new version: status=%s", resp.Status)
-		return
-	}
-
-	currentVersion, err := goversion.NewVersion(Version)
-	if err != nil {
-		log.Warn().Err(err).Msg("Error checking new version")
-		return
-	}
-
-	for _, release := range releases {
-		releaseVersion, err := goversion.NewVersion(*release.TagName)
-		if err != nil {
-			log.Warn().Err(err).Msg("Error checking new version")
-			return
-		}
-
-		if len(currentVersion.Prerelease()) == 0 && len(releaseVersion.Prerelease()) > 0 {
-			continue
-		}
-
-		if releaseVersion.GreaterThan(currentVersion) {
-			log.Warn().Err(err).Msgf("A new release of Traefik has been found: %s. Please consider updating.", releaseVersion.String())
-			return
-		}
-	}
-}
+// CheckNewVersion is a no-op for Hanzo Ingress (upstream version check disabled).
+func CheckNewVersion() {}

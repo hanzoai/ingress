@@ -21,7 +21,7 @@ OS/Arch:      {{.Os}}/{{.Arch}}`
 func NewCmd() *cli.Command {
 	return &cli.Command{
 		Name:          "version",
-		Description:   `Shows the current Traefik version.`,
+		Description:   `Shows the current Hanzo Ingress version.`,
 		Configuration: nil,
 		Run: func(_ []string) error {
 			if err := GetPrint(os.Stdout); err != nil {
