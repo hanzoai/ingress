@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hanzo-ingress
+  namespace: hanzo
+  labels:
+    app: hanzo-ingress
+    app.kubernetes.io/name: hanzo-ingress
+    app.kubernetes.io/part-of: hanzo-universe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hanzo-ingress
+  template:
+    metadata:
+      labels:
+        app: hanzo-ingress
+    spec:
+      serviceAccountName: hanzo-ingress
+      containers:
+      - name: ingress
+        image: ghcr.io/hanzoai/ingress:latest
+        imagePullPolicy: Always
+        args:
+        - "--providers.kubernetesingress=true"
+        - "--providers.kubernetesingress.ingressendpoint.publishedservice=hanzo/hanzo-ingress"
+        - "--providers.kubernetesingress.allowemptyservices=true"
+        - "--entrypoints.web.address=:8080"
+        - "--entrypoints.websecure.address=:8443"
+        - "--ping=true"
+        - "--ping.entryPoint=web"
+        - "--api.dashboard=false"
+        - "--log.level=INFO"
+        - "--accesslog=true"
+        ports:
+        - name: web
+          containerPort: 8080
+        - name: websecure
+          containerPort: 8443
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: web
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: web
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: "1"
+            memory: 512Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
