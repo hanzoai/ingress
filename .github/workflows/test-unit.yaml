@@ -1,6 +1,13 @@
 name: Test Unit
 
 on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - 'script/gcg/**'
   pull_request:
     branches:
       - '*'

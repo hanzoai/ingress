@@ -12,11 +12,11 @@ env:
 jobs:
 
   build-webui:
-    if: github.repository == 'traefik/traefik'
+    if: github.repository == 'hanzoai/ingress'
     uses: ./.github/workflows/template-webui.yaml
 
   experimental:
-    if: github.repository == 'traefik/traefik'
+    if: github.repository == 'hanzoai/ingress'
     name: Build experimental image on branch
     runs-on: ubuntu-latest
     timeout-minutes: 20
