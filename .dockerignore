@@ -1,5 +1,6 @@
 dist/
 !dist/**/traefik
+!dist/**/hanzo-ingress
 site/
 vendor/
 .idea/
