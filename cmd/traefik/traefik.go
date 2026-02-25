@@ -58,9 +58,9 @@ func main() {
 	loaders := []cli.ResourceLoader{&tcli.DeprecationLoader{}, &tcli.FileLoader{}, &tcli.FlagLoader{}, &tcli.EnvLoader{}}
 
 	cmdTraefik := &cli.Command{
-		Name: "traefik",
-		Description: `Traefik is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.
-Complete documentation is available at https://traefik.io`,
+		Name: "hanzo-ingress",
+		Description: `Hanzo Ingress is a cloud-native reverse proxy and load balancer for Hanzo infrastructure.
+Based on Traefik. Documentation: https://doc.traefik.io/traefik/`,
 		Configuration: tConfig,
 		Resources:     loaders,
 		Run: func(_ []string) error {
@@ -110,7 +110,7 @@ func runCmd(staticConfiguration *static.Configuration) error {
 	}
 
 	log.Info().Str("version", version.Version).
-		Msgf("Traefik version %s built on %s", version.Version, version.BuildDate)
+		Msgf("Hanzo Ingress version %s built on %s", version.Version, version.BuildDate)
 
 	redactedStaticConfiguration, err := redactor.RemoveCredentials(staticConfiguration)
 	if err != nil {
