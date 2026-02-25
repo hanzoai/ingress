@@ -1,0 +1,14 @@
+FROM alpine:3.23
+
+RUN apk add --no-cache --no-progress ca-certificates tzdata
+
+LABEL org.opencontainers.image.source="https://github.com/hanzoai/ingress"
+LABEL org.opencontainers.image.title="Hanzo Ingress"
+LABEL org.opencontainers.image.description="Cloud-native reverse proxy and load balancer for Hanzo infrastructure"
+
+COPY dist/linux/amd64/hanzo-ingress /hanzo-ingress
+
+EXPOSE 80
+VOLUME ["/tmp"]
+
+ENTRYPOINT ["/hanzo-ingress"]
