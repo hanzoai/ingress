@@ -6,6 +6,10 @@ on:
       - master
       - v*
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   CGO_ENABLED: 0
 
@@ -17,6 +21,7 @@ jobs:
 
   experimental:
     if: github.repository == 'hanzoai/ingress'
+    needs: build-webui
     name: Build experimental image on branch
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -66,6 +71,6 @@ jobs:
 
       - name: Build docker experimental image
         env:
-          DOCKER_BUILDX_ARGS: "--push"
+          DOCKER_BUILDX_ARGS: "--push --provenance=false --sbom=false"
         run: |
           make multi-arch-image-experimental-${GITHUB_REF##*/}
