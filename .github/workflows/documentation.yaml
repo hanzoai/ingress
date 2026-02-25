@@ -17,7 +17,7 @@ jobs:
     name: Doc Process
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: github.repository == 'traefik/traefik'
+    if: github.repository == 'hanzoai/ingress'
 
     steps:
       - name: Check out code
