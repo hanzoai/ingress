@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/observability/metrics"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
 )
 
 // TransportManager manages transport used for backend communications.

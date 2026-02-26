@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/webui"
+	"github.com/hanzoai/ingress/v3/webui"
 )
 
 type indexTemplateData struct {

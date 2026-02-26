@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"k8s.io/utils/ptr"
 )
 

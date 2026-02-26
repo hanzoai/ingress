@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/provider"
-	traefikv1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
-	"github.com/traefik/traefik/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/provider"
+	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	"github.com/hanzoai/ingress/v3/pkg/tls"
 	corev1 "k8s.io/api/core/v1"
 )
 

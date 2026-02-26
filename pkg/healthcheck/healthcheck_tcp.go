@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	"github.com/traefik/traefik/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	"github.com/hanzoai/ingress/v3/pkg/tcp"
 )
 
 // maxPayloadSize is the maximum payload size that can be sent during health checks.

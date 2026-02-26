@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/label"
+	"github.com/hanzoai/ingress/v3/pkg/config/label"
 )
 
 const (

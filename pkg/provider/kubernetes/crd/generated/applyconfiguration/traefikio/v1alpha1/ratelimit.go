@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	dynamic "github.com/traefik/traefik/v3/pkg/config/dynamic"
+	dynamic "github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 )
 

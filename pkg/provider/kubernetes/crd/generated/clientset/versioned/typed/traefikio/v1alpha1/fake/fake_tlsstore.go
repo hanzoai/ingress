@@ -27,9 +27,9 @@ THE SOFTWARE.
 package fake
 
 import (
-	traefikiov1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/traefikio/v1alpha1"
-	typedtraefikiov1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
-	v1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	traefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/traefikio/v1alpha1"
+	typedtraefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
+	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	gentype "k8s.io/client-go/gentype"
 )
 

@@ -7,16 +7,16 @@ import (
 
 	"github.com/containous/alice"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/static"
-	"github.com/traefik/traefik/v3/pkg/middlewares/accesslog"
-	"github.com/traefik/traefik/v3/pkg/middlewares/capture"
-	mmetrics "github.com/traefik/traefik/v3/pkg/middlewares/metrics"
-	"github.com/traefik/traefik/v3/pkg/middlewares/observability"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/observability/metrics"
-	"github.com/traefik/traefik/v3/pkg/observability/tracing"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/accesslog"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
+	mmetrics "github.com/hanzoai/ingress/v3/pkg/middlewares/metrics"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
+	"github.com/hanzoai/ingress/v3/pkg/observability/tracing"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 )
 
 // ObservabilityMgr is a manager for observability (AccessLogs, Metrics and Tracing) enablement.

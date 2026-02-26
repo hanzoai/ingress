@@ -16,14 +16,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	"github.com/traefik/traefik/v3/pkg/middlewares/requestdecorator"
-	httpmuxer "github.com/traefik/traefik/v3/pkg/muxer/http"
-	"github.com/traefik/traefik/v3/pkg/server/middleware"
-	"github.com/traefik/traefik/v3/pkg/server/service"
-	"github.com/traefik/traefik/v3/pkg/testhelpers"
-	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/requestdecorator"
+	httpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/http"
+	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
+	"github.com/hanzoai/ingress/v3/pkg/server/service"
+	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
+	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
 )
 
 func TestRouterManager_Get(t *testing.T) {

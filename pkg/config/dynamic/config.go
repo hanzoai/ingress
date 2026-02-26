@@ -1,7 +1,7 @@
 package dynamic
 
 import (
-	"github.com/traefik/traefik/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/tls"
 )
 
 // +k8s:deepcopy-gen=true

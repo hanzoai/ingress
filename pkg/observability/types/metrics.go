@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/traefik/paerser/types"
-	tTypes "github.com/traefik/traefik/v3/pkg/types"
+	tTypes "github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 // Metrics provides options to expose and send Traefik metrics to different third party monitoring systems.

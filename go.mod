@@ -1,4 +1,4 @@
-module github.com/traefik/traefik/v3
+module github.com/hanzoai/ingress/v3
 
 go 1.25.0
 
@@ -29,6 +29,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674
+	github.com/hanzoai/ingress/dynamic/ext v0.0.0-00010101000000-000000000000
 	github.com/hashicorp/consul/api v1.26.1
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-multierror v1.1.1
@@ -71,7 +72,6 @@ require (
 	github.com/tidwall/gjson v1.17.0
 	github.com/traefik/grpc-web v0.16.0
 	github.com/traefik/paerser v0.2.2
-	github.com/traefik/traefik/dynamic/ext v0.0.0-00010101000000-000000000000
 	github.com/traefik/yaegi v0.16.1
 	github.com/unrolled/render v1.0.2
 	github.com/unrolled/secure v1.0.9
@@ -411,7 +411,7 @@ require (
 )
 
 // Dynamic config extension.
-replace github.com/traefik/traefik/dynamic/ext => ./pkg/config/dynamic/ext
+replace github.com/hanzoai/ingress/dynamic/ext => ./pkg/config/dynamic/ext
 
 // Containous forks
 replace (

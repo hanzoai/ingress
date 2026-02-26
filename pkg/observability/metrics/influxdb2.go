@@ -13,9 +13,9 @@ import (
 	influxdb2log "github.com/influxdata/influxdb-client-go/v2/log"
 	influxdb "github.com/influxdata/influxdb1-client/v2"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	"github.com/traefik/traefik/v3/pkg/safe"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/safe"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"golang.org/x/time/rate"
 )
 

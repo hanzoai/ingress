@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/traefik/traefik/v3/pkg/ip"
-	"github.com/traefik/traefik/v3/pkg/proxy/httputil"
+	"github.com/hanzoai/ingress/v3/pkg/ip"
+	"github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
 	"golang.org/x/net/http/httpguts"
 )
 

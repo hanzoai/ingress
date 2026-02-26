@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	goauth "github.com/abbot/go-http-auth"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/middlewares"
-	"github.com/traefik/traefik/v3/pkg/middlewares/accesslog"
-	"github.com/traefik/traefik/v3/pkg/middlewares/observability"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/accesslog"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
 	"golang.org/x/sync/singleflight"
 )
 

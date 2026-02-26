@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/kvtools/zookeeper"
-	"github.com/traefik/traefik/v3/pkg/provider"
-	"github.com/traefik/traefik/v3/pkg/provider/kv"
+	"github.com/hanzoai/ingress/v3/pkg/provider"
+	"github.com/hanzoai/ingress/v3/pkg/provider/kv"
 )
 
 var _ provider.Provider = (*Provider)(nil)

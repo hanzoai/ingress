@@ -1,3 +1,3 @@
-module github.com/traefik/traefik/dynamic/ext
+module github.com/hanzoai/ingress/dynamic/ext
 
 go 1.24.0

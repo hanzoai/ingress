@@ -16,10 +16,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/traefik/traefik/v3/integration/try"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/integration/try"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 	"golang.org/x/net/http2"
 )
 

@@ -5,10 +5,10 @@ import (
 	"time"
 
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/dynamic/ext"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/dynamic/ext"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 	"google.golang.org/grpc/codes"
 	"k8s.io/utils/ptr"
 )
