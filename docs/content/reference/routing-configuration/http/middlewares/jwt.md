@@ -1,10 +1,10 @@
 ---
 title: 'JWT Authentication'
-description: 'Traefik Hub API Gateway - The JWT Authentication middleware verifies that a valid JWT token is provided in the Authorization header.'
+description: 'Hanzo API Gateway - The JWT Authentication middleware verifies that a valid JWT token is provided in the Authorization header.'
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 The JWT middleware verifies that a valid JWT token is provided in the `Authorization` header (`Authorization: Bearer <JWT>`).
 If the token can't be passed as an `Authorization` header, it can be given as form data or as a query parameter.

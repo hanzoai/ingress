@@ -1,19 +1,19 @@
 ---
-title: "Traefik Docker Swarm Routing Documentation"
-description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Traefik and Docker."
+title: "Hanzo Ingress Docker Swarm Routing Documentation"
+description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Hanzo Ingress and Docker."
 ---
 
-# Traefik & Docker Swarm
+# Hanzo Ingress & Docker Swarm
 
 A Story of Labels & Containers
 {: .subtitle }
 
 ![Swarm](../../assets/img/providers/docker.png)
 
-Attach labels to your containers and let Traefik do the rest!
+Attach labels to your containers and let Hanzo Ingress do the rest!
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With Docker Swarm, Traefik can leverage labels attached to a service to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With Docker Swarm, Hanzo Ingress can leverage labels attached to a service to generate routing rules.
 
 !!! warning "Labels & sensitive data"
 
@@ -64,7 +64,7 @@ With Docker Swarm, Traefik can leverage labels attached to a service to generate
     ```
 
     !!! important "Labels in Docker Swarm Mode"
-        While in Swarm Mode, Traefik uses labels found on services, not on individual containers.
+        While in Swarm Mode, Hanzo Ingress uses labels found on services, not on individual containers.
         Therefore, if you use a compose file with Swarm Mode, labels should be defined in the `deploy` part of your service.
         This behavior is only enabled for docker-compose version 3+ ([Compose file reference](https://docs.docker.com/compose/compose-file/compose-file-v3/#labels-1)).
 
@@ -80,12 +80,12 @@ With Docker Swarm, Traefik can leverage labels attached to a service to generate
           labels:
             - traefik.http.routers.my-container.rule=Host(`example.com`)
             - traefik.http.routers.my-container.service=my-service"
-            # Tell Traefik to use the port 12345 to connect to `my-container`
+            # Tell Hanzo Ingress to use the port 12345 to connect to `my-container`
             - traefik.http.services.my-service.loadbalancer.server.port=12345
     ```
 
-    !!! important "Traefik Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
-        By default, Traefik uses the lowest exposed port of a container as detailed in
+    !!! important "Hanzo Ingress Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
+        By default, Hanzo Ingress uses the lowest exposed port of a container as detailed in
         [Port Detection](../providers/swarm.md#port-detection) of the Swarm provider.
 
         Setting the label `traefik.http.services.xxx.loadbalancer.server.port`
@@ -120,7 +120,7 @@ With Docker Swarm, Traefik can leverage labels attached to a service to generate
 
 ### General
 
-Traefik creates, for each container, a corresponding [service](../services/index.md) and [router](../routers/index.md).
+Hanzo Ingress creates, for each container, a corresponding [service](../services/index.md) and [router](../routers/index.md).
 
 The Service automatically gets a server per instance of the container,
 and the router automatically gets a rule defined by `defaultRule` (if no rule for it was defined in labels).
@@ -529,7 +529,7 @@ You can declare TCP Routers and/or Services using labels.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### TCP Routers
@@ -667,7 +667,7 @@ You can declare UDP Routers and/or Services using labels.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### UDP Routers
@@ -706,7 +706,7 @@ You can declare UDP Routers and/or Services using labels.
 - "traefik.enable=true"
 ```
 
-You can tell Traefik to consider (or not) the container by setting `traefik.enable` to true or false.
+You can tell Hanzo Ingress to consider (or not) the container by setting `traefik.enable` to true or false.
 
 This option overrides the value of `exposedByDefault`.
 
@@ -732,5 +732,5 @@ otherwise it will randomly pick one (depending on how docker is returning them).
 
 Enables Swarm's inbuilt load balancer (only relevant in Swarm Mode).
 
-If you enable this option, Traefik will use the virtual IP provided by docker swarm instead of the containers IPs.
-Which means that Traefik will not perform any kind of load balancing and will delegate this task to swarm.
+If you enable this option, Hanzo Ingress will use the virtual IP provided by docker swarm instead of the containers IPs.
+Which means that Hanzo Ingress will not perform any kind of load balancing and will delegate this task to swarm.

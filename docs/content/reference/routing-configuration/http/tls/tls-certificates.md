@@ -1,6 +1,6 @@
 ---
-title: "Traefik TLS Certificates Documentation"
-description: "Learn how to configure the transport layer security (TLS) connection in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress TLS Certificates Documentation"
+description: "Learn how to configure the transport layer security (TLS) connection in Hanzo Ingress. Read the technical documentation."
 ---
 
 !!! info
@@ -14,7 +14,7 @@ See the [Let's Encrypt](../../../install-configuration/tls/certificate-resolvers
 
 ### User defined
 
-To add / remove TLS certificates, even when Traefik is already running, their definition can be added to the [dynamic configuration](../../dynamic-configuration-methods.md#providing-dynamic-routing-configuration-to-traefik), in the `[[tls.certificates]]` section:
+To add / remove TLS certificates, even when Hanzo Ingress is already running, their definition can be added to the [dynamic configuration](../../dynamic-configuration-methods.md#providing-dynamic-routing-configuration-to-traefik), in the `[[tls.certificates]]` section:
 
 ```yaml tab="Structured (YAML)"
 tls:
@@ -43,21 +43,21 @@ tls:
 
 #### Certificate selection (SNI)
 
-Traefik selects the certificate to present during the TLS handshake, based on the Server Name Indication (SNI) sent by the client.
+Hanzo Ingress selects the certificate to present during the TLS handshake, based on the Server Name Indication (SNI) sent by the client.
 
 However, HTTP router rules (e.g., `Host()`) are evaluated after TLS has been established, so they do not influence certificate selection.
 
 ##### Strict SNI Checking
 
 By default, if the client does not send SNI, or if no certificate matches the requested server name,
-Traefik falls back to the [default certificate](#default-certificate) from the TLS store (if configured).
+Hanzo Ingress falls back to the [default certificate](#default-certificate) from the TLS store (if configured).
 
 To reject connections without SNI (or with an unknown server name) instead of falling back to the default certificate,
 enable `sniStrict` in [TLS Options](./tls-options.md#strict-sni-checking).
 
 ## Certificates Stores
 
-In Traefik, certificates are grouped together in certificates stores.
+In Hanzo Ingress, certificates are grouped together in certificates stores.
 
 !!! important "Restriction"
 
@@ -104,7 +104,7 @@ tls:
 
 ### Default Certificate
 
-Traefik can use a default certificate for connections without a SNI, or without a matching domain.
+Hanzo Ingress can use a default certificate for connections without a SNI, or without a matching domain.
 This default certificate should be defined in a TLS store:
 
 ```yaml tab="Structured (YAML)"
@@ -124,11 +124,11 @@ tls:
       keyFile  = "path/to/cert.key"
 ```
 
-If no `defaultCertificate` is provided, Traefik will use the generated one.
+If no `defaultCertificate` is provided, Hanzo Ingress will use the generated one.
 
 ### ACME Default Certificate
 
-You can configure Traefik to use an ACME provider (like Let's Encrypt) to generate the default certificate.
+You can configure Hanzo Ingress to use an ACME provider (like Let's Encrypt) to generate the default certificate.
 The configuration to resolve the default certificate should be defined in a TLS store:
 
 !!! important "Precedence with the `defaultGeneratedCert` option"

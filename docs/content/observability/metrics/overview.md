@@ -1,18 +1,18 @@
 ---
-title: "Traefik Metrics Overview"
-description: "Traefik Proxy supports these metrics backend systems: Datadog, InfluxDB 2.X, Prometheus, and StatsD. Read the full documentation to get started."
+title: "Hanzo Ingress Metrics Overview"
+description: "Hanzo Ingress supports these metrics backend systems: Datadog, InfluxDB 2.X, Prometheus, and StatsD. Read the full documentation to get started."
 ---
 
 # Metrics
 
-Traefik provides metrics in the [OpenTelemetry](./opentelemetry.md) format as well as the following vendor specific backends:
+Hanzo Ingress provides metrics in the [OpenTelemetry](./opentelemetry.md) format as well as the following vendor specific backends:
 
 - [Datadog](./datadog.md)
 - [InfluxDB2](./influxdb2.md)
 - [Prometheus](./prometheus.md)
 - [StatsD](./statsd.md)
 
-Traefik Proxy hosts an official Grafana dashboard for both [on-premises](https://grafana.com/grafana/dashboards/17346)
+Hanzo Ingress hosts an official Grafana dashboard for both [on-premises](https://grafana.com/grafana/dashboards/17346)
 and [Kubernetes](https://grafana.com/grafana/dashboards/17347) deployments.
 
 ## Common Options
@@ -93,7 +93,7 @@ Here is a comprehensive list of labels that are provided by the global metrics:
 
 ## OpenTelemetry Semantic Conventions
 
-Traefik Proxy follows [official OpenTelemetry semantic conventions v1.23.1](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/http/http-metrics.md).
+Hanzo Ingress follows [official OpenTelemetry semantic conventions v1.23.1](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/http/http-metrics.md).
 
 ### HTTP Server
 
@@ -139,7 +139,7 @@ Here is a comprehensive list of labels that are provided by the metrics:
 
 ## HTTP Metrics
 
-On top of the official OpenTelemetry semantic conventions, Traefik provides its own metrics to monitor the incoming traffic.
+On top of the official OpenTelemetry semantic conventions, Hanzo Ingress provides its own metrics to monitor the incoming traffic.
 
 ### EntryPoint Metrics
 

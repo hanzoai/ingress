@@ -1,6 +1,6 @@
 ---
 title: "Request Path"
-description: "Learn how Traefik processes and secures request paths through sanitization and encoded character filtering to protect against path traversal and injection attacks."
+description: "Learn how Hanzo Ingress processes and secures request paths through sanitization and encoded character filtering to protect against path traversal and injection attacks."
 ---
 
 # Request Path
@@ -8,17 +8,17 @@ description: "Learn how Traefik processes and secures request paths through sani
 Protecting Against Path-Based Attacks Through Sanitization and Filtering
 {: .subtitle }
 
-Traefik implements multiple layers of security when processing incoming request paths.
+Hanzo Ingress implements multiple layers of security when processing incoming request paths.
 This includes path sanitization to normalize potentially dangerous sequences and encoded character filtering to prevent attack vectors that use URL encoding.
-Understanding how Traefik handles request paths is crucial for maintaining a secure routing infrastructure.
+Understanding how Hanzo Ingress handles request paths is crucial for maintaining a secure routing infrastructure.
 
-## How Traefik Processes Request Paths
+## How Hanzo Ingress Processes Request Paths
 
-When Traefik receives an HTTP request, it processes the request path through several security-focused stages:
+When Hanzo Ingress receives an HTTP request, it processes the request path through several security-focused stages:
 
 ### 1. Encoded Character Filtering
 
-Traefik inspects the path for potentially dangerous encoded characters and rejects requests containing them unless explicitly allowed.
+Hanzo Ingress inspects the path for potentially dangerous encoded characters and rejects requests containing them unless explicitly allowed.
 
 Here is the list of the encoded characters that are allowed by default:
 
@@ -34,18 +34,18 @@ Here is the list of the encoded characters that are allowed by default:
 
 ### 2. Path Normalization
 
-Traefik normalizes the request path by decoding the unreserved percent-encoded characters,
+Hanzo Ingress normalizes the request path by decoding the unreserved percent-encoded characters,
 as they are equivalent to their non-encoded form (according to [rfc3986#section-2.3](https://datatracker.ietf.org/doc/html/rfc3986#section-2.3)),
 and capitalizing the percent-encoded characters (according to [rfc3986#section-6.2.2.1](https://datatracker.ietf.org/doc/html/rfc3986#section-6.2.2.1)).
 
 ### 3. Path Sanitization
 
-Traefik sanitizes request paths to prevent common attack vectors,
+Hanzo Ingress sanitizes request paths to prevent common attack vectors,
 by removing the `..`, `.` and duplicate slash segments from the URL (according to [rfc3986#section-6.2.2.3](https://datatracker.ietf.org/doc/html/rfc3986#section-6.2.2.3)).
 
 ## Path Security Configuration
 
-Traefik provides two main mechanisms for path security that work together to protect your applications.
+Hanzo Ingress provides two main mechanisms for path security that work together to protect your applications.
 
 ### Path Sanitization
 

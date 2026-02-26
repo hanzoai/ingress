@@ -1,10 +1,10 @@
 ---
 title: 'API Key Authentication'
-description: 'Traefik Hub API Gateway - The API Key authentication middleware allows you to secure an API by requiring a secret key, base64 encoded or not, to be given, via an HTTP header, a cookie or a query parameter.'
+description: 'Hanzo API Gateway - The API Key authentication middleware allows you to secure an API by requiring a secret key, base64 encoded or not, to be given, via an HTTP header, a cookie or a query parameter.'
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 The API Key authentication middleware allows you to secure an API by requiring a secret key, base64 encoded or not, to be given, via an HTTP header, a cookie or a query parameter.
 

@@ -1,11 +1,11 @@
 ---
-title: "Traefik TLS Documentation"
-description: "Learn how to configure the transport layer security (TLS) connection for TCP services in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress TLS Documentation"
+description: "Learn how to configure the transport layer security (TLS) connection for TCP services in Hanzo Ingress. Read the technical documentation."
 ---
 
 ## General
 
-When a TCP router is configured to handle TLS traffic, include a `tls` field in its definition. This field tells Traefik that the router should process only TLS connections and ignore non-TLS traffic.
+When a TCP router is configured to handle TLS traffic, include a `tls` field in its definition. This field tells Hanzo Ingress that the router should process only TLS connections and ignore non-TLS traffic.
 
 By default, a router with a TLS field will terminate the TLS connections, meaning that it will send decrypted data to the services.
 
@@ -73,10 +73,10 @@ labels:
 
 ??? info "Postgres STARTTLS"
 
-    Traefik supports the Postgres STARTTLS protocol,
+    Hanzo Ingress supports the Postgres STARTTLS protocol,
     which allows TLS routing for Postgres connections.
 
-    To do so, Traefik reads the first bytes sent by a Postgres client,
+    To do so, Hanzo Ingress reads the first bytes sent by a Postgres client,
     identifies if they correspond to the message of a STARTTLS negotiation,
     and, if so, acknowledges and signals the client that it can start the TLS handshake.
 
@@ -106,7 +106,7 @@ labels:
 The `tls.certResolver` option allows you to specify a certificate resolver for automatic certificate generation via ACME providers (such as Let's Encrypt).
 
 When a certificate resolver is configured for a router,
-Traefik will automatically obtain and manage TLS certificates for the domains specified in the router's rule (in the `HostSNI` matcher) or in the `tls.domains` configuration (with `tls.domains` taking precedence).
+Hanzo Ingress will automatically obtain and manage TLS certificates for the domains specified in the router's rule (in the `HostSNI` matcher) or in the `tls.domains` configuration (with `tls.domains` taking precedence).
 
 !!! important "Prerequisites"
 
@@ -121,6 +121,6 @@ but the `tls.domains` option allows you to explicitly specify the domains and Su
 
 This provides fine-grained control over certificate generation and takes precedence over domains automatically extracted from router rules.
 
-Every domain must have A/AAAA records pointing to Traefik.
+Every domain must have A/AAAA records pointing to Hanzo Ingress.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

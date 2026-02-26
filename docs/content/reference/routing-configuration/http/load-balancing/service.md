@@ -1,9 +1,9 @@
 ---
-title: "Traefik HTTP Services Documentation"
+title: "Hanzo Ingress HTTP Services Documentation"
 description: "A service is in charge of connecting incoming requests to the Servers that can handle them. Read the technical documentation."
 ---
 
-Traefik services define how to distribute incoming traffic across your backend servers.
+Hanzo Ingress services define how to distribute incoming traffic across your backend servers.
 This page covers two main concepts:
 
 - **Service Load Balancer**: Routes traffic to backend servers using various load balancing strategies
@@ -122,8 +122,8 @@ labels:
 | <a id="opt-healthcheck" href="#opt-healthcheck" title="#opt-healthcheck">`healthcheck`</a> | Configures health check to remove unhealthy servers from the load balancing rotation.                                                                                                                                                                                                                                                                                                         | No       |
 | <a id="opt-passiveHealthcheck" href="#opt-passiveHealthcheck" title="#opt-passiveHealthcheck">`passiveHealthcheck`</a> | Configures the passive health check to remove unhealthy servers from the load balancing rotation.                                                                                                                                                                                                                                                                                             | No       |
 | <a id="opt-passHostHeader" href="#opt-passHostHeader" title="#opt-passHostHeader">`passHostHeader`</a> | Allows forwarding of the client Host header to server. By default, `passHostHeader` is true.                                                                                                                                                                                                                                                                                                  | No       |
-| <a id="opt-serversTransport" href="#opt-serversTransport" title="#opt-serversTransport">`serversTransport`</a> | Allows to reference an [HTTP ServersTransport](./serverstransport.md) configuration for the communication between Traefik and your servers. If no `serversTransport` is specified, the `default@internal` will be used.                                                                                                                                                                       | No       |
-| <a id="opt-responseForwarding" href="#opt-responseForwarding" title="#opt-responseForwarding">`responseForwarding`</a> | Configures how Traefik forwards the response from the backend server to the client.                                                                                                                                                                                                                                                                                                           | No       |
+| <a id="opt-serversTransport" href="#opt-serversTransport" title="#opt-serversTransport">`serversTransport`</a> | Allows to reference an [HTTP ServersTransport](./serverstransport.md) configuration for the communication between Hanzo Ingress and your servers. If no `serversTransport` is specified, the `default@internal` will be used.                                                                                                                                                                       | No       |
+| <a id="opt-responseForwarding" href="#opt-responseForwarding" title="#opt-responseForwarding">`responseForwarding`</a> | Configures how Hanzo Ingress forwards the response from the backend server to the client.                                                                                                                                                                                                                                                                                                           | No       |
 | <a id="opt-responseForwarding-FlushInterval" href="#opt-responseForwarding-FlushInterval" title="#opt-responseForwarding-FlushInterval">`responseForwarding.FlushInterval`</a> | Specifies the interval in between flushes to the client while copying the response body. It is a duration in milliseconds, defaulting to 100ms. A negative value means to flush immediately after each write to the client. The `FlushInterval` is ignored when ReverseProxy recognizes a response as a streaming response; for such responses, writes are flushed to the client immediately. | No       |
 
 #### Servers
@@ -285,8 +285,8 @@ When multiple servers have identical scores, Weighted Round Robin (WRR) with Ear
 ### Health Check
 
 The `healthcheck` option configures health check to remove unhealthy servers from the load balancing rotation.
-Traefik will consider HTTP(s) servers healthy as long as they return a status code to the health check request (carried out every interval) between `2XX` and `3XX`, or matching the configured status.
-For gRPC servers, Traefik will consider them healthy as long as they return SERVING to [gRPC health check v1 requests](https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
+Hanzo Ingress will consider HTTP(s) servers healthy as long as they return a status code to the health check request (carried out every interval) between `2XX` and `3XX`, or matching the configured status.
+For gRPC servers, Hanzo Ingress will consider them healthy as long as they return SERVING to [gRPC health check v1 requests](https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
 
 To propagate status changes (e.g. all servers of this service are down) upwards, HealthCheck must also be enabled on the parent(s) of this service.
 
@@ -301,7 +301,7 @@ Below are the available options for the health check mechanism:
 | <a id="opt-port" href="#opt-port" title="#opt-port">`port`</a> | Replaces the server URL port for the health check endpoint.                                                                   |         | No       |
 | <a id="opt-interval" href="#opt-interval" title="#opt-interval">`interval`</a> | Defines the frequency of the health check calls for healthy targets.                                                          | 30s     | No       |
 | <a id="opt-unhealthyInterval" href="#opt-unhealthyInterval" title="#opt-unhealthyInterval">`unhealthyInterval`</a> | Defines the frequency of the health check calls for unhealthy targets. When not defined, it defaults to the `interval` value. | 30s     | No       |
-| <a id="opt-timeout" href="#opt-timeout" title="#opt-timeout">`timeout`</a> | Defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.            | 5s      | No       |
+| <a id="opt-timeout" href="#opt-timeout" title="#opt-timeout">`timeout`</a> | Defines the maximum duration Hanzo Ingress will wait for a health check request before considering the server unhealthy.            | 5s      | No       |
 | <a id="opt-headers" href="#opt-headers" title="#opt-headers">`headers`</a> | Defines custom headers to be sent to the health check endpoint.                                                               |         | No       |
 | <a id="opt-followRedirects" href="#opt-followRedirects" title="#opt-followRedirects">`followRedirects`</a> | Defines whether redirects should be followed during the health check calls.                                                   | true    | No       |
 | <a id="opt-method" href="#opt-method" title="#opt-method">`method`</a> | Defines the HTTP method that will be used while connecting to the endpoint.                                                   | GET     | No       |
@@ -470,10 +470,10 @@ curl -b "lvl1=whoami1; lvl2=http://127.0.0.1:8081" http://localhost:8000
 The `passiveHealthcheck` option configures passive health check to remove unhealthy servers from the load balancing rotation.
 
 Passive health checks rely on real traffic to assess server health.
-Traefik forwards requests as usual and evaluates each response or timeout,
+Hanzo Ingress forwards requests as usual and evaluates each response or timeout,
 incrementing a failure counter whenever a request fails.
 If the number of successive failures within a specified time window exceeds the configured threshold,
-Traefik will automatically stop routing traffic to that server until it recovers.
+Hanzo Ingress will automatically stop routing traffic to that server until it recovers.
 A server will be considered healthy again after the configured failure window has passed.
 
 Below are the available options for the passive health check mechanism:
@@ -971,7 +971,7 @@ http:
 #### Errors
 
 The `errors` option enables status code-based failover.
-When the main service responds with an HTTP status code matching one of the configured ranges, Traefik automatically retries the request on the fallback service.
+When the main service responds with an HTTP status code matching one of the configured ranges, Hanzo Ingress automatically retries the request on the fallback service.
 
 To support request replay, the request body is buffered up to `maxRequestBodyBytes`.
 Requests with bodies larger than this limit receive a `413 Request Entity Too Large` response.

@@ -1,16 +1,16 @@
-# Exposing Services with Traefik on Docker - Basic
+# Exposing Services with Hanzo Ingress on Docker - Basic
 
-This guide will help you get started with exposing your services through Traefik Proxy using Docker. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
+This guide will help you get started with exposing your services through Hanzo Ingress using Docker. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
 
 ## Prerequisites
 
 - Docker and Docker Compose installed
 - Basic understanding of Docker concepts
-- Traefik deployed using the [Traefik Docker Setup guide](../../setup/docker.md)
+- Hanzo Ingress deployed using the [Docker Setup guide](../../setup/docker.md)
 
 ## Expose Your First HTTP Service
 
-Let's expose a simple HTTP service using the [whoami](https://hub.docker.com/r/traefik/whoami) application. This will demonstrate basic routing to a backend service.
+Let's expose a simple HTTP service using the [whoami](https://github.com/hanzoai/whoami) application. This will demonstrate basic routing to a backend service.
 
 First, create a `docker-compose.yml` file:
 
@@ -36,7 +36,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   whoami:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     restart: unless-stopped
     networks:
       - proxy
@@ -86,7 +86,7 @@ X-Forwarded-Server: 5789f594e7d5
 X-Real-Ip: 172.18.0.1
 ```
 
-This confirms that Traefik is successfully routing requests to your whoami application.
+This confirms that Hanzo Ingress is successfully routing requests to your whoami application.
 
 ## Add Routing Rules
 
@@ -99,7 +99,7 @@ Update your `docker-compose.yml` to add another service:
 
 # New service
   whoami-api:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     networks:
       - proxy
     container_name: "whoami-api"
@@ -199,7 +199,7 @@ services:
       - "traefik.http.routers.dashboard.tls=true"
 
   whoami:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     restart: unless-stopped
     networks:
       - proxy
@@ -211,7 +211,7 @@ services:
       - "traefik.http.routers.whoami.tls=true"
 
   whoami-api:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     container_name: "whoami-api"
     restart: unless-stopped
     networks:
@@ -240,7 +240,7 @@ Your browser can access https://whoami.docker.localhost/ for the service. You'll
 
 ## Next Steps
 
-Now that you've mastered the basics of exposing services with Traefik on Docker, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
+Now that you've mastered the basics of exposing services with Hanzo Ingress on Docker, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
 
 Continue to the [Advanced Guide](advanced.md) to learn about:
 

@@ -1,6 +1,6 @@
 ---
-title: "Traefik TLS Documentation"
-description: "Learn how to configure the transport layer security (TLS) connection in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress TLS Documentation"
+description: "Learn how to configure the transport layer security (TLS) connection in Hanzo Ingress. Read the technical documentation."
 ---
 
 # TLS
@@ -16,7 +16,7 @@ See the [Let's Encrypt](./acme.md) page.
 
 ### User defined
 
-To add / remove TLS certificates, even when Traefik is already running, their definition can be added to the [dynamic configuration](../getting-started/configuration-overview.md), in the `[[tls.certificates]]` section:
+To add / remove TLS certificates, even when Hanzo Ingress is already running, their definition can be added to the [dynamic configuration](../getting-started/configuration-overview.md), in the `[[tls.certificates]]` section:
 
 ```yaml tab="File (YAML)"
 # Dynamic configuration
@@ -49,7 +49,7 @@ tls:
 
 ## Certificates Stores
 
-In Traefik, certificates are grouped together in certificates stores, which are defined as such:
+In Hanzo Ingress, certificates are grouped together in certificates stores, which are defined as such:
 
 ```yaml tab="File (YAML)"
 # Dynamic configuration
@@ -109,7 +109,7 @@ tls:
 
 ### Default Certificate
 
-Traefik can use a default certificate for connections without a SNI, or without a matching domain.
+Hanzo Ingress can use a default certificate for connections without a SNI, or without a matching domain.
 This default certificate should be defined in a TLS store:
 
 ```yaml tab="File (YAML)"
@@ -157,11 +157,11 @@ data:
   tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
 ```
 
-If no `defaultCertificate` is provided, Traefik will use the generated one.
+If no `defaultCertificate` is provided, Hanzo Ingress will use the generated one.
 
 ### ACME Default Certificate
 
-You can configure Traefik to use an ACME provider (like Let's Encrypt) to generate the default certificate.
+You can configure Hanzo Ingress to use an ACME provider (like Let's Encrypt) to generate the default certificate.
 The configuration to resolve the default certificate should be defined in a TLS store:
 
 !!! important "Precedence with the `defaultGeneratedCert` option"
@@ -424,7 +424,7 @@ spec:
 
 ### Strict SNI Checking
 
-With strict SNI checking enabled, Traefik won't allow connections from clients that do not specify a server_name extension
+With strict SNI checking enabled, Hanzo Ingress won't allow connections from clients that do not specify a server_name extension
 or don't match any of the configured certificates.
 The default certificate is irrelevant on that matter.
 
@@ -499,7 +499,7 @@ spec:
 
 ### Client Authentication (mTLS)
 
-Traefik supports mutual authentication, through the `clientAuth` section.
+Hanzo Ingress supports mutual authentication, through the `clientAuth` section.
 
 For authentication policies that require verification of the client certificate, the certificate authority for the certificates should be set in `clientAuth.caFiles`.
 
@@ -557,7 +557,7 @@ spec:
 
 _Optional, Default="false"_
 
-When set to true, Traefik disables the use of session tickets, forcing every client to perform a full TLS handshake instead of resuming sessions.
+When set to true, Hanzo Ingress disables the use of session tickets, forcing every client to perform a full TLS handshake instead of resuming sessions.
 
 ```yaml tab="File (YAML)"
 # Dynamic configuration

@@ -1,9 +1,9 @@
 ---
-title: "Traefik HTTP Routers Rules & Priority Documentation"
-description: "In Traefik Proxy, an HTTP router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
+title: "Hanzo Ingress HTTP Routers Rules & Priority Documentation"
+description: "In Hanzo Ingress, an HTTP router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
 ---
 
-An HTTP router is in charge of connecting incoming requests to the services that can handle them. Traefik allows you to define your matching rules and [prioritize](#priority-calculation) the routes.
+An HTTP router is in charge of connecting incoming requests to the services that can handle them. Hanzo Ingress allows you to define your matching rules and [prioritize](#priority-calculation) the routes.
 
 ## Rules
 
@@ -117,7 +117,7 @@ It only matches the request client IP and does not use the `X-Forwarded-For` hea
     RuleSyntax option is deprecated and will be removed in the next major version.
     Please do not use this field and rewrite the router rules to use the v3 syntax.
 
-In Traefik v3 a new rule syntax has been introduced ([migration guide](../../../../migrate/v3.md)). the `ruleSyntax` option allows to configure the rule syntax to be used for parsing the rule on a per-router basis. This allows to have heterogeneous router configurations and ease migration.
+In Hanzo Ingress v3 a new rule syntax has been introduced ([migration guide](../../../../migrate/v3.md)). the `ruleSyntax` option allows to configure the rule syntax to be used for parsing the rule on a per-router basis. This allows to have heterogeneous router configurations and ease migration.
 
 The default value of the `ruleSyntax` option is inherited from the `defaultRuleSyntax` option in the install configuration (formerly known as static configuration). By default, the `defaultRuleSyntax` static option is v3, meaning that the default rule syntax is also v3
 
@@ -227,7 +227,7 @@ A value of `0` for the priority is ignored: `priority: 0` means that the default
 
 Negative priority values are supported.
 
-Traefik reserves a range of priorities for its internal routers, the maximum user-defined router priority value is:
+Hanzo Ingress reserves a range of priorities for its internal routers, the maximum user-defined router priority value is:
 
 - `(MaxInt32 - 1000)` for 32-bit platforms,
 - `(MaxInt64 - 1000)` for 64-bit platforms.

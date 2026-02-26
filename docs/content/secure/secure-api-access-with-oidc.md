@@ -1,12 +1,12 @@
 ---
 title: 'Secure API Access with OIDC'
-description: 'Traefik Hub API Gateway - The OIDC Authentication middleware secures your applications by delegating the authentication to an external provider.'
+description: 'Hanzo API Gateway - The OIDC Authentication middleware secures your applications by delegating the authentication to an external provider.'
 ---
 
 # Secure API Access with OIDC
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 OpenID Connect Authentication is built on top of the OAuth2 Authorization Code Flow (defined in [OAuth 2.0 RFC 6749, section 4.1](https://tools.ietf.org/html/rfc6749#section-4.1)).
 It allows an application to be secured by delegating authentication to an external provider (Keycloak, Okta etc.)
@@ -83,7 +83,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
 
 ---
 apiVersion: v1

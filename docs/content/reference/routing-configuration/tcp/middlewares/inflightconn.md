@@ -1,5 +1,5 @@
 ---
-title: 'Traefik InFlightConn Middleware - TCP'
+title: 'Hanzo Ingress InFlightConn Middleware - TCP'
 description: "Limiting the number of simultaneous connections."
 ---
 

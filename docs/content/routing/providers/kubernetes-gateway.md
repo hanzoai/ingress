@@ -1,11 +1,11 @@
 ---
-title: "Traefik Kubernetes Gateway"
-description: "The Kubernetes Gateway API can be used as a provider for routing and load balancing in Traefik Proxy. View examples in the technical documentation."
+title: "Hanzo Ingress Kubernetes Gateway"
+description: "The Kubernetes Gateway API can be used as a provider for routing and load balancing in Hanzo Ingress. View examples in the technical documentation."
 ---
 
-# Traefik & Kubernetes with Gateway API
+# Hanzo Ingress & Kubernetes with Gateway API
 
-When using the Kubernetes Gateway API provider, Traefik leverages the Gateway API Custom Resource Definitions (CRDs) to obtain its routing configuration. 
+When using the Kubernetes Gateway API provider, Hanzo Ingress leverages the Gateway API Custom Resource Definitions (CRDs) to obtain its routing configuration. 
 For detailed information on the Gateway API concepts and resources, refer to the official [documentation](https://gateway-api.sigs.k8s.io/).
 
 The Kubernetes Gateway API provider supports version [v1.4.0](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.4.0) of the specification.
@@ -20,7 +20,7 @@ A `Gateway` is a core resource in the Gateway API specification that defines the
 It is linked to a `GatewayClass`, which specifies the controller responsible for managing and handling the traffic, ensuring that it is directed to the appropriate Kubernetes backend services.
 
 The `GatewayClass` is a cluster-scoped resource typically defined by the infrastructure provider.
-The following `GatewayClass` defines that gateways attached to it must be managed by the Traefik controller.
+The following `GatewayClass` defines that gateways attached to it must be managed by the Hanzo Ingress controller.
 
 ```yaml tab="GatewayClass"
 ---
@@ -32,11 +32,11 @@ spec:
   controllerName: traefik.io/gateway-controller
 ```
 
-Next, the following `Gateway` manifest configures the running Traefik controller to handle the incoming traffic.
+Next, the following `Gateway` manifest configures the running Hanzo Ingress controller to handle the incoming traffic.
 
 !!! info "Listener ports"
 
-    Please note that `Gateway` listener ports must match the configured [EntryPoint ports](../entrypoints.md) of the Traefik deployment. 
+    Please note that `Gateway` listener ports must match the configured [EntryPoint ports](../entrypoints.md) of the Hanzo Ingress deployment. 
     In case they do not match, an `ERROR` message is logged, and the resource status is updated accordingly.
 
 ```yaml tab="Gateway"
@@ -175,7 +175,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoami
+          image: hanzoai/whoami
 
 ---
 apiVersion: v1
@@ -434,7 +434,7 @@ $ grpcurl -plaintext echo.localhost:80 gateway_api_conformance.echo_basic.grpcec
 !!! info "Experimental Channel"
 
     The `TCPRoute` resource described below is currently available only in the Experimental channel of the Gateway API specification. 
-    To use this resource, the [experimentalChannel](../../providers/kubernetes-gateway.md#experimentalchannel) option must be enabled in the Traefik deployment.
+    To use this resource, the [experimentalChannel](../../providers/kubernetes-gateway.md#experimentalchannel) option must be enabled in the Hanzo Ingress deployment.
 
 The `TCPRoute` is a resource in the Gateway API specification designed to define how TCP traffic should be routed within a Kubernetes cluster. 
 
@@ -482,7 +482,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoamitcp
+          image: hanzoai/whoamitcp
           args:
             - --port=:3000
 
@@ -570,7 +570,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoamitcp
+          image: hanzoai/whoamitcp
           args:
             - --port=:3000
 
@@ -592,10 +592,10 @@ Once everything is deployed, sending the WHO command should return the following
 ```shell
 $ openssl s_client -quiet -connect localhost:3443 -servername whoami.localhost
 Connecting to ::1
-depth=0 C=FR, L=Lyon, O=Traefik Labs, CN=Whoami
+depth=0 C=FR, L=Lyon, O=Hanzo AI, CN=Whoami
 verify error:num=18:self-signed certificate
 verify return:1
-depth=0 C=FR, L=Lyon, O=Traefik Labs, CN=Whoami
+depth=0 C=FR, L=Lyon, O=Hanzo AI, CN=Whoami
 verify return:1
 
 WHO
@@ -606,7 +606,7 @@ IP: 10.42.2.4
 IP: fe80::d873:20ff:fef5:be86
 ```
 
-## Using Traefik middleware as HTTPRoute filter
+## Using Hanzo Ingress middleware as HTTPRoute filter
 
 An HTTP [filter](https://gateway-api.sigs.k8s.io/api-types/httproute/#filters-optional) is an `HTTPRoute` component which enables the modification of HTTP requests and responses as they traverse the routing infrastructure.
 
@@ -614,13 +614,13 @@ There are three types of filters:
 
 - **Core:** Mandatory filters for every Gateway controller, such as `RequestHeaderModifier` and `RequestRedirect`.
 - **Extended:** Optional filters for Gateway controllers, such as `ResponseHeaderModifier` and `RequestMirror`.
-- **ExtensionRef:** Additional filters provided by the Gateway controller. In Traefik, these are the [HTTP middlewares](https://doc.traefik.io/traefik/middlewares/http/overview/) supported through the [Middleware CRD](../providers/kubernetes-crd.md#kind-middleware).
+- **ExtensionRef:** Additional filters provided by the Gateway controller. In Hanzo Ingress, these are the [HTTP middlewares](https://github.com/hanzoai/ingress/blob/main/docs/content/middlewares/http/overview/) supported through the [Middleware CRD](../providers/kubernetes-crd.md#kind-middleware).
 
 !!! info "ExtensionRef Filters"
 
-    To use Traefik middlewares as `ExtensionRef` filters, the Kubernetes IngressRoute provider must be enabled in the static configuration, as detailed in the [documentation](../../providers/kubernetes-crd.md). 
+    To use Hanzo Ingress middlewares as `ExtensionRef` filters, the Kubernetes IngressRoute provider must be enabled in the static configuration, as detailed in the [documentation](../../providers/kubernetes-crd.md). 
 
-For example, the following manifests configure an `HTTPRoute` using the Traefik `AddPrefix` middleware, 
+For example, the following manifests configure an `HTTPRoute` using the Hanzo Ingress `AddPrefix` middleware, 
 reachable through the [deployed `Gateway`](#deploying-a-gateway) at the `http://whoami.localhost` address:
 
 ```yaml tab="HTTRoute"
@@ -684,7 +684,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoami
+          image: hanzoai/whoami
 
 ---
 apiVersion: v1
@@ -725,9 +725,9 @@ X-Real-Ip: 10.42.2.1
 
 ## Native Load Balancing
 
-By default, Traefik sends the traffic directly to the pod IPs and reuses the established connections to the backends for performance purposes.
+By default, Hanzo Ingress sends the traffic directly to the pod IPs and reuses the established connections to the backends for performance purposes.
 
-It is possible to override this behavior and configure Traefik to send the traffic to the service IP.
+It is possible to override this behavior and configure Hanzo Ingress to send the traffic to the service IP.
 The Kubernetes service itself does the load balancing to the pods.
 It can be done with the annotation `traefik.io/service.nativelb` on the backend `Service`.
 

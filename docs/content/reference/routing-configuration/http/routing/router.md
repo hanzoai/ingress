@@ -1,5 +1,5 @@
 ---
-title: "Traefik HTTP Routers Documentation"
+title: "Hanzo Ingress HTTP Routers Documentation"
 description: "HTTP routers are responsible for connecting incoming requests to the services that can handle them. Read the technical documentation."
 ---
 

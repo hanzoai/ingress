@@ -1,14 +1,14 @@
 ---
 title: 'Secure API Access with WAF'
-description: 'Traefik Hub API Gateway - Learn how to configure the Coraza Web Application Firewall middleware to protect your applications from common web attacks.'
+description: 'Hanzo API Gateway - Learn how to configure the Coraza Web Application Firewall middleware to protect your applications from common web attacks.'
 ---
 
 # Secure API Access with WAF
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
-The [Coraza Web Application Firewall](https://coraza.io/) middleware in Traefik Hub API Gateway provides comprehensive protection against common web application attacks. The middleware supports the Coraza rule syntax and is compatible with [OWASP Core Rule Set (CRS)](https://coreruleset.org/docs/), allowing you to leverage proven security rules maintained by the security community.
+The [Coraza Web Application Firewall](https://coraza.io/) middleware in Hanzo API Gateway provides comprehensive protection against common web application attacks. The middleware supports the Coraza rule syntax and is compatible with [OWASP Core Rule Set (CRS)](https://coreruleset.org/docs/), allowing you to leverage proven security rules maintained by the security community.
 
 ## Basic WAF Protection
 
@@ -74,7 +74,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
 
 ---
 apiVersion: v1
@@ -163,7 +163,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
 
 ---
 apiVersion: v1
@@ -180,7 +180,7 @@ spec:
 ```
 
 !!! warning
-    Starting with Traefik Hub v3.11.0, Coraza requires read/write permissions to `/tmp`. This requirement stems from upstream changes in the Coraza engine.
+    Starting with Hanzo v3.11.0, Coraza requires read/write permissions to `/tmp`. This requirement stems from upstream changes in the Coraza engine.
 
 !!! note "Advanced Configuration"
     Advanced options and detailed rule configuration are described in the [reference page](../reference/routing-configuration/http/middlewares/waf.md).

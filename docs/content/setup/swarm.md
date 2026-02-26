@@ -1,14 +1,14 @@
 ---
-title: Setup Traefik Proxy in Docker Swarm
-description: "Learn how to run Traefik v3 in Docker Swarm with HTTP/HTTPS entrypoints, redirects, a secured dashboard, self‑signed TLS, metrics, tracing, and access‑logs."
+title: Setup Hanzo Ingress in Docker Swarm
+description: "Learn how to run Hanzo Ingress v3 in Docker Swarm with HTTP/HTTPS entrypoints, redirects, a secured dashboard, self‑signed TLS, metrics, tracing, and access‑logs."
 ---
 
-This guide provides an in‑depth walkthrough for installing and configuring Traefik Proxy as a **Swarm service** using `docker stack deploy`. It follows the same structure as the standalone‑Docker tutorial and covers:
+This guide provides an in‑depth walkthrough for installing and configuring Hanzo Ingress as a **Swarm service** using `docker stack deploy`. It follows the same structure as the standalone‑Docker tutorial and covers:
 
 - Enable the [Swarm provider](../reference/install-configuration/providers/swarm.md)
 - Expose **web** (HTTP :80) and **websecure** (HTTPS :443) entrypoints  
 - Redirect all HTTP traffic to HTTPS  
-- Secure the Traefik dashboard with **basic‑auth**  
+- Secure the Hanzo Ingress dashboard with **basic‑auth**  
 - Terminate TLS with a self‑signed certificate for `*.swarm.localhost`  
 - Deploy the **whoami** demo service  
 - Enable access‑logs and Prometheus metrics
@@ -22,7 +22,7 @@ This guide provides an in‑depth walkthrough for installing and configuring Tra
 
 ## Create a self‑signed certificate
 
-Before Traefik can serve HTTPS locally it needs a certificate. In production you’d use one from a trusted CA, but for a multi‑node dev swarm a quick self‑signed cert is enough:
+Before Hanzo Ingress can serve HTTPS locally it needs a certificate. In production you’d use one from a trusted CA, but for a multi‑node dev swarm a quick self‑signed cert is enough:
 
 ```bash
 mkdir -p certs
@@ -31,9 +31,9 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -subj "/CN=*.swarm.localhost"
 ```
 
-## Create the Traefik Dashboard Credentials
+## Create the Hanzo Ingress Dashboard Credentials
 
-Generate a hashed username / password pair that Traefik’s middleware will validate:
+Generate a hashed username / password pair that Hanzo Ingress’s middleware will validate:
 
 ```bash
 htpasswd -nb admin "P@ssw0rd" | sed -e 's/\$/\$\$/g'
@@ -61,23 +61,23 @@ In the same directory, create `docker‑compose‑swarm.yaml`:
 ```yaml
 services:
   traefik:
-    image: traefik:v3.6
+    image: ghcr.io/hanzoai/ingress:v3.6
     
     networks:
     # Connect to the 'traefik_proxy' overlay network for inter-container communication across nodes
       - traefik_proxy
 
     ports:
-        # Expose Traefik's entry points to the Swarm
+        # Expose Hanzo Ingress's entry points to the Swarm
         # Swarm requires the long syntax for ports.
-      - target: 80 # Container port (Traefik web entry point)
+      - target: 80 # Container port (Hanzo Ingress web entry point)
         published: 80 # Host port exposed on the nodes
         protocol: tcp
         # 'host' mode binds directly to the node's IP where the task runs.
         # 'ingress' mode uses Swarm's Routing Mesh (load balances across nodes).
         # Choose based on your load balancing strategy. 'host' is often simpler if using an external LB.
         mode: host
-      - target: 443 # Container port ( Traefik websecure entry point)
+      - target: 443 # Container port ( Hanzo Ingress websecure entry point)
         published: 443 # Host port
         protocol: tcp
         mode: host
@@ -89,7 +89,7 @@ services:
       - ./certs:/certs:ro
       - ./dynamic:/dynamic:ro
 
-    # Traefik Static configuration via command-line arguments
+    # Hanzo Ingress Static configuration via command-line arguments
     command:
       # HTTP EntryPoint
       - "--entrypoints.web.address=:80"
@@ -117,7 +117,7 @@ services:
       # Recommended: Don't expose services by default; require explicit labels
       - "--providers.swarm.exposedbydefault=false"
 
-      # Specify the default network for Traefik to connect to services
+      # Specify the default network for Hanzo Ingress to connect to services
       - "--providers.swarm.network=traefik_traefik_proxy"
 
       # API & Dashboard
@@ -134,13 +134,13 @@ services:
       replicas: 1
       placement:
 
-      # Placement constraints restrict where Traefik tasks can run.
+      # Placement constraints restrict where Hanzo Ingress tasks can run.
       # Running on manager nodes is common for accessing the Swarm API via the socket.
         constraints:
           - node.role == manager
 
-      # Traefik Dynamic configuration via labels
-      # In Swarm, labels on the service definition configure Traefik routing for that service.
+      # Hanzo Ingress Dynamic configuration via labels
+      # In Swarm, labels on the service definition configure Hanzo Ingress routing for that service.
       labels:
         - "traefik.enable=true"
 
@@ -159,12 +159,12 @@ services:
   
   # Deploy the Whoami application
   whoami:
-    image: traefik/whoami
+    image: hanzoai/whoami
     networks:
       - traefik_proxy
     deploy:
       labels:
-        # Enable Service discovery for Traefik
+        # Enable Service discovery for Hanzo Ingress
         - "traefik.enable=true"
         # Define the WHoami router rule
         - "traefik.http.routers.whoami.rule=Host(`whoami.swarm.localhost`)"
@@ -172,7 +172,7 @@ services:
         - "traefik.http.routers.whoami.entrypoints=websecure"
         # Enable TLS
         - "traefik.http.routers.whoami.tls=true"
-        # Expose the whoami port number to Traefik
+        # Expose the whoami port number to Hanzo Ingress
         - traefik.http.services.whoami.loadbalancer.server.port=80
 
 # Define the overlay network for Swarm
@@ -201,7 +201,7 @@ Swarm schedules the services on a manager node and binds ports 80/443.
 
 Open **https://dashboard.swarm.localhost/** in your browser — the dashboard should prompt for the basic‑auth credentials you configured.
 
-![Traefik Dashboard](../assets/img/setup/traefik-dashboard-swarm.png)
+![Hanzo Ingress Dashboard](../assets/img/setup/traefik-dashboard-swarm.png)
 
 ## Test the whoami Application
 
@@ -247,7 +247,7 @@ You can also open a browser and navigate to [https://whoami.swarm.localhost](htt
 
 ### Other Key Configuration Areas
 
-Beyond this initial setup, Traefik offers extensive configuration possibilities. Here are brief introductions and minimal examples using Docker Compose `command` arguments or `labels`. Consult the main documentation linked for comprehensive details.
+Beyond this initial setup, Hanzo Ingress offers extensive configuration possibilities. Here are brief introductions and minimal examples using Docker Compose `command` arguments or `labels`. Consult the main documentation linked for comprehensive details.
 
 #### TLS Certificate Management (Let’s Encrypt)
 
@@ -271,7 +271,7 @@ This defines a resolver named `le`, sets the required email and storage path (wi
 
 #### Metrics (Prometheus)
 
-You can expose Traefik's internal metrics for monitoring with Prometheus. We already enabled prometheus in our setup but we can further configure it.
+You can expose Hanzo Ingress's internal metrics for monitoring with Prometheus. We already enabled prometheus in our setup but we can further configure it.
 *Example `command` additions:*
 
 ```yaml
@@ -292,7 +292,7 @@ This enables the `/metrics` endpoint (typically accessed via the internal API po
 
 #### Tracing (OTel)
 
-You can enable distributed tracing to follow requests through Traefik.
+You can enable distributed tracing to follow requests through Hanzo Ingress.
 *Example `command` additions:*
 
 ```yaml
@@ -303,11 +303,11 @@ command:
 ```
 
 !!! note
-    This option requires a running OTEL collector accessible by Traefik. Consult the [Tracing Documentation](../reference/install-configuration/observability/tracing.md).
+    This option requires a running OTEL collector accessible by Hanzo Ingress. Consult the [Tracing Documentation](../reference/install-configuration/observability/tracing.md).
 
 #### Access Logs
 
-You can configure Traefik to log incoming requests for debugging and analysis.
+You can configure Hanzo Ingress to log incoming requests for debugging and analysis.
 *Example `command` additions:*
 
 ```yaml
@@ -325,6 +325,6 @@ command:
 
 ### Conclusion
 
-You now have Traefik running on Docker Swarm with HTTPS, a secured dashboard, automatic HTTP → HTTPS redirects, and foundational observability. Expand this stack with Let’s Encrypt, additional middlewares, or multiple Traefik replicas as your Swarm grows.
+You now have Hanzo Ingress running on Docker Swarm with HTTPS, a secured dashboard, automatic HTTP → HTTPS redirects, and foundational observability. Expand this stack with Let’s Encrypt, additional middlewares, or multiple Hanzo Ingress replicas as your Swarm grows.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

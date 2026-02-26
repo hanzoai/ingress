@@ -1,6 +1,6 @@
 ---
-title: "Traefik ReplacePath Documentation"
-description: "In Traefik Proxy's HTTP middleware, ReplacePath updates paths before forwarding requests. Read the technical documentation."
+title: "Hanzo Ingress ReplacePath Documentation"
+description: "In Hanzo Ingress's HTTP middleware, ReplacePath updates paths before forwarding requests. Read the technical documentation."
 ---
 
 # ReplacePath

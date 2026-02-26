@@ -1,10 +1,10 @@
 ---
 
-!!! question "Using Traefik OSS in Production?"
+!!! question "Using Hanzo Ingress in Production?"
 
-    If you are using Traefik at work, consider adding enterprise-grade API gateway capabilities or commercial support for Traefik OSS.
+    If you are using Hanzo Ingress at work, consider adding enterprise-grade API gateway capabilities or commercial support for Hanzo Ingress OSS.
 
-    - [Watch our API Gateway Demo Video](https://info.traefik.io/watch-traefik-api-gw-demo?cta=doc)
-    - [Request 24/7/365 OSS Support](https://info.traefik.io/request-commercial-support?cta=doc)
+    - [Watch our API Gateway Demo Video](https://hanzo.ai)
+    - [Request 24/7/365 OSS Support](https://hanzo.ai)
 
-    Adding API Gateway capabilities to Traefik OSS is fast and seamless. There's no rip and replace and all configurations remain intact. See it in action via [this short video](https://info.traefik.io/watch-traefik-api-gw-demo?cta=doc).
+    Adding API Gateway capabilities to Hanzo Ingress OSS is fast and seamless. There's no rip and replace and all configurations remain intact. See it in action via [this short video](https://hanzo.ai).

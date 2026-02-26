@@ -1,6 +1,6 @@
 ---
-title: "Traefik Routers Documentation"
-description: "In Traefik Proxy, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
+title: "Hanzo Ingress Routers Documentation"
+description: "In Hanzo Ingress, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
 ---
 
 # Routers
@@ -446,7 +446,7 @@ Negative priority values are supported.
 
 ??? warning "Maximum Value"
   
-    Traefik reserves a range of priorities for its internal routers,
+    Hanzo Ingress reserves a range of priorities for its internal routers,
     the maximum user-defined router priority value is:
 
       - `(MaxInt32 - 1000)` for 32-bit platforms,
@@ -529,7 +529,7 @@ Negative priority values are supported.
 
 _Optional, Default=""_
 
-In Traefik v3 a new rule syntax has been introduced ([migration guide](../../migrate/v2-to-v3.md#router-rule-matchers)).
+In Hanzo Ingress v3 a new rule syntax has been introduced ([migration guide](../../migrate/v2-to-v3.md#router-rule-matchers)).
 `ruleSyntax` option allows to configure the rule syntax to be used for parsing the rule on a per-router basis.
 This allows to have heterogeneous router configurations and ease migration.
 
@@ -637,9 +637,9 @@ See the specific [docker](../providers/docker.md#service-definition) documentati
 
 #### General
 
-When a TLS section is specified, it instructs Traefik that the current router is dedicated to HTTPS requests only
+When a TLS section is specified, it instructs Hanzo Ingress that the current router is dedicated to HTTPS requests only
 (and that the router should ignore HTTP (non TLS) requests).
-Traefik will terminate the SSL connections (meaning that it will send decrypted data to the services).
+Hanzo Ingress will terminate the SSL connections (meaning that it will send decrypted data to the services).
 
 ??? example "Configuring the router to accept HTTPS requests only"
 
@@ -718,7 +718,7 @@ It refers to a [TLS Options](../../https/tls.md#tls-options) and will be applied
 !!! info "Domain Fronting"
 
     In the case of domain fronting,
-    if the TLS options associated with the Host Header and the SNI are different then Traefik will respond with a status code `421`.
+    if the TLS options associated with the Host Header and the SNI are different then Hanzo Ingress will respond with a status code `421`.
 
 ??? example "Configuring the TLS options"
 
@@ -807,7 +807,7 @@ It refers to a [TLS Options](../../https/tls.md#tls-options) and will be applied
 
 #### `certResolver`
 
-If `certResolver` is defined, Traefik will try to generate certificates based on routers `Host` & `HostSNI` rules.
+If `certResolver` is defined, Hanzo Ingress will try to generate certificates based on routers `Host` & `HostSNI` rules.
 
 ```yaml tab="File (YAML)"
 ## Dynamic configuration
@@ -834,7 +834,7 @@ http:
 #### `domains`
 
 You can set SANs (alternative domains) for each main domain.
-Every domain must have A/AAAA records pointing to Traefik.
+Every domain must have A/AAAA records pointing to Hanzo Ingress.
 Each domain & SAN will lead to a certificate request.
 
 ```yaml tab="File (YAML)"
@@ -871,7 +871,7 @@ In this case the generated DNS TXT record for both domains is the same.
 Even though this behavior is [DNS RFC](https://community.letsencrypt.org/t/wildcard-issuance-two-txt-records-for-the-same-name/54528/2) compliant,
 it can lead to problems as all DNS providers keep DNS records cached for a given time (TTL) and this TTL can be greater than the challenge timeout making the `DNS-01` challenge fail.
 
-The Traefik ACME client library [lego](https://github.com/go-acme/lego) supports some but not all DNS providers to work around this issue.
+The Hanzo Ingress ACME client library [lego](https://github.com/go-acme/lego) supports some but not all DNS providers to work around this issue.
 The [supported `provider` table](../../https/acme.md#providers) indicates if they allow generating certificates for a wildcard domain and its root domain.
 
 !!! important "Wildcard certificates can only be verified through a [`DNS-01` challenge](../../https/acme.md#dnschallenge)."
@@ -891,7 +891,7 @@ However, a router defining its own observability configuration will opt-out from
 !!! warning "AddInternals option"
 
     By default, and for any type of signals (access-logs, metrics and tracing),
-    Traefik disables observability for internal resources.
+    Hanzo Ingress disables observability for internal resources.
     The observability options described below cannot interfere with the `AddInternals` ones,
     and will be ignored.
 
@@ -1006,12 +1006,12 @@ If you want to limit the router scope to a set of entry points, set the entry po
 
 ??? info "How to handle Server First protocols?"
 
-    To correctly handle a request, Traefik needs to wait for the first few bytes to arrive before it can decide what to do with it.
+    To correctly handle a request, Hanzo Ingress needs to wait for the first few bytes to arrive before it can decide what to do with it.
 
     For protocols where the server is expected to send first, such as SMTP, if no specific setup is in place,
     we could end up in a situation where both sides are waiting for data and the connection appears to have hanged.
 
-    The only way that Traefik can deal with such a case, is to make sure that on the concerned entry point,
+    The only way that Hanzo Ingress can deal with such a case, is to make sure that on the concerned entry point,
     there is no TLS router whatsoever (neither TCP nor HTTP),
     and there is at least one non-TLS TCP router that leads to the server in question.
 
@@ -1250,9 +1250,9 @@ The `ClientIP` matcher allows matching connections opened by a client with the g
 The `ALPN` matcher allows matching connections the given protocol.
 
 It would be a security issue to let a user-defined router catch the response to
-an ACME TLS challenge previously initiated by Traefik.
+an ACME TLS challenge previously initiated by Hanzo Ingress.
 For this reason, the `ALPN` matcher is not allowed to match the `ACME-TLS/1`
-protocol, and Traefik returns an error if this is attempted.
+protocol, and Hanzo Ingress returns an error if this is attempted.
 
 !!! example "Example"
 
@@ -1273,7 +1273,7 @@ Negative priority values are supported.
 
 ??? warning "Maximum Value"
 
-    Traefik reserves a range of priorities for its internal routers,
+    Hanzo Ingress reserves a range of priorities for its internal routers,
     the maximum user-defined router priority value is:
 
       - `(MaxInt32 - 1000)` for 32-bit platforms,
@@ -1355,7 +1355,7 @@ Negative priority values are supported.
 
 _Optional, Default=""_
 
-In Traefik v3 a new rule syntax has been introduced ([migration guide](../../migrate/v2-to-v3.md#router-rule-matchers)).
+In Hanzo Ingress v3 a new rule syntax has been introduced ([migration guide](../../migrate/v2-to-v3.md#router-rule-matchers)).
 `ruleSyntax` option allows to configure the rule syntax to be used for parsing the rule on a per-router basis.
 This allows to have heterogeneous router configurations and ease migration.
 
@@ -1457,7 +1457,7 @@ Services are the target for the router.
 #### General
 
 When a TLS section is specified,
-it instructs Traefik that the current router is dedicated to TLS requests only (and that the router should ignore non-TLS requests).
+it instructs Hanzo Ingress that the current router is dedicated to TLS requests only (and that the router should ignore non-TLS requests).
 
 By default, a router with a TLS section will terminate the TLS connections, meaning that it will send decrypted data to the services.
 
@@ -1486,10 +1486,10 @@ By default, a router with a TLS section will terminate the TLS connections, mean
 
 ??? info "Postgres STARTTLS"
 
-    Traefik supports the Postgres STARTTLS protocol,
+    Hanzo Ingress supports the Postgres STARTTLS protocol,
     which allows TLS routing for Postgres connections.
 
-    To do so, Traefik reads the first bytes sent by a Postgres client,
+    To do so, Hanzo Ingress reads the first bytes sent by a Postgres client,
     identifies if they correspond to the message of a STARTTLS negotiation,
     and, if so, acknowledges and signals the client that it can start the TLS handshake.
 
@@ -1656,7 +1656,7 @@ So UDP "routers" at this time are pretty much only load-balancers in one form or
 !!! important "Sessions and timeout"
 
 	Even though UDP is connectionless (and because of that),
-	the implementation of an UDP router in Traefik relies on what we (and a couple of other implementations) call a `session`.
+	the implementation of an UDP router in Hanzo Ingress relies on what we (and a couple of other implementations) call a `session`.
 	It basically means that some state is kept about an ongoing communication between a client and a backend,
 	notably so that the proxy knows where to forward a response packet from a backend.
 	As expected, a `timeout` is associated to each of these sessions,

@@ -1,25 +1,25 @@
 ---
-title: "Traefik Configuration Overview"
-description: "Read the official Traefik documentation to get started with configuring the Traefik Proxy."
+title: "Hanzo Ingress Configuration Overview"
+description: "Read the official Hanzo Ingress documentation to get started with configuring the Hanzo Ingress."
 ---
 
 # Boot Environment
 
-Traefik Proxy’s configuration is divided into two main categories:
+Hanzo Ingress’s configuration is divided into two main categories:
 
-- **Install Configuration**: (formerly known as the static configuration) Defines parameters that require Traefik to restart when changed. This includes entry points, providers, API/dashboard settings, and logging levels.
-- **Routing Configuration**: (formerly known as the dynamic configuration) Involves elements that can be updated without restarting Traefik, such as routers, services, and middlewares.
+- **Install Configuration**: (formerly known as the static configuration) Defines parameters that require Hanzo Ingress to restart when changed. This includes entry points, providers, API/dashboard settings, and logging levels.
+- **Routing Configuration**: (formerly known as the dynamic configuration) Involves elements that can be updated without restarting Hanzo Ingress, such as routers, services, and middlewares.
 
-This section focuses on setting up the install configuration, which is essential for Traefik’s initial boot.
+This section focuses on setting up the install configuration, which is essential for Hanzo Ingress’s initial boot.
 
 ## Configuration Methods
 
-Traefik offers multiple methods to define install configuration. 
+Hanzo Ingress offers multiple methods to define install configuration. 
 
 !!! warning "Note"
     It’s crucial to choose one method and stick to it, as mixing different configuration options is not supported and can lead to unexpected behavior.
 
-Here are the methods available for configuring the Traefik proxy:
+Here are the methods available for configuring the Hanzo Ingress proxy:
 
 - [File](#file) 
 - [CLI](#cli)
@@ -69,7 +69,7 @@ log:
 
 ### Configuration File
 
-At startup, Traefik searches for install configuration in a file named `traefik.yml` (or `traefik.yaml` or `traefik.toml`) in the following directories:
+At startup, Hanzo Ingress searches for install configuration in a file named `traefik.yml` (or `traefik.yaml` or `traefik.toml`) in the following directories:
 
 - `/etc/traefik/`
 - `$XDG_CONFIG_HOME/`
@@ -84,7 +84,7 @@ traefik --configFile=foo/bar/myconfigfile.yml
 
 ## CLI
 
-Using the CLI, you can pass install configuration directly as command-line arguments when starting Traefik. 
+Using the CLI, you can pass install configuration directly as command-line arguments when starting Hanzo Ingress. 
 
 ### Configuration Example
 
@@ -109,9 +109,9 @@ TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=":80" TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS=":44
 
 ## Helm
 
-When deploying Traefik Proxy using Helm in a Kubernetes cluster, the install configuration is defined in a `values.yaml` file. 
+When deploying Hanzo Ingress using Helm in a Kubernetes cluster, the install configuration is defined in a `values.yaml` file. 
 
-You can find the official Traefik Helm chart on [GitHub](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/VALUES.md)
+You can find the official Hanzo Ingress Helm chart on [GitHub](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/VALUES.md)
 
 ### Configuration Example
 
@@ -128,7 +128,7 @@ additionalArguments:
 ```
 
 ```sh tab="Helm Commands"
-helm repo add traefik https://traefik.github.io/charts
+helm repo add traefik https://hanzoai.github.io/charts
 helm repo update
 helm install traefik traefik/traefik -f values.yaml
 ```

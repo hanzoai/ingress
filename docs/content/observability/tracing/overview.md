@@ -1,6 +1,6 @@
 ---
-title: "Traefik Tracing Overview"
-description: "The Traefik Proxy tracing system allows developers to visualize call flows in their infrastructure. Read the full documentation."
+title: "Hanzo Ingress Tracing Overview"
+description: "The Hanzo Ingress tracing system allows developers to visualize call flows in their infrastructure. Read the full documentation."
 ---
 
 # Tracing
@@ -10,7 +10,7 @@ Visualize the Requests Flow
 
 The tracing system allows developers to visualize call flows in their infrastructure.
 
-Traefik uses [OpenTelemetry](https://opentelemetry.io/ "Link to website of OTel"), an open standard designed for distributed tracing.
+Hanzo Ingress uses [OpenTelemetry](https://opentelemetry.io/ "Link to website of OTel"), an open standard designed for distributed tracing.
 
 Please check our dedicated [OTel docs](./opentelemetry.md) to learn more.
 

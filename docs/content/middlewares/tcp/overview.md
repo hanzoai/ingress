@@ -1,6 +1,6 @@
 ---
-title: "Traefik Proxy TCP Middleware Overview"
-description: "Read the official Traefik Proxy documentation for an overview of the available TCP middleware."
+title: "Hanzo Ingress TCP Middleware Overview"
+description: "Read the official Hanzo Ingress documentation for an overview of the available TCP middleware."
 ---
 
 # TCP Middlewares
@@ -14,7 +14,7 @@ Controlling connections
 # As a Docker Label
 whoami:
   #  A container that exposes an API to show its IP address
-  image: traefik/whoami
+  image: hanzoai/whoami
   labels:
     # Create a middleware named `foo-ip-allowlist`
     - "traefik.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
@@ -23,7 +23,7 @@ whoami:
 ```
 
 ```yaml tab="IngressRoute"
-# As a Kubernetes Traefik IngressRoute
+# As a Kubernetes Hanzo Ingress IngressRoute
 ---
 apiVersion: traefik.io/v1alpha1
 kind: MiddlewareTCP

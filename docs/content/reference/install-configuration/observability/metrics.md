@@ -1,18 +1,18 @@
 ---
-title: "Traefik Metrics Overview"
-description: "Traefik Proxy supports these metrics backend systems: OpenTelemetry, Datadog, InfluxDB 2.X, Prometheus, and StatsD. Read the full documentation to get started."
+title: "Hanzo Ingress Metrics Overview"
+description: "Hanzo Ingress supports these metrics backend systems: OpenTelemetry, Datadog, InfluxDB 2.X, Prometheus, and StatsD. Read the full documentation to get started."
 ---
 
 # Metrics
 
-Traefik provides metrics in the [OpenTelemetry](#open-telemetry) format as well as the following vendor specific backends:
+Hanzo Ingress provides metrics in the [OpenTelemetry](#open-telemetry) format as well as the following vendor specific backends:
 
 - [Datadog](#datadog)
 - [InfluxDB2](#influxdb-v2)
 - [Prometheus](#prometheus)
 - [StatsD](#statsd)
 
-Traefik Proxy has an official Grafana dashboard for both [on-premises](https://grafana.com/grafana/dashboards/17346)
+Hanzo Ingress has an official Grafana dashboard for both [on-premises](https://grafana.com/grafana/dashboards/17346)
 and [Kubernetes](https://grafana.com/grafana/dashboards/17347) deployments.
 
 ---
@@ -55,8 +55,8 @@ metrics:
 
 !!! tip "Helm Chart Configuration"
 
-    Traefik can be configured to provide metrics in the OpenTelemetry format using the Helm Chart values.
-    To know more about the Helm Chart options, refer to the [Helm Chart](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/VALUES.md) (Find options `metrics.otlp`).
+    Hanzo Ingress can be configured to provide metrics in the OpenTelemetry format using the Helm Chart values.
+    To know more about the Helm Chart options, refer to the [Helm Chart](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/VALUES.md) (Find options `metrics.otlp`).
 
 ### Configuration Options
 
@@ -89,17 +89,17 @@ metrics:
 ### resourceAttributes
 
 The `resourceAttributes` option allows setting the resource attributes sent along the traces.
-Traefik also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
+Hanzo Ingress also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
 
 !!! info "Kubernetes Resource Attributes Detection"
 
-    Additionally, Traefik automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
+    Additionally, Hanzo Ingress automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
     
     - `k8s.namespace.name`
     - `k8s.pod.uid`
     - `k8s.pod.name`
     
-    Note that this automatic detection can fail, like if the Traefik pod is running in host network mode.
+    Note that this automatic detection can fail, like if the Hanzo Ingress pod is running in host network mode.
     In this case, you should provide the attributes with the option or the env variable.
 
 ## Vendors
@@ -237,14 +237,14 @@ metrics:
 | <a id="opt-metrics-prometheus-addServicesLabels" href="#opt-metrics-prometheus-addServicesLabels" title="#opt-metrics-prometheus-addServicesLabels">`metrics.prometheus.addServicesLabels`</a> | Enable metrics on services.| true      | No      |
 | <a id="opt-metrics-prometheus-buckets" href="#opt-metrics-prometheus-buckets" title="#opt-metrics-prometheus-buckets">`metrics.prometheus.buckets`</a> | Buckets for latency metrics. |"0.100000, 0.300000, 1.200000, 5.000000"  | No      |
 | <a id="opt-metrics-prometheus-manualRouting" href="#opt-metrics-prometheus-manualRouting" title="#opt-metrics-prometheus-manualRouting">`metrics.prometheus.manualRouting`</a> | Set to _true_, it disables the default internal router in order to allow creating a custom router for the `prometheus@internal` service. | false    | No      |
-| <a id="opt-metrics-prometheus-entryPoint" href="#opt-metrics-prometheus-entryPoint" title="#opt-metrics-prometheus-entryPoint">`metrics.prometheus.entryPoint`</a> | Traefik Entrypoint name used to expose metrics. | "traefik"     | No      |
+| <a id="opt-metrics-prometheus-entryPoint" href="#opt-metrics-prometheus-entryPoint" title="#opt-metrics-prometheus-entryPoint">`metrics.prometheus.entryPoint`</a> | Hanzo Ingress Entrypoint name used to expose metrics. | "traefik"     | No      |
 | <a id="opt-metrics-prometheus-headerLabels" href="#opt-metrics-prometheus-headerLabels" title="#opt-metrics-prometheus-headerLabels">`metrics.prometheus.headerLabels`</a> | Defines extra labels extracted from request headers for the `requests_total` metrics.<br />More information [here](#headerlabels). |       | Yes      |
 
 ##### headerLabels
 
 Defines the extra labels for the `requests_total` metrics, and for each of them, the request header containing the value for this label.
 If the header is not present in the request it will be added nonetheless with an empty value.
-The label must be a valid label name for Prometheus metrics, otherwise, the Prometheus metrics provider will fail to serve any Traefik-related metric.
+The label must be a valid label name for Prometheus metrics, otherwise, the Prometheus metrics provider will fail to serve any ingress-related metric.
 
 !!! note "How to provide the `Host` header value"
       The `Host` header is never present in the Header map of a request, as per go documentation says:
@@ -370,7 +370,7 @@ Here is a comprehensive list of labels that are provided by the global metrics:
 
 ### OpenTelemetry Semantic Conventions
 
-Traefik Proxy follows [official OpenTelemetry semantic conventions v1.23.1](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/http/http-metrics.md).
+Hanzo Ingress follows [official OpenTelemetry semantic conventions v1.23.1](https://github.com/open-telemetry/semantic-conventions/blob/v1.23.1/docs/http/http-metrics.md).
 
 #### HTTP Server
 
@@ -416,7 +416,7 @@ Here is a comprehensive list of labels that are provided by the metrics:
 
 ### HTTP Metrics
 
-On top of the official OpenTelemetry semantic conventions, Traefik provides its own metrics to monitor the incoming traffic.
+On top of the official OpenTelemetry semantic conventions, Hanzo Ingress provides its own metrics to monitor the incoming traffic.
 
 #### EntryPoint Metrics
 

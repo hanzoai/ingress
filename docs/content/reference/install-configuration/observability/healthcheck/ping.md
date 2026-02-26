@@ -1,18 +1,18 @@
 ---
-title: "Traefik Ping Option Documentation"
-description: "In Traefik Proxy, the option Ping lets you check the health of your Traefik instances. Read the technical documentation for configuration examples and options."
+title: "Hanzo Ingress Ping Option Documentation"
+description: "In Hanzo Ingress, the option Ping lets you check the health of your Hanzo Ingress instances. Read the technical documentation for configuration examples and options."
 ---
 
 # Ping 
 
-Checking the Health of your Traefik Instances
+Checking the Health of your Hanzo Ingress Instances
 {: .subtitle }
 
-The `ping` options allows you to enable the ping endpoint to check Traefik liveness.
+The `ping` options allows you to enable the ping endpoint to check Hanzo Ingress liveness.
 
 The ping endpoint is reachable using the path `/ping` and the methods `GET`and `HEAD`.
 
-If the Traefik instance is alive, it returns the `200` HTTP code with the content: `OK`.
+If the Hanzo Ingress instance is alive, it returns the `200` HTTP code with the content: `OK`.
 
 ## Configuration Example
 
@@ -33,7 +33,7 @@ ping: {}
 ## Configuration Options
 
 The `ping` option is defined in the install (static) configuration.
-You can define it using the same [configuration methods](../../boot-environment.md#configuration-methods) as Traefik.
+You can define it using the same [configuration methods](../../boot-environment.md#configuration-methods) as Hanzo Ingress.
 
 | Field | Description                                               | Default              | Required |
 |:------|:----------------------------------------------------------|:---------------------|:---------|
@@ -43,9 +43,9 @@ You can define it using the same [configuration methods](../../boot-environment.
 
 ### `terminatingStatusCode`
 
-During the period in which Traefik is gracefully shutting down, the ping handler
+During the period in which Hanzo Ingress is gracefully shutting down, the ping handler
 returns a `503` status code by default.  
-If Traefik is behind, for example a load-balancer
+If Hanzo Ingress is behind, for example a load-balancer
 doing health checks (such as the Kubernetes LivenessProbe), another code might
 be expected as the signal for graceful termination.  
 In that case, the terminatingStatusCode can be used to set the code returned by the ping

@@ -1,10 +1,10 @@
 ---
 title: 'LDAP Authentication'
-description: 'Traefik Hub API Gateway - The LDAP Authentication middleware secures your applications by delegating the authentication to an external LDAP server.'
+description: 'Hanzo API Gateway - The LDAP Authentication middleware secures your applications by delegating the authentication to an external LDAP server.'
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 The LDAP Authentication middleware secures your applications by delegating the authentication to an external LDAP server.
 

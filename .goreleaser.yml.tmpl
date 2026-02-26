@@ -1,4 +1,4 @@
-project_name: traefik
+project_name: hanzo-ingress
 version: 2
 
 [[if .GOARCH]]
@@ -8,7 +8,7 @@ dist: "./dist/[[ .GOOS ]]"
 [[end]]
 
 builds:
-  - binary: traefik
+  - binary: hanzo-ingress
 
     main: ./cmd/traefik/
     env:
@@ -52,7 +52,7 @@ changelog:
   disable: true
 
 archives:
-  - id: traefik
+  - id: hanzo-ingress
     name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     formats:
       - tar.gz

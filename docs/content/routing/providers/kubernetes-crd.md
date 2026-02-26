@@ -1,9 +1,9 @@
 ---
-title: "Routing Configuration for Traefik CRD"
-description: "Understand the routing configuration for the Kubernetes IngressRoute & Traefik CRD. Read the technical documentation."
+title: "Routing Configuration for Hanzo Ingress CRD"
+description: "Understand the routing configuration for the Kubernetes IngressRoute & Hanzo Ingress CRD. Read the technical documentation."
 ---
 
-# Traefik & Kubernetes
+# Hanzo Ingress & Kubernetes
 
 The Kubernetes Ingress Controller, The Custom Resource Way.
 {: .subtitle }
@@ -21,7 +21,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
     --8<-- "content/reference/dynamic-configuration/kubernetes-crd-rbac.yml"
     ```
     
-    ```yaml tab="Traefik"
+    ```yaml tab="Hanzo Ingress"
     apiVersion: v1
     kind: ServiceAccount
     metadata:
@@ -48,7 +48,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
           serviceAccountName: traefik-ingress-controller
           containers:
             - name: traefik
-              image: traefik:v3.6
+              image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --log.level=DEBUG
                 - --api
@@ -180,7 +180,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
         spec:
           containers:
             - name: whoami
-              image: traefik/whoami
+              image: hanzoai/whoami
               ports:
                 - containerPort: 80
     
@@ -223,7 +223,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
         spec:
           containers:
             - name: whoamitcp
-              image: traefik/whoamitcp
+              image: hanzoai/whoamitcp
               ports:
                 - containerPort: 8080
     
@@ -266,7 +266,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
         spec:
           containers:
             - name: whoamiudp
-              image: traefik/whoamiudp:latest
+              image: hanzoai/whoamiudp:latest
               ports:
                 - containerPort: 8080
     
@@ -289,9 +289,9 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
 
 ### Custom Resource Definition (CRD)
 
-* You can find an exhaustive list, generated from Traefik's source code, of the custom resources and their attributes in [the reference page](../../reference/dynamic-configuration/kubernetes-crd.md).
-* Validate that [the prerequisites](../../providers/kubernetes-crd.md#requirements) are fulfilled before using the Traefik custom resources.
-* Traefik CRDs are building blocks that you can assemble according to your needs.
+* You can find an exhaustive list, generated from Hanzo Ingress's source code, of the custom resources and their attributes in [the reference page](../../reference/dynamic-configuration/kubernetes-crd.md).
+* Validate that [the prerequisites](../../providers/kubernetes-crd.md#requirements) are fulfilled before using the Hanzo Ingress custom resources.
+* Hanzo Ingress CRDs are building blocks that you can assemble according to your needs.
     
 You can find an excerpt of the available custom resources in the table below:
 
@@ -305,12 +305,12 @@ You can find an excerpt of the available custom resources in the table below:
 | [IngressRouteUDP](#kind-ingressrouteudp)         | UDP Routing                                                        | [UDP router](../routers/index.md#configuring-udp-routers)      |
 | [TLSOptions](#kind-tlsoption)                    | Allows to configure some parameters of the TLS connection          | [TLSOptions](../../https/tls.md#tls-options)                   |
 | [TLSStores](#kind-tlsstore)                      | Allows to configure the default TLS store                          | [TLSStores](../../https/tls.md#certificates-stores)            |
-| [ServersTransport](#kind-serverstransport)       | Allows to configure the transport between Traefik and the backends | [ServersTransport](../../services/#serverstransport_1)         |
-| [ServersTransportTCP](#kind-serverstransporttcp) | Allows to configure the transport between Traefik and the backends | [TCP ServersTransport](../../services/#serverstransport_3)     |
+| [ServersTransport](#kind-serverstransport)       | Allows to configure the transport between Hanzo Ingress and the backends | [ServersTransport](../../services/#serverstransport_1)         |
+| [ServersTransportTCP](#kind-serverstransporttcp) | Allows to configure the transport between Hanzo Ingress and the backends | [TCP ServersTransport](../../services/#serverstransport_3)     |
 
 ### Kind: `IngressRoute`
 
-`IngressRoute` is the CRD implementation of a [Traefik HTTP router](../routers/index.md#configuring-http-routers).
+`IngressRoute` is the CRD implementation of a [HTTP router](../routers/index.md#configuring-http-routers).
 
 Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `IngressRoute` objects.
 
@@ -490,24 +490,24 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
 
 !!! important "Configuring Backend Protocol"
 
-    There are 3 ways to configure the backend protocol for communication between Traefik and your pods:
+    There are 3 ways to configure the backend protocol for communication between Hanzo Ingress and your pods:
 	
     - Setting the scheme explicitly (http/https/h2c)
     - Configuring the name of the kubernetes service port to start with https (https)
     - Setting the kubernetes service port to use port 443 (https)
 
-    If you do not configure the above, Traefik will assume an http connection.
+    If you do not configure the above, Hanzo Ingress will assume an http connection.
     
 
 !!! important "Using Kubernetes ExternalName Service"
 
-    Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
-    Accordingly, Traefik supports defining a port in two ways:
+    Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
+    Accordingly, Hanzo Ingress supports defining a port in two ways:
     
     - only on `IngressRoute` service
     - on both sides, you'll be warned if the ports don't match, and the `IngressRoute` service port is used
     
-    Thus, in case of two sides port definition, Traefik expects a match between ports.
+    Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
     
     ??? example "Examples"
         
@@ -664,7 +664,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
 
     To avoid creating the server load-balancer with the pods IPs and use Kubernetes Service clusterIP directly,
     one should set the service `NativeLB` option to true.
-    Please note that, by default, Traefik reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
+    Please note that, by default, Hanzo Ingress reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
     By default, `NativeLB` is false.
 
     ??? example "Example"
@@ -703,7 +703,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
 
 ### Kind: `Middleware`
 
-`Middleware` is the CRD implementation of a [Traefik middleware](../../middlewares/http/overview.md).
+`Middleware` is the CRD implementation of a [middleware](../../middlewares/http/overview.md).
 
 Register the `Middleware` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `Middleware` objects or referencing middlewares in the [`IngressRoute`](#kind-ingressroute) objects.
 
@@ -749,18 +749,18 @@ Register the `Middleware` [kind](../../reference/dynamic-configuration/kubernete
     when the definition of the middleware comes from another provider.
     In this context, specifying a namespace when referring to the resource does not make any sense, and will be ignored.
     Additionally, when you want to reference a Middleware from the CRD Provider,
-    you have to append the namespace of the resource in the resource-name as Traefik appends the namespace internally automatically.
+    you have to append the namespace of the resource in the resource-name as Hanzo Ingress appends the namespace internally automatically.
 
 More information about available middlewares in the dedicated [middlewares section](../../middlewares/http/overview.md).
 
 ### Kind: `TraefikService`
 
-`TraefikService` is the CRD implementation of a ["Traefik Service"](../services/index.md).
+`TraefikService` is the CRD implementation of a ["Hanzo Ingress Service"](../services/index.md).
 
 Register the `TraefikService` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `TraefikService` objects,
 referencing services in the [`IngressRoute`](#kind-ingressroute) objects, or recursively in others `TraefikService` objects.
 
-!!! info "Disambiguate Traefik and Kubernetes Services"
+!!! info "Disambiguate Hanzo Ingress and Kubernetes Services"
 
     As the field `name` can reference different types of objects, use the field `kind` to avoid any ambiguity.
     
@@ -927,8 +927,8 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
             percent: 15
     ```
     
-    ```yaml tab="Mirroring Traefik Service"
-    # Mirroring from a Traefik Service
+    ```yaml tab="Mirroring Hanzo Ingress Service"
+    # Mirroring from a Hanzo Ingress Service
     apiVersion: traefik.io/v1alpha1
     kind: TraefikService
     metadata:
@@ -992,7 +992,7 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
 As explained in the section about [Sticky sessions](../../services/#sticky-sessions), for stickiness to work all the way,
 it must be specified at each load-balancing level.
 
-When stickiness is enabled, Traefik uses Kubernetes [serving](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/#serving) endpoints status to detect and mark servers as fenced.
+When stickiness is enabled, Hanzo Ingress uses Kubernetes [serving](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/#serving) endpoints status to detect and mark servers as fenced.
 Fenced servers can still process requests tied to sticky cookies, while they are terminating.
 
 For instance, in the example below, there is a first level of load-balancing because there is a (Weighted Round Robin) load-balancing of the two `whoami` services,
@@ -1098,7 +1098,7 @@ and there is a second level because each whoami service is a `replicaset` and is
         spec:
           containers:
             - name: whoami1
-              image: traefik/whoami
+              image: hanzoai/whoami
               ports:
                 - name: web
                   containerPort: 80
@@ -1124,7 +1124,7 @@ and there is a second level because each whoami service is a `replicaset` and is
         spec:
           containers:
             - name: whoami2
-              image: traefik/whoami
+              image: hanzoai/whoami
               ports:
                 - name: web
                   containerPort: 80
@@ -1140,7 +1140,7 @@ and there is a second level because each whoami service is a `replicaset` and is
 
 ### Kind: `IngressRouteTCP`
 
-`IngressRouteTCP` is the CRD implementation of a [Traefik TCP router](../routers/index.md#configuring-tcp-routers).
+`IngressRouteTCP` is the CRD implementation of a [TCP router](../routers/index.md#configuring-tcp-routers).
 
 Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `IngressRouteTCP` objects.
 
@@ -1275,13 +1275,13 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
 
 !!! important "Using Kubernetes ExternalName Service"
 
-    Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
-    Accordingly, Traefik supports defining a port in two ways:
+    Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
+    Accordingly, Hanzo Ingress supports defining a port in two ways:
     
     - only on `IngressRouteTCP` service
     - on both sides, you'll be warned if the ports don't match, and the `IngressRouteTCP` service port is used
     
-    Thus, in case of two sides port definition, Traefik expects a match between ports.
+    Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
     
     ??? example "Examples"
         
@@ -1386,7 +1386,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
 
 ### Kind: `MiddlewareTCP`
 
-`MiddlewareTCP` is the CRD implementation of a [Traefik TCP middleware](../../middlewares/tcp/overview.md).
+`MiddlewareTCP` is the CRD implementation of a [TCP middleware](../../middlewares/tcp/overview.md).
 
 Register the `MiddlewareTCP` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `MiddlewareTCP` objects or referencing TCP middlewares in the [`IngressRouteTCP`](#kind-ingressroutetcp) objects.
 
@@ -1431,13 +1431,13 @@ Register the `MiddlewareTCP` [kind](../../reference/dynamic-configuration/kubern
     when the definition of the TCP middleware comes from another provider.
     In this context, specifying a namespace when referring to the resource does not make any sense, and will be ignored.
     Additionally, when you want to reference a MiddlewareTCP from the CRD Provider,
-    you have to append the namespace of the resource in the resource-name as Traefik appends the namespace internally automatically.
+    you have to append the namespace of the resource in the resource-name as Hanzo Ingress appends the namespace internally automatically.
 
 More information about available TCP middlewares in the dedicated [middlewares section](../../middlewares/tcp/overview.md).
 
 ### Kind: `IngressRouteUDP`
 
-`IngressRouteUDP` is the CRD implementation of a [Traefik UDP router](../routers/index.md#configuring-udp-routers).
+`IngressRouteUDP` is the CRD implementation of a [UDP router](../routers/index.md#configuring-udp-routers).
 
 Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `IngressRouteUDP` objects.
 
@@ -1495,13 +1495,13 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
 
 !!! important "Using Kubernetes ExternalName Service"
 
-    Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
-    Accordingly, Traefik supports defining a port in two ways:
+    Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port.
+    Accordingly, Hanzo Ingress supports defining a port in two ways:
     
     - only on `IngressRouteUDP` service
     - on both sides, you'll be warned if the ports don't match, and the `IngressRouteUDP` service port is used
     
-    Thus, in case of two sides port definition, Traefik expects a match between ports.
+    Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
     
     ??? example "Examples"
         
@@ -1632,7 +1632,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
 
 ### Kind: `TLSOption`
 
-`TLSOption` is the CRD implementation of a [Traefik "TLS Option"](../../https/tls.md#tls-options).
+`TLSOption` is the CRD implementation of a [TLS Option](../../https/tls.md#tls-options).
 
 Register the `TLSOption` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `TLSOption` objects
 or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`IngressRouteTCP`](#kind-ingressroutetcp) objects.
@@ -1675,7 +1675,7 @@ or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`Ingre
 | [6]  | `clientAuth`                | determines the server's policy for TLS [Client Authentication](../../https/tls.md#client-authentication-mtls).                                                                                                             |
 | [7]  | `clientAuth.secretNames`    | list of names of the referenced Kubernetes [Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) (in TLSOption namespace). The secret must contain a certificate under either a `tls.ca` or a `ca.crt` key. |
 | [8]  | `clientAuth.clientAuthType` | defines the client authentication type to apply. The available values are: `NoClientCert`, `RequestClientCert`, `VerifyClientCertIfGiven` and `RequireAndVerifyClientCert`.                                                |
-| [9]  | `sniStrict`                 | if `true`, Traefik won't allow connections from clients connections that do not specify a server_name extension.                                                                                                           |
+| [9]  | `sniStrict`                 | if `true`, Hanzo Ingress won't allow connections from clients connections that do not specify a server_name extension.                                                                                                           |
 | [10] | `alpnProtocols`             | List of supported [application level protocols](../../https/tls.md#alpn-protocols) for the TLS handshake, in order of preference.                                                                                          |
 
 !!! info "CA Secret"
@@ -1758,14 +1758,14 @@ or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`Ingre
 
 ### Kind: `TLSStore`
 
-`TLSStore` is the CRD implementation of a [Traefik "TLS Store"](../../https/tls.md#certificates-stores).
+`TLSStore` is the CRD implementation of a [TLS Store](../../https/tls.md#certificates-stores).
 
 Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore` objects.
 
 !!! important "Default TLS Store"
 
-    Traefik currently only uses the [TLS Store named "default"](../../https/tls.md#certificates-stores).
-    This _default_ `TLSStore` should be in a namespace discoverable by Traefik. Since it is used by default on [`IngressRoute`](#kind-ingressroute) and [`IngressRouteTCP`](#kind-ingressroutetcp) objects, there never is a need to actually reference it.
+    Hanzo Ingress currently only uses the [TLS Store named "default"](../../https/tls.md#certificates-stores).
+    This _default_ `TLSStore` should be in a namespace discoverable by Hanzo Ingress. Since it is used by default on [`IngressRoute`](#kind-ingressroute) and [`IngressRouteTCP`](#kind-ingressroutetcp) objects, there never is a need to actually reference it.
     This means that you cannot have two stores that are named default in different Kubernetes namespaces.
     As a consequence, with respect to TLS stores, the only change that makes sense (and only if needed) is to configure the default TLSStore.
 

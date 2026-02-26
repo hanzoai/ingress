@@ -1,6 +1,6 @@
 ---
-title: "Traefik Errors Documentation"
-description: "In Traefik Proxy, the Errors middleware returns custom pages according to configured ranges of HTTP Status codes. Read the technical documentation."
+title: "Hanzo Ingress Errors Documentation"
+description: "In Hanzo Ingress, the Errors middleware returns custom pages according to configured ranges of HTTP Status codes. Read the technical documentation."
 ---
 
 # Errors
@@ -12,7 +12,7 @@ The Errors middleware returns a custom page in lieu of the default, according to
 
 !!! important
 
-    The error page itself is _not_ hosted by Traefik.
+    The error page itself is _not_ hosted by Hanzo Ingress.
 
 ## Configuration Examples
 
@@ -119,7 +119,7 @@ The service that will serve the new requested error page.
 
 !!! note ""
 
-    In Kubernetes, you need to reference a Kubernetes Service instead of a Traefik service.
+    In Kubernetes, you need to reference a Kubernetes Service instead of a Hanzo Ingress service.
 
 !!! info "Host Header"
 

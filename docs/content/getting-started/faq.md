@@ -1,15 +1,15 @@
 ---
-title: "Traefik Getting Started FAQ"
-description: "Check out our FAQ page for answers to commonly asked questions on getting started with Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Getting Started FAQ"
+description: "Check out our FAQ page for answers to commonly asked questions on getting started with Hanzo Ingress. Read the technical documentation."
 ---
 
 # FAQ
 
-## Why is Traefik Answering `XXX` HTTP Response Status Code?
+## Why is Hanzo Ingress Answering `XXX` HTTP Response Status Code?
 
-Traefik is a dynamic reverse proxy,
+Hanzo Ingress is a dynamic reverse proxy,
 and while the documentation often demonstrates configuration options through file examples,
-the core feature of Traefik is its dynamic configurability,
+the core feature of Hanzo Ingress is its dynamic configurability,
 directly reacting to changes from providers over time.
 
 Notably, a part of the configuration is [static](./configuration-overview.md#the-static-configuration),
@@ -33,19 +33,19 @@ that is whether there is a Router matching the kind of traffic going through it.
 
 ### `404 Not found`
 
-Traefik returns a `404` response code in the following situations:
+Hanzo Ingress returns a `404` response code in the following situations:
 
 - A request reaching an EntryPoint that has no Routers
 - An HTTP request reaching an EntryPoint that has no HTTP Router
 - An HTTPS request reaching an EntryPoint that has no HTTPS Router
 - A request reaching an EntryPoint that has HTTP/HTTPS Routers that cannot be matched
 
-From Traefik's point of view,
+From Hanzo Ingress's point of view,
 every time a request cannot be matched with a router the correct response code is a `404 Not found`.
 
 In this situation, the response code is not a `503 Service Unavailable`
-because Traefik is not able to confirm that the lack of a matching router for a request is only temporary.
-Traefik's routing configuration is dynamic and aggregated from different providers,
+because Hanzo Ingress is not able to confirm that the lack of a matching router for a request is only temporary.
+Hanzo Ingress's routing configuration is dynamic and aggregated from different providers,
 hence it's not possible to assume at any moment that a specific route should be handled or not.
 
 ??? info "This behavior is consistent with rfc7231"
@@ -67,11 +67,11 @@ hence it's not possible to assume at any moment that a specific route should be 
 
 ### `502 Bad Gateway`
 
-Traefik returns a `502` response code when an error happens while contacting the upstream service.
+Hanzo Ingress returns a `502` response code when an error happens while contacting the upstream service.
 
 ### `503 Service Unavailable`
 
-Traefik returns a `503` response code when a Router has been matched,
+Hanzo Ingress returns a `503` response code when a Router has been matched,
 but there are no servers ready to handle the request.
 
 This situation is encountered when a service has been explicitly configured without servers,
@@ -81,7 +81,7 @@ or when a service has healthcheck enabled and all servers are unhealthy.
 
 Sometimes, the `404` response code doesn't play well with other parties or services (such as CDNs).
 
-In these situations, you may want Traefik to always reply with a `503` response code,
+In these situations, you may want Hanzo Ingress to always reply with a `503` response code,
 instead of a `404` response code.
 
 To achieve this behavior, a catchall router,
@@ -158,14 +158,14 @@ By default, the following headers are automatically added when proxying requests
 For more details,
 please check out the [forwarded header](../routing/entrypoints.md#forwarded-headers) documentation.
 
-## How Traefik is Storing and Serving TLS Certificates?
+## How Hanzo Ingress is Storing and Serving TLS Certificates?
 
 ### Storing TLS Certificates
 
-[TLS](../https/tls.md "Link to Traefik TLS docs") certificates are either provided directly by the [dynamic configuration](./configuration-overview.md#the-dynamic-configuration "Link to dynamic configuration overview") from [providers](../https/tls.md#user-defined "Link to the TLS configuration"),
+[TLS](../https/tls.md "Link to Hanzo Ingress TLS docs") certificates are either provided directly by the [dynamic configuration](./configuration-overview.md#the-dynamic-configuration "Link to dynamic configuration overview") from [providers](../https/tls.md#user-defined "Link to the TLS configuration"),
 or by [ACME resolvers](../https/acme.md#providers "Link to ACME resolvers"), which act themselves as providers internally.
 
-For each TLS certificate, Traefik produces an identifier used as a key to store it.
+For each TLS certificate, Hanzo Ingress produces an identifier used as a key to store it.
 This identifier is constructed as the alphabetically ordered concatenation of the SANs `DNSNames` and `IPAddresses` of the TLScertificate.
 
 #### Examples:
@@ -186,7 +186,7 @@ This means that along with configurations applied, it is possible that the TLS c
 
 ### Serving TLS Certificates
 
-For each incoming connection, Traefik is serving the "best" matching TLS certificate for the provided server name.
+For each incoming connection, Hanzo Ingress is serving the "best" matching TLS certificate for the provided server name.
 
 The TLS certificate selection process narrows down the list of TLS certificates matching the server name,
 and then selects the last TLS certificate in this list after having ordered it by the identifier alphabetically.
@@ -200,7 +200,7 @@ and then selects the last TLS certificate in this list after having ordered it b
 
 ### Caching TLS Certificates
 
-While Traefik is serving the best matching TLS certificate for each incoming connection,
+While Hanzo Ingress is serving the best matching TLS certificate for each incoming connection,
 the selection process cost for each incoming connection is avoided thanks to a cache mechanism.
 
 Once a TLS certificate has been selected as the "best" TLS certificate for a server name,
@@ -223,7 +223,7 @@ One way to check whether a configuration file is well-formed, is to validate it 
 
 ## Why are some resources (routers, middlewares, services...) not created/applied?
 
-As a common tip, if a resource is dropped/not created by Traefik after the dynamic configuration was evaluated,
+As a common tip, if a resource is dropped/not created by Hanzo Ingress after the dynamic configuration was evaluated,
 one should look for an error in the logs.
 
 If found, the error confirms that something went wrong while creating the resource,

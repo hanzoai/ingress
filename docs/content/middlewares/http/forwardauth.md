@@ -1,6 +1,6 @@
 ---
-title: "Traefik ForwardAuth Documentation"
-description: "In Traefik Proxy, the HTTP ForwardAuth middleware delegates authentication to an external Service. Read the technical documentation."
+title: "Hanzo Ingress ForwardAuth Documentation"
+description: "In Hanzo Ingress, the HTTP ForwardAuth middleware delegates authentication to an external Service. Read the technical documentation."
 ---
 
 # ForwardAuth
@@ -340,7 +340,7 @@ Set the `forwardBody` option to `true` to send Body.
 
 !!! info
 
-    As body is read inside Traefik before forwarding, this breaks streaming.
+    As body is read inside Hanzo Ingress before forwarding, this breaks streaming.
 
 ```yaml tab="Docker & Swarm"
 labels:

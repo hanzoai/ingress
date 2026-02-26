@@ -1,11 +1,11 @@
 ---
-title: "Traefik Installation Documentation"
-description: "There are several flavors to choose from when installing Traefik Proxy. Get started with Traefik Proxy, and read the technical documentation."
+title: "Hanzo Ingress Installation Documentation"
+description: "There are several flavors to choose from when installing Hanzo Ingress. Get started with Hanzo Ingress, and read the technical documentation."
 ---
 
-# Install Traefik
+# Install Hanzo Ingress
 
-You can install Traefik with the following flavors:
+You can install Hanzo Ingress with the following flavors:
 
 * [Use the official Docker image](./#use-the-official-docker-image)
 * [Use the Helm Chart](./#use-the-helm-chart)
@@ -14,10 +14,10 @@ You can install Traefik with the following flavors:
 
 ## Use the Official Docker Image
 
-Choose one of the [official Docker images](https://hub.docker.com/_/traefik) and run it with one sample configuration file:
+Choose one of the [official Docker images](https://ghcr.io/hanzoai/ingress) and run it with one sample configuration file:
 
-* [YAML](https://raw.githubusercontent.com/traefik/traefik/v3.6/traefik.sample.yml)
-* [TOML](https://raw.githubusercontent.com/traefik/traefik/v3.6/traefik.sample.toml)
+* [YAML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/traefik.sample.yml)
+* [TOML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/traefik.sample.toml)
 
 ```shell
 docker run -d -p 8080:8080 -p 80:80 \
@@ -31,21 +31,21 @@ For more details, go to the [Docker provider documentation](../providers/docker.
     * Prefer a fixed version than the latest that could be an unexpected version.
     ex: `traefik:v3.6`
     * Docker images are based from the [Alpine Linux Official image](https://hub.docker.com/_/alpine).
-    * Any orchestrator using docker images can fetch the official Traefik docker image.
+    * Any orchestrator using docker images can fetch the official Hanzo Ingress docker image.
 
 ## Use the Helm Chart
 
-Traefik can be installed in Kubernetes using the Helm chart from <https://github.com/traefik/traefik-helm-chart>.
+Hanzo Ingress can be installed in Kubernetes using the Helm chart from <https://github.com/hanzoai/ingress-helm-chart>.
 
 Ensure that the following requirements are met:
 
 * Kubernetes 1.22+
 * Helm version 3.9+ is [installed](https://helm.sh/docs/intro/install/)
 
-Add Traefik Labs chart repository to Helm:
+Add Hanzo AI chart repository to Helm:
 
 ```bash
-helm repo add traefik https://traefik.github.io/charts
+helm repo add traefik https://hanzoai.github.io/charts
 ```
 
 You can update the chart repository by running:
@@ -64,7 +64,7 @@ helm install traefik traefik/traefik
 
     All [Helm features](https://helm.sh/docs/intro/using_helm/) are supported.
 
-    Examples are provided [here](https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md).
+    Examples are provided [here](https://github.com/hanzoai/ingress-helm-chart/blob/master/EXAMPLES.md).
 
     For instance, installing the chart in a dedicated namespace:
 
@@ -81,9 +81,9 @@ helm install traefik traefik/traefik
     as with [any helm chart](https://helm.sh/docs/intro/using_helm/#customizing-the-chart-before-installing).
     {: #helm-custom-values }
 
-    All parameters are documented in the default [`values.yaml`](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml).
+    All parameters are documented in the default [`values.yaml`](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/values.yaml).
 
-    You can also set Traefik command line flags using `additionalArguments`.
+    You can also set Hanzo Ingress command line flags using `additionalArguments`.
     Example of installation with logging set to `DEBUG`:
 
     ```bash tab="Using Helm CLI"
@@ -101,7 +101,7 @@ helm install traefik traefik/traefik
 
 ## Use the Binary Distribution
 
-Grab the latest binary from the [releases](https://github.com/traefik/traefik/releases) page.
+Grab the latest binary from the [releases](https://github.com/hanzoai/ingress/releases) page.
 
 ??? info "Check the integrity of the downloaded file"
 
@@ -137,7 +137,7 @@ Grab the latest binary from the [releases](https://github.com/traefik/traefik/re
 And run it:
 
 ```bash
-./traefik --help
+./hanzo-ingress --help
 ```
 
 ## Compile your Binary from the Sources

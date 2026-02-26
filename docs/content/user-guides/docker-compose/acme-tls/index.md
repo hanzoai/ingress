@@ -1,11 +1,11 @@
 ---
-title: "Traefik Docker TLS Challenge Documentation"
-description: "Learn how to create a certificate with the Let's Encrypt TLS challenge to use HTTPS on a service exposed with Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Docker TLS Challenge Documentation"
+description: "Learn how to create a certificate with the Let's Encrypt TLS challenge to use HTTPS on a service exposed with Hanzo Ingress. Read the technical documentation."
 ---
 
 # Docker-compose with Let's Encrypt: TLS Challenge
 
-This guide aims to demonstrate how to create a certificate with the Let's Encrypt TLS challenge to use https on a simple service exposed with Traefik.  
+This guide aims to demonstrate how to create a certificate with the Let's Encrypt TLS challenge to use https on a simple service exposed with Hanzo Ingress.  
 Please also read the [basic example](../basic-example/) for details on how to expose such a service.  
 
 ## Prerequisite
@@ -39,7 +39,7 @@ For the TLS challenge you will need:
 
     If you uncommented the `acme.caserver` line, you will get an SSL error, but if you display the certificate and see it was emitted by `Fake LE Intermediate X1` then it means all is good.
     (It is the staging environment intermediate certificate used by Let's Encrypt).
-    You can now safely comment the `acme.caserver` line, remove the `letsencrypt/acme.json` file and restart Traefik to issue a valid certificate.
+    You can now safely comment the `acme.caserver` line, remove the `letsencrypt/acme.json` file and restart Hanzo Ingress to issue a valid certificate.
 
 ## Explanation
 
@@ -49,7 +49,7 @@ What changed between the basic example:
 
 ```yaml
 command:
-  # Traefik will listen to incoming request on the port 443 (https)
+  # Hanzo Ingress will listen to incoming request on the port 443 (https)
   - "--entryPoints.websecure.address=:443"
 ports:
   - "443:443"
@@ -75,7 +75,7 @@ command:
   - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
 ```
 
-- We configure the `whoami` service to tell Traefik to use the certificate resolver named `myresolver` we just configured:
+- We configure the `whoami` service to tell Hanzo Ingress to use the certificate resolver named `myresolver` we just configured:
 
 ```yaml
 labels:

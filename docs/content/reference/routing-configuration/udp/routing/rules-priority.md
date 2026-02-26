@@ -1,6 +1,6 @@
 ---
-title: "Traefik UDP Routers Rules & Priority Documentation"
-description: "In Traefik Proxy, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
+title: "Hanzo Ingress UDP Routers Rules & Priority Documentation"
+description: "In Hanzo Ingress, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
 ---
 
 A router is in charge of connecting incoming requests to the services that can handle them.
@@ -20,7 +20,7 @@ So UDP _routers_ at this time are pretty much only load-balancers in one form or
 ## Sessions and timeout
 
 Even though UDP is connectionless (and because of that),
-the implementation of an UDP router in Traefik relies on what we (and a couple of other implementations) call a `session`.
+the implementation of an UDP router in Hanzo Ingress relies on what we (and a couple of other implementations) call a `session`.
 It means that some state is kept about an ongoing communication between a client and a backend,
 notably so that the proxy knows where to forward a response packet from a backend.
 

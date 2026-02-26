@@ -1,17 +1,17 @@
 ---
-title: "Docker and Traefik Quick Start"
-description: "Deploy Traefik in Docker and expose your first service"
+title: "Docker and Hanzo Ingress Quick Start"
+description: "Deploy Hanzo Ingress in Docker and expose your first service"
 ---
 
-# Getting Started with Docker and Traefik
+# Getting Started with Docker and Hanzo Ingress
 
-Docker is a first-class citizen in Traefik, offering native support for Docker containers and services. 
-Whether you're using Docker Compose or running containers directly, Traefik provides a seamless experience for managing your Docker traffic.
+Docker is a first-class citizen in Hanzo Ingress, offering native support for Docker containers and services. 
+Whether you're using Docker Compose or running containers directly, Hanzo Ingress provides a seamless experience for managing your Docker traffic.
 
 This guide shows you how to:
 
-- Install Traefik using Docker
-- Expose the Traefik dashboard
+- Install Hanzo Ingress using Docker
+- Expose the Hanzo Ingress dashboard
 - Deploy a sample application
 - Configure basic routing
 
@@ -20,7 +20,7 @@ This guide shows you how to:
 - Docker 
 - Docker Compose (optional)
 
-## Install Traefik
+## Install Hanzo Ingress
 
 ### Using Docker Compose
 
@@ -36,7 +36,7 @@ This configuration:
 # docker-compose.yml
 services:
   traefik:
-    image: traefik:v3.6
+    image: ghcr.io/hanzoai/ingress:v3.6
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -48,7 +48,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-Start Traefik:
+Start Hanzo Ingress:
 
 ```bash
 docker-compose up -d
@@ -56,7 +56,7 @@ docker-compose up -d
 
 ### Using Docker CLI
 
-Alternatively, you can run Traefik directly with Docker. 
+Alternatively, you can run Hanzo Ingress directly with Docker. 
 This command:
 
 - Exposes ports 80 and 8080 for web traffic and dashboard access
@@ -76,7 +76,7 @@ providers:
   docker: {}
 ```
 
-Start Traefik:
+Start Hanzo Ingress:
 
 ```bash
 docker run -d \
@@ -96,7 +96,7 @@ You can access the dashboard at:
 
 [http://localhost:8080/dashboard/](http://localhost:8080/dashboard/)
 
-![Traefik Dashboard Screenshot](../assets/img/getting-started/traefik-dashboard.png)
+![Hanzo Ingress Dashboard Screenshot](../assets/img/getting-started/traefik-dashboard.png)
 
 ## Deploy a Sample Application
 
@@ -106,7 +106,7 @@ Create a whoami service:
 # whoami.yml
 services:
   whoami:
-    image: traefik/whoami
+    image: hanzoai/whoami
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
 ```
@@ -146,11 +146,11 @@ You can also open [http://whoami.localhost](http://whoami.localhost) in a browse
 
 ![whoami application Screenshot](../assets/img/getting-started/whoami-localhost.png)
 
-If you navigate to the **HTTP Routers** section of the Traefik dashboard, you can see that the `whoami.localhost` route is managed by the Traefik Docker provider:
+If you navigate to the **HTTP Routers** section of the Hanzo Ingress dashboard, you can see that the `whoami.localhost` route is managed by the Hanzo Ingress Docker provider:
 
-![Traefik Dashboard HTTP Routers Section Screenshot](../assets/img/getting-started/docker-router.png)
+![Hanzo Ingress Dashboard HTTP Routers Section Screenshot](../assets/img/getting-started/docker-router.png)
 
-That's it! You've successfully deployed Traefik and configured routing in Docker.
+That's it! You've successfully deployed Hanzo Ingress and configured routing in Docker.
 
 ## Next Steps
 

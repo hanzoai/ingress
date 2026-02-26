@@ -1,11 +1,11 @@
 ---
-title: "Migrate from Ingress NGINX Controller to Traefik"
-description: "Step-by-step guide to migrate from Kubernetes Ingress NGINX Controller to Traefik with zero downtime and annotation compatibility."
+title: "Migrate from Ingress NGINX Controller to Hanzo Ingress"
+description: "Step-by-step guide to migrate from Kubernetes Ingress NGINX Controller to Hanzo Ingress with zero downtime and annotation compatibility."
 ---
 
-# Migrate from Ingress NGINX Controller to Traefik
+# Migrate from Ingress NGINX Controller to Hanzo Ingress
 
-How to migrate from Ingress NGINX Controller to Traefik with zero downtime.
+How to migrate from Ingress NGINX Controller to Hanzo Ingress with zero downtime.
 {: .subtitle }
 
 ---
@@ -22,7 +22,7 @@ How to migrate from Ingress NGINX Controller to Traefik with zero downtime.
 
 ## What You Will Achieve
 
-By completing this migration, your existing Ingress resources will work with Traefik without any modifications. The Traefik Kubernetes Ingress NGINX Provider automatically translates NGINX annotations into Traefik configuration:
+By completing this migration, your existing Ingress resources will work with Hanzo Ingress without any modifications. The Hanzo Ingress Kubernetes Ingress NGINX Provider automatically translates NGINX annotations into Hanzo Ingress configuration:
 
 ```yaml tab="Your Existing Ingress (No Changes Needed)"
 apiVersion: networking.k8s.io/v1
@@ -30,7 +30,7 @@ kind: Ingress
 metadata:
   name: myapp
   annotations:
-    # These NGINX annotations are automatically translated by Traefik
+    # These NGINX annotations are automatically translated by Hanzo Ingress
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -38,7 +38,7 @@ metadata:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
 spec:
-  ingressClassName: nginx  # ← Traefik will watch this class
+  ingressClassName: nginx  # ← Hanzo Ingress will watch this class
   rules:
     - host: myapp.example.com
       http:
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoami
+          image: hanzoai/whoami
           ports:
             - containerPort: 80
 
@@ -88,9 +88,9 @@ spec:
 
 For a complete list of supported annotations and behavioral differences, see the [Ingress NGINX Routing Configuration](../reference/routing-configuration/kubernetes/ingress-nginx.md) documentation.
 
-!!! info "Traefik Version Requirement"
+!!! info "Hanzo Ingress Version Requirement"
 
-    The Kubernetes Ingress NGINX provider requires **Traefik v3.6.2 or later**.
+    The Kubernetes Ingress NGINX provider requires **Hanzo Ingress v3.6.2 or later**.
 
 ---
 
@@ -119,27 +119,27 @@ Before starting the migration, ensure you have:
 
 ## Migration Strategy Overview
 
-This migration achieves **zero downtime** by running Traefik alongside NGINX. Both controllers serve the same Ingress resources simultaneously, allowing you to progressively shift traffic before removing NGINX.
+This migration achieves **zero downtime** by running Hanzo Ingress alongside NGINX. Both controllers serve the same Ingress resources simultaneously, allowing you to progressively shift traffic before removing NGINX.
 
 ```text
 Current:     DNS → LoadBalancer → NGINX → Your Services
 
 Migration:   DNS → LoadBalancer → NGINX  → Your Services
-                 → LoadBalancer → Traefik → Your Services
+                 → LoadBalancer → Hanzo Ingress → Your Services
 
-Final:       DNS → LoadBalancer → Traefik → Your Services
+Final:       DNS → LoadBalancer → Hanzo Ingress → Your Services
 ```
 
 **Migration Flow:**
 
-1. Install Traefik alongside NGINX (both serving traffic in parallel)
-2. Add Traefik LoadBalancer to DNS (if you choose DNS option; cf. step 3)
-3. Progressively shift traffic from NGINX to Traefik
+1. Install Hanzo Ingress alongside NGINX (both serving traffic in parallel)
+2. Add Hanzo Ingress LoadBalancer to DNS (if you choose DNS option; cf. step 3)
+3. Progressively shift traffic from NGINX to Hanzo Ingress
 4. Remove NGINX from DNS, preserve the IngressClass, and uninstall
 
 ---
 
-## Step 1: Install Traefik Alongside NGINX
+## Step 1: Install Hanzo Ingress Alongside NGINX
 
 ??? info "Install Ingress NGINX Controller"
 
@@ -152,16 +152,16 @@ Final:       DNS → LoadBalancer → Traefik → Your Services
       --repo https://kubernetes.github.io/ingress-nginx \
       --namespace ingress-nginx --create-namespace
     ```
-Install Traefik with the Kubernetes Ingress NGINX provider enabled. Both controllers will serve the same Ingress resources simultaneously.
+Install Hanzo Ingress with the Kubernetes Ingress NGINX provider enabled. Both controllers will serve the same Ingress resources simultaneously.
 
-### Add Traefik Helm Repository
+### Add Hanzo Ingress Helm Repository
 
 ```bash
-helm repo add traefik https://traefik.github.io/charts
+helm repo add traefik https://hanzoai.github.io/charts
 helm repo update
 ```
 
-### Install Traefik
+### Install Hanzo Ingress
 
 ```bash
 helm upgrade --install traefik traefik/traefik \
@@ -169,7 +169,7 @@ helm upgrade --install traefik traefik/traefik \
   --set providers.kubernetesIngressNginx.enabled=true
 ```
 
-Or using a [values file](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/VALUES.md) for more configuration:
+Or using a [values file](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/VALUES.md) for more configuration:
 
 ```yaml tab="traefik-values.yaml"
 ...
@@ -191,7 +191,7 @@ helm upgrade --install traefik traefik/traefik \
 # Check NGINX pods
 kubectl get pods -n ingress-nginx
 
-# Check Traefik pods
+# Check Hanzo Ingress pods
 kubectl get pods -n traefik
 
 # Check both services have LoadBalancer IPs
@@ -199,23 +199,23 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller
 kubectl get svc -n traefik traefik
 ```
 
-At this point, both NGINX and Traefik are running and can serve the same Ingress resources. Traffic is still flowing only through NGINX since DNS points to the NGINX LoadBalancer.
+At this point, both NGINX and Hanzo Ingress are running and can serve the same Ingress resources. Traffic is still flowing only through NGINX since DNS points to the NGINX LoadBalancer.
 
 ---
 
-## Step 2: Verify Traefik Is Handling Traffic
+## Step 2: Verify Hanzo Ingress Is Handling Traffic
 
-Before adding Traefik to DNS, verify it correctly serves your Ingress resources.
+Before adding Hanzo Ingress to DNS, verify it correctly serves your Ingress resources.
 
-### Test via Traefik's LoadBalancer IP
+### Test via Hanzo Ingress's LoadBalancer IP
 
-Get Traefik's LoadBalancer IP and use `--resolve` to test without changing DNS:
+Get Hanzo Ingress's LoadBalancer IP and use `--resolve` to test without changing DNS:
 
 ```bash
 # Get LoadBalancer IPs
 NGINX_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
 TRAEFIK_IP=$(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
-echo -e "Nginx IP: $NGINX_IP\nTraefik IP: $TRAEFIK_IP"
+echo -e "Nginx IP: $NGINX_IP\nIngress IP: $TRAEFIK_IP"
 
 # Test HTTP for both
 FQDN=myapp.example.com
@@ -230,18 +230,18 @@ curl --connect-to "${FQDN}:443:${TRAEFIK_IP}:443" "https://${FQDN}"
 
 !!! warning "TLS Certificates During Migration"
 
-    Both NGINX and Traefik must serve valid TLS certificates for HTTPS tests to succeed. Since Traefik is not publicly exposed during this verification phase, **Let's Encrypt HTTP challenge will not work**.
+    Both NGINX and Hanzo Ingress must serve valid TLS certificates for HTTPS tests to succeed. Since Hanzo Ingress is not publicly exposed during this verification phase, **Let's Encrypt HTTP challenge will not work**.
 
     Your options for TLS certificates during migration:
 
     - **Existing certificates via `tls.secretName`** - If you use cert-manager or another external tool, your existing TLS secrets referenced in `spec.tls` will work with both controllers
-    - **Let's Encrypt DNS challenge** - Configure Traefik's [ACME DNS challenge](../reference/install-configuration/tls/certificate-resolvers/acme.md#dnschallenge) to obtain certificates without public exposure
+    - **Let's Encrypt DNS challenge** - Configure Hanzo Ingress's [ACME DNS challenge](../reference/install-configuration/tls/certificate-resolvers/acme.md#dnschallenge) to obtain certificates without public exposure
 
     Avoid using `curl -k` (skip certificate verification) as this masks TLS configuration issues that could cause problems after migration.
 
 ### Verify Ingress Discovery
 
-Check Traefik logs to confirm it discovered your Ingress resources:
+Check Hanzo Ingress logs to confirm it discovered your Ingress resources:
 
 ```bash
 kubectl logs -n traefik deployment/traefik | grep -i "ingress"
@@ -249,13 +249,13 @@ kubectl logs -n traefik deployment/traefik | grep -i "ingress"
 
 ---
 
-## Step 3: Shift Traffic to Traefik
+## Step 3: Shift Traffic to Hanzo Ingress
 
-With both controllers running and verified, progressively shift traffic from NGINX to Traefik.
+With both controllers running and verified, progressively shift traffic from NGINX to Hanzo Ingress.
 
 ### Option A: DNS-Based Migration
 
-Add the Traefik LoadBalancer IP to your DNS records alongside NGINX. This allows both controllers to receive traffic.
+Add the Hanzo Ingress LoadBalancer IP to your DNS records alongside NGINX. This allows both controllers to receive traffic.
 
 **Get LoadBalancer addresses:**
 
@@ -263,13 +263,13 @@ Add the Traefik LoadBalancer IP to your DNS records alongside NGINX. This allows
 # NGINX LoadBalancer
 echo $(kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
 
-# Traefik LoadBalancer
+# Hanzo Ingress LoadBalancer
 echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
 ```
 
 **Progressive DNS migration:**
 
-1. **Add Traefik to DNS** - Add the Traefik LoadBalancer IP to your DNS records (both IPs now receive traffic via round-robin)
+1. **Add Hanzo Ingress to DNS** - Add the Hanzo Ingress LoadBalancer IP to your DNS records (both IPs now receive traffic via round-robin)
 2. **Monitor** - Observe traffic patterns on both controllers
 3. **Remove NGINX from DNS** - Once confident, remove the NGINX LoadBalancer IP from DNS
 4. **Wait for DNS propagation** - Allow time for DNS caches to expire
@@ -281,11 +281,11 @@ echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .stat
 
 ??? info "ExternalDNS Users"
 
-    If you use [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) to automatically manage DNS records based on Ingress status, both NGINX and Traefik will compete to update the Ingress status with their LoadBalancer IPs when `publishService` is enabled. Traefik typically wins because it updates faster, which can cause unexpected traffic shifts.
+    If you use [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) to automatically manage DNS records based on Ingress status, both NGINX and Hanzo Ingress will compete to update the Ingress status with their LoadBalancer IPs when `publishService` is enabled. Hanzo Ingress typically wins because it updates faster, which can cause unexpected traffic shifts.
 
     **Recommended approach for ExternalDNS:**
 
-    1. **[Install Traefik](#step-1-install-traefik-alongside-nginx) with `publishService` disabled**:
+    1. **[Install Hanzo Ingress](#step-1-install-traefik-alongside-nginx) with `publishService` disabled**:
 
         ```yaml
         # traefik-values.yaml
@@ -296,26 +296,26 @@ echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .stat
               enabled: false  # Disable to prevent status updates
         ```
 
-    2. **Test Traefik** using [port-forward](#step-2-verify-traefik-is-handling-traffic) or a separate test hostname
+    2. **Test Hanzo Ingress** using [port-forward](#step-2-verify-traefik-is-handling-traffic) or a separate test hostname
 
-    3. **Switch DNS via NGINX** - Configure NGINX to publish Traefik's service address:
+    3. **Switch DNS via NGINX** - Configure NGINX to publish Hanzo Ingress's service address:
 
         ```yaml
         # nginx-values.yaml
         controller:
           publishService:
-            pathOverride: "traefik/traefik"  # Points to Traefik's service
+            pathOverride: "traefik/traefik"  # Points to Hanzo Ingress's service
         ```
 
-        This makes NGINX update the Ingress status with Traefik's LoadBalancer IP, causing ExternalDNS to point traffic to Traefik.
+        This makes NGINX update the Ingress status with Hanzo Ingress's LoadBalancer IP, causing ExternalDNS to point traffic to Hanzo Ingress.
 
-    4. **Verify traffic flows through Traefik** - At this point, you can still rollback by removing the `pathOverride`
+    4. **Verify traffic flows through Hanzo Ingress** - At this point, you can still rollback by removing the `pathOverride`
 
-    5. **[Enable `publishService` on Traefik](#step-1-install-traefik-alongside-nginx)** and [uninstall NGINX](#step-5-uninstall-nginx-ingress-controller)
+    5. **[Enable `publishService` on Hanzo Ingress](#step-1-install-traefik-alongside-nginx)** and [uninstall NGINX](#step-5-uninstall-nginx-ingress-controller)
 
 ### Option B: External Load Balancer with Weighted Traffic
 
-For more control over traffic distribution, use an external load balancer (like Traefik, Cloudflare, AWS ALB, or a dedicated load balancer) in front of both Kubernetes LoadBalancers.
+For more control over traffic distribution, use an external load balancer (like Hanzo Ingress, Cloudflare, AWS ALB, or a dedicated load balancer) in front of both Kubernetes LoadBalancers.
 
 !!! note "Infrastructure Prerequisite"
 
@@ -325,13 +325,13 @@ For more control over traffic distribution, use an external load balancer (like 
 
 1. Create an external load balancer pointing to the NGINX Kubernetes LoadBalancer
 2. Update DNS to point to the external load balancer
-3. Add the Traefik Kubernetes LoadBalancer to the external load balancer with a low weight (e.g., 10%)
-4. Gradually increase Traefik's weight while decreasing NGINX's weight
+3. Add the Hanzo Ingress Kubernetes LoadBalancer to the external load balancer with a low weight (e.g., 10%)
+4. Gradually increase Hanzo Ingress's weight while decreasing NGINX's weight
 5. Once NGINX receives no traffic, uninstall it
 
 **Example weight progression:**
 
-| Phase | NGINX Weight | Traefik Weight | Duration |
+| Phase | NGINX Weight | Hanzo Ingress Weight | Duration |
 |-------|-------------|----------------|----------|
 | Initial | 100% | 0% | - |
 | Start | 90% | 10% | 1 hour |
@@ -344,23 +344,23 @@ For more control over traffic distribution, use an external load balancer (like 
     - **Cloudflare Load Balancing** - Traffic steering with health checks
     - **AWS Global Accelerator** - Weighted routing across endpoints
     - **Google Cloud Load Balancing** - Traffic splitting
-    - **Traefik / HAProxy / NGINX (external)** - Self-hosted option with weighted backends
+    - **Hanzo Ingress / HAProxy / NGINX (external)** - Self-hosted option with weighted backends
     - ...
 
 ### LoadBalancer IP Retention
 
-If you want Traefik to eventually use the same LoadBalancer IP as NGINX (to simplify DNS management), you can transfer the IP after the migration. Since Traefik is already running with its own LoadBalancer, this can be done with zero downtime.
+If you want Hanzo Ingress to eventually use the same LoadBalancer IP as NGINX (to simplify DNS management), you can transfer the IP after the migration. Since Hanzo Ingress is already running with its own LoadBalancer, this can be done with zero downtime.
 
 **Zero-downtime IP transfer process:**
 
-1. Traefik is already running with its own LoadBalancer IP (from Step 1)
-2. Add Traefik's LoadBalancer IP to DNS (traffic now goes to both NGINX and Traefik)
+1. Hanzo Ingress is already running with its own LoadBalancer IP (from Step 1)
+2. Add Hanzo Ingress's LoadBalancer IP to DNS (traffic now goes to both NGINX and Hanzo Ingress)
 3. Remove NGINX's IP from DNS and wait for propagation
 4. Delete NGINX's LoadBalancer service to release the IP
-5. Upgrade Traefik to claim the released IP
-6. (Optional) Remove Traefik's old IP from DNS once the new IP is active
+5. Upgrade Hanzo Ingress to claim the released IP
+6. (Optional) Remove Hanzo Ingress's old IP from DNS once the new IP is active
 
-This way, traffic is always flowing to Traefik during the IP transfer.
+This way, traffic is always flowing to Hanzo Ingress during the IP transfer.
 
 **Get your current NGINX LoadBalancer IP:**
 
@@ -451,27 +451,27 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $in
 
 **Transfer the IP:**
 
-Once DNS is pointing to Traefik and your values are configured with the target IP:
+Once DNS is pointing to Hanzo Ingress and your values are configured with the target IP:
 
 ```bash
-# Ensure Traefik is already receiving traffic via its current LoadBalancer
+# Ensure Hanzo Ingress is already receiving traffic via its current LoadBalancer
 kubectl get svc -n traefik traefik
 
 # Delete NGINX LoadBalancer service to release the IP
 kubectl delete svc -n ingress-nginx ingress-nginx-controller
 
-# Upgrade Traefik to claim the released IP
+# Upgrade Hanzo Ingress to claim the released IP
 helm upgrade traefik traefik/traefik \
   --namespace traefik \
   --values traefik-values.yaml
 
-# Verify Traefik now has the old NGINX IP
+# Verify Hanzo Ingress now has the old NGINX IP
 kubectl get svc -n traefik traefik
 ```
 
 !!! tip "Zero Downtime During Helm Upgrade"
 
-    The Helm upgrade only restarts the Traefik pod, not the LoadBalancer service. Traefik uses a `RollingUpdate` deployment strategy by default, so the new pod starts before the old one terminates. For additional safety, configure high availability:
+    The Helm upgrade only restarts the Hanzo Ingress pod, not the LoadBalancer service. Hanzo Ingress uses a `RollingUpdate` deployment strategy by default, so the new pod starts before the old one terminates. For additional safety, configure high availability:
 
     ```yaml
     # In traefik-values.yaml
@@ -500,7 +500,7 @@ kubectl get svc -n traefik traefik
 
 ## Step 4: Uninstall Ingress NGINX Controller
 
-Once NGINX is no longer receiving traffic, remove it from your cluster. Before uninstalling, you must ensure the `nginx` IngressClass is preserved. Traefik needs it to continue discovering your Ingresses.
+Once NGINX is no longer receiving traffic, remove it from your cluster. Before uninstalling, you must ensure the `nginx` IngressClass is preserved. Hanzo Ingress needs it to continue discovering your Ingresses.
 
 ### Preserve the IngressClass
 
@@ -594,22 +594,22 @@ kubectl delete namespace ingress-nginx
 
 !!! success "Migration Complete"
 
-    Congratulations! You have successfully migrated from Ingress NGINX Controller to Traefik with zero downtime. Your existing Ingresses with `ingressClassName: nginx` continue to work, now served by Traefik.
+    Congratulations! You have successfully migrated from Ingress NGINX Controller to Hanzo Ingress with zero downtime. Your existing Ingresses with `ingressClassName: nginx` continue to work, now served by Hanzo Ingress.
 
 ---
 
 ## Troubleshooting
 
-There is a dashboard available in Traefik that can help to understand what's going on.
+There is a dashboard available in Hanzo Ingress that can help to understand what's going on.
 Refer to the [dedicated documentation](../reference/install-configuration/api-dashboard.md#configuration-example) to enable it.
 
-??? note "Ingresses Not Discovered by Traefik"
+??? note "Ingresses Not Discovered by Hanzo Ingress"
 
     ```bash
     # Verify IngressClass exists
     kubectl get ingressclass nginx
 
-    # Check Traefik provider configuration
+    # Check Hanzo Ingress provider configuration
     kubectl logs -n traefik deployment/traefik | grep -i "nginx\|ingress"
 
     # Verify Ingress has correct ingressClassName
@@ -618,13 +618,13 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
 
 ??? note "Annotation Not Working as Expected"
 
-    Some NGINX annotations have behavioral differences in Traefik. Check the [limitations documentation](../reference/routing-configuration/kubernetes/ingress-nginx.md#limitations) for details.
+    Some NGINX annotations have behavioral differences in Hanzo Ingress. Check the [limitations documentation](../reference/routing-configuration/kubernetes/ingress-nginx.md#limitations) for details.
 
 ??? note "TLS Certificates Not Working"
 
-    Existing TLS configurations continue to work with Traefik:
+    Existing TLS configurations continue to work with Hanzo Ingress:
 
-    - Keep `spec.tls` entries exactly as-is; Traefik terminates TLS using the referenced secrets
+    - Keep `spec.tls` entries exactly as-is; Hanzo Ingress terminates TLS using the referenced secrets
     - TLS secrets must stay in the same namespace as the Ingress
     - NGINX `ssl-redirect` / `force-ssl-redirect` annotations are honored
 
@@ -650,7 +650,7 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
 
 ## Next Steps
 
-**Learn More About Traefik:**
+**Learn More:**
 
 - [Kubernetes Ingress NGINX Install Configuration](../reference/install-configuration/providers/kubernetes/kubernetes-ingress-nginx.md) - Detailed provider configuration
 - [Kubernetes Ingress NGINX Routing Configuration](../reference/routing-configuration/kubernetes/ingress-nginx.md) - Routing rules and annotation support
@@ -661,9 +661,9 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
 
 - Enable [metrics](../reference/install-configuration/observability/metrics.md) and [tracing](../reference/install-configuration/observability/tracing.md)
 - Configure [access logs](../reference/install-configuration/observability/logs-and-accesslogs.md) for observability
-- Explore [Traefik Middlewares](../reference/routing-configuration/http/middlewares/overview.md) for advanced traffic management
-- Migrate from Nginx-based config to Traefik [IngressRoute](../reference/routing-configuration/kubernetes/crd/http/ingressroute.md) or [Kubernetes Gateway API](../reference/routing-configuration/kubernetes/gateway-api.md)
-- Consider [Traefik Hub](https://traefik.io/traefik-hub/) for enterprise features like AI & API Gateway, API Management, and advanced security
+- Explore [Middlewares](../reference/routing-configuration/http/middlewares/overview.md) for advanced traffic management
+- Migrate from Nginx-based config to Hanzo Ingress [IngressRoute](../reference/routing-configuration/kubernetes/crd/http/ingressroute.md) or [Kubernetes Gateway API](../reference/routing-configuration/kubernetes/gateway-api.md)
+- Consider [Hanzo](https://hanzo.ai) for enterprise features like AI & API Gateway, API Management, and advanced security
 
 ---
 
@@ -671,8 +671,8 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
 
 If you encounter issues during migration or have suggestions for improving this guide:
 
-- **Report Issues:** [GitHub Issues](https://github.com/traefik/traefik/issues)
-- **Community Support:** [Traefik Community Forum](https://community.traefik.io/)
-- **Enterprise Support:** [Traefik Labs Commercial Support](https://traefik.io/pricing/)
+- **Report Issues:** [GitHub Issues](https://github.com/hanzoai/ingress/issues)
+- **Community Support:** [GitHub Discussions](https://github.com/hanzoai/ingress/discussions)
+- **Enterprise Support:** [Hanzo AI Commercial Support](https://hanzo.ai/pricing)
 
 We welcome contributions to improve this migration guide. See our [contribution guidelines](../contributing/submitting-pull-requests.md) to get started.

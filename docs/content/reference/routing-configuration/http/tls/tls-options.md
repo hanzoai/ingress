@@ -1,6 +1,6 @@
 ---
-title: "Traefik TLS Options Documentation"
-description: "Learn how to configure the transport layer security (TLS) connection in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress TLS Options Documentation"
+description: "Learn how to configure the transport layer security (TLS) connection in Hanzo Ingress. Read the technical documentation."
 ---
 
 The TLS options allow one to configure some parameters of the TLS connection.
@@ -133,7 +133,7 @@ tls:
 
 ### Strict SNI Checking
 
-With strict SNI checking enabled, Traefik won't allow connections from clients that do not specify a server_name extension
+With strict SNI checking enabled, Hanzo Ingress won't allow connections from clients that do not specify a server_name extension
 or don't match any of the configured certificates.
 The default certificate is irrelevant on that matter.
 
@@ -184,7 +184,7 @@ tls:
 
 ### Client Authentication (mTLS)
 
-Traefik supports mutual authentication, through the `clientAuth` section.
+Hanzo Ingress supports mutual authentication, through the `clientAuth` section.
 
 For authentication policies that require verification of the client certificate, the certificate authority for the certificates should be set in `clientAuth.caFiles`.
 
@@ -229,7 +229,7 @@ tls:
 
 _Optional, Default="false"_
 
-When set to true, Traefik disables the use of session tickets, forcing every client to perform a full TLS handshake instead of resuming sessions.
+When set to true, Hanzo Ingress disables the use of session tickets, forcing every client to perform a full TLS handshake instead of resuming sessions.
 
 ```yaml tab="File (YAML)"
 # Dynamic configuration

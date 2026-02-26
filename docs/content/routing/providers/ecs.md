@@ -1,17 +1,17 @@
 ---
-title: "Traefik ECS Documentation"
-description: "AWS ECS is a provider for routing and load balancing in Traefik Proxy. Read the technical documentation to get started."
+title: "Hanzo Ingress ECS Documentation"
+description: "AWS ECS is a provider for routing and load balancing in Hanzo Ingress. Read the technical documentation to get started."
 ---
 
-# Traefik & ECS
+# Hanzo Ingress & ECS
 
 A Story of Labels & Elastic Containers
 {: .subtitle }
 
-Attach labels to your containers and let Traefik do the rest!
+Attach labels to your containers and let Hanzo Ingress do the rest!
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With ECS, Traefik can leverage labels attached to a container to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With ECS, Hanzo Ingress can leverage labels attached to a container to generate routing rules.
 
 !!! warning "Labels & sensitive data"
 
@@ -27,7 +27,7 @@ With ECS, Traefik can leverage labels attached to a container to generate routin
 
 ### General
 
-Traefik creates, for each elastic service, a corresponding [service](../services/index.md) and [router](../routers/index.md).
+Hanzo Ingress creates, for each elastic service, a corresponding [service](../services/index.md) and [router](../routers/index.md).
 
 The Service automatically gets a server per elastic container, and the router gets a default rule attached to it, based on the service name.
 
@@ -404,7 +404,7 @@ You can declare TCP Routers and/or Services using labels.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same elastic service (but you have to do so manually).
 
 #### TCP Routers
@@ -537,7 +537,7 @@ You can declare UDP Routers and/or Services using tags.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same elastic service (but you have to do so manually).
 
 #### UDP Routers
@@ -576,6 +576,6 @@ You can declare UDP Routers and/or Services using tags.
 traefik.enable=true
 ```
 
-You can tell Traefik to consider (or not) the ECS service by setting `traefik.enable` to true or false.
+You can tell Hanzo Ingress to consider (or not) the ECS service by setting `traefik.enable` to true or false.
 
 This option overrides the value of `exposedByDefault`.

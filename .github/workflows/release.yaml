@@ -8,8 +8,7 @@ on:
 env:
   CGO_ENABLED: 0
   VERSION: ${{ github.ref_name }}
-  TRAEFIKER_EMAIL: "traefiker@traefik.io"
-  CODENAME: ramequin
+  CODENAME: hanzo
 
 jobs:
 
@@ -104,13 +103,6 @@ jobs:
           tar xvf webui.tar.gz
           rm webui.tar.gz
 
-      - name: Retrieve the secret and decode it to a file
-        env:
-          TRAEFIKER_RSA: ${{ secrets.TRAEFIKER_RSA }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "${TRAEFIKER_RSA}" | base64 --decode > ~/.ssh/traefiker_rsa
-
       - name: Download All Artifacts
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
@@ -122,15 +114,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cat dist/**/*_checksums.txt >> "dist/traefik_${VERSION}_checksums.txt"
+          cat dist/**/*_checksums.txt >> "dist/hanzo-ingress_${VERSION}_checksums.txt"
           rm dist/**/*_checksums.txt
-          tar cfz "dist/traefik-${VERSION}.src.tar.gz" \
+          tar cfz "dist/hanzo-ingress-${VERSION}.src.tar.gz" \
             --exclude-vcs \
             --exclude .idea \
             --exclude .github \
             --exclude dist .
 
           chown -R "$(id -u)":"$(id -g)" dist/
-          gh release create ${VERSION} ./dist/**/traefik*.{zip,tar.gz} ./dist/traefik*.{tar.gz,txt} --repo hanzoai/ingress --title ${VERSION} --notes ${VERSION} --latest=false
-
-          ./script/deploy.sh
+          gh release create ${VERSION} ./dist/**/hanzo-ingress*.{zip,tar.gz} ./dist/hanzo-ingress*.{tar.gz,txt} --repo hanzoai/ingress --title ${VERSION} --notes ${VERSION} --latest=false

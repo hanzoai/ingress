@@ -1,6 +1,6 @@
 ---
-title: "Traefik SPIFFE Documentation"
-description: "Learn how to configure Traefik to use SPIFFE. Read the technical documentation."
+title: "Hanzo Ingress SPIFFE Documentation"
+description: "Learn how to configure Hanzo Ingress to use SPIFFE. Read the technical documentation."
 ---
 
 # SPIFFE
@@ -12,12 +12,12 @@ Secure the backend connection with SPIFFE.
 provides a secure identity in the form of a specially crafted X.509 certificate, 
 to every workload in an environment.
 
-Traefik is able to connect to the Workload API to obtain an X509-SVID used to secure the connection with SPIFFE enabled backends.
+Hanzo Ingress is able to connect to the Workload API to obtain an X509-SVID used to secure the connection with SPIFFE enabled backends.
 
-!!! warning "SPIFFE can cause Traefik to stall"
+!!! warning "SPIFFE can cause Hanzo Ingress to stall"
     When using SPIFFE,
-    Traefik will wait for the first SVID to be delivered before starting.
-    If Traefik is hanging when waiting on SPIFFE SVID delivery,
+    Hanzo Ingress will wait for the first SVID to be delivered before starting.
+    If Hanzo Ingress is hanging when waiting on SPIFFE SVID delivery,
     please double check that it is correctly registered as workload in your SPIFFE infrastructure.
 
 ## Workload API

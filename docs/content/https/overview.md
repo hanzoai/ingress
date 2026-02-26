@@ -1,6 +1,6 @@
 ---
-title: "Traefik Proxy  HTTPS & TLS Overview |Traefik Docs"
-description: "Traefik supports HTTPS & TLS, which concerns roughly two parts of the configuration: routers, and the TLS connection. Read the documentation to learn more."
+title: "Hanzo Ingress  HTTPS & TLS Overview |Hanzo Ingress Docs"
+description: "Hanzo Ingress supports HTTPS & TLS, which concerns roughly two parts of the configuration: routers, and the TLS connection. Read the documentation to learn more."
 ---
 
 # HTTPS & TLS
@@ -8,7 +8,7 @@ description: "Traefik supports HTTPS & TLS, which concerns roughly two parts of 
 Overview
 {: .subtitle }
 
-Traefik supports HTTPS & TLS, which concerns roughly two parts of the configuration:
+Hanzo Ingress supports HTTPS & TLS, which concerns roughly two parts of the configuration:
 routers, and the TLS connection (and its underlying certificates).
 
 When a router has to handle HTTPS traffic,

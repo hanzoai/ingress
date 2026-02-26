@@ -1,9 +1,9 @@
 ---
-title: "Traefik Routing Configuration with KV stores"
-description: "Read the technical documentation to learn the Traefik Routing Configuration with KV stores."
+title: "Hanzo Ingress Routing Configuration with KV stores"
+description: "Read the technical documentation to learn the Hanzo Ingress Routing Configuration with KV stores."
 ---
 
-# Traefik & KV Stores
+# Hanzo Ingress & KV Stores
 
 A Story of key & values
 {: .subtitle }

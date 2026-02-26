@@ -1,5 +1,5 @@
 ---
-title: "Traefik TCP Routers Documentation"
+title: "Hanzo Ingress TCP Routers Documentation"
 description: "TCP routers are responsible for connecting incoming TCP connections to the services that can handle them. Read the technical documentation."
 ---
 

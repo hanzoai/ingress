@@ -17,7 +17,7 @@ jobs:
     name: Doc Process
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Disabled: requires traefik-specific tooling (structor, mixtus, seo-doc)
+    # Disabled: requires upstream-specific tooling (structor, mixtus, seo-doc)
     # and GH_TOKEN_REPO secret. Re-enable when Hanzo docs pipeline is set up.
     if: false
 

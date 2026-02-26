@@ -1,11 +1,11 @@
 ---
 title: "Observability Overview"
-description: "Traefik Proxy provides comprehensive monitoring and observability capabilities to maintain reliability and efficiency."
+description: "Hanzo Ingress provides comprehensive monitoring and observability capabilities to maintain reliability and efficiency."
 ---
 
 # Observability Overview
 
-Traefik Proxy provides comprehensive monitoring and observability capabilities to maintain reliability and efficiency:
+Hanzo Ingress provides comprehensive monitoring and observability capabilities to maintain reliability and efficiency:
 
 - [Logs and Access Logs](./logs-and-access-logs.md) provide real-time insight into the health of your system. They enable swift error detection and intervention through alerts. By centralizing logs, you can streamline the debugging process during incident resolution.
 

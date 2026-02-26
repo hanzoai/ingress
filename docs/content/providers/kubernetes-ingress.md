@@ -1,14 +1,14 @@
 ---
-title: "Traefik Kubernetes Ingress Documentation"
-description: "Understand the requirements, routing configuration, and how to set up Traefik Proxy as your Kubernetes Ingress Controller. Read the technical documentation."
+title: "Hanzo Ingress Kubernetes Ingress Documentation"
+description: "Understand the requirements, routing configuration, and how to set up Hanzo Ingress as your Kubernetes Ingress Controller. Read the technical documentation."
 ---
 
-# Traefik & Kubernetes
+# Hanzo Ingress & Kubernetes
 
 The Kubernetes Ingress Controller.
 {: .subtitle }
 
-The Traefik Kubernetes Ingress provider is a Kubernetes Ingress controller; that is to say,
+The Hanzo Ingress Kubernetes Ingress provider is a Kubernetes Ingress controller; that is to say,
 it manages access to cluster services by supporting the [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) specification.
 
 ## Requirements
@@ -70,23 +70,23 @@ spec:
 
 ## LetsEncrypt Support with the Ingress Provider
 
-By design, Traefik is a stateless application,
+By design, Hanzo Ingress is a stateless application,
 meaning that it only derives its configuration from the environment it runs in,
 without additional configuration.
-For this reason, users can run multiple instances of Traefik at the same time to achieve HA,
+For this reason, users can run multiple instances of Hanzo Ingress at the same time to achieve HA,
 as is a common pattern in the kubernetes ecosystem.
 
-When using a single instance of Traefik Proxy with Let's Encrypt, you should encounter no issues.
+When using a single instance of Hanzo Ingress with Let's Encrypt, you should encounter no issues.
 However, this could be a single point of failure.
-Unfortunately, it is not possible to run multiple instances of Traefik 2.0 with Let's Encrypt enabled,
-because there is no way to ensure that the correct instance of Traefik receives the challenge request, and subsequent responses.
-Early versions (v1.x) of Traefik used a [KV store](https://doc.traefik.io/traefik/v1.7/configuration/acme/#storage) to attempt to achieve this,
+Unfortunately, it is not possible to run multiple instances of Hanzo Ingress 2.0 with Let's Encrypt enabled,
+because there is no way to ensure that the correct instance of Hanzo Ingress receives the challenge request, and subsequent responses.
+Early versions (v1.x) of Hanzo Ingress used a [KV store](https://github.com/hanzoai/ingress/blob/main/docs/content/v1.7/configuration/acme/#storage) to attempt to achieve this,
 but due to sub-optimal performance that feature was dropped in 2.0.
 
 If you need Let's Encrypt with high availability in a Kubernetes environment,
-we recommend using [Traefik Enterprise](https://traefik.io/traefik-enterprise/) which includes distributed Let's Encrypt as a supported feature.
+we recommend using [Hanzo](https://hanzo.ai) which includes distributed Let's Encrypt as a supported feature.
 
-If you want to keep using Traefik Proxy,
+If you want to keep using Hanzo Ingress,
 LetsEncrypt HA can be achieved by using a Certificate Controller such as [Cert-Manager](https://cert-manager.io/docs/).
 When using Cert-Manager to manage certificates,
 it creates secrets in your namespaces that can be referenced as TLS secrets in your [ingress objects](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls).
@@ -99,14 +99,14 @@ _Optional, Default=""_
 
 The Kubernetes server endpoint URL.
 
-When deployed into Kubernetes, Traefik reads the environment variables `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` or `KUBECONFIG` to construct the endpoint.
+When deployed into Kubernetes, Hanzo Ingress reads the environment variables `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` or `KUBECONFIG` to construct the endpoint.
 
 The access token is looked up in `/var/run/secrets/kubernetes.io/serviceaccount/token` and the SSL CA certificate in `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt`.
 Both are mounted automatically when deployed inside Kubernetes.
 
 The endpoint may be specified to override the environment variable values inside a cluster.
 
-When the environment variables are not found, Traefik tries to connect to the Kubernetes API server with an external-cluster client.
+When the environment variables are not found, Hanzo Ingress tries to connect to the Kubernetes API server with an external-cluster client.
 In this case, the endpoint is required.
 Specifically, it may be set to the URL used by `kubectl proxy` to connect to a Kubernetes cluster using the granted authentication and authorization of the associated kubeconfig.
 
@@ -179,7 +179,7 @@ providers:
 _Optional, Default: []_
 
 Array of namespaces to watch.
-If left empty, Traefik watches all namespaces.
+If left empty, Hanzo Ingress watches all namespaces.
 
 ```yaml tab="File (YAML)"
 providers:
@@ -205,7 +205,7 @@ providers:
 _Optional, Default: ""_
 
 A label selector can be defined to filter on specific Ingress objects only.
-If left empty, Traefik processes all Ingress objects in the configured namespaces.
+If left empty, Hanzo Ingress processes all Ingress objects in the configured namespaces.
 
 See [label-selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors) for details.
 
@@ -293,10 +293,10 @@ _Optional, Default: false_
 	Please use the `disableClusterScopeResources` option instead.
 
 If the parameter is set to `true`,
-Traefik will not discover IngressClasses in the cluster.
-By doing so, it alleviates the requirement of giving Traefik the rights to look IngressClasses up.
+Hanzo Ingress will not discover IngressClasses in the cluster.
+By doing so, it alleviates the requirement of giving Hanzo Ingress the rights to look IngressClasses up.
 Furthermore, when this option is set to `true`,
-Traefik is not able to handle Ingresses with IngressClass references,
+Hanzo Ingress is not able to handle Ingresses with IngressClass references,
 therefore such Ingresses will be ignored.
 Please note that annotations are not affected by this option.
 
@@ -322,9 +322,9 @@ providers:
 _Optional, Default: false_
 
 When this parameter is set to `true`,
-Traefik will not discover cluster scope resources (`IngressClass` and `Nodes`).
-By doing so, it alleviates the requirement of giving Traefik the rights to look up for cluster resources.
-Furthermore, Traefik will not handle Ingresses with IngressClass references, therefore such Ingresses will be ignored (please note that annotations are not affected by this option).
+Hanzo Ingress will not discover cluster scope resources (`IngressClass` and `Nodes`).
+By doing so, it alleviates the requirement of giving Hanzo Ingress the rights to look up for cluster resources.
+Furthermore, Hanzo Ingress will not handle Ingresses with IngressClass references, therefore such Ingresses will be ignored (please note that annotations are not affected by this option).
 This will also prevent from using the `NodePortLB` options on services.
 
 ```yaml tab="File (YAML)"
@@ -432,7 +432,7 @@ providers:
 _Optional, Default: 0_
 
 The `throttleDuration` option defines how often the provider is allowed to handle events from Kubernetes. This prevents
-a Kubernetes cluster that updates many times per second from continuously changing your Traefik configuration.
+a Kubernetes cluster that updates many times per second from continuously changing your Hanzo Ingress configuration.
 
 If left empty, the provider does not apply any throttling and does not drop any Kubernetes events.
 
@@ -554,7 +554,7 @@ providers:
 
 ### Further
 
-To learn more about the various aspects of the Ingress specification that Traefik supports,
-many examples of Ingresses definitions are located in the test [examples](https://github.com/traefik/traefik/tree/v3.6/pkg/provider/kubernetes/ingress/fixtures) of the Traefik repository.
+To learn more about the various aspects of the Ingress specification that Hanzo Ingress supports,
+many examples of Ingresses definitions are located in the test [examples](https://github.com/hanzoai/ingress/tree/v3.6/pkg/provider/kubernetes/ingress/fixtures) of the Hanzo Ingress repository.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

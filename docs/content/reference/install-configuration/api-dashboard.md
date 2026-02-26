@@ -1,11 +1,11 @@
 ---
-title: "Traefik API & Dashboard Documentation"
-description: "Traefik Proxy exposes information through API handlers and showcase them on the Dashboard. Learn about the security, configuration, and endpoints of the APIs and Dashboard. Read the technical documentation."
+title: "Hanzo Ingress API & Dashboard Documentation"
+description: "Hanzo Ingress exposes information through API handlers and showcase them on the Dashboard. Learn about the security, configuration, and endpoints of the APIs and Dashboard. Read the technical documentation."
 ---
 
-Traefik exposes a number of information through API endpoints, such as the configuration of your routers, services, middlewares, etc.
+Hanzo Ingress exposes a number of information through API endpoints, such as the configuration of your routers, services, middlewares, etc.
 
-The dashboard, which is the central place that displays the current active routes handled by Traefik, fetches the data from this API.
+The dashboard, which is the central place that displays the current active routes handled by Hanzo Ingress, fetches the data from this API.
 
 <figure>
     <img src="../../../assets/img/webui-dashboard.png" alt="Dashboard - Providers" />
@@ -163,9 +163,9 @@ http:
 
 The API and the dashboard can be configured:
 
-- In the Helm Chart: You can find the options to customize the Traefik installation
-enabling the dashboard [here](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L155).
-- In the Traefik Static Configuration as described below.
+- In the Helm Chart: You can find the options to customize the Hanzo Ingress installation
+enabling the dashboard [here](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/values.yaml#L155).
+- In the Hanzo Ingress Static Configuration as described below.
 
 | Field      | Description  | Default | Required |
 |:-----------|:---------------------------------|:--------|:---------|
@@ -203,7 +203,7 @@ All the following endpoints must be accessed with a `GET` HTTP request.
 | <a id="opt-apioverview" href="#opt-apioverview" title="#opt-apioverview">`/api/overview`</a> | Returns statistic information about HTTP, TCP and about enabled features and providers. |
 | <a id="opt-apisupport-dump" href="#opt-apisupport-dump" title="#opt-apisupport-dump">`/api/support-dump`</a> | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
 | <a id="opt-apirawdata" href="#opt-apirawdata" title="#opt-apirawdata">`/api/rawdata`</a> | Returns information about dynamic configurations, errors, status and dependency relations.  |
-| <a id="opt-apiversion" href="#opt-apiversion" title="#opt-apiversion">`/api/version`</a> | Returns information about Traefik version.                                                  |
+| <a id="opt-apiversion" href="#opt-apiversion" title="#opt-apiversion">`/api/version`</a> | Returns information about Hanzo Ingress version.                                                  |
 | <a id="opt-debugvars" href="#opt-debugvars" title="#opt-debugvars">`/debug/vars`</a> | See the [expvar](https://golang.org/pkg/expvar/) Go documentation.                          |
 | <a id="opt-debugpprof" href="#opt-debugpprof" title="#opt-debugpprof">`/debug/pprof/`</a> | See the [pprof Index](https://golang.org/pkg/net/http/pprof/#Index) Go documentation.       |
 | <a id="opt-debugpprofcmdline" href="#opt-debugpprofcmdline" title="#opt-debugpprofcmdline">`/debug/pprof/cmdline`</a> | See the [pprof Cmdline](https://golang.org/pkg/net/http/pprof/#Cmdline) Go documentation.   |
@@ -214,7 +214,7 @@ All the following endpoints must be accessed with a `GET` HTTP request.
 
 !!! note "Base Path Configuration"
 
-    By default, Traefik exposes its API and Dashboard under the `/` base path. It's possible to configure it with `api.basepath`. When configured, all endpoints (api, dashboard, debug) are using it.
+    By default, Hanzo Ingress exposes its API and Dashboard under the `/` base path. It's possible to configure it with `api.basepath`. When configured, all endpoints (api, dashboard, debug) are using it.
 
 ## Dashboard
 
@@ -226,13 +226,13 @@ The dashboard is available by default on the path  `/dashboard/`.
     - There is also a redirect from the path `/` to `/dashboard/`.
 
 As mentioned above in the [Security](#security) section, it is important to secure access to both the dashboard and the API.
-You need to define a routing configuration within Traefik.
+You need to define a routing configuration within Hanzo Ingress.
 This involves setting up a router attached to the service `api@internal`, which allows you to:
 
 - Implement security features using [middlewares](../../middlewares/overview.md), such as authentication ([basicAuth](../../middlewares/http/basicauth.md), [digestAuth](../../middlewares/http/digestauth.md),
   [forwardAuth](../../middlewares/http/forwardauth.md)) or [allowlisting](../../middlewares/http/ipallowlist.md).
 
-- Define a [router rule](#dashboard-router-rule) for accessing the dashboard through Traefik.
+- Define a [router rule](#dashboard-router-rule) for accessing the dashboard through Hanzo Ingress.
 
 ### Dashboard Router Rule
 
