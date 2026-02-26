@@ -1,0 +1,45 @@
+---
+# Default CORS headers middleware
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: cors-allow-all
+  namespace: hanzo
+spec:
+  headers:
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    accessControlAllowHeaders:
+      - Content-Type
+      - Authorization
+      - X-Requested-With
+    accessControlAllowOriginList:
+      - "*"
+    accessControlMaxAge: 86400
+---
+# Large body uploads (50MB)
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: body-size-50m
+  namespace: hanzo
+spec:
+  buffering:
+    maxRequestBodyBytes: 52428800
+---
+# ORM docs redirect
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: orm-redirect
+  namespace: hanzo
+spec:
+  redirectRegex:
+    regex: "^https?://orm\\.hanzo\\.ai/(.*)"
+    replacement: "https://hanzo.ai/docs/services/orm"
+    permanent: true

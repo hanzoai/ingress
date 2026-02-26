@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/traefik/v3/pkg/middlewares/requestdecorator"
-	"github.com/traefik/traefik/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/requestdecorator"
+	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
 )
 
 func TestClientIPV2Matcher(t *testing.T) {

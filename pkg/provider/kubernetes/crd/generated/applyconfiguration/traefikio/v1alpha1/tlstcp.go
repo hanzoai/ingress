@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	types "github.com/traefik/traefik/v3/pkg/types"
+	types "github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 // TLSTCPApplyConfiguration represents a declarative configuration of the TLSTCP type for use

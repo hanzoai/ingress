@@ -31,9 +31,9 @@ COPY --from=webui /src/webui/static ./webui/static
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -ldflags="-w -s \
-      -X github.com/traefik/traefik/v3/pkg/version.Version=${VERSION} \
-      -X github.com/traefik/traefik/v3/pkg/version.Codename=hanzo \
-      -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
+      -X github.com/hanzoai/ingress/v3/pkg/version.Version=${VERSION} \
+      -X github.com/hanzoai/ingress/v3/pkg/version.Codename=hanzo \
+      -X github.com/hanzoai/ingress/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
     -o /hanzo-ingress ./cmd/traefik
 
 # ---- Stage 3: Runtime ----

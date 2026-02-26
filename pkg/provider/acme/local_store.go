@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/safe"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/safe"
 )
 
 var _ Store = (*LocalStore)(nil)

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/middlewares"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares"
 	"github.com/vulcand/oxy/v2/forward"
 )
 

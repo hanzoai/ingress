@@ -12,8 +12,8 @@ import (
 	"github.com/containous/alice"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/traefik/v3/pkg/config/static"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/ptrace"
 	"go.opentelemetry.io/collector/pdata/ptrace/ptraceotlp"
@@ -423,7 +423,7 @@ func TestTracerProvider(t *testing.T) {
 	_, span := tracer.Start(t.Context(), "test")
 	defer span.End()
 
-	span.TracerProvider().Tracer("github.com/traefik/traefik")
+	span.TracerProvider().Tracer("github.com/hanzoai/ingress")
 	span.TracerProvider().Tracer("other")
 }
 

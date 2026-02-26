@@ -15,8 +15,8 @@ import (
 
 	"github.com/go-acme/lego/v4/challenge/tlsalpn01"
 	"github.com/rs/zerolog/log"
-	tcpmuxer "github.com/traefik/traefik/v3/pkg/muxer/tcp"
-	"github.com/traefik/traefik/v3/pkg/tcp"
+	tcpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/tcp"
+	"github.com/hanzoai/ingress/v3/pkg/tcp"
 )
 
 const (

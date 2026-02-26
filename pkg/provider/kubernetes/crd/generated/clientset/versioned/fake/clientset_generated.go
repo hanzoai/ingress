@@ -27,10 +27,10 @@ THE SOFTWARE.
 package fake
 
 import (
-	applyconfiguration "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration"
-	clientset "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
-	traefikv1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
-	faketraefikv1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1/fake"
+	applyconfiguration "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration"
+	clientset "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
+	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
+	faketraefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"

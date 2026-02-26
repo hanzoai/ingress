@@ -18,7 +18,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/k3s"
 	"github.com/testcontainers/testcontainers-go/network"
-	"github.com/traefik/traefik/v3/integration/try"
+	"github.com/hanzoai/ingress/v3/integration/try"
 	"knative.dev/networking/test/conformance/ingress"
 	klog "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
