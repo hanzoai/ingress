@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	ttypes "github.com/traefik/traefik/v3/pkg/types"
-	"github.com/traefik/traefik/v3/pkg/version"
+	ttypes "github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/version"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
@@ -106,7 +106,7 @@ func (c *OTelTracing) Setup(ctx context.Context, serviceName string, sampleRate 
 
 	log.Debug().Msg("OpenTelemetry tracer configured")
 
-	return tracerProvider.Tracer("github.com/traefik/traefik"), &tpCloser{provider: tracerProvider}, err
+	return tracerProvider.Tracer("github.com/hanzoai/ingress"), &tpCloser{provider: tracerProvider}, err
 }
 
 func (c *OTelTracing) setupHTTPExporter() (*otlptrace.Exporter, error) {

@@ -27,9 +27,9 @@ THE SOFTWARE.
 package applyconfiguration
 
 import (
-	internal "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/internal"
-	traefikiov1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/traefikio/v1alpha1"
-	v1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	internal "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/internal"
+	traefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/traefikio/v1alpha1"
+	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	managedfields "k8s.io/apimachinery/pkg/util/managedfields"

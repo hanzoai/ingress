@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 type responseWriter struct {

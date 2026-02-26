@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/static"
-	"github.com/traefik/traefik/v3/pkg/observability"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/v3/pkg/observability"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 	"go.opentelemetry.io/contrib/propagators/autoprop"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -260,7 +260,7 @@ type TracerProvider struct {
 // Tracer returns the trace.Tracer for the given options.
 // It returns specifically the Traefik Tracer when requested.
 func (t TracerProvider) Tracer(name string, options ...trace.TracerOption) trace.Tracer {
-	if name == "github.com/traefik/traefik" {
+	if name == "github.com/hanzoai/ingress" {
 		return t.tracer
 	}
 
@@ -276,7 +276,7 @@ func TracerFromContext(ctx context.Context) *Tracer {
 
 	span := trace.SpanFromContext(ctx)
 	if span != nil && span.TracerProvider() != nil {
-		tracer := span.TracerProvider().Tracer("github.com/traefik/traefik")
+		tracer := span.TracerProvider().Tracer("github.com/hanzoai/ingress")
 		if tracer, ok := tracer.(*Tracer); ok {
 			return tracer
 		}

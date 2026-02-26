@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/traefik/traefik/v3/pkg/rules"
+	"github.com/hanzoai/ingress/v3/pkg/rules"
 	"github.com/vulcand/predicate"
 )
 

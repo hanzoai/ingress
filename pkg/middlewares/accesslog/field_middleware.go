@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/middlewares/capture"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/vulcand/oxy/v2/utils"
 )
 

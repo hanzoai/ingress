@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/traefik/traefik/v3/pkg/config/label"
+	"github.com/hanzoai/ingress/v3/pkg/config/label"
 )
 
 const annotationsPrefix = "traefik.io/"

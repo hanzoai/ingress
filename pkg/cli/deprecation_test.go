@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/traefik/paerser/cli"
-	"github.com/traefik/traefik/v3/cmd"
+	"github.com/hanzoai/ingress/v3/cmd"
 )
 
 func ptr[T any](t T) *T {

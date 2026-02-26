@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/redactor"
-	"github.com/traefik/traefik/v3/pkg/version"
+	"github.com/hanzoai/ingress/v3/pkg/redactor"
+	"github.com/hanzoai/ingress/v3/pkg/version"
 )
 
 func (h Handler) getSupportDump(rw http.ResponseWriter, req *http.Request) {
