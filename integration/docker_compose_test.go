@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/traefik/traefik/v3/integration/try"
-	"github.com/traefik/traefik/v3/pkg/api"
-	"github.com/traefik/traefik/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/v3/integration/try"
+	"github.com/hanzoai/ingress/v3/pkg/api"
+	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
 )
 
 // Docker tests suite.

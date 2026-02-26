@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"github.com/tidwall/gjson"
-	"github.com/traefik/traefik/v3/integration/try"
+	"github.com/hanzoai/ingress/v3/integration/try"
 )
 
 type TracingSuite struct {
@@ -97,7 +97,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_router_minimalVerbosity() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -146,7 +146,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_entrypoint_minimalVerbosity()
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -195,7 +195,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -263,7 +263,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_gRPC() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -341,7 +341,7 @@ func (s *TracingSuite) TestOpenTelemetryRateLimit() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name": "RateLimiter",
 			"batches.0.scopeSpans.0.spans.0.kind": "SPAN_KIND_INTERNAL",
@@ -369,7 +369,7 @@ func (s *TracingSuite) TestOpenTelemetryRateLimit() {
 			"batches.0.scopeSpans.0.spans.3.attributes.#(key=\"http.response.status_code\").value.intValue": "429",
 		},
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -440,7 +440,7 @@ func (s *TracingSuite) TestOpenTelemetryRetry() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                             "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.kind":                                                             "SPAN_KIND_CLIENT",
@@ -563,7 +563,7 @@ func (s *TracingSuite) TestOpenTelemetryAuth() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name": "BasicAuth",
 			"batches.0.scopeSpans.0.spans.0.kind": "SPAN_KIND_INTERNAL",
@@ -616,7 +616,7 @@ func (s *TracingSuite) TestOpenTelemetryAuthWithRetry() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name": "BasicAuth",
 			"batches.0.scopeSpans.0.spans.0.kind": "SPAN_KIND_INTERNAL",
@@ -673,7 +673,7 @@ func (s *TracingSuite) TestOpenTelemetrySafeURL() {
 
 	contains := []map[string]string{
 		{
-			"batches.0.scopeSpans.0.scope.name": "github.com/traefik/traefik",
+			"batches.0.scopeSpans.0.scope.name": "github.com/hanzoai/ingress",
 
 			"batches.0.scopeSpans.0.spans.0.name":                                                           "ReverseProxy",
 			"batches.0.scopeSpans.0.spans.0.attributes.#(key=\"http.request.method\").value.stringValue":    "GET",

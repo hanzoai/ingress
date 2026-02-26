@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/rules"
-	"github.com/traefik/traefik/v3/pkg/tcp"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/rules"
+	"github.com/hanzoai/ingress/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 	"github.com/vulcand/predicate"
 )
 

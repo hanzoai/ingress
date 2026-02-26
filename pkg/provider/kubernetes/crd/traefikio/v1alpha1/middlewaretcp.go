@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

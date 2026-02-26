@@ -17,9 +17,9 @@ import (
 	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
 	"github.com/spiffe/go-spiffe/v2/svid/x509svid"
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 // ClientConn is the interface that provides information about the client connection.

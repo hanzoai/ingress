@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	traefikiov1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	traefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	listers "k8s.io/client-go/listers"
 	cache "k8s.io/client-go/tools/cache"

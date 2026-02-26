@@ -7,8 +7,8 @@ import (
 	"net/url"
 
 	"github.com/traefik/paerser/types"
-	ttypes "github.com/traefik/traefik/v3/pkg/types"
-	"github.com/traefik/traefik/v3/pkg/version"
+	ttypes "github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/version"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"

@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	ptypes "github.com/traefik/paerser/types"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	"github.com/traefik/traefik/v3/pkg/types"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 	"k8s.io/utils/ptr"
 )
 

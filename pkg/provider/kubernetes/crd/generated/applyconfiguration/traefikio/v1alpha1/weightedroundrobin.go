@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	dynamic "github.com/traefik/traefik/v3/pkg/config/dynamic"
+	dynamic "github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 )
 
 // WeightedRoundRobinApplyConfiguration represents a declarative configuration of the WeightedRoundRobin type for use

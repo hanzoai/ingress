@@ -29,8 +29,8 @@ package v1alpha1
 import (
 	http "net/http"
 
-	scheme "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme"
-	traefikiov1alpha1 "github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	scheme "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme"
+	traefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
 	rest "k8s.io/client-go/rest"
 )
 

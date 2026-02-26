@@ -10,9 +10,9 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	th "github.com/traefik/traefik/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	th "github.com/hanzoai/ingress/v3/pkg/testhelpers"
 )
 
 func TestRegisterPromState(t *testing.T) {

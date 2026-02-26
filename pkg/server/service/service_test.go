@@ -15,11 +15,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	"github.com/traefik/traefik/v3/pkg/proxy/httputil"
-	"github.com/traefik/traefik/v3/pkg/server/provider"
-	"github.com/traefik/traefik/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	"github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
+	"github.com/hanzoai/ingress/v3/pkg/server/provider"
+	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
 )
 
 func pointer[T any](v T) *T { return &v }

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 )
 
 func TestEncodedCharacters(t *testing.T) {

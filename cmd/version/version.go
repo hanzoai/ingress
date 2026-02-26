@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/traefik/paerser/cli"
-	"github.com/traefik/traefik/v3/pkg/version"
+	"github.com/hanzoai/ingress/v3/pkg/version"
 )
 
 var versionTemplate = `Version:      {{.Version}}

@@ -11,10 +11,10 @@ import (
 
 	"github.com/go-kit/kit/metrics"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/observability"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	"github.com/traefik/traefik/v3/pkg/types"
-	"github.com/traefik/traefik/v3/pkg/version"
+	"github.com/hanzoai/ingress/v3/pkg/observability"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/version"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
@@ -62,7 +62,7 @@ func NewSemConvMetricRegistry(ctx context.Context, config *otypes.OTLP) (*SemCon
 		}
 	}
 
-	meter := otel.Meter("github.com/traefik/traefik",
+	meter := otel.Meter("github.com/hanzoai/ingress",
 		metric.WithInstrumentationVersion(version.Version))
 
 	httpServerRequestDuration, err := httpconv.NewServerRequestDuration(meter,
@@ -115,7 +115,7 @@ func RegisterOpenTelemetry(ctx context.Context, config *otypes.OTLP) Registry {
 		openTelemetryGaugeCollector = newOpenTelemetryGaugeCollector()
 	}
 
-	meter := otel.Meter("github.com/traefik/traefik",
+	meter := otel.Meter("github.com/hanzoai/ingress",
 		metric.WithInstrumentationVersion(version.Version))
 
 	reg := &standardRegistry{

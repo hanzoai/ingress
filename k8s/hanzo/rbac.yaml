@@ -10,7 +10,10 @@ metadata:
   name: hanzo-ingress
 rules:
 - apiGroups: [""]
-  resources: ["services", "endpoints", "secrets"]
+  resources: ["services", "endpoints", "secrets", "namespaces", "nodes", "configmaps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
   verbs: ["get", "list", "watch"]
 - apiGroups: ["networking.k8s.io"]
   resources: ["ingresses", "ingressclasses"]

@@ -6,8 +6,8 @@ import (
 	"time"
 
 	ptypes "github.com/traefik/paerser/types"
-	"github.com/traefik/traefik/v3/pkg/ip"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/ip"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 const (

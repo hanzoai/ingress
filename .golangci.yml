@@ -147,15 +147,15 @@ linters:
           alias: gatev1alpha2
 
         # Traefik Kubernetes rewrites:
-        - pkg: github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1
+        - pkg: github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1
           alias: traefikv1alpha1
-        - pkg: github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned
+        - pkg: github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned
           alias: traefikclientset
-        - pkg: github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions
+        - pkg: github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions
           alias: traefikinformers
-        - pkg: github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme
+        - pkg: github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme
           alias: traefikscheme
-        - pkg: github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake
+        - pkg: github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake
           alias: traefikcrdfake
     misspell:
       locale: US

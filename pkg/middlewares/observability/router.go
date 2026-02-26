@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/containous/alice"
-	"github.com/traefik/traefik/v3/pkg/middlewares"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/observability/tracing"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/observability/tracing"
 	"go.opentelemetry.io/otel/attribute"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.opentelemetry.io/otel/trace"
