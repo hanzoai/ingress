@@ -4,9 +4,9 @@ description: "Automatic Certificate Management using Let's Encrypt/Vault and Tai
 ---
 
 
-In Traefik, TLS Certificates can be generated using Certificates Resolvers.
+In Hanzo Ingress, TLS Certificates can be generated using Certificates Resolvers.
 
-In Traefik, two certificate resolvers exist:
+In Hanzo Ingress, two certificate resolvers exist:
 
 - [`acme`](./acme.md): It allows generating ACME certificates stored in a file (not distributed).
 - [`tailscale`](./tailscale.md): It allows provisioning TLS certificates for internal Tailscale services.

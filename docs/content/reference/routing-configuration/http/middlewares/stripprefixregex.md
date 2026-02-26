@@ -1,6 +1,6 @@
 ---
-title: "Traefik StripPrefixRegex Documentation"
-description: "In Traefik Proxy's HTTP middleware, StripPrefixRegex removes prefixes from paths before forwarding requests, using regex. Read the technical documentation."
+title: "Hanzo Ingress StripPrefixRegex Documentation"
+description: "In Hanzo Ingress's HTTP middleware, StripPrefixRegex removes prefixes from paths before forwarding requests, using regex. Read the technical documentation."
 ---
 
 The `stripPrefixRegex` middleware strips the matching path prefix and stores it in an `X-Forwarded-Prefix` header.
@@ -61,7 +61,7 @@ spec:
 ### regex
 
 If your backend is serving assets (for example, images or JavaScript files), it can use the `X-Forwarded-Prefix` header to construct relative URLs.
-Using the previous example, the backend should return `/products/shoes/image.png` (and not `/images.png`, which Traefik would likely not be able to associate with the same backend).
+Using the previous example, the backend should return `/products/shoes/image.png` (and not `/images.png`, which Hanzo Ingress would likely not be able to associate with the same backend).
 
 !!! tip
 

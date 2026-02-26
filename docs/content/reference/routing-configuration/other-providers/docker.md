@@ -1,12 +1,12 @@
 ---
-title: "Traefik Docker Routing Documentation"
-description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Traefik and Docker."
+title: "Hanzo Ingress Docker Routing Documentation"
+description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Hanzo Ingress and Docker."
 ---
 
-# Traefik & Docker
+# Hanzo Ingress & Docker
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With Docker, Traefik can leverage labels attached to a container to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With Docker, Hanzo Ingress can leverage labels attached to a container to generate routing rules.
 
 !!! warning "Labels & sensitive data"
 
@@ -52,12 +52,12 @@ With Docker, Traefik can leverage labels attached to a container to generate rou
         # ...
         labels:
           - traefik.http.routers.my-container.rule=Host(`example.com`)
-          # Tell Traefik to use the port 12345 to connect to `my-container`
+          # Tell Hanzo Ingress to use the port 12345 to connect to `my-container`
           - traefik.http.services.my-service.loadbalancer.server.port=12345
     ```
 
-    !!! important "Traefik Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
-        By default, Traefik uses the first exposed port of a container.
+    !!! important "Hanzo Ingress Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
+        By default, Hanzo Ingress uses the first exposed port of a container.
 
         Setting the label `traefik.http.services.xxx.loadbalancer.server.port`
         overrides that behavior.
@@ -89,11 +89,11 @@ With Docker, Traefik can leverage labels attached to a container to generate rou
 
 !!! tip "TLS Default Generated Certificates"
 
-    To learn how to configure Traefik default generated certificate, refer to the [TLS Certificates](../http/tls/tls-certificates.md#acme-default-certificate) page.
+    To learn how to configure Hanzo Ingress default generated certificate, refer to the [TLS Certificates](../http/tls/tls-certificates.md#acme-default-certificate) page.
 
 ### General
 
-Traefik creates, for each container, a corresponding [service](../http/load-balancing/service.md) and [router](../http/routing/rules-and-priority.md).
+Hanzo Ingress creates, for each container, a corresponding [service](../http/load-balancing/service.md) and [router](../http/routing/rules-and-priority.md).
 
 The Service automatically gets a server per instance of the container,
 and the router automatically gets a rule defined by `defaultRule` (if no rule for it was defined in labels).
@@ -250,7 +250,7 @@ You can declare TCP Routers and/or Services using labels.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### TCP Routers
@@ -320,7 +320,7 @@ You can declare UDP Routers and/or Services using labels.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### UDP Routers
@@ -344,6 +344,6 @@ You can declare UDP Routers and/or Services using labels.
 
 | Label | Description | Value |
 |------|-------------|-------|
-| <a id="opt-traefik-enable" href="#opt-traefik-enable" title="#opt-traefik-enable">`traefik.enable`</a> | You can tell Traefik to consider (or not) the container by setting `traefik.enable` to true or false.<br/>This option overrides the value of `exposedByDefault`. | `true` |
-| <a id="opt-traefik-docker-allownonrunning" href="#opt-traefik-docker-allownonrunning" title="#opt-traefik-docker-allownonrunning">`traefik.docker.allownonrunning`</a> | By default, Traefik only considers containers in "running" state.<br/>This option controls whether containers that are not in "running" state (e.g., stopped, paused, exited) should still be visible to Traefik for service discovery.<br/><br/>When this label is set to true, Traefik will:<br/>- Keep the router and service configuration even when the container is not running<br/>- Create services with empty backend server lists<br/>- Return 503 Service Unavailable for requests to stopped containers (instead of 404 Not Found)<br/>- Execute the full middleware chain, allowing middlewares to intercept requests<br/><br/>As the `traefik.docker.allownonrunning` enables the discovery of all containers exposing this option disregarding their state, if multiple stopped containers expose the same router but their configurations diverge, then the routers will be dropped. | `true` |
+| <a id="opt-traefik-enable" href="#opt-traefik-enable" title="#opt-traefik-enable">`traefik.enable`</a> | You can tell Hanzo Ingress to consider (or not) the container by setting `traefik.enable` to true or false.<br/>This option overrides the value of `exposedByDefault`. | `true` |
+| <a id="opt-traefik-docker-allownonrunning" href="#opt-traefik-docker-allownonrunning" title="#opt-traefik-docker-allownonrunning">`traefik.docker.allownonrunning`</a> | By default, Hanzo Ingress only considers containers in "running" state.<br/>This option controls whether containers that are not in "running" state (e.g., stopped, paused, exited) should still be visible to Hanzo Ingress for service discovery.<br/><br/>When this label is set to true, Hanzo Ingress will:<br/>- Keep the router and service configuration even when the container is not running<br/>- Create services with empty backend server lists<br/>- Return 503 Service Unavailable for requests to stopped containers (instead of 404 Not Found)<br/>- Execute the full middleware chain, allowing middlewares to intercept requests<br/><br/>As the `traefik.docker.allownonrunning` enables the discovery of all containers exposing this option disregarding their state, if multiple stopped containers expose the same router but their configurations diverge, then the routers will be dropped. | `true` |
 | <a id="opt-traefik-docker-network" href="#opt-traefik-docker-network" title="#opt-traefik-docker-network">`traefik.docker.network`</a> | Overrides the default docker network to use for connections to the container.<br/>If a container is linked to several networks, be sure to set the proper network name (you can check this with `docker inspect <container_id>`), otherwise it will randomly pick one (depending on how docker is returning them).<br/><br/>When deploying a stack from a compose file `stack`, the networks defined are prefixed with `stack`. | `mynetwork` |

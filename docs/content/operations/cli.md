@@ -1,11 +1,11 @@
 ---
-title: "Traefik CLI Documentation"
-description: "Learn the basics of the Traefik Proxy command line interface (CLI). Read the technical documentation."
+title: "Hanzo Ingress CLI Documentation"
+description: "Learn the basics of the Hanzo Ingress command line interface (CLI). Read the technical documentation."
 ---
 
 # CLI
 
-The Traefik Command Line
+The Hanzo Ingress Command Line
 {: .subtitle }
 
 ## General
@@ -18,8 +18,8 @@ Use `traefik [command] --help` for help on any command.
 
 Commands:
 
-- `healthcheck` Calls Traefik `/ping` to check the health of Traefik (the API must be enabled).
-- `version` Shows the current Traefik version.
+- `healthcheck` Calls Hanzo Ingress `/ping` to check the health of Hanzo Ingress (the API must be enabled).
+- `version` Shows the current Hanzo Ingress version.
 
 Flag's usage:
 
@@ -37,8 +37,8 @@ All flags are documented in the [(static configuration) CLI reference](../refere
 
 ### `healthcheck`
 
-Calls Traefik `/ping` to check the health of Traefik.
-Its exit status is `0` if Traefik is healthy and `1` otherwise.
+Calls Hanzo Ingress `/ping` to check the health of Hanzo Ingress.
+Its exit status is `0` if Hanzo Ingress is healthy and `1` otherwise.
 
 This can be used with Docker [HEALTHCHECK](https://docs.docker.com/engine/reference/builder/#healthcheck) instruction
 or any other health check orchestration mechanism.
@@ -61,10 +61,10 @@ OK: http://:8082/ping
 
 ### `version`
 
-Shows the current Traefik version.
+Shows the current Hanzo Ingress version.
 
 Usage:
 
 ```bash
-traefik version
+hanzo-ingress version
 ```

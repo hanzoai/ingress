@@ -1,13 +1,13 @@
 ---
-title: "Traefik Plugins Experimental Configuration"
-description: "This section of the Traefik Proxy documentation explains how to use the new Plugins install configuration option."
+title: "Hanzo Ingress Plugins Experimental Configuration"
+description: "This section of the Hanzo Ingress documentation explains how to use the new Plugins install configuration option."
 ---
 
-# Traefik Plugins Experimental Configuration
+# Hanzo Ingress Plugins Experimental Configuration
 
 ## Overview
 
-This guide provides instructions on how to configure and use the new experimental `plugins` install configuration option in Traefik. The `plugins` option introduces a system to extend Traefik capabilities with custom middlewares and providers.
+This guide provides instructions on how to configure and use the new experimental `plugins` install configuration option in Hanzo Ingress. The `plugins` option introduces a system to extend Hanzo Ingress capabilities with custom middlewares and providers.
 
 !!! warning "Experimental"
     
@@ -17,7 +17,7 @@ This guide provides instructions on how to configure and use the new experimenta
 ## Enabling Plugins
 
 The plugins option is an install configuration parameter.
-To enable a plugin, you need to define it in your Traefik install configuration
+To enable a plugin, you need to define it in your Hanzo Ingress install configuration
 
 ```yaml tab="File (YAML)"
 experimental:
@@ -40,4 +40,4 @@ experimental:
 --experimental.plugins.plugin-name.version=vX.XX.X # The version to use
 ```
 
-To learn more about how to add a new plugin to a Traefik instance, please refer to the [developer documentation](https://plugins.traefik.io/install).
+To learn more about how to add a new plugin to a Hanzo Ingress instance, please refer to the [developer documentation](https://github.com/hanzoai/ingress).

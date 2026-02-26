@@ -1,9 +1,9 @@
 ---
-title: "Traefik ZooKeeper Documentation"
-description: "For configuration discovery in Traefik Proxy, you can store your configurations in ZooKeeper. Read the technical documentation."
+title: "Hanzo Ingress ZooKeeper Documentation"
+description: "For configuration discovery in Hanzo Ingress, you can store your configurations in ZooKeeper. Read the technical documentation."
 ---
 
-# Traefik & ZooKeeper
+# Hanzo Ingress & ZooKeeper
 
 ## Configuration Example
 

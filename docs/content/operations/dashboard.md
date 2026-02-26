@@ -1,6 +1,6 @@
 ---
-title: "Traefik Dashboard Documentation"
-description: "The dashboard shows you the current active routes handled by Traefik Proxy in one central place. Read the technical documentation to learn its operations."
+title: "Hanzo Ingress Dashboard Documentation"
+description: "The dashboard shows you the current active routes handled by Hanzo Ingress in one central place. Read the technical documentation to learn its operations."
 ---
 
 # The Dashboard
@@ -8,7 +8,7 @@ description: "The dashboard shows you the current active routes handled by Traef
 See What's Going On
 {: .subtitle }
 
-The dashboard is the central place that shows you the current active routes handled by Traefik.
+The dashboard is the central place that shows you the current active routes handled by Hanzo Ingress.
 
 <figure>
     <img src="../assets/img/webui-dashboard.png" alt="Dashboard - Providers" />
@@ -33,7 +33,7 @@ There are 2 ways to configure and access the dashboard:
 
 This is the **recommended** method.
 
-Start by enabling the dashboard by using the following option from [Traefik's API](./api.md)
+Start by enabling the dashboard by using the following option from [Hanzo Ingress's API](./api.md)
 on the [static configuration](../getting-started/configuration-overview.md#the-static-configuration):
 
 ```yaml tab="File (YAML)"
@@ -48,7 +48,7 @@ api: {}
 --api=true
 ```
 
-Then define a routing configuration on Traefik itself,
+Then define a routing configuration on Hanzo Ingress itself,
 with a router attached to the service `api@internal` in the
 [dynamic configuration](../getting-started/configuration-overview.md#the-dynamic-configuration),
 to allow defining:
@@ -58,12 +58,12 @@ to allow defining:
   [forwardAuth](../middlewares/http/forwardauth.md)) or [allowlisting](../middlewares/http/ipallowlist.md).
 
 - A [router rule](#dashboard-router-rule) for accessing the dashboard,
-  through Traefik itself (sometimes referred to as "Traefik-ception").
+  through Hanzo Ingress itself (sometimes referred to as self-routing).
 
 ### Dashboard Router Rule
 
 As underlined in the [documentation for the `api.dashboard` option](./api.md#dashboard),
-the [router rule](../routing/routers/index.md#rule) defined for Traefik must match
+the [router rule](../routing/routers/index.md#rule) defined for Hanzo Ingress must match
 the path prefixes `/api` and `/dashboard`.
 
 We recommend using a "Host Based rule" as ```Host(`traefik.example.com`)``` to match everything on the host domain,
@@ -89,7 +89,7 @@ rule = "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashb
 
 ### Custom API Base Path
 
-As shown above, by default Traefik exposes its API and Dashboard under the `/` base path,
+As shown above, by default Hanzo Ingress exposes its API and Dashboard under the `/` base path,
 which means that respectively the API is served under the `/api` path,
 and the dashboard under the `/dashboard` path.
 
@@ -125,15 +125,15 @@ api:
 
 !!! warning "Please note that this mode is incompatible with the [custom API base path option](#custom-api-base-path)."
 
-When _insecure_ mode is enabled, one can access the dashboard on the `traefik` port (default: `8080`) of the Traefik instance,
-at the following URL: `http://<Traefik IP>:8080/dashboard/` (trailing slash is mandatory).
+When _insecure_ mode is enabled, one can access the dashboard on the `traefik` port (default: `8080`) of the Hanzo Ingress instance,
+at the following URL: `http://<Ingress IP>:8080/dashboard/` (trailing slash is mandatory).
 
 This mode is **not** recommended because it does not allow security features.
 For example, it is not possible to add an authentication middleware with this mode.
 
 It should be used for testing purpose **only**.
 
-To enable the _insecure_ mode, use the following options from [Traefik's API](./api.md#insecure):
+To enable the _insecure_ mode, use the following options from [Hanzo Ingress's API](./api.md#insecure):
 
 ```yaml tab="File (YAML)"
 api:

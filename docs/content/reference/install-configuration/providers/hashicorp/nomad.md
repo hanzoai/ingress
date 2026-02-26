@@ -1,9 +1,9 @@
 ---
 title: "Nomad Service Discovery"
-description: "Learn how to use Nomad as a provider for configuration discovery in Traefik Proxy. Read the technical documentation."
+description: "Learn how to use Nomad as a provider for configuration discovery in Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik & Nomad Service Discovery
+# Hanzo Ingress & Nomad Service Discovery
 
 ## Configuration Example
 
@@ -45,11 +45,11 @@ service {
 | <a id="opt-providers-nomad-watch" href="#opt-providers-nomad-watch" title="#opt-providers-nomad-watch">`providers.nomad.watch`</a> | Enables the watch mode to refresh the configuration on a per-event basis. |  false     | No   |
 | <a id="opt-providers-nomad-throttleDuration" href="#opt-providers-nomad-throttleDuration" title="#opt-providers-nomad-throttleDuration">`providers.nomad.throttleDuration`</a> | Defines how often the provider is allowed to handle service events from Nomad. This option is only compatible when the `watch` option is enabled |  0s     | No   |
 | <a id="opt-providers-nomad-defaultRule" href="#opt-providers-nomad-defaultRule" title="#opt-providers-nomad-defaultRule">`providers.nomad.defaultRule`</a> | The Default Host rule for all services. See [here](#defaultrule) for more information |   ```"Host(`{{ normalize .Name }}`)"```   | No   |
-| <a id="opt-providers-nomad-constraints" href="#opt-providers-nomad-constraints" title="#opt-providers-nomad-constraints">`providers.nomad.constraints`</a> | Defines an expression that Traefik matches against the container labels to determine whether to create any route for that container. See [here](#constraints) for more information.  |  ""   | No   |
-| <a id="opt-providers-nomad-exposedByDefault" href="#opt-providers-nomad-exposedByDefault" title="#opt-providers-nomad-exposedByDefault">`providers.nomad.exposedByDefault`</a> | Expose Nomad services by default in Traefik. If set to `false`, services that do not have a `traefik.enable=true` tag will be ignored from the resulting routing configuration. See [here](../overview.md#exposedbydefault-and-traefikenable) for additional information |  true    | No   |
+| <a id="opt-providers-nomad-constraints" href="#opt-providers-nomad-constraints" title="#opt-providers-nomad-constraints">`providers.nomad.constraints`</a> | Defines an expression that Hanzo Ingress matches against the container labels to determine whether to create any route for that container. See [here](#constraints) for more information.  |  ""   | No   |
+| <a id="opt-providers-nomad-exposedByDefault" href="#opt-providers-nomad-exposedByDefault" title="#opt-providers-nomad-exposedByDefault">`providers.nomad.exposedByDefault`</a> | Expose Nomad services by default in Hanzo Ingress. If set to `false`, services that do not have a `traefik.enable=true` tag will be ignored from the resulting routing configuration. See [here](../overview.md#exposedbydefault-and-traefikenable) for additional information |  true    | No   |
 | <a id="opt-providers-nomad-allowEmptyServices" href="#opt-providers-nomad-allowEmptyServices" title="#opt-providers-nomad-allowEmptyServices">`providers.nomad.allowEmptyServices`</a> |  Instructs the provider to create any [servers load balancer](../../../../routing/services/index.md#servers-load-balancer) defined for Docker containers regardless of the [healthiness](https://docs.docker.com/engine/reference/builder/#healthcheck) of the corresponding containers. |  false   | No   |
-| <a id="opt-providers-nomad-prefix" href="#opt-providers-nomad-prefix" title="#opt-providers-nomad-prefix">`providers.nomad.prefix`</a> | Defines the prefix for Nomad service tags defining Traefik labels. | `traefik`     | yes   |
-| <a id="opt-providers-nomad-stale" href="#opt-providers-nomad-stale" title="#opt-providers-nomad-stale">`providers.nomad.stale`</a> | Instructs Traefik to use stale consistency for Nomad service API reads. See [here](#stale) for more information | false   | No   |
+| <a id="opt-providers-nomad-prefix" href="#opt-providers-nomad-prefix" title="#opt-providers-nomad-prefix">`providers.nomad.prefix`</a> | Defines the prefix for Nomad service tags defining Hanzo Ingress labels. | `traefik`     | yes   |
+| <a id="opt-providers-nomad-stale" href="#opt-providers-nomad-stale" title="#opt-providers-nomad-stale">`providers.nomad.stale`</a> | Instructs Hanzo Ingress to use stale consistency for Nomad service API reads. See [here](#stale) for more information | false   | No   |
 | <a id="opt-providers-nomad-endpoint-address" href="#opt-providers-nomad-endpoint-address" title="#opt-providers-nomad-endpoint-address">`providers.nomad.endpoint.address`</a> | Defines the Address of the Nomad server. | `http://127.0.0.1:4646`  | No   |
 | <a id="opt-providers-nomad-endpoint-token" href="#opt-providers-nomad-endpoint-token" title="#opt-providers-nomad-endpoint-token">`providers.nomad.endpoint.token`</a> | Defines a per-request ACL token if Nomad ACLs are enabled. See [here](#token) for more information | ""  | No   |
 | <a id="opt-providers-nomad-endpoint-endpointWaitTime" href="#opt-providers-nomad-endpoint-endpointWaitTime" title="#opt-providers-nomad-endpoint-endpointWaitTime">`providers.nomad.endpoint.endpointWaitTime`</a> | Defines a duration for which a `watch` can block. If not provided, the agent default values will be used. | ""  | No   |
@@ -175,16 +175,16 @@ providers:
 # ...
 ```
 
-??? info "Default rule and Traefik service"
+??? info "Default rule and Hanzo Ingress service"
 
-    The exposure of the Traefik container, combined with the default rule mechanism,
+    The exposure of the Hanzo Ingress container, combined with the default rule mechanism,
     can lead to create a router targeting itself in a loop.
     In this case, to prevent an infinite loop,
-    Traefik adds an internal middleware to refuse the request if it comes from the same router.
+    Hanzo Ingress adds an internal middleware to refuse the request if it comes from the same router.
 
 ### `constraints`
 
-The `constraints` option can be set to an expression that Traefik matches against the service tags to determine whether
+The `constraints` option can be set to an expression that Hanzo Ingress matches against the service tags to determine whether
 to create any route for that service. If none of the service tags match the expression, no route for that service is
 created. If the expression is empty, all detected services are included.
 

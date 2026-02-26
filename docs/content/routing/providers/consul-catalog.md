@@ -1,19 +1,19 @@
 ---
-title: "Traefik Consul Catalog Routing"
-description: "Learn how to use Consul Catalog as a provider for routing configurations in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Consul Catalog Routing"
+description: "Learn how to use Consul Catalog as a provider for routing configurations in Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik & Consul Catalog
+# Hanzo Ingress & Consul Catalog
 
 A Story of Tags, Services & Instances
 {: .subtitle }
 
 ![Consul Catalog](../../assets/img/providers/consul.png)
 
-Attach tags to your services and let Traefik do the rest!
+Attach tags to your services and let Hanzo Ingress do the rest!
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With Consul Catalog, Traefik can leverage tags attached to a service to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With Consul Catalog, Hanzo Ingress can leverage tags attached to a service to generate routing rules.
 
 !!! warning "Tags & sensitive data"
 
@@ -29,7 +29,7 @@ With Consul Catalog, Traefik can leverage tags attached to a service to generate
 
 ### General
 
-Traefik creates, for each consul Catalog service, a corresponding [service](../services/index.md) and [router](../routers/index.md).
+Hanzo Ingress creates, for each consul Catalog service, a corresponding [service](../services/index.md) and [router](../routers/index.md).
 
 The Service automatically gets a server per instance in this consul Catalog service, and the router gets a default rule attached to it, based on the service name.
 
@@ -398,7 +398,7 @@ You can declare TCP Routers and/or Services using tags.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same consul service (but you have to do so manually).
 
 #### TCP Routers
@@ -523,7 +523,7 @@ You can declare UDP Routers and/or Services using tags.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same consul service (but you have to do so manually).
 
 #### UDP Routers
@@ -562,7 +562,7 @@ You can declare UDP Routers and/or Services using tags.
 traefik.enable=true
 ```
 
-You can tell Traefik to consider (or not) the service by setting `traefik.enable` to true or false.
+You can tell Hanzo Ingress to consider (or not) the service by setting `traefik.enable` to true or false.
 
 This option overrides the value of `exposedByDefault`.
 
@@ -572,7 +572,7 @@ This option overrides the value of `exposedByDefault`.
 traefik.consulcatalog.connect=true
 ```
 
-You can tell Traefik to consider (or not) the service as a Connect capable one by setting `traefik.consulcatalog.connect` to true or false.
+You can tell Hanzo Ingress to consider (or not) the service as a Connect capable one by setting `traefik.consulcatalog.connect` to true or false.
 
 This option overrides the value of `connectByDefault`.
 
@@ -583,14 +583,14 @@ traefik.consulcatalog.canary=true
 ```
 
 When ConsulCatalog, in the context of a Nomad orchestrator,
-is a provider (of service registration) for Traefik,
-one might have the need to distinguish within Traefik between a [Canary](https://learn.hashicorp.com/tutorials/nomad/job-blue-green-and-canary-deployments#deploy-with-canaries) instance of a service, or a production one.
+is a provider (of service registration) for Hanzo Ingress,
+one might have the need to distinguish within Hanzo Ingress between a [Canary](https://learn.hashicorp.com/tutorials/nomad/job-blue-green-and-canary-deployments#deploy-with-canaries) instance of a service, or a production one.
 For example if one does not want them to be part of the same load-balancer.
 
 Therefore, this option, which is meant to be provided as one of the values of the `canary_tags` field in the Nomad [service stanza](https://www.nomadproject.io/docs/job-specification/service#canary_tags),
-allows Traefik to identify that the associated instance is a canary one.
+allows Hanzo Ingress to identify that the associated instance is a canary one.
 
 #### Port Lookup
 
-Traefik is capable of detecting the port to use, by following the default consul Catalog flow.
+Hanzo Ingress is capable of detecting the port to use, by following the default consul Catalog flow.
 That means, if you just expose lets say port `:1337` on the consul Catalog ui, traefik will pick up this port and use it.

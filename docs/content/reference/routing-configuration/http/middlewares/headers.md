@@ -1,6 +1,6 @@
 ---
-title: "Traefik Headers Documentation"
-description: "In Traefik Proxy, the HTTP headers middleware manages the headers of requests and responses. Read the technical documentation."
+title: "Hanzo Ingress Headers Documentation"
+description: "In Hanzo Ingress, the HTTP headers middleware manages the headers of requests and responses. Read the technical documentation."
 ---
 
 The Headers middleware manages the headers of requests and responses.
@@ -300,7 +300,7 @@ spec:
 The `accessControlAllowOriginList` indicates whether a resource can be shared by returning different values.
 
 A wildcard origin `*` can also be configured, and matches all requests.
-If this value is set by a backend service, it will be overwritten by Traefik.
+If this value is set by a backend service, it will be overwritten by Hanzo Ingress.
 
 This value can contain a list of allowed origins.
 
@@ -310,7 +310,7 @@ More information including how to use the settings can be found at:
 - [w3](https://fetch.spec.whatwg.org/#http-access-control-allow-origin)
 - [IETF](https://tools.ietf.org/html/rfc6454#section-7.1)
 
-Traefik no longer supports the `null` value, as it is [no longer recommended as a return value](https://w3c.github.io/webappsec-cors-for-developers/#avoid-returning-access-control-allow-origin-null).
+Hanzo Ingress no longer supports the `null` value, as it is [no longer recommended as a return value](https://w3c.github.io/webappsec-cors-for-developers/#avoid-returning-access-control-allow-origin-null).
 
 ### `accessControlAllowOriginListRegex`
 

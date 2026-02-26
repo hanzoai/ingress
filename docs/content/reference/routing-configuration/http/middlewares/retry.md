@@ -1,6 +1,6 @@
 ---
-title: "Traefik HTTP Retry Documentation"
-description: "Configure Traefik Proxy's HTTP Retry middleware, so you can retry requests to a backend server until it succeeds. Read the technical documentation."
+title: "Hanzo Ingress HTTP Retry Documentation"
+description: "Configure Hanzo Ingress's HTTP Retry middleware, so you can retry requests to a backend server until it succeeds. Read the technical documentation."
 ---
 
 The `retry` middleware retries requests a given number of times to a backend server if that server does not reply.  

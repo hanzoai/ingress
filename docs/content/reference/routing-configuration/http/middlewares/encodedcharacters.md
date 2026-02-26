@@ -1,6 +1,6 @@
 ---
-title: "Traefik EncodedCharacters Documentation"
-description: "In Traefik Proxy, the EncodedCharacters middleware controls which ambiguous reserved encoded characters are allowed in the request path. Read the technical documentation."
+title: "Hanzo Ingress EncodedCharacters Documentation"
+description: "In Hanzo Ingress, the EncodedCharacters middleware controls which ambiguous reserved encoded characters are allowed in the request path. Read the technical documentation."
 ---
 
 The EncodedCharacters middleware controls which ambiguous reserved encoded characters are allowed in the request path.
@@ -50,7 +50,7 @@ http:
 ## Configuration Options
 
 When you are configuring these options, check if your backend is fully compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
-This helps avoid split-view situation, where Traefik and your backend interpret the same URL differently.
+This helps avoid split-view situation, where Hanzo Ingress and your backend interpret the same URL differently.
 
 | Field                   | Description                                                        | Default | Required |
 |-------------------------|--------------------------------------------------------------------|---------| -------- |

@@ -1,6 +1,6 @@
 ---
-title: "Traefik Proxy Middleware Overview"
-description: "There are several available middleware in Traefik Proxy used to modify requests or headers, take charge of redirections, add authentication, and so on."
+title: "Hanzo Ingress Middleware Overview"
+description: "There are several available middleware in Hanzo Ingress used to modify requests or headers, take charge of redirections, add authentication, and so on."
 ---
 
 # Middlewares
@@ -10,7 +10,7 @@ Tweaking the Request
 
 Attached to the routers, pieces of middleware are a means of tweaking the requests before they are sent to your [service](../routing/services/index.md) (or before the answer from the services are sent to the clients).
 
-There are several available middleware in Traefik, some can modify the request, the headers, some are in charge of redirections, some add authentication, and so on.
+There are several available middleware in Hanzo Ingress, some can modify the request, the headers, some are in charge of redirections, some add authentication, and so on.
 
 Middlewares that use the same protocol can be combined into chains to fit every scenario.
 
@@ -25,7 +25,7 @@ Middlewares that use the same protocol can be combined into chains to fit every 
 # As a Docker Label
 whoami:
   #  A container that exposes an API to show its IP address
-  image: traefik/whoami
+  image: hanzoai/whoami
   labels:
     # Create a middleware named `foo-add-prefix`
     - "traefik.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"

@@ -1,10 +1,10 @@
 ---
-title: "Traefik File Dynamic Configuration"
-description: "This guide will provide you with the YAML and TOML files for dynamic configuration in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress File Dynamic Configuration"
+description: "This guide will provide you with the YAML and TOML files for dynamic configuration in Hanzo Ingress. Read the technical documentation."
 ---
 
 
-# Traefik and Configuration Files
+# Hanzo Ingress and Configuration Files
 
 !!! warning "Work In Progress"
 
@@ -27,9 +27,9 @@ description: "This guide will provide you with the YAML and TOML files for dynam
 !!! warning
 
     Go Templating only works with dedicated dynamic configuration files.
-    Templating does not work in the Traefik main static configuration file.
+    Templating does not work in the Hanzo Ingress main static configuration file.
 
-Traefik supports using Go templating to automatically generate repetitive sections of configuration files.
+Hanzo Ingress supports using Go templating to automatically generate repetitive sections of configuration files.
 These sections must be a valid [Go template](https://pkg.go.dev/text/template/), and can use
 [sprig template functions](https://masterminds.github.io/sprig/).
 

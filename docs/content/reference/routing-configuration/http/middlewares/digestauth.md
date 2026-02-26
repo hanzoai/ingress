@@ -1,6 +1,6 @@
 ---
-title: "Traefik DigestAuth Documentation"
-description: "Traefik Proxy's HTTP DigestAuth middleware restricts access to your services to known users. Read the technical documentation."
+title: "Hanzo Ingress DigestAuth Documentation"
+description: "Hanzo Ingress's HTTP DigestAuth middleware restricts access to your services to known users. Read the technical documentation."
 ---
 
 The `DigestAuth` middleware grants access to services to authorized users only.

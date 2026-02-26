@@ -1,6 +1,6 @@
 ---
 title: "Multi-Layer Routing"
-description: "Learn how to use Traefik's multi-layer routing to create hierarchical router relationships where parent routers can apply middleware before child routers make routing decisions."
+description: "Learn how to use Hanzo Ingress's multi-layer routing to create hierarchical router relationships where parent routers can apply middleware before child routers make routing decisions."
 ---
 
 # Multi-Layer Routing

@@ -1,17 +1,17 @@
 ---
 title: 'Secure API Access with JWT'
-description: 'Traefik Hub API Gateway - Learn how to configure the JWT Authentication middleware for Ingress management.'
+description: 'Hanzo API Gateway - Learn how to configure the JWT Authentication middleware for Ingress management.'
 ---
 
 # Secure API Access with JWT
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 JSON Web Token (JWT) (defined in the [RFC 7519](https://tools.ietf.org/html/rfc7519)) allows
-Traefik Hub API Gateway to secure the API access using a token signed using either a private signing secret or a public/private key.
+Hanzo API Gateway to secure the API access using a token signed using either a private signing secret or a public/private key.
 
-Traefik Hub API Gateway provides many kinds of sources to perform the token validation:
+Hanzo API Gateway provides many kinds of sources to perform the token validation:
 
 - Setting a secret value in the middleware configuration (option `signingSecret`).
 - Setting a public key: In that case, users should sign their token using a private key, and the public key can be used to verify the signature (option `publicKey`).
@@ -31,7 +31,7 @@ Traefik Hub API Gateway provides many kinds of sources to perform the token vali
 
 ## Verify a JWT with a secret
 
-To allow the Traefik Hub API Gateway to validate a JWT with a secret value stored in a Kubernetes Secret, apply the following configuration:
+To allow the Hanzo API Gateway to validate a JWT with a secret value stored in a Kubernetes Secret, apply the following configuration:
 
 ```yaml tab="Middleware JWT"
 apiVersion: traefik.io/v1alpha1
@@ -92,7 +92,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
 
 ---
 apiVersion: v1
@@ -110,7 +110,7 @@ spec:
 
 ## Verify a JWT using an Identity Provider
 
-To allow the Traefik Hub API Gateway to validate a JWT using an Identity Provider, such as Keycloak and Azure AD in the examples below, apply the following configuration:
+To allow the Hanzo API Gateway to validate a JWT using an Identity Provider, such as Keycloak and Azure AD in the examples below, apply the following configuration:
 
 ```yaml tab="JWKS with Keycloak URL"
 apiVersion: traefik.io/v1alpha1
@@ -179,7 +179,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
 
 ---
 apiVersion: v1

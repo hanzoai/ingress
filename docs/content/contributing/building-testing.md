@@ -1,14 +1,14 @@
 ---
-title: "Traefik Building & Testing Documentation"
-description: "Compile and test your own Traefik Proxy! Learn how to build your own Traefik binary from the sources, and read the technical documentation."
+title: "Hanzo Ingress Building & Testing Documentation"
+description: "Compile and test your own Hanzo Ingress! Learn how to build your own Hanzo Ingress binary from the sources, and read the technical documentation."
 ---
 
 # Building and Testing
 
-Compile and Test Your Own Traefik!
+Compile and Test Your Own Build!
 {: .subtitle }
 
-You want to build your own Traefik binary from the sources?
+You want to build your own Hanzo Ingress binary from the sources?
 Let's see how.
 
 ## Building
@@ -23,7 +23,7 @@ You need:
 
 !!! tip "Source Directory"
 
-    It is recommended that you clone Traefik into the `~/go/src/github.com/traefik/traefik` directory.
+    It is recommended that you clone Hanzo Ingress into the `~/go/src/github.com/traefik/traefik` directory.
     This is the official golang workspace hierarchy that will allow dependencies to be properly resolved.
 
 !!! note "Environment"
@@ -52,9 +52,9 @@ You need:
     ## ... and the list goes on
     ```
 
-### Build Traefik
+### Build Hanzo Ingress
 
-Once you've set up your go environment and cloned the source repository, you can build Traefik.
+Once you've set up your go environment and cloned the source repository, you can build Hanzo Ingress.
 
 ```bash
 $ make binary
@@ -69,7 +69,7 @@ $ ls dist/
 traefik*
 ```
 
-You will find the Traefik executable (`traefik`) in the `./dist` directory.
+You will find the Hanzo Ingress executable (`traefik`) in the `./dist` directory.
 
 ## Testing
 

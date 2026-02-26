@@ -1,6 +1,6 @@
 ---
-title: "Traefik InFlightReq Documentation"
-description: "Traefik Proxy's HTTP middleware lets you limit the number of simultaneous in-flight requests. Read the technical documentation."
+title: "Hanzo Ingress InFlightReq Documentation"
+description: "Hanzo Ingress's HTTP middleware lets you limit the number of simultaneous in-flight requests. Read the technical documentation."
 ---
 
 # InFlightReq
@@ -99,13 +99,13 @@ If none are set, the default is to use the `requestHost`.
 
 #### `sourceCriterion.ipStrategy`
 
-The `ipStrategy` option defines three parameters that configures how Traefik determines the client IP: `depth`, `excludedIPs` and `ipv6Subnet`.
+The `ipStrategy` option defines three parameters that configures how Hanzo Ingress determines the client IP: `depth`, `excludedIPs` and `ipv6Subnet`.
 
 !!! important "As a middleware, InFlightReq happens before the actual proxying to the backend takes place. In addition, the previous network hop only gets appended to `X-Forwarded-For` during the last stages of proxying, i.e. after it has already passed through the middleware. Therefore, during InFlightReq, as the previous network hop is not yet present in `X-Forwarded-For`, it cannot be used and/or relied upon."
 
 ##### `ipStrategy.depth`
 
-The `depth` option tells Traefik to use the `X-Forwarded-For` header and select the IP located at the `depth` position (starting from the right).
+The `depth` option tells Hanzo Ingress to use the `X-Forwarded-For` header and select the IP located at the `depth` position (starting from the right).
 
 - If `depth` is greater than the total number of IPs in `X-Forwarded-For`, then the client IP is empty.
 - `depth` is ignored if its value is less than or equal to 0.
@@ -163,7 +163,7 @@ http:
 
 ##### `ipStrategy.excludedIPs`
 
-`excludedIPs` configures Traefik to scan the `X-Forwarded-For` header and select the first IP not in the list.
+`excludedIPs` configures Hanzo Ingress to scan the `X-Forwarded-For` header and select the first IP not in the list.
 
 !!! important "If `depth` is specified, `excludedIPs` is ignored."
 

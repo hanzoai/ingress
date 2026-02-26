@@ -1,6 +1,6 @@
 ---
-title: "Traefik CircuitBreaker Documentation"
-description: "The HTTP circuit breaker in Traefik Proxy prevents stacking requests to unhealthy Services, resulting in cascading failures. Read the technical documentation."
+title: "Hanzo Ingress CircuitBreaker Documentation"
+description: "The HTTP circuit breaker in Hanzo Ingress prevents stacking requests to unhealthy Services, resulting in cascading failures. Read the technical documentation."
 ---
 
 The HTTP circuit breaker prevents stacking requests to unhealthy Services, resulting in cascading failures.

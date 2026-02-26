@@ -1,22 +1,22 @@
 ---
 title: 'Coraza Web Application Firewall'
-description: 'Traefik Hub API Gateway - The HTTP Coraza in Traefik Hub API Gateway provides web application firewall capabilities'
+description: 'Hanzo API Gateway - The HTTP Coraza in Hanzo API Gateway provides web application firewall capabilities'
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
-The [Coraza WAF](https://coraza.io/) middleware in Traefik Hub API Gateway provides web application firewall capabilities.
+The [Coraza WAF](https://coraza.io/) middleware in Hanzo API Gateway provides web application firewall capabilities.
 
 The native middleware in Hub API Gateway provides at least 23 times more performance compared to the
-WASM-based [Coraza plugin](https://plugins.traefik.io/plugins/65f2aea146079255c9ffd1ec/coraza-waf) available with the open-source Traefik Proxy.
+WASM-based [Coraza plugin](https://github.com/hanzoai/ingress) available with the open-source Hanzo Ingress.
 
 To learn how to write rules, please visit [Coraza documentation](https://coraza.io/docs/tutorials/introduction/ "Link to Coraza introduction tutorial") and
 [OWASP CRS documentation](https://coreruleset.org/docs/ "Link to the OWAP CRS project documentation").
 
 !!! warning
 
-    Starting with Traefik Hub v3.11.0, Coraza needs to have read/write permissions to `/tmp`. This is related to [this upstream PR](https://github.com/corazawaf/coraza/pull/1030).
+    Starting with Hanzo v3.11.0, Coraza needs to have read/write permissions to `/tmp`. This is related to [this upstream PR](https://github.com/corazawaf/coraza/pull/1030).
 
 ---
 

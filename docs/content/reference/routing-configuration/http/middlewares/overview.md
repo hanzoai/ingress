@@ -1,13 +1,13 @@
 ---
-title: "Traefik Proxy Middleware Overview"
-description: "There are several available middleware in Traefik Proxy used to modify requests or headers, take charge of redirections, add authentication, and so on."
+title: "Hanzo Ingress Middleware Overview"
+description: "There are several available middleware in Hanzo Ingress used to modify requests or headers, take charge of redirections, add authentication, and so on."
 ---
 
 # HTTP Middleware Overview
 
 Attached to the routers, pieces of middleware are a means of tweaking the requests before they are sent to your service (or before the answer from the services are sent to the clients).
 
-There are several available middlewares in Traefik, some can modify the request, the headers, some are in charge of redirections, some add authentication, and so on.
+There are several available middlewares in Hanzo Ingress, some can modify the request, the headers, some are in charge of redirections, some add authentication, and so on.
 
 Middlewares that use the same protocol can be combined into chains to fit every scenario.
 
@@ -47,6 +47,6 @@ Middlewares that use the same protocol can be combined into chains to fit every 
 
 ## Community Middlewares
 
-Please take a look at the community-contributed plugins in the [plugin catalog](https://plugins.traefik.io/plugins).
+Please take a look at the community-contributed plugins in the [plugin catalog](https://github.com/hanzoai/ingress).
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

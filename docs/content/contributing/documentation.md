@@ -1,6 +1,6 @@
 ---
-title: "Traefik Contribution Documentation"
-description: "Found something unclear in the Traefik Proxy documentation and want to give a try at explaining it better? Read the guide to building documentation."
+title: "Hanzo Ingress Contribution Documentation"
+description: "Found something unclear in the Hanzo Ingress documentation and want to give a try at explaining it better? Read the guide to building documentation."
 ---
 
 # Documentation
@@ -15,7 +15,7 @@ Let's see how.
 
 ### General
 
-This [documentation](../index.md "Link to the official Traefik documentation") is built with [MkDocs](https://mkdocs.org/ "Link to the website of MkDocs").
+This [documentation](../index.md "Link to the official Hanzo Ingress documentation") is built with [MkDocs](https://mkdocs.org/ "Link to the website of MkDocs").
 
 ### Method 1: `Docker` and `make`
 
