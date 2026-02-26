@@ -1,6 +1,6 @@
 ---
-title: "Traefik File Documentation"
-description: "The file provider in Traefik Proxy lets you define the dynamic configuration in a YAML or TOML file. Read the technical documentation."
+title: "Hanzo Ingress File Documentation"
+description: "The file provider in Hanzo Ingress lets you define the dynamic configuration in a YAML or TOML file. Read the technical documentation."
 ---
 
 # File
@@ -103,11 +103,11 @@ http:
 | <a id="opt-providers-providersThrottleDuration" href="#opt-providers-providersThrottleDuration" title="#opt-providers-providersThrottleDuration">`providers.providersThrottleDuration`</a> | Minimum amount of time to wait for, after a configuration reload, before taking into account any new configuration refresh event.<br />If multiple events occur within this time, only the most recent one is taken into account, and all others are discarded.<br />**This option cannot be set per provider, but the throttling algorithm applies to each of them independently.** | 2s  | No |
 | <a id="opt-providers-file-filename" href="#opt-providers-file-filename" title="#opt-providers-file-filename">`providers.file.filename`</a> | Defines the path to the configuration file.  |  ""    | Yes   |
 | <a id="opt-providers-file-directory" href="#opt-providers-file-directory" title="#opt-providers-file-directory">`providers.file.directory`</a> | Defines the path to the directory that contains the configuration files. The `filename` and `directory` options are mutually exclusive. It is recommended to use `directory`.  |  ""    | Yes   |
-| <a id="opt-providers-file-watch" href="#opt-providers-file-watch" title="#opt-providers-file-watch">`providers.file.watch`</a> | Set the `watch` option to `true` to allow Traefik to automatically watch for file changes. It works with both the `filename` and the `directory` options. | true | No |
+| <a id="opt-providers-file-watch" href="#opt-providers-file-watch" title="#opt-providers-file-watch">`providers.file.watch`</a> | Set the `watch` option to `true` to allow Hanzo Ingress to automatically watch for file changes. It works with both the `filename` and the `directory` options. | true | No |
 
 !!! warning "Limitations"
 
-    With the file provider, Traefik listens for file system notifications to update the dynamic configuration.
+    With the file provider, Hanzo Ingress listens for file system notifications to update the dynamic configuration.
 
     If you use a mounted/bound file system in your orchestrator (like docker or kubernetes), the way the files are linked may be a source of errors.
     If the link between the file systems is broken, when a source file/directory is changed/renamed, nothing will be reported to the linked file/directory, so the file system notifications will be neither triggered nor caught.
@@ -115,10 +115,10 @@ http:
     For example, in Docker, if the host file is renamed, the link to the mounted file is broken and the container's file is no longer updated.
     To avoid this kind of issue, it is recommended to:
 
-    * set the Traefik [**directory**](#directory) configuration with the parent directory
+    * set the Hanzo Ingress [**directory**](#directory) configuration with the parent directory
     * mount/bind the parent directory
 
-    As it is very difficult to listen to all file system notifications, Traefik uses [fsnotify](https://github.com/fsnotify/fsnotify).
+    As it is very difficult to listen to all file system notifications, Hanzo Ingress uses [fsnotify](https://github.com/fsnotify/fsnotify).
     If using a directory with a mounted directory does not fix your issue, please check your file system compatibility with fsnotify.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

@@ -1,14 +1,14 @@
 ---
-title: "Traefik Redis Documentation"
-description: "For configuration discovery in Traefik Proxy, you can store your configurations in Redis. Read the technical documentation."
+title: "Hanzo Ingress Redis Documentation"
+description: "For configuration discovery in Hanzo Ingress, you can store your configurations in Redis. Read the technical documentation."
 ---
 
-# Traefik & Redis
+# Hanzo Ingress & Redis
 
 A Story of KV store & Containers
 {: .subtitle }
 
-Store your configuration in Redis and let Traefik do the rest!
+Store your configuration in Redis and let Hanzo Ingress do the rest!
 
 !!! tip "Dynamic configuration updates"
 

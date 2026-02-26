@@ -1,6 +1,6 @@
 ---
-title: "Traefik RedirectRegex Documentation"
-description: "In Traefik Proxy's HTTP middleware, RedirectRegex redirecting clients to different locations. Read the technical documentation."
+title: "Hanzo Ingress RedirectRegex Documentation"
+description: "In Hanzo Ingress's HTTP middleware, RedirectRegex redirecting clients to different locations. Read the technical documentation."
 ---
 
 The `RedirectRegex` redirects a request using regex matching and replacement.

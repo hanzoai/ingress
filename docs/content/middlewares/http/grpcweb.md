@@ -1,6 +1,6 @@
 ---
-title: "Traefik GrpcWeb Documentation"
-description: "In Traefik Proxy's HTTP middleware, GrpcWeb converts a gRPC Web requests to HTTP/2 gRPC requests. Read the technical documentation."
+title: "Hanzo Ingress GrpcWeb Documentation"
+description: "In Hanzo Ingress's HTTP middleware, GrpcWeb converts a gRPC Web requests to HTTP/2 gRPC requests. Read the technical documentation."
 ---
 
 # GrpcWeb
@@ -12,7 +12,7 @@ The GrpcWeb middleware converts gRPC Web requests to HTTP/2 gRPC requests before
 
 !!! tip
 
-    Please note, that Traefik needs to communicate using gRPC with the backends (h2c or HTTP/2 over TLS).
+    Please note, that Hanzo Ingress needs to communicate using gRPC with the backends (h2c or HTTP/2 over TLS).
     Check out [Exposing gRPC Services](../../expose/overview.md#exposing-grpc-services) for more details.
 
 ## Configuration Examples

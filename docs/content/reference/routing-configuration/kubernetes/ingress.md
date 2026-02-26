@@ -1,9 +1,9 @@
 ---
 title: "Kubernetes Ingress Routing Configuration"
-description: "Understand the routing configuration for the Kubernetes Ingress Controller and Traefik Proxy. Read the technical documentation."
+description: "Understand the routing configuration for the Kubernetes Ingress Controller and Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik & Kubernetes with Ingress
+# Hanzo Ingress & Kubernetes with Ingress
 
 ## Routing Configuration
 
@@ -169,7 +169,7 @@ spec:
 
     Controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
     The Kubernetes Service itself does load-balance to the pods.
-    Please note that, by default, Traefik reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
+    Please note that, by default, Hanzo Ingress reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
     By default, NativeLB is false.
 
     ```yaml
@@ -179,7 +179,7 @@ spec:
 ??? info "`traefik.ingress.kubernetes.io/service.nodeportlb`"
 
     Controls, when creating the load-balancer, whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-    It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+    It allows services to be reachable when Hanzo Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
     By default, NodePortLB is false.
 
     ```yaml
@@ -375,7 +375,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
                       number: 80
     ```
 
-    ```yaml tab="Traefik"
+    ```yaml tab="Hanzo Ingress"
     apiVersion: v1
     kind: ServiceAccount
     metadata:
@@ -402,7 +402,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
           serviceAccountName: traefik-ingress-controller
           containers:
             - name: traefik
-              image: traefik:v3.6
+              image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --entryPoints.websecure.address=:443
                 - --entryPoints.websecure.http.tls
@@ -450,7 +450,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
         spec:
           containers:
             - name: whoami
-              image: traefik/whoami
+              image: hanzoai/whoami
               ports:
                 - containerPort: 80
 
@@ -559,7 +559,7 @@ TLS certificates can be managed in Secrets objects.
     Only TLS certificates provided by users can be stored in Kubernetes Secrets.
     [Let's Encrypt](../../install-configuration/tls/certificate-resolvers/acme.md) certificates cannot be managed in Kubernetes Secrets yet.
 
-### Communication Between Traefik and Pods
+### Communication Between Hanzo Ingress and Pods
 
 !!! info "Routing directly to [Kubernetes services](https://kubernetes.io/docs/concepts/services-networking/service/ "Link to Kubernetes service docs")"
 
@@ -571,11 +571,11 @@ TLS certificates can be managed in Secrets objects.
     One alternative is to use an `ExternalName` service to forward requests to the Kubernetes service through DNS.
     To do so, one must allow external name services.
 
-Traefik automatically requests endpoint information based on the service provided in the ingress spec.
-Although Traefik will connect directly to the endpoints (pods),
+Hanzo Ingress automatically requests endpoint information based on the service provided in the ingress spec.
+Although Hanzo Ingress will connect directly to the endpoints (pods),
 it still checks the service port to see if TLS communication is required.
 
-There are 3 ways to configure Traefik to use HTTPS to communicate with pods:
+There are 3 ways to configure Hanzo Ingress to use HTTPS to communicate with pods:
 
 1. If the service port defined in the ingress spec is `443` (note that you can still use `targetPort` to use a different port on your pod).
 1. If the service port defined in the ingress spec has a name that starts with `https` (such as `https-api`, `https-web` or just `https`).
@@ -614,7 +614,7 @@ This will allow users to create a "default router" that will match all unmatched
 
 !!! info
 
-    Due to Traefik's use of priorities, you may have to set this ingress priority lower than other ingresses in your environment,
+    Due to Hanzo Ingress's use of priorities, you may have to set this ingress priority lower than other ingresses in your environment,
     to avoid this global ingress from satisfying requests that could match other ingresses.
 
     To do this, use the `traefik.ingress.kubernetes.io/router.priority` annotation (as seen in [Annotations on Ingress](#on-ingress)) on your ingresses accordingly.

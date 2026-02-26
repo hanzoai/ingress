@@ -1,13 +1,13 @@
 ---
-title: "Traefik API Documentation"
-description: "Traefik Proxy exposes information through API handlers. Learn about the security, configuration, and endpoints of APIs. Read the technical documentation."
+title: "Hanzo Ingress API Documentation"
+description: "Hanzo Ingress exposes information through API handlers. Learn about the security, configuration, and endpoints of APIs. Read the technical documentation."
 ---
 
 # API
 
-Traefik exposes a number of information through an API handler, such as the configuration of all routers, services, middlewares, etc.
+Hanzo Ingress exposes a number of information through an API handler, such as the configuration of all routers, services, middlewares, etc.
 
-As with all features of Traefik, this handler can be enabled with the [static configuration](../getting-started/configuration-overview.md#the-static-configuration).
+As with all features of Hanzo Ingress, this handler can be enabled with the [static configuration](../getting-started/configuration-overview.md#the-static-configuration).
 
 ## Security
 
@@ -41,7 +41,7 @@ api: {}
 --api=true
 ```
 
-And then define a routing configuration on Traefik itself with the
+And then define a routing configuration on Hanzo Ingress itself with the
 [dynamic configuration](../getting-started/configuration-overview.md#the-dynamic-configuration):
 
 --8<-- "content/operations/include-api-examples.md"
@@ -168,7 +168,7 @@ All the following endpoints must be accessed with a `GET` HTTP request.
 | `/api/overview`                | Returns statistic information about http and tcp as well as enabled features and providers.         |
 | `/api/support-dump`            | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
 | `/api/rawdata`                 | Returns information about dynamic configurations, errors, status and dependency relations.          |
-| `/api/version`                 | Returns information about Traefik version.                                                          |
+| `/api/version`                 | Returns information about Hanzo Ingress version.                                                          |
 | `/debug/vars`                  | See the [expvar](https://golang.org/pkg/expvar/) Go documentation.                                  |
 | `/debug/pprof/`                | See the [pprof Index](https://golang.org/pkg/net/http/pprof/#Index) Go documentation.               |
 | `/debug/pprof/cmdline`         | See the [pprof Cmdline](https://golang.org/pkg/net/http/pprof/#Cmdline) Go documentation.           |

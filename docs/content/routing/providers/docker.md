@@ -1,19 +1,19 @@
 ---
-title: "Traefik Docker Routing Documentation"
-description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Traefik and Docker."
+title: "Hanzo Ingress Docker Routing Documentation"
+description: "This guide will teach you how to attach labels to your containers, to route traffic and load balance with Hanzo Ingress and Docker."
 ---
 
-# Traefik & Docker
+# Hanzo Ingress & Docker
 
 A Story of Labels & Containers
 {: .subtitle }
 
 ![Docker](../../assets/img/providers/docker.png)
 
-Attach labels to your containers and let Traefik do the rest!
+Attach labels to your containers and let Hanzo Ingress do the rest!
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With Docker, Traefik can leverage labels attached to a container to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With Docker, Hanzo Ingress can leverage labels attached to a container to generate routing rules.
 
 !!! warning "Labels & sensitive data"
 
@@ -59,12 +59,12 @@ With Docker, Traefik can leverage labels attached to a container to generate rou
         # ...
         labels:
           - traefik.http.routers.my-container.rule=Host(`example.com`)
-          # Tell Traefik to use the port 12345 to connect to `my-container`
+          # Tell Hanzo Ingress to use the port 12345 to connect to `my-container`
           - traefik.http.services.my-service.loadbalancer.server.port=12345
     ```
 
-    !!! important "Traefik Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
-        By default, Traefik uses the first exposed port of a container.
+    !!! important "Hanzo Ingress Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
+        By default, Hanzo Ingress uses the first exposed port of a container.
 
         Setting the label `traefik.http.services.xxx.loadbalancer.server.port`
         overrides that behavior.
@@ -97,7 +97,7 @@ With Docker, Traefik can leverage labels attached to a container to generate rou
 
 ### General
 
-Traefik creates, for each container, a corresponding [service](../services/index.md) and [router](../routers/index.md).
+Hanzo Ingress creates, for each container, a corresponding [service](../services/index.md) and [router](../routers/index.md).
 
 The Service automatically gets a server per instance of the container,
 and the router automatically gets a rule defined by `defaultRule` (if no rule for it was defined in labels).
@@ -521,7 +521,7 @@ You can declare TCP Routers and/or Services using labels.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### TCP Routers
@@ -658,7 +658,7 @@ You can declare UDP Routers and/or Services using labels.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same container (but you have to do so manually).
 
 #### UDP Routers
@@ -697,7 +697,7 @@ You can declare UDP Routers and/or Services using labels.
 - "traefik.enable=true"
 ```
 
-You can tell Traefik to consider (or not) the container by setting `traefik.enable` to true or false.
+You can tell Hanzo Ingress to consider (or not) the container by setting `traefik.enable` to true or false.
 
 This option overrides the value of `exposedByDefault`.
 

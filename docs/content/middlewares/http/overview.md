@@ -1,6 +1,6 @@
 ---
-title: "Traefik Proxy HTTP Middleware Overview"
-description: "Read the official Traefik Proxy documentation for an overview of the available HTTP middleware."
+title: "Hanzo Ingress HTTP Middleware Overview"
+description: "Read the official Hanzo Ingress documentation for an overview of the available HTTP middleware."
 ---
 
 # HTTP Middlewares
@@ -14,7 +14,7 @@ Controlling connections
 # As a Docker Label
 whoami:
   #  A container that exposes an API to show its IP address
-  image: traefik/whoami
+  image: hanzoai/whoami
   labels:
     # Create a middleware named `foo-add-prefix`
     - "traefik.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"
@@ -23,7 +23,7 @@ whoami:
 ```
 
 ```yaml tab="IngressRoute"
-# As a Kubernetes Traefik IngressRoute
+# As a Kubernetes Hanzo Ingress IngressRoute
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -125,6 +125,6 @@ http:
 
 ## Community Middlewares
 
-Please take a look at the community-contributed plugins in the [plugin catalog](https://plugins.traefik.io/plugins).
+Please take a look at the community-contributed plugins in the [plugin catalog](https://github.com/hanzoai/ingress).
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

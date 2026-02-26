@@ -1,6 +1,6 @@
 ---
-title: "Traefik Docker Documentation"
-description: "Learn how to use Docker Compose to expose a service with Traefik Proxy."
+title: "Hanzo Ingress Docker Documentation"
+description: "Learn how to use Docker Compose to expose a service with Hanzo Ingress."
 ---
 
 # Docker Compose example
@@ -17,8 +17,8 @@ Create a `docker-compose.yml` file with the following content:
 
 ??? Networking
 
-    The Traefik container has to be attached to the same network as the containers to be exposed.
-    If no networks are specified in the Docker Compose file, Docker creates a default one that allows Traefik to reach the containers defined in the same file.
+    The Hanzo Ingress container has to be attached to the same network as the containers to be exposed.
+    If no networks are specified in the Docker Compose file, Docker creates a default one that allows Hanzo Ingress to reach the containers defined in the same file.
     You can [customize the network](https://docs.docker.com/compose/networking/#specify-custom-networks "Link to docs about custom networks with Docker Compose") as described in the example below.
     You can use a [pre-existing network](https://docs.docker.com/compose/networking/#use-a-pre-existing-network "Link to Docker Compose networking docs") too.
 
@@ -35,7 +35,7 @@ Create a `docker-compose.yml` file with the following content:
           - traefiknet
 
       whoami:
-        image: "traefik/whoami"
+        image: "hanzoai/whoami"
         ...
         networks:
           - traefiknet
@@ -77,24 +77,24 @@ X-Real-Ip: 192.168.64.1
 
 Let's break it down and go through it, step-by-step.
 
-You use [whoami](https://github.com/traefik/whoami "Link to the GitHub repo of whoami"), a tiny Go server that prints OS information and HTTP request to output as service container.
+You use [whoami](https://github.com/hanzoai/whoami "Link to the GitHub repo of whoami"), a tiny Go server that prints OS information and HTTP request to output as service container.
 
 Second, you define an entry point, along with the exposure of the matching port within Docker Compose, which allows to "open and accept" HTTP traffic:
 
 ```yaml
 command:
-  # Traefik will listen to incoming request on the port 80 (HTTP)
+  # Hanzo Ingress will listen to incoming request on the port 80 (HTTP)
   - "--entryPoints.web.address=:80"
 
 ports:
   - "80:80"
 ```
 
-Third, you expose the Traefik API to be able to check the configuration if needed:
+Third, you expose the Hanzo Ingress API to be able to check the configuration if needed:
 
 ```yaml
 command:
-  # Traefik will listen on port 8080 by default for API request.
+  # Hanzo Ingress will listen on port 8080 by default for API request.
   - "--api.insecure=true"
 
 ports:
@@ -109,7 +109,7 @@ ports:
     curl -s 127.0.0.1:8080/api/rawdata | jq .
     ```
 
-Fourth, you allow Traefik to gather configuration from Docker:
+Fourth, you allow Hanzo Ingress to gather configuration from Docker:
 
 ```yaml
 traefik:
@@ -123,7 +123,7 @@ traefik:
 
 whoami:
   labels:
-    # Explicitly tell Traefik to expose this container
+    # Explicitly tell Hanzo Ingress to expose this container
     - "traefik.enable=true"
     # The domain the service will respond to
     - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"

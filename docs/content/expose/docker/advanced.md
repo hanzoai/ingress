@@ -1,8 +1,8 @@
-# Exposing Services with Traefik on Docker - Advanced
+# Exposing Services with Hanzo Ingress on Docker - Advanced
 
-This guide builds on the concepts and setup from the [Basic Guide](basic.md). Make sure you've completed the basic guide and have a working Traefik setup with Docker before proceeding.
+This guide builds on the concepts and setup from the [Basic Guide](basic.md). Make sure you've completed the basic guide and have a working Hanzo Ingress setup with Docker before proceeding.
 
-In this advanced guide, you'll learn how to enhance your Traefik deployment with:
+In this advanced guide, you'll learn how to enhance your Hanzo Ingress deployment with:
 
 - **Middlewares** for security headers and access control
 - **Let's Encrypt** for automated certificate management
@@ -13,11 +13,11 @@ In this advanced guide, you'll learn how to enhance your Traefik deployment with
 
 - Completed the [Basic Guide](basic.md)
 - Docker and Docker Compose installed
-- Working Traefik setup from the basic guide
+- Working Hanzo Ingress setup from the basic guide
 
 ## Add Middlewares
 
-Middlewares allow you to modify requests or responses as they pass through Traefik. Let's add two useful middlewares: [Headers](../../reference/routing-configuration/http/middlewares/headers.md) for security and [IP allowlisting](../../reference/routing-configuration/http/middlewares/ipallowlist.md) for access control.
+Middlewares allow you to modify requests or responses as they pass through Hanzo Ingress. Let's add two useful middlewares: [Headers](../../reference/routing-configuration/http/middlewares/headers.md) for security and [IP allowlisting](../../reference/routing-configuration/http/middlewares/ipallowlist.md) for access control.
 
 Add the following labels to your whoami service in `docker-compose.yml`:
 
@@ -82,11 +82,11 @@ If you try to access from an IP not in the allow list, the request will be rejec
 
 ## Generate Certificates with Let's Encrypt
 
-Let's Encrypt provides free, automated TLS certificates. Let's configure Traefik to automatically obtain and renew certificates for our services.
+Let's Encrypt provides free, automated TLS certificates. Let's configure Hanzo Ingress to automatically obtain and renew certificates for our services.
 
 Instead of using self-signed certificates, update your existing `docker-compose.yml` file with the following changes:
 
-Add the Let's Encrypt certificate resolver to the Traefik service command section:
+Add the Let's Encrypt certificate resolver to the Hanzo Ingress service command section:
 
 ```yaml
 command:
@@ -141,7 +141,7 @@ docker compose up -d
 ```
 
 !!! important "Public DNS Required"
-    Let's Encrypt may require a publicly accessible domain to validate domain ownership. For testing with local domains like `whoami.docker.localhost`, the certificate will remain self-signed. In production, replace it with a real domain that has a publicly accessible DNS record pointing to your Traefik instance.
+    Let's Encrypt may require a publicly accessible domain to validate domain ownership. For testing with local domains like `whoami.docker.localhost`, the certificate will remain self-signed. In production, replace it with a real domain that has a publicly accessible DNS record pointing to your Hanzo Ingress instance.
 
 Once the certificate is issued, you can verify it:
 
@@ -228,7 +228,7 @@ Multi-layer routing enables hierarchical relationships between routers, where pa
 
 To use multi-layer routing with Docker, you need to enable the File provider alongside the Docker provider.
 
-Update your Traefik service in `docker-compose.yml`:
+Update your Hanzo Ingress service in `docker-compose.yml`:
 
 ```yaml
 services:
@@ -270,7 +270,7 @@ services:
 
   # Mock authentication service that adds X-User-Role header
   auth-service:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     networks:
       - proxy
     environment:
@@ -281,7 +281,7 @@ services:
 
   # Admin backend service
   admin-backend:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     networks:
       - proxy
     environment:
@@ -292,7 +292,7 @@ services:
 
   # User backend service
   user-backend:
-    image: "traefik/whoami"
+    image: "hanzoai/whoami"
     networks:
       - proxy
     environment:
@@ -353,7 +353,7 @@ http:
     - Use `service-name@docker` to reference Docker services
     - Use `parent-name@file` in `parentRefs` to reference the parent router in the File provider
 
-    The `@provider` suffix tells Traefik which provider namespace to look in for the resource.
+    The `@provider` suffix tells Hanzo Ingress which provider namespace to look in for the resource.
 
 Apply the changes:
 
@@ -391,15 +391,15 @@ In this advanced guide, you've learned how to:
 - Implement sticky sessions for stateful applications
 - Setup multi-layer routing for authentication-based routing
 
-These advanced capabilities allow you to build production-ready Traefik deployments with Docker. Each of these can be further customized to meet your specific requirements.
+These advanced capabilities allow you to build production-ready Hanzo Ingress deployments with Docker. Each of these can be further customized to meet your specific requirements.
 
 ### Next Steps
 
-Now that you've mastered both basic and advanced Traefik features with Docker, you might want to explore:
+Now that you've mastered both basic and advanced Hanzo Ingress features with Docker, you might want to explore:
 
 - [Advanced routing options](../../reference/routing-configuration/http/routing/rules-and-priority.md) like query parameter matching, header-based routing, and more
 - [Additional middlewares](../../reference/routing-configuration/http/middlewares/overview.md) for authentication, rate limiting, and request modifications
-- [Observability features](../../reference/install-configuration/observability/metrics.md) for monitoring and debugging your Traefik deployment
+- [Observability features](../../reference/install-configuration/observability/metrics.md) for monitoring and debugging your Hanzo Ingress deployment
 - [TCP services](../../reference/routing-configuration/tcp/service.md) for exposing TCP services
 - [UDP services](../../reference/routing-configuration/udp/service.md) for exposing UDP services
 - [Docker provider documentation](../../reference/install-configuration/providers/docker.md) for more details about the Docker integration

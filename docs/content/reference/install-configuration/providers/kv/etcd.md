@@ -1,9 +1,9 @@
 ---
-title: "Traefik Etcd Documentation"
-description: "Use etcd as a provider for configuration discovery in Traefik Proxy. Automate and store your configurations with Etcd. Read the technical documentation."
+title: "Hanzo Ingress Etcd Documentation"
+description: "Use etcd as a provider for configuration discovery in Hanzo Ingress. Automate and store your configurations with Etcd. Read the technical documentation."
 ---
 
-# Traefik & etcd
+# Hanzo Ingress & etcd
 
 ## Configuration Example
 

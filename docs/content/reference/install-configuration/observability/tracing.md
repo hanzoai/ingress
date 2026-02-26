@@ -1,6 +1,6 @@
 ---
-title: "Traefik Tracing Overview"
-description: "The Traefik Proxy tracing system allows developers to visualize call flows in their infrastructure. Read the full documentation."
+title: "Hanzo Ingress Tracing Overview"
+description: "The Hanzo Ingress tracing system allows developers to visualize call flows in their infrastructure. Read the full documentation."
 ---
 
 # Tracing
@@ -10,7 +10,7 @@ Visualize the Requests Flow
 
 The tracing system allows developers to visualize call flows in their infrastructure.
 
-Traefik uses [OpenTelemetry](https://opentelemetry.io/ "Link to website of OTel"), an open standard designed for distributed tracing.
+Hanzo Ingress uses [OpenTelemetry](https://opentelemetry.io/ "Link to website of OTel"), an open standard designed for distributed tracing.
 
 ## Configuration Example
 
@@ -41,7 +41,7 @@ tracing: {}
 | <a id="opt-tracing-addInternals" href="#opt-tracing-addInternals" title="#opt-tracing-addInternals">`tracing.addInternals`</a> | Enables tracing for internal resources (e.g.: `ping@internal`).                                                                                                             | false                               | No       |
 | <a id="opt-tracing-serviceName" href="#opt-tracing-serviceName" title="#opt-tracing-serviceName">`tracing.serviceName`</a> | Defines the service name resource attribute.                                                                                                                                | "traefik"                           | No       |
 | <a id="opt-tracing-resourceAttributes" href="#opt-tracing-resourceAttributes" title="#opt-tracing-resourceAttributes">`tracing.resourceAttributes`</a> | Defines additional resource attributes to be sent to the collector. See [resourceAttributes](#resourceattributes) for details.                                              | []                                  | No       |
-| <a id="opt-tracing-sampleRate" href="#opt-tracing-sampleRate" title="#opt-tracing-sampleRate">`tracing.sampleRate`</a> | The proportion of requests to trace, specified between 0.0 and 1.0.<br /> Since Traefik supports parent-based sampling ratios, root spans (i.e., spans initiated by Traefik) are sampled according to this rate, while child spans inherit the sampling decision of their parent (i.e., the tracing context from incoming requests). See [sampleRate](#samplerate) for details.  | 1.0                                 | No       |
+| <a id="opt-tracing-sampleRate" href="#opt-tracing-sampleRate" title="#opt-tracing-sampleRate">`tracing.sampleRate`</a> | The proportion of requests to trace, specified between 0.0 and 1.0.<br /> Since Hanzo Ingress supports parent-based sampling ratios, root spans (i.e., spans initiated by Hanzo Ingress) are sampled according to this rate, while child spans inherit the sampling decision of their parent (i.e., the tracing context from incoming requests). See [sampleRate](#samplerate) for details.  | 1.0                                 | No       |
 | <a id="opt-tracing-capturedRequestHeaders" href="#opt-tracing-capturedRequestHeaders" title="#opt-tracing-capturedRequestHeaders">`tracing.capturedRequestHeaders`</a> | Defines the list of request headers to add as attributes.<br />It applies to client and server kind spans.                                                                  | []                                  | No       |
 | <a id="opt-tracing-capturedResponseHeaders" href="#opt-tracing-capturedResponseHeaders" title="#opt-tracing-capturedResponseHeaders">`tracing.capturedResponseHeaders`</a> | Defines the list of response headers to add as attributes.<br />It applies to client and server kind spans.                                                                 | []                                  | False    |
 | <a id="opt-tracing-safeQueryParams" href="#opt-tracing-safeQueryParams" title="#opt-tracing-safeQueryParams">`tracing.safeQueryParams`</a> | By default, all query parameters are redacted.<br />Defines the list of query parameters to not redact.                                                                     | []                                  | No       |
@@ -67,7 +67,7 @@ The `sampleRate` option controls trace sampling using a `ParentBased(TraceIDRati
 
 !!! info "Sampling Strategy Behavior"
 
-    - **Root spans** (trace originating at Traefik): Sampled according to the configured `sampleRate` using trace ID ratio-based sampling.
+    - **Root spans** (trace originating at the proxy): Sampled according to the configured `sampleRate` using trace ID ratio-based sampling.
     - **Child spans** (requests with existing trace context): Inherit the sampling decision from the parent span, regardless of the local `sampleRate`.
 
     This ensures consistent sampling decisions across distributed traces: once a trace is sampled, all spans in that trace are sampled, providing complete end-to-end visibility.
@@ -75,15 +75,15 @@ The `sampleRate` option controls trace sampling using a `ParentBased(TraceIDRati
 ## resourceAttributes
 
 The `resourceAttributes` option allows setting the resource attributes sent along the traces.
-Traefik also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
+Hanzo Ingress also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
 
 !!! info "Kubernetes Resource Attributes Detection"
 
-    Additionally, Traefik automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
+    Additionally, Hanzo Ingress automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
     
     - `k8s.namespace.name`
     - `k8s.pod.uid`
     - `k8s.pod.name`
     
-    Note that this automatic detection can fail, like if the Traefik pod is running in host network mode.
+    Note that this automatic detection can fail, like if the Hanzo Ingress pod is running in host network mode.
     In this case, you should provide the attributes with the option or the env variable.

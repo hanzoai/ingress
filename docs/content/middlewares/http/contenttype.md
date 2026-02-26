@@ -1,6 +1,6 @@
 ---
-title: "Traefik ContentType Documentation"
-description: "Traefik Proxy's HTTP middleware automatically sets the `Content-Type` header value when it is not set by the backend. Read the technical documentation."
+title: "Hanzo Ingress ContentType Documentation"
+description: "Hanzo Ingress's HTTP middleware automatically sets the `Content-Type` header value when it is not set by the backend. Read the technical documentation."
 ---
 
 # ContentType
@@ -13,7 +13,7 @@ when it is not set by the backend.
 
 !!! info
 
-    The scope of the Content-Type middleware is the MIME type detection done by the core of Traefik (the server part).
+    The scope of the Content-Type middleware is the MIME type detection done by the core of Hanzo Ingress (the server part).
     Therefore, it has no effect against any other `Content-Type` header modifications (e.g.: in another middleware such as compress).
 
 ## Configuration Examples

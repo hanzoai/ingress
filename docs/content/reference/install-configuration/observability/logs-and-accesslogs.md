@@ -1,11 +1,11 @@
 ---
-title: "Traefik Logs Documentation"
-description: "Logs are a key part of observability in Traefik Proxy. Read the technical documentation to learn their configurations, rotations, and time zones."
+title: "Hanzo Ingress Logs Documentation"
+description: "Logs are a key part of observability in Hanzo Ingress. Read the technical documentation to learn their configurations, rotations, and time zones."
 ---
 
 ## Logs
 
-Logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+Logs concern everything that happens to Hanzo Ingress itself (startup, configuration, events, shutdown, and so on).
 
 ### Configuration Example
 
@@ -31,11 +31,11 @@ log:
 
 ### Configuration Options
 
-The section below describe how to configure Traefik logs using the static configuration.
+The section below describe how to configure Hanzo Ingress logs using the static configuration.
 
 | Field      | Description  | Default | Required |
 |:-----------|:----------------------------|:--------|:---------|
-| <a id="opt-log-filePath" href="#opt-log-filePath" title="#opt-log-filePath">`log.filePath`</a> | By default, the logs are written to the standard output.<br />You can configure a file path instead using the `filePath` option. When `filePath` is specified, Traefik will write logs only to that file (not to standard output).| - | No      |
+| <a id="opt-log-filePath" href="#opt-log-filePath" title="#opt-log-filePath">`log.filePath`</a> | By default, the logs are written to the standard output.<br />You can configure a file path instead using the `filePath` option. When `filePath` is specified, Hanzo Ingress will write logs only to that file (not to standard output).| - | No      |
 | <a id="opt-log-format" href="#opt-log-format" title="#opt-log-format">`log.format`</a> | Log format (`common`or `json`).<br /> The fields displayed with the format `common` cannot be customized. | "common" | No      |
 | <a id="opt-log-level" href="#opt-log-level" title="#opt-log-level">`log.level`</a> | Log level (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, and `PANIC`)| ERROR | No      |
 | <a id="opt-log-noColor" href="#opt-log-noColor" title="#opt-log-noColor">`log.noColor`</a> | When using the format `common`, disables the colorized output. | false      | No      |
@@ -46,7 +46,7 @@ The section below describe how to configure Traefik logs using the static config
 
 ### OpenTelemetry
 
-Traefik supports OpenTelemetry for logging. To enable OpenTelemetry, you need to set the following in the static configuration:
+Hanzo Ingress supports OpenTelemetry for logging. To enable OpenTelemetry, you need to set the following in the static configuration:
 
 ```yaml tab="File (YAML)"
 experimental:
@@ -124,22 +124,22 @@ log:
 #### resourceAttributes
 
 The `resourceAttributes` option allows setting the resource attributes sent along the traces.
-Traefik also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
+Hanzo Ingress also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
 
 !!! info "Kubernetes Resource Attributes Detection"
 
-    Additionally, Traefik automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
+    Additionally, Hanzo Ingress automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
     
     - `k8s.namespace.name`
     - `k8s.pod.uid`
     - `k8s.pod.name`
     
-    Note that this automatic detection can fail, like if the Traefik pod is running in host network mode.
+    Note that this automatic detection can fail, like if the Hanzo Ingress pod is running in host network mode.
     In this case, you should provide the attributes with the option or the env variable.
 
 ## AccessLogs
 
-Access logs concern everything that happens to the requests handled by Traefik.
+Access logs concern everything that happens to the requests handled by Hanzo Ingress.
 
 !!! note "Stdio logs are not enabled by default alongside OTLP exports"
     If you would like Stdio access logs to be available, use [accessLog.dualOutput](#opt-accesslog-dualOutput) option.
@@ -212,14 +212,14 @@ accessLog:
 
 ### Configuration Options
 
-The section below describes how to configure Traefik access logs using the static configuration.
+The section below describes how to configure Hanzo Ingress access logs using the static configuration.
 
 | Field      | Description    | Default | Required |
 |:-----------|:--------------------------|:--------|:---------|
 | <a id="opt-accesslog-filePath" href="#opt-accesslog-filePath" title="#opt-accesslog-filePath">`accesslog.filePath`</a> | By default, the access logs are written to the standard output.<br />You can configure a file path instead using the `filePath` option.|  | No      |
 | <a id="opt-accesslog-dualOutput" href="#opt-accesslog-dualOutput" title="#opt-accesslog-dualOutput">`accesslog.dualOutput`</a> | Force Stdio logging, even if OTLP is configured. By default, Stdio logging is disabled when OTLP is enabled for performance reasons. | false      | No      |
-| <a id="opt-accesslog-format" href="#opt-accesslog-format" title="#opt-accesslog-format">`accesslog.format`</a> | By default, logs are written using the Traefik Common Log Format (CLF).<br />Available formats: [`common`](#traefik-clf-format-fields) (Traefik extended CLF), [`genericCLF`](#generic-clf-format-fields) (standard CLF compatible with analyzers), or [`json`](#json-format-fields).<br />If the given format is unsupported, the default (`common`) is used instead. | "common" | No      |
-| <a id="opt-accesslog-bufferingSize" href="#opt-accesslog-bufferingSize" title="#opt-accesslog-bufferingSize">`accesslog.bufferingSize`</a> | To write the logs in an asynchronous fashion, specify a  `bufferingSize` option.<br />This option represents the number of log lines Traefik will keep in memory before writing them to the selected output.<br />In some cases, this option can greatly help performances.| 0 | No      |
+| <a id="opt-accesslog-format" href="#opt-accesslog-format" title="#opt-accesslog-format">`accesslog.format`</a> | By default, logs are written using the Hanzo Ingress Common Log Format (CLF).<br />Available formats: [`common`](#traefik-clf-format-fields) (extended CLF), [`genericCLF`](#generic-clf-format-fields) (standard CLF compatible with analyzers), or [`json`](#json-format-fields).<br />If the given format is unsupported, the default (`common`) is used instead. | "common" | No      |
+| <a id="opt-accesslog-bufferingSize" href="#opt-accesslog-bufferingSize" title="#opt-accesslog-bufferingSize">`accesslog.bufferingSize`</a> | To write the logs in an asynchronous fashion, specify a  `bufferingSize` option.<br />This option represents the number of log lines Hanzo Ingress will keep in memory before writing them to the selected output.<br />In some cases, this option can greatly help performances.| 0 | No      |
 | <a id="opt-accesslog-addInternals" href="#opt-accesslog-addInternals" title="#opt-accesslog-addInternals">`accesslog.addInternals`</a> | Enables access logs for internal resources (e.g.: `ping@internal`). | false  | No      |
 | <a id="opt-accesslog-filters-statusCodes" href="#opt-accesslog-filters-statusCodes" title="#opt-accesslog-filters-statusCodes">`accesslog.filters.statusCodes`</a> | Limit the access logs to requests with a status codes in the specified range. | [ ]      | No      |
 | <a id="opt-accesslog-filters-retryAttempts" href="#opt-accesslog-filters-retryAttempts" title="#opt-accesslog-filters-retryAttempts">`accesslog.filters.retryAttempts`</a> | Keep the access logs when at least one retry has happened. | false      | No      |
@@ -231,7 +231,7 @@ The section below describes how to configure Traefik access logs using the stati
 
 ### OpenTelemetry
 
-Traefik supports OpenTelemetry for access logs. To enable OpenTelemetry, you need to set the following in the static configuration:
+Hanzo Ingress supports OpenTelemetry for access logs. To enable OpenTelemetry, you need to set the following in the static configuration:
 
 ```yaml tab="File (YAML)"
 experimental:
@@ -311,29 +311,29 @@ accesslog:
 #### resourceAttributes
 
 The `resourceAttributes` option allows setting the resource attributes sent along the traces.
-Traefik also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
+Hanzo Ingress also supports the `OTEL_RESOURCE_ATTRIBUTES` env variable to set up the resource attributes.
 
 !!! info "Kubernetes Resource Attributes Detection"
 
-    Additionally, Traefik automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
+    Additionally, Hanzo Ingress automatically discovers the following [Kubernetes resource attributes](https://opentelemetry.io/docs/specs/semconv/non-normative/k8s-attributes/) when running in a Kubernetes cluster:
     
     - `k8s.namespace.name`
     - `k8s.pod.uid`
     - `k8s.pod.name`
     
-    Note that this automatic detection can fail, like if the Traefik pod is running in host network mode.
+    Note that this automatic detection can fail, like if the Hanzo Ingress pod is running in host network mode.
     In this case, you should provide the attributes with the option or the env variable.
 
-### Traefik CLF format fields
+### Hanzo Ingress CLF format fields
 
-It's the default format provided by Traefik.
-Below the fields displayed with the Traefik CLF format:
+It's the default format provided by Hanzo Ingress.
+Below the fields displayed with the Hanzo Ingress CLF format:
 
 ```html
 <remote_IP_address> - <client_user_name_if_available> [<timestamp>] 
 "<request_method> <request_path> <request_protocol>" <HTTP_status> <content-length> 
-"<request_referrer>" "<request_user_agent>" <number_of_requests_received_since_Traefik_started>
-"<Traefik_router_name>" "<Traefik_server_URL>" <request_duration_in_ms>ms
+"<request_referrer>" "<request_user_agent>" <number_of_requests_received_since_started>
+"<router_name>" "<server_URL>" <request_duration_in_ms>ms
 ```
 
 ### Generic CLF format fields
@@ -353,10 +353,10 @@ Below the fields displayed with the generic CLF format:
 | <a id="opt-StartUTC" href="#opt-StartUTC" title="#opt-StartUTC">`StartUTC`</a> | The time at which request processing started.                                                                                                                       |
 | <a id="opt-StartLocal" href="#opt-StartLocal" title="#opt-StartLocal">`StartLocal`</a> | The local time at which request processing started.                                                                                                                 |
 | <a id="opt-Duration" href="#opt-Duration" title="#opt-Duration">`Duration`</a> | The total time taken (in nanoseconds) by processing the response, including the origin server's time but not the log writing time.                                  |
-| <a id="opt-RouterName" href="#opt-RouterName" title="#opt-RouterName">`RouterName`</a> | The name of the Traefik  router.                                                                                                                                    |
-| <a id="opt-ServiceName" href="#opt-ServiceName" title="#opt-ServiceName">`ServiceName`</a> | The name of the Traefik backend.          |
-| <a id="opt-ServiceURL" href="#opt-ServiceURL" title="#opt-ServiceURL">`ServiceURL`</a> | The URL of the Traefik backend.       |
-| <a id="opt-ServiceAddr" href="#opt-ServiceAddr" title="#opt-ServiceAddr">`ServiceAddr`</a> | The IP:port of the Traefik backend (extracted from `ServiceURL`). |
+| <a id="opt-RouterName" href="#opt-RouterName" title="#opt-RouterName">`RouterName`</a> | The name of the Hanzo Ingress  router.                                                                                                                                    |
+| <a id="opt-ServiceName" href="#opt-ServiceName" title="#opt-ServiceName">`ServiceName`</a> | The name of the Hanzo Ingress backend.          |
+| <a id="opt-ServiceURL" href="#opt-ServiceURL" title="#opt-ServiceURL">`ServiceURL`</a> | The URL of the Hanzo Ingress backend.       |
+| <a id="opt-ServiceAddr" href="#opt-ServiceAddr" title="#opt-ServiceAddr">`ServiceAddr`</a> | The IP:port of the Hanzo Ingress backend (extracted from `ServiceURL`). |
 | <a id="opt-ClientAddr" href="#opt-ClientAddr" title="#opt-ClientAddr">`ClientAddr`</a> | The remote address in its original form (usually IP:port).     |
 | <a id="opt-ClientHost" href="#opt-ClientHost" title="#opt-ClientHost">`ClientHost`</a> | The remote IP address from which the client request was received.     |
 | <a id="opt-ClientPort" href="#opt-ClientPort" title="#opt-ClientPort">`ClientPort`</a> | The remote TCP port from which the client request was received.   |
@@ -372,14 +372,14 @@ Below the fields displayed with the generic CLF format:
 | <a id="opt-RequestContentSize" href="#opt-RequestContentSize" title="#opt-RequestContentSize">`RequestContentSize`</a> | The number of bytes in the request entity (a.k.a. body) sent by the client.   |
 | <a id="opt-OriginDuration" href="#opt-OriginDuration" title="#opt-OriginDuration">`OriginDuration`</a> | The time taken (in nanoseconds) by the origin server ('upstream') to return its response. |
 | <a id="opt-OriginContentSize" href="#opt-OriginContentSize" title="#opt-OriginContentSize">`OriginContentSize`</a> | The content length specified by the origin server, or 0 if unspecified.    |
-| <a id="opt-OriginStatus" href="#opt-OriginStatus" title="#opt-OriginStatus">`OriginStatus`</a> | The HTTP status code returned by the origin server. If the request was handled by this Traefik instance (e.g. with a redirect), then this value will be absent (0). |
+| <a id="opt-OriginStatus" href="#opt-OriginStatus" title="#opt-OriginStatus">`OriginStatus`</a> | The HTTP status code returned by the origin server. If the request was handled by this Hanzo Ingress instance (e.g. with a redirect), then this value will be absent (0). |
 | <a id="opt-OriginStatusLine" href="#opt-OriginStatusLine" title="#opt-OriginStatusLine">`OriginStatusLine`</a> | `OriginStatus` + Status code explanation   |
 | <a id="opt-DownstreamStatus" href="#opt-DownstreamStatus" title="#opt-DownstreamStatus">`DownstreamStatus`</a> | The HTTP status code returned to the client.    |
 | <a id="opt-DownstreamStatusLine" href="#opt-DownstreamStatusLine" title="#opt-DownstreamStatusLine">`DownstreamStatusLine`</a> | The `DownstreamStatus` and status code explanation.     |
 | <a id="opt-DownstreamContentSize" href="#opt-DownstreamContentSize" title="#opt-DownstreamContentSize">`DownstreamContentSize`</a> | The number of bytes in the response entity returned to the client. This is in addition to the "Content-Length" header, which may be present in the origin response. |
-| <a id="opt-RequestCount" href="#opt-RequestCount" title="#opt-RequestCount">`RequestCount`</a> | The number of requests received since the Traefik instance started.    |
+| <a id="opt-RequestCount" href="#opt-RequestCount" title="#opt-RequestCount">`RequestCount`</a> | The number of requests received since the Hanzo Ingress instance started.    |
 | <a id="opt-GzipRatio" href="#opt-GzipRatio" title="#opt-GzipRatio">`GzipRatio`</a> | The response body compression ratio achieved.   |
-| <a id="opt-Overhead" href="#opt-Overhead" title="#opt-Overhead">`Overhead`</a> | The processing time overhead (in nanoseconds) caused by Traefik.    |
+| <a id="opt-Overhead" href="#opt-Overhead" title="#opt-Overhead">`Overhead`</a> | The processing time overhead (in nanoseconds) caused by Hanzo Ingress.    |
 | <a id="opt-RetryAttempts" href="#opt-RetryAttempts" title="#opt-RetryAttempts">`RetryAttempts`</a> | The amount of attempts the request was retried.   |
 | <a id="opt-TLSVersion" href="#opt-TLSVersion" title="#opt-TLSVersion">`TLSVersion`</a> | The TLS version used by the connection (e.g. `1.2`) (if connection is TLS).   |
 | <a id="opt-TLSCipher" href="#opt-TLSCipher" title="#opt-TLSCipher">`TLSCipher`</a> | The TLS cipher used by the connection (e.g. `TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA`) (if connection is TLS).      |
@@ -387,7 +387,7 @@ Below the fields displayed with the generic CLF format:
 
 ### Log Rotation
 
-Traefik close and reopen its log files, assuming they're configured, on receipt of a USR1 signal.
+Hanzo Ingress close and reopen its log files, assuming they're configured, on receipt of a USR1 signal.
 This allows the logs to be rotated and processed by an external program, such as `logrotate`.
 
 !!! warning
@@ -395,9 +395,9 @@ This allows the logs to be rotated and processed by an external program, such as
 
 ### Time Zones
 
-Traefik will timestamp each log line in UTC time by default.
+Hanzo Ingress will timestamp each log line in UTC time by default.
 
-It is possible to configure the Traefik to timestamp in a specific timezone by ensuring the following configuration has been made in your environment:
+It is possible to configure the Hanzo Ingress to timestamp in a specific timezone by ensuring the following configuration has been made in your environment:
 
 1. Provide time zone data to `/etc/localtime` or `/usr/share/zoneinfo` (based on your distribution) or set the environment variable TZ to the desired timezone.
 2. Specify the field `StartLocal` by dropping the field named `StartUTC` (available on the default Common Log Format (CLF) as well as JSON): `accesslog.fields.names.StartUTC=drop`.
@@ -407,7 +407,7 @@ Example utilizing Docker Compose:
 ```yaml
 services:
   traefik:
-    image: traefik:v3.6
+    image: ghcr.io/hanzoai/ingress:v3.6
     environment:
       - TZ=US/Alaska
     command:

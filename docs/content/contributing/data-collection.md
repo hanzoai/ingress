@@ -1,23 +1,23 @@
 ---
-title: "Traefik Data Collection Documentation"
-description: "Learn what data Traefik shares, how it is used, and how you can control it. This documentation explains both version check and anonymous usage statistics data. Read the technical documentation."
+title: "Hanzo Ingress Data Collection Documentation"
+description: "Learn what data Hanzo Ingress shares, how it is used, and how you can control it. This documentation explains both version check and anonymous usage statistics data. Read the technical documentation."
 ---
 
 # Data Collection
 
-Understanding the data Traefik shares and how it is used
+Understanding the data Hanzo Ingress shares and how it is used
 {: .subtitle }
 
 ## Introduction
 
-Protecting user privacy is essential to Traefik Labs, and we design every data-sharing mechanism with transparency and minimalism in mind.
-This page describes the two types of data exchanged by Traefik and how to configure them.
+Protecting user privacy is essential to Hanzo AI, and we design every data-sharing mechanism with transparency and minimalism in mind.
+This page describes the two types of data exchanged by Hanzo Ingress and how to configure them.
 
-For more details on how your data is handled, please refer to our [Privacy and Cookie Policy](https://traefik.io/legal/privacy-and-cookie-policy).
+For more details on how your data is handled, please refer to our [Privacy and Cookie Policy](https://hanzo.ai/privacy).
 
 ## Configuration Overview
 
-Traefik provides two independent mechanisms:
+Hanzo Ingress provides two independent mechanisms:
 
 - `checkNewVersion`, enabled by default. You may disable it at any time.
 - `sendAnonymousUsage`, which requires explicit opt‑in.
@@ -45,28 +45,28 @@ A log message at startup clearly indicates whether each of those options are ena
 
 ## Version Check (`checkNewVersion`) – Opt-out
 
-Traefik periodically contacts `update.traefik.io` to determine whether a newer version is available.
-When this request is made, Traefik shares the **running version** and the **public IP** of the instance.
+Hanzo Ingress periodically contacts `update.traefik.io` to determine whether a newer version is available.
+When this request is made, Hanzo Ingress shares the **running version** and the **public IP** of the instance.
 The IP is used to build global usage statistics and does not influence the version comparison.
 
-This mechanism helps you stay informed about updates and provides TraefikLabs with a broad view of which versions are deployed in the wild.
+This mechanism helps you stay informed about updates and provides Hanzo AI with a broad view of which versions are deployed in the wild.
 
-The collected IP addresses are also used for marketing purposes, specifically to detect companies running Traefik and offer them adapted support contracts, enterprise features, and tailored services.
+The collected IP addresses are also used for marketing purposes, specifically to detect companies running Hanzo Ingress and offer them adapted support contracts, enterprise features, and tailored services.
 
-If you want to explore the implementation, you can read the version check source code: [version.go](https://github.com/traefik/traefik/blob/master/pkg/version/version.go)
+If you want to explore the implementation, you can read the version check source code: [version.go](https://github.com/hanzoai/ingress/blob/master/pkg/version/version.go)
 
 ## Anonymous Usage Data (`sendAnonymousUsage`) – Opt‑in
 
-Traefik can also collect anonymous usage statistics once per day, starting 10 minutes after it starts running.  
+Hanzo Ingress can also collect anonymous usage statistics once per day, starting 10 minutes after it starts running.  
 These statistics include:
 
-- the Traefik version,
+- the Hanzo Ingress version,
 - a hash of the configuration,
 - an anonymized version of the static configuration (all sensitive fields removed: tokens, passwords, URLs, IP addresses, domains, emails, etc.).
 
-This feature comes from this [public proposal](https://github.com/traefik/traefik/issues/2369).
+This feature comes from this [public proposal](https://github.com/hanzoai/ingress/issues/2369).
 
-This information helps TraefikLabs understand how Traefik is used in general and prioritize features and provider support accordingly. Dynamic configuration (routers and services) is never collected.
+This information helps Hanzo AI understand how Hanzo Ingress is used in general and prioritize features and provider support accordingly. Dynamic configuration (routers and services) is never collected.
 
 !!! example "Enabling Data Collection"
 
@@ -136,6 +136,6 @@ providers:
 ### The Code for Anonymous Usage Collection
 
 If you want to explore the implementation, you can read the collector source code:
-[collector.go](https://github.com/traefik/traefik/blob/master/pkg/collector/collector.go)
+[collector.go](https://github.com/hanzoai/ingress/blob/master/pkg/collector/collector.go)
 
-Traefik anonymizes all configuration fields by default, except those explicitly marked with `export=true`.
+Hanzo Ingress anonymizes all configuration fields by default, except those explicitly marked with `export=true`.

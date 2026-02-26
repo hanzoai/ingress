@@ -1,18 +1,18 @@
 ---
 title: "Kubernetes Service"
-description: "A Service is a not Traefik CRD, it allows you to describe the Service option in an IngressRoute or a Traefik Service."
+description: "A Service is a not Hanzo Ingress CRD, it allows you to describe the Service option in an IngressRoute or a Hanzo Ingress Service."
 ---
 
-`Service` is the implementation of a [Traefik HTTP service](../../../http/load-balancing/service.md). 
+`Service` is the implementation of a [HTTP service](../../../http/load-balancing/service.md). 
 
 There is no dedicated CRD, a `Service` is part of:
 
 - [`IngressRoute`](./ingressroute.md)
 - [`TraefikService`](./traefikservice.md)
 
-Note that, before creating `IngressRoute` or `TraefikService` objects, you need to apply the [Traefik Kubernetes CRDs](https://doc.traefik.io/traefik/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
+Note that, before creating `IngressRoute` or `TraefikService` objects, you need to apply the [Kubernetes CRDs](https://github.com/hanzoai/ingress/blob/main/docs/content/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
 
-This registers the Traefik-specific resources.
+This registers the CRD resources.
 
 ## Configuration Example
 
@@ -36,7 +36,7 @@ spec:
     - kind: Service
       name: foo
       namespace: apps
-      # Customize the connection between Traefik and the backend
+      # Customize the connection between Hanzo Ingress and the backend
       passHostHeader: true
       port: 80
       responseForwarding:
@@ -64,7 +64,7 @@ spec:
     - kind: Service
       name: foo
       namespace: apps
-      # Customize the connection between Traefik and the backend
+      # Customize the connection between Hanzo Ingress and the backend
       passHostHeader: true
       port: 80
       responseForwarding:
@@ -82,13 +82,13 @@ spec:
 
 | Field                                                                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Default                                                              | Required |
 |:---------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------|:---------|
-| <a id="opt-kind" href="#opt-kind" title="#opt-kind">`kind`</a> | Kind of the service targeted.<br />Two values allowed:<br />- **Service**: Kubernetes Service<br /> **TraefikService**: Traefik Service.<br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                             | "Service"                                                            | No       |
+| <a id="opt-kind" href="#opt-kind" title="#opt-kind">`kind`</a> | Kind of the service targeted.<br />Two values allowed:<br />- **Service**: Kubernetes Service<br /> **TraefikService**: Hanzo Ingress Service.<br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                             | "Service"                                                            | No       |
 | <a id="opt-name" href="#opt-name" title="#opt-name">`name`</a> | Service name.<br />The character `@` is not authorized. <br />More information [here](#middleware).                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                      | Yes      |
 | <a id="opt-namespace" href="#opt-namespace" title="#opt-namespace">`namespace`</a> | Service namespace.<br />Can be empty if the service belongs to the same namespace as the IngressRoute. <br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                                                              |                                                                      | No       |
 | <a id="opt-port" href="#opt-port" title="#opt-port">`port`</a> | Service port (number or port name).<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                      | No       |
 | <a id="opt-responseForwarding-flushInterval" href="#opt-responseForwarding-flushInterval" title="#opt-responseForwarding-flushInterval">`responseForwarding.`<br />`flushInterval`</a> | Interval, in milliseconds, in between flushes to the client while copying the response body.<br />A negative value means to flush immediately after each write to the client.<br />This configuration is ignored when a response is a streaming response; for such responses, writes are flushed to the client immediately.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                               | 100ms                                                                | No       |
 | <a id="opt-scheme" href="#opt-scheme" title="#opt-scheme">`scheme`</a> | Scheme to use for the request to the upstream Kubernetes Service.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                                                         | "http"<br />"https" if `port` is 443 or contains the string *https*. | No       |
-| <a id="opt-serversTransport" href="#opt-serversTransport" title="#opt-serversTransport">`serversTransport`</a> | Name of ServersTransport resource to use to configure the transport between Traefik and your servers.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                     | ""                                                                   | No       |
+| <a id="opt-serversTransport" href="#opt-serversTransport" title="#opt-serversTransport">`serversTransport`</a> | Name of ServersTransport resource to use to configure the transport between Hanzo Ingress and your servers.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                     | ""                                                                   | No       |
 | <a id="opt-passHostHeader" href="#opt-passHostHeader" title="#opt-passHostHeader">`passHostHeader`</a> | Forward client Host header to server.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | true                                                                 | No       |
 | <a id="opt-healthCheck-scheme" href="#opt-healthCheck-scheme" title="#opt-healthCheck-scheme">`healthCheck.scheme`</a> | Server URL scheme for the health check endpoint.<br />Evaluated only if the kind is **Service**.<br />Only for [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) of type [ExternalName](#externalname-service).                                                                                                                                                                                                                                                                                                      | ""                                                                   | No       |
 | <a id="opt-healthCheck-mode" href="#opt-healthCheck-mode" title="#opt-healthCheck-mode">`healthCheck.mode`</a> | Health check mode.<br /> If defined to grpc, will use the gRPC health check protocol to probe the server.<br />Evaluated only if the kind is **Service**.<br />Only for [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) of type [ExternalName](#externalname-service).                                                                                                                                                                                                                                             | "http"                                                               | No       |
@@ -108,18 +108,18 @@ spec:
 | <a id="opt-sticky-cookie-sameSite" href="#opt-sticky-cookie-sameSite" title="#opt-sticky-cookie-sameSite">`sticky.`<br />`cookie.sameSite`</a> | [SameSite](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite) policy<br />Allowed values:<br />-`none`<br />-`lax`<br />`strict`<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                              | ""                                                                   | No       |
 | <a id="opt-sticky-cookie-maxAge" href="#opt-sticky-cookie-maxAge" title="#opt-sticky-cookie-maxAge">`sticky.`<br />`cookie.maxAge`</a> | Number of seconds until the cookie expires.<br />Negative number, the cookie expires immediately.<br />0, the cookie never expires.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                       | 0                                                                    | No       |
 | <a id="opt-strategy" href="#opt-strategy" title="#opt-strategy">`strategy`</a> | Strategy defines the load balancing strategy between the servers.<br />Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                              | "RoundRobin"                                                         | No       |
-| <a id="opt-nativeLB" href="#opt-nativeLB" title="#opt-nativeLB">`nativeLB`</a> | Allow using the Kubernetes Service load balancing between the pods instead of the one provided by Traefik.<br /> Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                               | false                                                                | No       |
-| <a id="opt-nodePortLB" href="#opt-nodePortLB" title="#opt-nodePortLB">`nodePortLB`</a> | Use the nodePort IP address when the service type is NodePort.<br />It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                 | false                                                                | No       |
+| <a id="opt-nativeLB" href="#opt-nativeLB" title="#opt-nativeLB">`nativeLB`</a> | Allow using the Kubernetes Service load balancing between the pods instead of the one provided by Hanzo Ingress.<br /> Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                               | false                                                                | No       |
+| <a id="opt-nodePortLB" href="#opt-nodePortLB" title="#opt-nodePortLB">`nodePortLB`</a> | Use the nodePort IP address when the service type is NodePort.<br />It allows services to be reachable when Hanzo Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                 | false                                                                | No       |
 
 
 ### ExternalName Service
 
-Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Traefik supports defining a port in two ways:
+Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Hanzo Ingress supports defining a port in two ways:
 
 - only on `IngressRoute` service
 - on both sides, you'll be warned if the ports don't match, and the `IngressRoute` service port is used
 
-Thus, in case of two sides port definition, Traefik expects a match between ports.
+Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
 
 === "Ports defined on Resource"
 
@@ -222,12 +222,12 @@ Thus, in case of two sides port definition, Traefik expects a match between port
 
 ### Port Definition
 
-Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Traefik supports defining a port in two ways:
+Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Hanzo Ingress supports defining a port in two ways:
 
 - only on `IngressRoute` service
 - on both sides, you'll be warned if the ports don't match, and the `IngressRoute` service port is used
 
-Thus, in case of two sides port definition, Traefik expects a match between ports.
+Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
 
 ??? example   
 
@@ -382,7 +382,7 @@ spec:
 
     To avoid creating the server load-balancer with the pod IPs and use Kubernetes Service clusterIP directly,
     one should set the service `NativeLB` option to true.
-    Please note that, by default, Traefik reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
+    Please note that, by default, Hanzo Ingress reuses the established connections to the backends for performance purposes. This can prevent the requests load balancing between the replicas from behaving as one would expect when the option is set.
     By default, `NativeLB` is false.
 
     ??? example "Example"
@@ -421,10 +421,10 @@ spec:
 
 ### Configuring Backend Protocol
 
-There are 3 ways to configure the backend protocol for communication between Traefik and your pods:
+There are 3 ways to configure the backend protocol for communication between Hanzo Ingress and your pods:
 
 - Setting the scheme explicitly (http/https/h2c)
 - Configuring the name of the kubernetes service port to start with https (https)
 - Setting the kubernetes service port to use port 443 (https)
 
-If you do not configure the above, Traefik will assume an http connection.
+If you do not configure the above, Hanzo Ingress will assume an http connection.

@@ -1,6 +1,6 @@
 ---
-title: "Traefik Prometheus Documentation"
-description: "Traefik supports several metrics backends, including Prometheus. Learn how to implement it for observability in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Prometheus Documentation"
+description: "Hanzo Ingress supports several metrics backends, including Prometheus. Learn how to implement it for observability in Hanzo Ingress. Read the technical documentation."
 ---
 
 # Prometheus
@@ -173,7 +173,7 @@ _Optional_
 Defines the extra labels for the `requests_total` metrics, and for each of them, the request header containing the value for this label.
 Please note that if the header is not present in the request it will be added nonetheless with an empty value.
 In addition, the label should be a valid label name for Prometheus metrics, 
-otherwise, the Prometheus metrics provider will fail to serve any Traefik-related metric.
+otherwise, the Prometheus metrics provider will fail to serve any ingress-related metric.
 
 ```yaml tab="File (YAML)"
 metrics:

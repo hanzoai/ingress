@@ -1,9 +1,9 @@
 ---
-title: "Traefik Docker Documentation"
-description: "Learn how to achieve configuration discovery in Traefik through Docker. Read the technical documentation."
+title: "Hanzo Ingress Docker Documentation"
+description: "Learn how to achieve configuration discovery in Hanzo Ingress through Docker. Read the technical documentation."
 ---
 
-# Traefik & Docker
+# Hanzo Ingress & Docker
 
 !!! tip "The Quick Start Uses Docker"
 
@@ -44,13 +44,13 @@ services:
 | <a id="opt-providers-docker-endpoint" href="#opt-providers-docker-endpoint" title="#opt-providers-docker-endpoint">`providers.docker.endpoint`</a> | Specifies the Docker API endpoint. See [here](#endpoint) for more information|  "unix:///var/run/docker.sock"     | Yes   |
 | <a id="opt-providers-docker-username" href="#opt-providers-docker-username" title="#opt-providers-docker-username">`providers.docker.username`</a> | Defines the username for Basic HTTP authentication. This should be used when the Docker daemon socket is exposed through an HTTP proxy that requires Basic HTTP authentication.|  ""    | No   |
 | <a id="opt-providers-docker-password" href="#opt-providers-docker-password" title="#opt-providers-docker-password">`providers.docker.password`</a> | Defines the password for Basic HTTP authentication. This should be used when the Docker daemon socket is exposed through an HTTP proxy that requires Basic HTTP authentication.|  ""    | No   |
-| <a id="opt-providers-docker-useBindPortIP" href="#opt-providers-docker-useBindPortIP" title="#opt-providers-docker-useBindPortIP">`providers.docker.useBindPortIP`</a> | Instructs Traefik to use the IP/Port attached to the container's binding instead of its inner network IP/Port. See [here](#usebindportip) for more information |  false   | No   |
-| <a id="opt-providers-docker-exposedByDefault" href="#opt-providers-docker-exposedByDefault" title="#opt-providers-docker-exposedByDefault">`providers.docker.exposedByDefault`</a> | Expose containers by default through Traefik. See [here](./overview.md#exposedbydefault-and-traefikenable) for additional information |  true    | No   |
+| <a id="opt-providers-docker-useBindPortIP" href="#opt-providers-docker-useBindPortIP" title="#opt-providers-docker-useBindPortIP">`providers.docker.useBindPortIP`</a> | Instructs Hanzo Ingress to use the IP/Port attached to the container's binding instead of its inner network IP/Port. See [here](#usebindportip) for more information |  false   | No   |
+| <a id="opt-providers-docker-exposedByDefault" href="#opt-providers-docker-exposedByDefault" title="#opt-providers-docker-exposedByDefault">`providers.docker.exposedByDefault`</a> | Expose containers by default through Hanzo Ingress. See [here](./overview.md#exposedbydefault-and-traefikenable) for additional information |  true    | No   |
 | <a id="opt-providers-docker-network" href="#opt-providers-docker-network" title="#opt-providers-docker-network">`providers.docker.network`</a> | Defines a default docker network to use for connections to all containers. This option can be overridden on a per-container basis with the `traefik.docker.network` label.|  ""    | No   |
 | <a id="opt-providers-docker-defaultRule" href="#opt-providers-docker-defaultRule" title="#opt-providers-docker-defaultRule">`providers.docker.defaultRule`</a> | Defines what routing rule to apply to a container if no rule is defined by a label. See [here](#defaultrule) for more information. |  ```"Host(`{{ normalize .Name }}`)"```  | No   |
 | <a id="opt-providers-docker-httpClientTimeout" href="#opt-providers-docker-httpClientTimeout" title="#opt-providers-docker-httpClientTimeout">`providers.docker.httpClientTimeout`</a> | Defines the client timeout (in seconds) for HTTP connections. If its value is 0, no timeout is set. |  0   | No   |
-| <a id="opt-providers-docker-watch" href="#opt-providers-docker-watch" title="#opt-providers-docker-watch">`providers.docker.watch`</a> | Instructs Traefik to watch Docker events or not. |  True   | No   |
-| <a id="opt-providers-docker-constraints" href="#opt-providers-docker-constraints" title="#opt-providers-docker-constraints">`providers.docker.constraints`</a> | Defines an expression that Traefik matches against the container labels to determine whether to create any route for that container. See [here](#constraints) for more information.  |  ""   | No   |
+| <a id="opt-providers-docker-watch" href="#opt-providers-docker-watch" title="#opt-providers-docker-watch">`providers.docker.watch`</a> | Instructs Hanzo Ingress to watch Docker events or not. |  True   | No   |
+| <a id="opt-providers-docker-constraints" href="#opt-providers-docker-constraints" title="#opt-providers-docker-constraints">`providers.docker.constraints`</a> | Defines an expression that Hanzo Ingress matches against the container labels to determine whether to create any route for that container. See [here](#constraints) for more information.  |  ""   | No   |
 | <a id="opt-providers-docker-allowEmptyServices" href="#opt-providers-docker-allowEmptyServices" title="#opt-providers-docker-allowEmptyServices">`providers.docker.allowEmptyServices`</a> |  Instructs the provider to create any [servers load balancer](../../../routing/services/index.md#servers-load-balancer) defined for Docker containers regardless of the [healthiness](https://docs.docker.com/engine/reference/builder/#healthcheck) of the corresponding containers. |  false   | No   |
 | <a id="opt-providers-docker-tls-ca" href="#opt-providers-docker-tls-ca" title="#opt-providers-docker-tls-ca">`providers.docker.tls.ca`</a> | Defines the path to the certificate authority used for the secure connection to Docker, it defaults to the system bundle.  |  ""   | No   |
 | <a id="opt-providers-docker-tls-cert" href="#opt-providers-docker-tls-cert" title="#opt-providers-docker-tls-cert">`providers.docker.tls.cert`</a> | Defines the path to the public certificate used for the secure connection to Docker. When using this option, setting the `key` option is required. |   ""  | Yes   |
@@ -63,12 +63,12 @@ See the [Docker API Access](#docker-api-access) section for more information.
 
 ??? example "Using the docker.sock"
 
-    The docker-compose file shares the docker sock with the Traefik container
+    The docker-compose file shares the docker sock with the Hanzo Ingress container
 
     ```yaml
     services:
       traefik:
-         image: traefik:v3.1 # The official v3 Traefik docker image
+         image: ghcr.io/hanzoai/ingress:v3.1 # The official v3 Hanzo Ingress docker image
          ports:
            - "80:80"
          volumes:
@@ -97,9 +97,9 @@ See the [Docker API Access](#docker-api-access) section for more information.
 
 ??? example "Using SSH"
 
-    Using Docker 18.09+ you can connect Traefik to daemon using SSH.
-    We specify the SSH host and user in Traefik's configuration file.
-    Note that if the server requires public keys for authentication, you must have them accessible for the user running Traefik.
+    Using Docker 18.09+ you can connect Hanzo Ingress to daemon using SSH.
+    We specify the SSH host and user in Hanzo Ingress's configuration file.
+    Note that if the server requires public keys for authentication, you must have them accessible for the user running Hanzo Ingress.
 
     ```yaml tab="File (YAML)"
     providers:
@@ -121,7 +121,7 @@ See the [Docker API Access](#docker-api-access) section for more information.
 
 ??? example "Using HTTP"
 
-    Using Docker Engine API you can connect Traefik to remote daemon using HTTP.
+    Using Docker Engine API you can connect Hanzo Ingress to remote daemon using HTTP.
 
     ```yaml tab="File (YAML)"
     providers:
@@ -143,7 +143,7 @@ See the [Docker API Access](#docker-api-access) section for more information.
 
 ??? example "Using TCP"
 
-    Using Docker Engine API you can connect Traefik to remote daemon using TCP.
+    Using Docker Engine API you can connect Hanzo Ingress to remote daemon using TCP.
 
     ```yaml tab="File (YAML)"
     providers:
@@ -180,12 +180,12 @@ providers:
 
 ### `useBindPortIP`
 
-Traefik routes requests to the IP/port of the matching container.
-When setting `useBindPortIP=true`, you tell Traefik to use the IP/Port attached to the container's _binding_ instead of its inner network IP/Port.
+Hanzo Ingress routes requests to the IP/port of the matching container.
+When setting `useBindPortIP=true`, you tell Hanzo Ingress to use the IP/Port attached to the container's _binding_ instead of its inner network IP/Port.
 
-When used in conjunction with the `traefik.http.services.<name>.loadbalancer.server.port` label (that tells Traefik to route requests to a specific port),
-Traefik tries to find a binding on port `traefik.http.services.<name>.loadbalancer.server.port`.
-If it cannot find such a binding, Traefik falls back on the internal network IP of the container,
+When used in conjunction with the `traefik.http.services.<name>.loadbalancer.server.port` label (that tells Hanzo Ingress to route requests to a specific port),
+Hanzo Ingress tries to find a binding on port `traefik.http.services.<name>.loadbalancer.server.port`.
+If it cannot find such a binding, Hanzo Ingress falls back on the internal network IP of the container,
 but still uses the `traefik.http.services.<name>.loadbalancer.server.port` that is set in the label.
 
 ??? example "Examples of `usebindportip` in different situations."
@@ -254,16 +254,16 @@ providers:
 # ...
 ```
 
-??? info "Default rule and Traefik service"
+??? info "Default rule and Hanzo Ingress service"
 
-    The exposure of the Traefik container, combined with the default rule mechanism,
+    The exposure of the Hanzo Ingress container, combined with the default rule mechanism,
     can lead to create a router targeting itself in a loop.
     In this case, to prevent an infinite loop,
-    Traefik adds an internal middleware to refuse the request if it comes from the same router.
+    Hanzo Ingress adds an internal middleware to refuse the request if it comes from the same router.
 
 ### `constraints`
 
-The `constraints` option can be set to an expression that Traefik matches against the container labels to determine whether
+The `constraints` option can be set to an expression that Hanzo Ingress matches against the container labels to determine whether
 to create any route for that container. If none of the container labels match the expression, no route for that container is
 created. If the expression is empty, all detected containers are included.
 
@@ -329,13 +329,13 @@ providers:
 ## Routing Configuration
 
 When using Docker as a [provider](./overview.md),
-Traefik uses [container labels](https://docs.docker.com/engine/reference/commandline/run/#label) to retrieve its routing configuration.
+Hanzo Ingress uses [container labels](https://docs.docker.com/engine/reference/commandline/run/#label) to retrieve its routing configuration.
 
 See the list of labels in the dedicated [routing](../../../routing/providers/docker.md) section.
 
 ### Routing Configuration with Labels
 
-By default, Traefik watches for [container level labels](https://docs.docker.com/config/labels-custom-metadata/) on a standalone Docker Engine.
+By default, Hanzo Ingress watches for [container level labels](https://docs.docker.com/config/labels-custom-metadata/) on a standalone Docker Engine.
 
 When using Docker Compose, labels are specified by the directive
 [`labels`](https://docs.docker.com/compose/compose-file/compose-file-v3/#labels) from the
@@ -345,20 +345,20 @@ When using Docker Compose, labels are specified by the directive
 
     Please note that any tool like Nomad, Terraform, Ansible, etc.
     that is able to define a Docker container with labels can work
-    with Traefik and the Docker provider.
+    with Hanzo Ingress and the Docker provider.
 
 ### Port Detection
 
-Traefik retrieves the private IP and port of containers from the Docker API.
+Hanzo Ingress retrieves the private IP and port of containers from the Docker API.
 
 Port detection for private communication works as follows:
 
 - If a container [exposes](https://docs.docker.com/engine/reference/builder/#expose) a single port,
-  then Traefik uses this port.
+  then Hanzo Ingress uses this port.
 - If a container [exposes](https://docs.docker.com/engine/reference/builder/#expose) multiple ports,
-  then Traefik uses the lowest port.  E.g. if `80` and `8080` are exposed, Traefik will use `80`.
+  then Hanzo Ingress uses the lowest port.  E.g. if `80` and `8080` are exposed, Hanzo Ingress will use `80`.
 - If a container does not expose any port, or the selection from multiple ports does not fit,
-  then you must manually specify which port Traefik should use for communication
+  then you must manually specify which port Hanzo Ingress should use for communication
   by using the label `traefik.http.services.<service_name>.loadbalancer.server.port`
   (Read more on this label in the dedicated section in [routing](../../../routing/providers/docker.md#services)).
 
@@ -372,26 +372,26 @@ the IP address of the host is resolved as follows:
 - if that lookup was also unsuccessful, fall back to `127.0.0.1`
 
 On Linux, for versions of Docker older than 20.10.0, for `host.docker.internal` to be defined, it should be provided
-as an `extra_host` to the Traefik container, using the `--add-host` flag. For example, to set it to the IP address of
+as an `extra_host` to the Hanzo Ingress container, using the `--add-host` flag. For example, to set it to the IP address of
 the bridge interface (`docker0` by default): `--add-host=host.docker.internal:172.17.0.1`.
 
 ### IPv4 & IPv6
 
 When using a docker stack that uses IPv6,
-Traefik will use the IPv4 container IP before its IPv6 counterpart.
+Hanzo Ingress will use the IPv4 container IP before its IPv6 counterpart.
 Therefore, on an IPv6 Docker stack,
-Traefik will use the IPv6 container IP.
+Hanzo Ingress will use the IPv6 container IP.
 
 ### Docker API Access
 
-Traefik requires access to the docker socket to get its dynamic configuration.
+Hanzo Ingress requires access to the docker socket to get its dynamic configuration.
 
 You can specify which Docker API Endpoint to use with the directive [`endpoint`](#endpoint).
 
 !!! warning "Security Note"
 
     Accessing the Docker API without any restriction is a security concern:
-    If Traefik is attacked, then the attacker might get access to the underlying host.
+    If Hanzo Ingress is attacked, then the attacker might get access to the underlying host.
     {: #security-note }
 
     As explained in the [Docker Daemon Attack Surface documentation](https://docs.docker.com/engine/security/#docker-daemon-attack-surface):
@@ -408,23 +408,23 @@ You can specify which Docker API Endpoint to use with the directive [`endpoint`]
         - Authentication with Client Certificates as described in ["Protect the Docker daemon socket."](https://docs.docker.com/engine/security/protect-access/)
         - Authorize and filter requests to restrict possible actions with [the TecnativaDocker Socket Proxy](https://github.com/Tecnativa/docker-socket-proxy).
         - Authorization with the [Docker Authorization Plugin Mechanism](https://web.archive.org/web/20190920092526/https://docs.docker.com/engine/extend/plugins_authorization/)
-        - Accounting at networking level, by exposing the socket only inside a Docker private network, only available for Traefik.
-        - Accounting at container level, by exposing the socket on a another container than Traefik's.
-        - Accounting at kernel level, by enforcing kernel calls with mechanisms like [SELinux](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), to only allows an identified set of actions for Traefik's process (or the "socket exposer" process).
+        - Accounting at networking level, by exposing the socket only inside a Docker private network, only available for Hanzo Ingress.
+        - Accounting at container level, by exposing the socket on a another container than the proxy's.
+        - Accounting at kernel level, by enforcing kernel calls with mechanisms like [SELinux](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), to only allows an identified set of actions for Hanzo Ingress's process (or the "socket exposer" process).
         - SSH public key authentication (SSH is supported with Docker > 18.09)
         - Authentication using HTTP Basic authentication through an HTTP proxy that exposes the Docker daemon socket.
 
     ??? info "More Resources and Examples"
 
         - ["Paranoid about mounting /var/run/docker.sock?"](https://medium.com/@containeroo/traefik-2-0-paranoid-about-mounting-var-run-docker-sock-22da9cb3e78c)
-        - [Traefik and Docker: A Discussion with Docker Captain, Bret Fisher](https://blog.traefik.io/traefik-and-docker-a-discussion-with-docker-captain-bret-fisher-7f0b9a54ff88)
+        - [Docker socket security discussion with Docker Captain, Bret Fisher]()
         - [KubeCon EU 2018 Keynote, Running with Scissors, from Liz Rice](https://www.youtube.com/watch?v=ltrV-Qmh3oY)
         - [Don't expose the Docker socket (not even to a container)](https://www.lvh.io/posts/dont-expose-the-docker-socket-not-even-to-a-container/)
         - [A thread on Hacker News about sharing the `/var/run/docker.sock` file](https://news.ycombinator.com/item?id=17983623)
         - [To DinD or not to DinD](https://blog.loof.fr/2018/01/to-dind-or-not-do-dind.html)
-        - [Traefik issue GH-4174 about security with Docker socket](https://github.com/traefik/traefik/issues/4174)
+        - [Issue GH-4174 about security with Docker socket](https://github.com/hanzoai/ingress/issues/4174)
         - [Inspecting Docker Activity with Socat](https://developers.redhat.com/blog/2015/02/25/inspecting-docker-activity-with-socat/)
-        - [Letting Traefik run on Worker Nodes](https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/)
+        - [Letting Hanzo Ingress run on Worker Nodes](https://blog.mikesir87.io/2018/07/letting-traefik-run-on-worker-nodes/)
         - [Docker Socket Proxy from Tecnativa](https://github.com/Tecnativa/docker-socket-proxy)
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

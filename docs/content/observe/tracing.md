@@ -1,17 +1,17 @@
 ---
 title: "Tracing"
-description: "Tracing in Traefik Proxy allows you to track the flow of operations within your system. Using traces and spans, you can identify performance bottlenecks and pinpoint applications causing slowdowns to optimize response times effectively."
+description: "Tracing in Hanzo Ingress allows you to track the flow of operations within your system. Using traces and spans, you can identify performance bottlenecks and pinpoint applications causing slowdowns to optimize response times effectively."
 ---
 
 # Tracing
 
-Tracing in Traefik Proxy allows you to track the flow of operations within your system. Using traces and spans, you can identify performance bottlenecks and pinpoint applications causing slowdowns to optimize response times effectively.
+Tracing in Hanzo Ingress allows you to track the flow of operations within your system. Using traces and spans, you can identify performance bottlenecks and pinpoint applications causing slowdowns to optimize response times effectively.
 
-Traefik Proxy uses [OpenTelemetry](https://opentelemetry.io/) to export traces. OpenTelemetry is an open-source observability framework. You can send traces to an OpenTelemetry collector, which can then export them to a variety of backends like Jaeger, Zipkin, or Datadog.
+Hanzo Ingress uses [OpenTelemetry](https://opentelemetry.io/) to export traces. OpenTelemetry is an open-source observability framework. You can send traces to an OpenTelemetry collector, which can then export them to a variety of backends like Jaeger, Zipkin, or Datadog.
 
 ## Configuration
 
-To enable tracing in Traefik Proxy, you need to configure it in your static configuration file or Helm values if you are using the [Helm chart](https://github.com/traefik/traefik-helm-chart). The following example shows how to configure the OpenTelemetry provider to send traces to a collector via HTTP.
+To enable tracing in Hanzo Ingress, you need to configure it in your static configuration file or Helm values if you are using the [Helm chart](https://github.com/hanzoai/ingress-helm-chart). The following example shows how to configure the OpenTelemetry provider to send traces to a collector via HTTP.
 
 ```yaml tab="Structured (YAML)"
 tracing:

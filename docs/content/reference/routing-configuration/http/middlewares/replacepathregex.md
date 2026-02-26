@@ -1,6 +1,6 @@
 ---
-title: "Traefik ReplacePathRegex Documentation"
-description: "In Traefik Proxy's HTTP middleware, ReplacePathRegex updates paths before forwarding requests, using a regex. Read the technical documentation."
+title: "Hanzo Ingress ReplacePathRegex Documentation"
+description: "In Hanzo Ingress's HTTP middleware, ReplacePathRegex updates paths before forwarding requests, using a regex. Read the technical documentation."
 ---
 
 The `replacePathRegex` middleware will:

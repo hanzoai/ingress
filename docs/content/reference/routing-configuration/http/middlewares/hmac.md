@@ -1,10 +1,10 @@
 ---
 title: "HMAC"
-description: "Traefik Hub API Gateway - The HMAC Middleware allows you secure your APIs using the HMAC mechanism."
+description: "Hanzo API Gateway - The HMAC Middleware allows you secure your APIs using the HMAC mechanism."
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 This middleware validates a digital signature computed using the content of an HTTP request and a shared secret that is
 sent to the proxy using the `Authorization` or `Proxy-Authorization` header.

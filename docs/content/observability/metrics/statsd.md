@@ -1,6 +1,6 @@
 ---
-title: "Traefik StatsD Documentation"
-description: "Traefik supports several metrics backends, including StatsD. Learn how to implement it for observability in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress StatsD Documentation"
+description: "Hanzo Ingress supports several metrics backends, including StatsD. Learn how to implement it for observability in Hanzo Ingress. Read the technical documentation."
 ---
 
 # StatsD

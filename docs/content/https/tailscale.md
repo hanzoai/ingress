@@ -1,6 +1,6 @@
 ---
-title: "Traefik Tailscale Documentation"
-description: "Learn how to configure Traefik Proxy to resolve TLS certificates for your Tailscale services. Read the technical documentation."
+title: "Hanzo Ingress Tailscale Documentation"
+description: "Learn how to configure Hanzo Ingress to resolve TLS certificates for your Tailscale services. Read the technical documentation."
 ---
 
 # Tailscale
@@ -203,5 +203,5 @@ A certificate resolver requests certificates for a set of domain names inferred 
 
 ## Automatic Renewals
 
-Traefik automatically tracks the expiry date of each Tailscale certificate it fetches,
+Hanzo Ingress automatically tracks the expiry date of each Tailscale certificate it fetches,
 and starts to renew a certificate 14 days before its expiry to match Tailscale daemon renew policy.
