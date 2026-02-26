@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	dynamic "github.com/traefik/traefik/v3/pkg/config/dynamic"
+	dynamic "github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 )
 
 // ServersTransportSpecApplyConfiguration represents a declarative configuration of the ServersTransportSpec type for use

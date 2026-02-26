@@ -8,9 +8,9 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/static"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/plugins"
+	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/plugins"
 )
 
 const outputDir = "./plugins-storage/"

@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	"github.com/traefik/traefik/v3/pkg/middlewares/tcp/inflightconn"
-	"github.com/traefik/traefik/v3/pkg/middlewares/tcp/ipallowlist"
-	"github.com/traefik/traefik/v3/pkg/middlewares/tcp/ipwhitelist"
-	"github.com/traefik/traefik/v3/pkg/server/provider"
-	"github.com/traefik/traefik/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/inflightconn"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/ipallowlist"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/ipwhitelist"
+	"github.com/hanzoai/ingress/v3/pkg/server/provider"
+	"github.com/hanzoai/ingress/v3/pkg/tcp"
 )
 
 type middlewareStackType int

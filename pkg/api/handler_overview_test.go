@@ -10,15 +10,15 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	"github.com/traefik/traefik/v3/pkg/config/static"
-	otypes "github.com/traefik/traefik/v3/pkg/observability/types"
-	"github.com/traefik/traefik/v3/pkg/provider/docker"
-	"github.com/traefik/traefik/v3/pkg/provider/file"
-	"github.com/traefik/traefik/v3/pkg/provider/kubernetes/crd"
-	"github.com/traefik/traefik/v3/pkg/provider/kubernetes/ingress"
-	"github.com/traefik/traefik/v3/pkg/provider/rest"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/v3/pkg/provider/docker"
+	"github.com/hanzoai/ingress/v3/pkg/provider/file"
+	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd"
+	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/ingress"
+	"github.com/hanzoai/ingress/v3/pkg/provider/rest"
 )
 
 func TestHandler_Overview(t *testing.T) {

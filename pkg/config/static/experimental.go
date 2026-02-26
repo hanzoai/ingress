@@ -1,6 +1,6 @@
 package static
 
-import "github.com/traefik/traefik/v3/pkg/plugins"
+import "github.com/hanzoai/ingress/v3/pkg/plugins"
 
 // Experimental experimental Traefik features.
 type Experimental struct {

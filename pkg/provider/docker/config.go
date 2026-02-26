@@ -11,11 +11,11 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/label"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
-	"github.com/traefik/traefik/v3/pkg/provider"
-	"github.com/traefik/traefik/v3/pkg/provider/constraints"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/label"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/provider"
+	"github.com/hanzoai/ingress/v3/pkg/provider/constraints"
 )
 
 type DynConfBuilder struct {

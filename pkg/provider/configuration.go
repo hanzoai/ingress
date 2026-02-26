@@ -11,8 +11,8 @@ import (
 
 	"github.com/Masterminds/sprig/v3"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 )
 
 // MakeDefaultRuleTemplate creates the default rule template.

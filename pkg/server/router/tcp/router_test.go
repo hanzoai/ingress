@@ -17,14 +17,14 @@ import (
 	"github.com/go-acme/lego/v4/challenge/tlsalpn01"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/traefik/v3/pkg/config/dynamic"
-	"github.com/traefik/traefik/v3/pkg/config/runtime"
-	tcpmiddleware "github.com/traefik/traefik/v3/pkg/server/middleware/tcp"
-	"github.com/traefik/traefik/v3/pkg/server/service/tcp"
-	tcp2 "github.com/traefik/traefik/v3/pkg/tcp"
-	traefiktls "github.com/traefik/traefik/v3/pkg/tls"
-	"github.com/traefik/traefik/v3/pkg/tls/generate"
-	"github.com/traefik/traefik/v3/pkg/types"
+	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
+	tcpmiddleware "github.com/hanzoai/ingress/v3/pkg/server/middleware/tcp"
+	"github.com/hanzoai/ingress/v3/pkg/server/service/tcp"
+	tcp2 "github.com/hanzoai/ingress/v3/pkg/tcp"
+	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/v3/pkg/tls/generate"
+	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
 type applyRouter func(conf *runtime.Configuration)

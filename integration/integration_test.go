@@ -31,7 +31,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/network"
-	"github.com/traefik/traefik/v3/integration/try"
+	"github.com/hanzoai/ingress/v3/integration/try"
 	"gopkg.in/yaml.v3"
 )
 
