@@ -307,7 +307,7 @@ func TestRedirectSchemeHandler(t *testing.T) {
 			t.Parallel()
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-			handler, err := NewRedirectScheme(t.Context(), next, test.config, "traefikTest")
+			handler, err := NewRedirectScheme(t.Context(), next, test.config, "ingressTest")
 
 			if test.errorExpected {
 				require.Error(t, err)

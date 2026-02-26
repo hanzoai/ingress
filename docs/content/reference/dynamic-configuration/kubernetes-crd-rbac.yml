@@ -48,12 +48,12 @@ rules:
     verbs:
       - update
   - apiGroups:
-      - traefik.io
+      - hanzo.ai
     resources:
       - middlewares
       - middlewaretcps
       - ingressroutes
-      - traefikservices
+      - ingressservices
       - ingressroutetcps
       - ingressrouteudps
       - tlsoptions

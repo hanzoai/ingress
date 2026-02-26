@@ -101,7 +101,7 @@ your-container:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroutestripprefix
@@ -129,7 +129,7 @@ metadata:
   name: ingress
   namespace: appspace
   annotations:
-    "traefik.ingress.kubernetes.io/router.middlewares": add-foo-prefix@file
+    "ingress.kubernetes.io/router.middlewares": add-foo-prefix@file
 spec:
 ```
 

@@ -31,7 +31,7 @@ func (s *ThrottlingSuite) SetupSuite() {
 }
 
 func (s *ThrottlingSuite) TestThrottleConfReload() {
-	s.traefikCmd(withConfigFile("fixtures/throttling/simple.toml"))
+	s.ingressCmd(withConfigFile("fixtures/throttling/simple.toml"))
 
 	// wait for Traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.BodyContains("rest@internal"))

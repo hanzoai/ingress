@@ -244,7 +244,7 @@ func newOpenTelemetryMeterProvider(ctx context.Context, config *otypes.OTLP) (*s
 		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exporter, opts...)),
 		// View to customize histogram buckets and rename a single histogram instrument.
 		sdkmetric.WithView(sdkmetric.NewView(
-			sdkmetric.Instrument{Name: "traefik_*_request_duration_seconds"},
+			sdkmetric.Instrument{Name: "ingress_*_request_duration_seconds"},
 			sdkmetric.Stream{Aggregation: sdkmetric.AggregationExplicitBucketHistogram{
 				Boundaries: config.ExplicitBoundaries,
 			}},

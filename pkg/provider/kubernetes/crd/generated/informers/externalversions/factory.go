@@ -33,7 +33,7 @@ import (
 
 	versioned "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
 	internalinterfaces "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/internalinterfaces"
-	traefikio "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/traefikio"
+	hanzoai "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/hanzoai"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -262,9 +262,9 @@ type SharedInformerFactory interface {
 	// client.
 	InformerFor(obj runtime.Object, newFunc internalinterfaces.NewInformerFunc) cache.SharedIndexInformer
 
-	Traefik() traefikio.Interface
+	Hanzo() hanzoai.Interface
 }
 
-func (f *sharedInformerFactory) Traefik() traefikio.Interface {
-	return traefikio.New(f, f.namespace, f.tweakListOptions)
+func (f *sharedInformerFactory) Hanzo() hanzoai.Interface {
+	return hanzoai.New(f, f.namespace, f.tweakListOptions)
 }

@@ -366,7 +366,7 @@ func (c *clientWrapper) GetIngressClasses() ([]*netv1.IngressClass, error) {
 	}
 
 	for _, ic := range ingressClasses {
-		if ic.Spec.Controller == traefikDefaultIngressClassController {
+		if ic.Spec.Controller == defaultIngressClassController {
 			ics = append(ics, ic)
 		}
 	}

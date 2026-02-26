@@ -30,7 +30,7 @@ kind: GatewayClass
 metadata:
   name: traefik
 spec:
-  controllerName: traefik.io/gateway-controller
+  controllerName: hanzo.ai/gateway-controller
 ```
 
 Next, the following `Gateway` manifest configures the running Hanzo Ingress controller to handle the incoming traffic.
@@ -329,7 +329,7 @@ spec:
 
 ```yaml tab="AddPrefix middleware"
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: add-prefix

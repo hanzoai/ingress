@@ -18,7 +18,7 @@ This registers the `Middleware` kind and other CRD resources.
 ## Configuration Example
 
 ```yaml tab="Middleware"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: stripprefix
@@ -31,7 +31,7 @@ spec:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroutebar

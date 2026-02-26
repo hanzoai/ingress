@@ -3,7 +3,7 @@ kind: GatewayClass
 metadata:
   name: my-gateway-class
 spec:
-  controllerName: traefik.io/gateway-controller
+  controllerName: hanzo.ai/gateway-controller
 
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -73,8 +73,8 @@ spec:
             value: /foo
 
       backendRefs:
-        - group: traefik.io
-          kind: TraefikService
+        - group: hanzo.ai
+          kind: IngressService
           name: myservice@file
           weight: 1
           port: 80

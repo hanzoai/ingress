@@ -33,10 +33,10 @@ const (
 	CommonFormat string = "common"
 )
 
-const OTelTraefikServiceName = "traefik"
+const OTelIngressServiceName = "ingress"
 
-// TraefikLog holds the configuration settings for the traefik logger.
-type TraefikLog struct {
+// IngressLog holds the configuration settings for the traefik logger.
+type IngressLog struct {
 	Level   string `description:"Log level set to traefik logs." json:"level,omitempty" toml:"level,omitempty" yaml:"level,omitempty" export:"true"`
 	Format  string `description:"Traefik log format: json | common" json:"format,omitempty" toml:"format,omitempty" yaml:"format,omitempty" export:"true"`
 	NoColor bool   `description:"When using the 'common' format, disables the colorized output." json:"noColor,omitempty" toml:"noColor,omitempty" yaml:"noColor,omitempty" export:"true"`
@@ -51,7 +51,7 @@ type TraefikLog struct {
 }
 
 // SetDefaults sets the default values.
-func (l *TraefikLog) SetDefaults() {
+func (l *IngressLog) SetDefaults() {
 	l.Format = CommonFormat
 	l.Level = "ERROR"
 }
@@ -160,7 +160,7 @@ type OTelLog struct {
 
 // SetDefaults sets the default values.
 func (o *OTelLog) SetDefaults() {
-	o.ServiceName = OTelTraefikServiceName
+	o.ServiceName = OTelIngressServiceName
 	o.HTTP = &OTelHTTP{}
 	o.HTTP.SetDefaults()
 }

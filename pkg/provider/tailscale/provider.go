@@ -16,7 +16,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/muxer/tcp"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -31,7 +31,7 @@ type Provider struct {
 	dynMessages chan<- dynamic.Message     // update to Traefik core
 
 	certByDomainMu sync.RWMutex
-	certByDomain   map[string]traefiktls.Certificate
+	certByDomain   map[string]ingresstls.Certificate
 }
 
 // ThrottleDuration implements the aggregator.throttled interface, in order to
@@ -43,7 +43,7 @@ func (p *Provider) ThrottleDuration() time.Duration {
 // Init implements the provider.Provider interface.
 func (p *Provider) Init() error {
 	p.dynConfigs = make(chan dynamic.Configuration)
-	p.certByDomain = make(map[string]traefiktls.Certificate)
+	p.certByDomain = make(map[string]ingresstls.Certificate)
 
 	return nil
 }
@@ -225,7 +225,7 @@ func (p *Provider) purgeUnusedCerts(domains []string) bool {
 	p.certByDomainMu.Lock()
 	defer p.certByDomainMu.Unlock()
 
-	newCertByDomain := make(map[string]traefiktls.Certificate)
+	newCertByDomain := make(map[string]ingresstls.Certificate)
 	for _, domain := range domains {
 		if cert, ok := p.certByDomain[domain]; ok {
 			newCertByDomain[domain] = cert
@@ -254,7 +254,7 @@ func (p *Provider) fetchCerts(ctx context.Context, domains []string) {
 		logger.Debug().Msgf("Fetched certificate for domain %q", domain)
 
 		p.certByDomainMu.Lock()
-		p.certByDomain[domain] = traefiktls.Certificate{
+		p.certByDomain[domain] = ingresstls.Certificate{
 			CertFile: types.FileOrContent(cert),
 			KeyFile:  types.FileOrContent(key),
 		}
@@ -281,11 +281,11 @@ func (p *Provider) sendDynamicConfig() {
 	}
 	sort.Strings(sortedDomains)
 
-	var certs []*traefiktls.CertAndStores
+	var certs []*ingresstls.CertAndStores
 	for _, domain := range sortedDomains {
 		// Only the default store is supported.
-		certs = append(certs, &traefiktls.CertAndStores{
-			Stores:      []string{traefiktls.DefaultTLSStoreName},
+		certs = append(certs, &ingresstls.CertAndStores{
+			Stores:      []string{ingresstls.DefaultTLSStoreName},
 			Certificate: p.certByDomain[domain],
 		})
 	}

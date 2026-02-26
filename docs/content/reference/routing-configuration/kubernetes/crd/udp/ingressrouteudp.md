@@ -12,7 +12,7 @@ This registers the `IngressRouteUDP` kind and other CRD resources.
 ## Configuration Example
 
 ```yaml tab="IngressRouteUDP"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: ingressrouteudpfoo
@@ -55,7 +55,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Ports defined on Resource"
 
     ```yaml tab="IngressRouteUDP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: test.route
@@ -87,7 +87,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Port defined on the Service"
 
     ```yaml tab="IngressRouteUDP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: test.route
@@ -120,7 +120,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Port defined on both sides"
 
     ```yaml tab="IngressRouteUDP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: test.route
@@ -156,7 +156,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 To avoid creating the server load-balancer with the pods IPs and use Kubernetes Service `clusterIP` directly, one should set the `NativeLB` option to true. By default, `NativeLB` is false.
 
 ```yaml tab="IngressRouteUDP"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: test.route

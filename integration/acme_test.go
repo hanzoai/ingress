@@ -58,7 +58,7 @@ type templateModel struct {
 
 const (
 	// Domain to check
-	acmeDomain = "traefik.acme.wtf"
+	acmeDomain = "ingress.acme.wtf"
 
 	// Wildcard domain to check
 	wildcardDomain = "*.acme.wtf"
@@ -145,7 +145,7 @@ func (s *AcmeSuite) TestHTTP01Domains() {
 		}},
 		template: templateModel{
 			Domains: []types.Domain{{
-				Main: "traefik.acme.wtf",
+				Main: "ingress.acme.wtf",
 			}},
 			Acme: map[string]static.CertificateResolver{
 				"default": {ACME: &acme.Configuration{
@@ -168,7 +168,7 @@ func (s *AcmeSuite) TestHTTP01StoreDomains() {
 		}},
 		template: templateModel{
 			Domain: types.Domain{
-				Main: "traefik.acme.wtf",
+				Main: "ingress.acme.wtf",
 			},
 			Acme: map[string]static.CertificateResolver{
 				"default": {ACME: &acme.Configuration{
@@ -192,7 +192,7 @@ func (s *AcmeSuite) TestHTTP01DomainsInSAN() {
 		template: templateModel{
 			Domains: []types.Domain{{
 				Main: "acme.wtf",
-				SANs: []string{"traefik.acme.wtf"},
+				SANs: []string{"ingress.acme.wtf"},
 			}},
 			Acme: map[string]static.CertificateResolver{
 				"default": {ACME: &acme.Configuration{
@@ -390,7 +390,7 @@ func (s *AcmeSuite) TestTLSALPN01Domains() {
 		}},
 		template: templateModel{
 			Domains: []types.Domain{{
-				Main: "traefik.acme.wtf",
+				Main: "ingress.acme.wtf",
 			}},
 			Acme: map[string]static.CertificateResolver{
 				"default": {ACME: &acme.Configuration{
@@ -414,7 +414,7 @@ func (s *AcmeSuite) TestTLSALPN01DomainsInSAN() {
 		template: templateModel{
 			Domains: []types.Domain{{
 				Main: "acme.wtf",
-				SANs: []string{"traefik.acme.wtf"},
+				SANs: []string{"ingress.acme.wtf"},
 			}},
 			Acme: map[string]static.CertificateResolver{
 				"default": {ACME: &acme.Configuration{
@@ -438,7 +438,7 @@ func (s *AcmeSuite) TestNoValidLetsEncryptServer() {
 		},
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Expected traefik works
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -463,7 +463,7 @@ func (s *AcmeSuite) retrieveAcmeCertificate(testCase acmeTestCase) {
 
 	file := s.adaptFile(testCase.traefikConfFilePath, testCase.template)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// A real file is needed to have the right mode on acme.json file
 	defer os.Remove("/tmp/acme.json")

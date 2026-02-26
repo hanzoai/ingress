@@ -49,7 +49,7 @@ func (s *TCPSuite) TestMixed() {
 		WhoamiNoCert: s.getComposeServiceIP("whoami-no-cert") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("Path(`/test`)"))
 	require.NoError(s.T(), err)
@@ -97,7 +97,7 @@ func (s *TCPSuite) TestTLSOptions() {
 		WhoamiNoCert: s.getComposeServiceIP("whoami-no-cert") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-c.test`)"))
 	require.NoError(s.T(), err)
@@ -138,7 +138,7 @@ func (s *TCPSuite) TestNonTLSFallback() {
 		WhoamiNoTLS:  s.getComposeServiceIP("whoami-no-tls") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
@@ -170,7 +170,7 @@ func (s *TCPSuite) TestNonTlsTcp() {
 		WhoamiNoTLS: s.getComposeServiceIP("whoami-no-tls") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
@@ -188,7 +188,7 @@ func (s *TCPSuite) TestCatchAllNoTLS() {
 		WhoamiBannerAddress: s.getComposeServiceIP("whoami-banner") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
@@ -208,7 +208,7 @@ func (s *TCPSuite) TestCatchAllNoTLSWithHTTPS() {
 		WhoamiURL:          "http://" + s.getComposeServiceIP("whoami") + ":80",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
@@ -233,7 +233,7 @@ func (s *TCPSuite) TestMiddlewareAllowList() {
 		WhoamiB: s.getComposeServiceIP("whoami-b") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
@@ -257,7 +257,7 @@ func (s *TCPSuite) TestMiddlewareWhiteList() {
 		WhoamiB: s.getComposeServiceIP("whoami-b") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
@@ -281,7 +281,7 @@ func (s *TCPSuite) TestWRR() {
 		WhoamiAB: s.getComposeServiceIP("whoami-ab") + ":8080",
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-b.test`)"))
 	require.NoError(s.T(), err)

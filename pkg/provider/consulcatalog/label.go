@@ -22,7 +22,7 @@ func (p *Provider) getExtraConf(labels map[string]string) (configuration, error)
 		ConsulCatalog: specificConfiguration{Connect: p.ConnectByDefault},
 	}
 
-	err := label.Decode(labels, &conf, "traefik.consulcatalog.", "traefik.enable")
+	err := label.Decode(labels, &conf, "ingress.consulcatalog.", "ingress.enable")
 	if err != nil {
 		return configuration{}, err
 	}

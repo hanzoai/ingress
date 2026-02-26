@@ -95,7 +95,7 @@ kubectl apply -f whoami-route.yaml
 ### Using IngressRoute
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -252,7 +252,7 @@ kubectl apply -f whoami-route.yaml
 Update your existing IngressRoute to include path-based routing:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -387,7 +387,7 @@ kubectl apply -f whoami-route.yaml
 Update your existing IngressRoute to use TLS:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami

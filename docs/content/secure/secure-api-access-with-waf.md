@@ -15,7 +15,7 @@ The [Coraza Web Application Firewall](https://coraza.io/) middleware in Hanzo AP
 To protect your applications with custom security rules, apply the following configuration:
 
 ```yaml tab="Middleware WAF"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: waf-protection
@@ -38,7 +38,7 @@ This configuration implements three security directives that work together to pr
 - **SQL Injection Detection**: The third rule scans request parameters (query strings and form data) for SQL injection patterns using Coraza's built-in detection engine. The `ARGS` variable covers query string parameters like `?id=1` and form data from POST requests like `username=admin&password=123`, but does not include cookies. SQL injection attacks attempt to manipulate database queries by injecting malicious SQL code through user inputs. When detected, the rule blocks the request and logs detailed information about the attempted attack, including which parameter contained the malicious payload.
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: protected-app
@@ -95,7 +95,7 @@ spec:
 To implement comprehensive protection using the OWASP Core Rule Set, which provides battle-tested rules against common attack patterns, apply the following configuration:
 
 ```yaml tab="Middleware WAF with CRS"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: waf-crs-protection
@@ -127,7 +127,7 @@ This advanced configuration implements [OWASP Core Rule Set (CRS)](https://corer
 - **BLOCKING-EVALUATION Rule Set**: The `REQUEST-949-BLOCKING-EVALUATION.conf` file evaluates the accumulated anomaly score against the configured thresholds. If the total score exceeds the threshold, it triggers the blocking action, preventing the request from reaching your application.
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: crs-protected-app

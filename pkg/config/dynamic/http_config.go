@@ -7,7 +7,7 @@ import (
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/hanzoai/ingress/dynamic/ext"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 	"google.golang.org/grpc/codes"
 	"k8s.io/utils/ptr"
@@ -504,7 +504,7 @@ type ServersTransport struct {
 	ServerName          string                  `description:"Defines the serverName used to contact the server." json:"serverName,omitempty" toml:"serverName,omitempty" yaml:"serverName,omitempty"`
 	InsecureSkipVerify  bool                    `description:"Disables SSL certificate verification." json:"insecureSkipVerify,omitempty" toml:"insecureSkipVerify,omitempty" yaml:"insecureSkipVerify,omitempty" export:"true"`
 	RootCAs             []types.FileOrContent   `description:"Defines a list of CA certificates used to validate server certificates." json:"rootCAs,omitempty" toml:"rootCAs,omitempty" yaml:"rootCAs,omitempty"`
-	Certificates        traefiktls.Certificates `description:"Defines a list of client certificates for mTLS." json:"certificates,omitempty" toml:"certificates,omitempty" yaml:"certificates,omitempty" export:"true"`
+	Certificates        ingresstls.Certificates `description:"Defines a list of client certificates for mTLS." json:"certificates,omitempty" toml:"certificates,omitempty" yaml:"certificates,omitempty" export:"true"`
 	CipherSuites        []string                `description:"Defines the cipher suites to use when contacting backend servers." json:"cipherSuites,omitempty" toml:"cipherSuites,omitempty" yaml:"cipherSuites,omitempty" export:"true"`
 	MinVersion          string                  `description:"Defines the minimum TLS version to use when contacting backend servers." json:"minVersion,omitempty" toml:"minVersion,omitempty" yaml:"minVersion,omitempty" export:"true"`
 	MaxVersion          string                  `description:"Defines the maximum TLS version to use when contacting backend servers." json:"maxVersion,omitempty" toml:"maxVersion,omitempty" yaml:"maxVersion,omitempty" export:"true"`

@@ -23,7 +23,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 	"go.opentelemetry.io/contrib/bridges/otellogrus"
 	"go.opentelemetry.io/otel/trace"
@@ -113,7 +113,7 @@ func NewHandler(ctx context.Context, config *otypes.AccessLog) (*Handler, error)
 			return nil, fmt.Errorf("setting up OpenTelemetry logger provider: %w", err)
 		}
 
-		logger.Hooks.Add(otellogrus.NewHook("traefik", otellogrus.WithLoggerProvider(otelLoggerProvider)))
+		logger.Hooks.Add(otellogrus.NewHook("ingress", otellogrus.WithLoggerProvider(otelLoggerProvider)))
 		if !config.DualOutput {
 			logger.Out = io.Discard
 		}
@@ -235,8 +235,8 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request, next http
 	core[RequestScheme] = "http"
 	if req.TLS != nil {
 		core[RequestScheme] = "https"
-		core[TLSVersion] = traefiktls.GetVersion(req.TLS)
-		core[TLSCipher] = traefiktls.GetCipherName(req.TLS)
+		core[TLSVersion] = ingresstls.GetVersion(req.TLS)
+		core[TLSCipher] = ingresstls.GetCipherName(req.TLS)
 		if len(req.TLS.PeerCertificates) > 0 && req.TLS.PeerCertificates[0] != nil {
 			core[TLSClientSubject] = req.TLS.PeerCertificates[0].Subject.String()
 		}

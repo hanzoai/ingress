@@ -15,7 +15,7 @@ import (
 )
 
 // DefaultDomain Traefik domain for the default certificate.
-const DefaultDomain = "TRAEFIK DEFAULT CERT"
+const DefaultDomain = "INGRESS DEFAULT CERT"
 
 // DefaultCertificate generates random TLS certificates.
 func DefaultCertificate() (*tls.Certificate, error) {

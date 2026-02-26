@@ -12,21 +12,21 @@ import (
 )
 
 // NewCmd builds a new HealthCheck command.
-func NewCmd(traefikConfiguration *static.Configuration, loaders []cli.ResourceLoader) *cli.Command {
+func NewCmd(ingressConfiguration *static.Configuration, loaders []cli.ResourceLoader) *cli.Command {
 	return &cli.Command{
 		Name:          "healthcheck",
 		Description:   `Calls Traefik /ping endpoint (disabled by default) to check the health of Traefik.`,
-		Configuration: traefikConfiguration,
-		Run:           runCmd(traefikConfiguration),
+		Configuration: ingressConfiguration,
+		Run:           runCmd(ingressConfiguration),
 		Resources:     loaders,
 	}
 }
 
-func runCmd(traefikConfiguration *static.Configuration) func(_ []string) error {
+func runCmd(ingressConfiguration *static.Configuration) func(_ []string) error {
 	return func(_ []string) error {
-		traefikConfiguration.SetEffectiveConfiguration()
+		ingressConfiguration.SetEffectiveConfiguration()
 
-		resp, errPing := Do(*traefikConfiguration)
+		resp, errPing := Do(*ingressConfiguration)
 		if resp != nil {
 			resp.Body.Close()
 		}
@@ -53,7 +53,7 @@ func Do(staticConfiguration static.Configuration) (*http.Response, error) {
 
 	ep := staticConfiguration.Ping.EntryPoint
 	if ep == "" {
-		ep = "traefik"
+		ep = "ingress"
 	}
 
 	pingEntryPoint, ok := staticConfiguration.EntryPoints[ep]

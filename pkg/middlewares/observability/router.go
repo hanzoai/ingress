@@ -51,8 +51,8 @@ func (f *routerTracing) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 		req = req.WithContext(tracingCtx)
 
-		span.SetAttributes(attribute.String("traefik.service.name", f.service))
-		span.SetAttributes(attribute.String("traefik.router.name", f.router))
+		span.SetAttributes(attribute.String("ingress.service.name", f.service))
+		span.SetAttributes(attribute.String("ingress.router.name", f.router))
 		span.SetAttributes(semconv.HTTPRoute(f.routerRule))
 	}
 

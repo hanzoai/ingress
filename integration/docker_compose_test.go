@@ -44,7 +44,7 @@ func (s *DockerComposeSuite) TestComposeScale() {
 	}
 	file := s.adaptFile("fixtures/docker/minimal.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req := testhelpers.MustNewRequest(http.MethodGet, "http://127.0.0.1:8000/whoami", nil)
 	req.Host = "my.super.host"

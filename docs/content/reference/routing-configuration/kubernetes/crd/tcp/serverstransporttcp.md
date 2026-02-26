@@ -22,7 +22,7 @@ This registers the `ServersTransportTCP` kind and other CRD resources.
 ## Configuration Example
 
 ```yaml tab="ServersTransportTCP"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: ServersTransportTCP
 metadata:
   name: mytransport

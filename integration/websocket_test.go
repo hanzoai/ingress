@@ -54,7 +54,7 @@ func (s *WebsocketSuite) TestBase() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -98,7 +98,7 @@ func (s *WebsocketSuite) TestWrongOrigin() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -141,7 +141,7 @@ func (s *WebsocketSuite) TestOrigin() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -195,7 +195,7 @@ func (s *WebsocketSuite) TestWrongOriginIgnoredByServer() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -246,7 +246,7 @@ func (s *WebsocketSuite) TestSSLTermination() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -302,7 +302,7 @@ func (s *WebsocketSuite) TestBasicAuth() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -340,7 +340,7 @@ func (s *WebsocketSuite) TestSpecificResponseFromBackend() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -379,7 +379,7 @@ func (s *WebsocketSuite) TestURLWithURLEncodedChar() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -427,7 +427,7 @@ func (s *WebsocketSuite) TestSSLhttp2() {
 		WebsocketServer: ts.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -459,7 +459,7 @@ func (s *WebsocketSuite) TestSettingEnableConnectProtocol() {
 		WebsocketServer: "http://127.0.0.1",
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
 	// Wait for traefik.
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -518,7 +518,7 @@ func (s *WebsocketSuite) TestHeaderAreForwarded() {
 		WebsocketServer: srv.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))

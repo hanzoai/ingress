@@ -20,12 +20,12 @@ Before creating `TLSOption` objects or referencing TLS options in the [`IngressR
     There may exist only one `TLSOption` with the name `default` (across all namespaces) - otherwise they will be dropped.  
     To explicitly use a different `TLSOption` (and using the Kubernetes Ingress resources)
     you'll have to add an annotation to the Ingress in the following form:
-    `traefik.ingress.kubernetes.io/router.tls.options: <resource-namespace>-<resource-name>@kubernetescrd`
+    `ingress.kubernetes.io/router.tls.options: <resource-namespace>-<resource-name>@kubernetescrd`
 
 ## Configuration Example
 
 ```yaml tab="TLSOption"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: mytlsoption

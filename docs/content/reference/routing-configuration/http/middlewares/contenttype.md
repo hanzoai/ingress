@@ -44,7 +44,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Enable auto-detection
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: autodetect

@@ -73,7 +73,7 @@ func (s *GatewayAPIConformanceSuite) SetupSuite() {
 	}
 
 	if !slices.ContainsFunc(images, func(img testcontainers.ImageInfo) bool {
-		return img.Name == traefikImage
+		return img.Name == ingressImage
 	}) {
 		s.T().Fatal("Traefik image is not present")
 	}
@@ -89,11 +89,11 @@ func (s *GatewayAPIConformanceSuite) SetupSuite() {
 		s.T().Fatal(err)
 	}
 
-	if err = s.k3sContainer.LoadImages(ctx, traefikImage); err != nil {
+	if err = s.k3sContainer.LoadImages(ctx, ingressImage); err != nil {
 		s.T().Fatal(err)
 	}
 
-	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", traefikNamespace, traefikDeployment, "--for=condition=Available", "--timeout=30s"})
+	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", ingressNamespace, traefikDeployment, "--for=condition=Available", "--timeout=30s"})
 	if err != nil || exitCode > 0 {
 		s.T().Fatalf("Traefik pod is not ready: %v", err)
 	}
@@ -146,7 +146,7 @@ func (s *GatewayAPIConformanceSuite) TearDownSuite() {
 			}
 		}
 
-		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", traefikNamespace, traefikDeployment})
+		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", ingressNamespace, traefikDeployment})
 		if err == nil || exitCode == 0 {
 			if res, err := io.ReadAll(result); err == nil {
 				s.T().Log(string(res))
@@ -172,7 +172,7 @@ func (s *GatewayAPIConformanceSuite) TestK8sGatewayAPIConformance() {
 	cSuite, err := ksuite.NewConformanceTestSuite(ksuite.ConformanceOptions{
 		Client:                     s.kubeClient,
 		Clientset:                  s.clientSet,
-		GatewayClassName:           "traefik",
+		GatewayClassName:           "ingress",
 		Debug:                      true,
 		CleanupBaseResources:       true,
 		RestConfig:                 s.restConfig,
@@ -181,10 +181,10 @@ func (s *GatewayAPIConformanceSuite) TestK8sGatewayAPIConformance() {
 		EnableAllSupportedFeatures: false,
 		RunTest:                    *gatewayAPIConformanceRunTest,
 		Implementation: v1.Implementation{
-			Organization: "traefik",
-			Project:      "traefik",
+			Organization: "ingress",
+			Project:      "ingress",
 			URL:          "https://traefik.io/",
-			Version:      *traefikVersion,
+			Version:      *ingressVersion,
 			Contact:      []string{"@traefik/maintainers"},
 		},
 		ConformanceProfiles: sets.New(

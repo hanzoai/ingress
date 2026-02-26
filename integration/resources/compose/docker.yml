@@ -6,35 +6,35 @@ services:
     image: traefik/whoamitcp
     command: [ "-name", "my.super.host" ]
     labels:
-      traefik.tcp.Routers.Super.Rule: HostSNI(`my.super.host`)
-      traefik.tcp.Routers.Super.tls: true
-      traefik.tcp.Services.Super.Loadbalancer.server.port: 8080
+      ingress.tcp.Routers.Super.Rule: HostSNI(`my.super.host`)
+      ingress.tcp.Routers.Super.tls: true
+      ingress.tcp.Services.Super.Loadbalancer.server.port: 8080
 
   withlabels1:
     image: traefik/whoami
     labels:
-      traefik.http.Routers.Super.Rule: Host(`my.super.host`)
+      ingress.http.Routers.Super.Rule: Host(`my.super.host`)
 
   withlabels2:
     image: traefik/whoami
     labels:
-      traefik.http.Routers.SuperHost.Rule: Host(`my-super.host`)
+      ingress.http.Routers.SuperHost.Rule: Host(`my-super.host`)
 
   withonelabelmissing:
     image: traefik/whoami
     labels:
-      traefik.random.value: my.super.host
+      ingress.random.value: my.super.host
 
   powpow:
     image: traefik/whoami
     command:
       - --port=2375
     labels:
-      traefik.http.Routers.Super.Rule: Host(`my.super.host`)
-      traefik.http.Services.powpow.LoadBalancer.server.Port: 2375
+      ingress.http.Routers.Super.Rule: Host(`my.super.host`)
+      ingress.http.Services.powpow.LoadBalancer.server.Port: 2375
 
   nonRunning:
     image: traefik/whoami
     labels:
-      traefik.http.Routers.NonRunning.Rule: Host(`non.running.host`)
-      traefik.docker.allownonrunning: "true"
+      ingress.http.Routers.NonRunning.Rule: Host(`non.running.host`)
+      ingress.docker.allownonrunning: "true"

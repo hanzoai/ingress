@@ -16,7 +16,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/plog/plogotlp"
 )
 
-const traefikTestOTLPLogFile = "traefik_otlp.log"
+const ingressTestOTLPLogFile = "ingress_otlp.log"
 
 // DualLoggingSuite tests that both OTLP and stdout logging can work together.
 type DualLoggingSuite struct {
@@ -34,8 +34,8 @@ func (s *DualLoggingSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 
 	// Clean up any existing log files
-	os.Remove(traefikTestLogFile)
-	os.Remove(traefikTestOTLPLogFile)
+	os.Remove(ingressTestLogFile)
+	os.Remove(ingressTestOTLPLogFile)
 }
 
 func (s *DualLoggingSuite) TearDownSuite() {
@@ -43,8 +43,8 @@ func (s *DualLoggingSuite) TearDownSuite() {
 
 	// Clean up log files
 	generatedFiles := []string{
-		traefikTestLogFile,
-		traefikTestOTLPLogFile,
+		ingressTestLogFile,
+		ingressTestOTLPLogFile,
 	}
 
 	for _, filename := range generatedFiles {
@@ -113,8 +113,8 @@ func (s *DualLoggingSuite) TestOTLPAndStdoutLogging() {
 
 	file := s.adaptFile("fixtures/dual_logging/otlp_and_stdout.toml", tempObjects)
 
-	cmd, display := s.cmdTraefik(withConfigFile(file))
-	defer s.displayTraefikLogFile(traefikTestLogFile)
+	cmd, display := s.cmdIngress(withConfigFile(file))
+	defer s.displayIngressLogFile(ingressTestLogFile)
 
 	s.waitForTraefik("dashboard")
 

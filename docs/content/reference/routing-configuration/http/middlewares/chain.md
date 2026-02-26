@@ -107,7 +107,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test
@@ -124,7 +124,7 @@ spec:
       middlewares:
         - name: secured
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: secured
@@ -135,7 +135,7 @@ spec:
     - name: known-ips
     - name: auth-users
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: auth-users
@@ -144,7 +144,7 @@ spec:
     users:
     - test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: https-only
@@ -152,7 +152,7 @@ spec:
   redirectScheme:
     scheme: https
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: known-ips

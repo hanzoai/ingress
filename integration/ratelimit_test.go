@@ -41,7 +41,7 @@ func (s *RateLimitSuite) TestSimpleConfiguration() {
 		Server1 string
 	}{s.ServerIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("ratelimit"))
 	require.NoError(s.T(), err)
@@ -72,7 +72,7 @@ func (s *RateLimitSuite) TestRedisRateLimitSimpleConfiguration() {
 		RedisEndpoint: s.RedisEndpoint,
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("ratelimit", "redis"))
 	require.NoError(s.T(), err)

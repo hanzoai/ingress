@@ -14,7 +14,7 @@ func (p *Provider) getConfiguration(instance ecsInstance) (configuration, error)
 		Enable: p.ExposedByDefault,
 	}
 
-	err := label.Decode(instance.Labels, &conf, "traefik.ecs.", "traefik.enable")
+	err := label.Decode(instance.Labels, &conf, "ingress.ecs.", "ingress.enable")
 	if err != nil {
 		return configuration{}, err
 	}
