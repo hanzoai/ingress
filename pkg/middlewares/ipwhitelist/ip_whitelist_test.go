@@ -36,7 +36,7 @@ func TestNewIPWhiteLister(t *testing.T) {
 			t.Parallel()
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-			whiteLister, err := New(t.Context(), next, test.whiteList, "traefikTest")
+			whiteLister, err := New(t.Context(), next, test.whiteList, "ingressTest")
 
 			if test.expectedError {
 				assert.Error(t, err)
@@ -78,7 +78,7 @@ func TestIPWhiteLister_ServeHTTP(t *testing.T) {
 			t.Parallel()
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-			whiteLister, err := New(t.Context(), next, test.whiteList, "traefikTest")
+			whiteLister, err := New(t.Context(), next, test.whiteList, "ingressTest")
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()

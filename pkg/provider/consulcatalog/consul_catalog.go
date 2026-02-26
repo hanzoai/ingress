@@ -96,10 +96,10 @@ type Configuration struct {
 func (c *Configuration) SetDefaults() {
 	c.Endpoint = &EndpointConfig{}
 	c.RefreshInterval = ptypes.Duration(15 * time.Second)
-	c.Prefix = "traefik"
+	c.Prefix = "ingress"
 	c.ExposedByDefault = true
 	c.DefaultRule = defaultTemplateRule
-	c.ServiceName = "traefik"
+	c.ServiceName = "ingress"
 	c.StrictChecks = defaultStrictChecks()
 }
 

@@ -107,7 +107,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: myingressroute
@@ -125,7 +125,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
           port: 80
     
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteTCP
     metadata:
       name: ingressroute.tcp
@@ -141,7 +141,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
             port: 8080
     
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: ingressroute.udp
@@ -299,7 +299,7 @@ You can find an excerpt of the available custom resources in the table below:
 |--------------------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------|
 | [IngressRoute](#kind-ingressroute)               | HTTP Routing                                                       | [HTTP router](../routers/index.md#configuring-http-routers)    |
 | [Middleware](#kind-middleware)                   | Tweaks the HTTP requests before they are sent to your service      | [HTTP Middlewares](../../middlewares/http/overview.md)         |
-| [TraefikService](#kind-traefikservice)           | Abstraction for HTTP loadbalancing/mirroring                       | [HTTP service](../services/index.md#configuring-http-services) |
+| [IngressService](#kind-ingressservice)           | Abstraction for HTTP loadbalancing/mirroring                       | [HTTP service](../services/index.md#configuring-http-services) |
 | [IngressRouteTCP](#kind-ingressroutetcp)         | TCP Routing                                                        | [TCP router](../routers/index.md#configuring-tcp-routers)      |
 | [MiddlewareTCP](#kind-middlewaretcp)             | Tweaks the TCP requests before they are sent to your service       | [TCP Middlewares](../../middlewares/tcp/overview.md)           |
 | [IngressRouteUDP](#kind-ingressrouteudp)         | UDP Routing                                                        | [UDP router](../routers/index.md#configuring-udp-routers)      |
@@ -317,7 +317,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
 !!! info "IngressRoute Attributes"
 
     ```yaml
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: foo
@@ -388,7 +388,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
 | [9]  | `observability.accesslogs`     | Defines whether the route will produce [access-logs](../routers/index.md#accesslogs).                                                                                                                                                                                                        |
 | [10] | `observability.metrics`        | Defines whether the route will produce [metrics](../routers/index.md#metrics).                                                                                                                                                                                                               |
 | [11] | `observability.tracing`        | Defines whether the route will produce [traces](../routers/index.md#tracing).                                                                                                                                                                                                                |
-| [12] | `routes[n].services`           | List of any combination of [TraefikService](#kind-traefikservice) and reference to a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) (See below for `ExternalName Service` setup)                                                                     |
+| [12] | `routes[n].services`           | List of any combination of [IngressService](#kind-ingressservice) and reference to a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) (See below for `ExternalName Service` setup)                                                                     |
 | [13] | `services[n].port`             | Defines the port of a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/). This can be a reference to a named port.                                                                                                                                       |
 | [14] | `services[n].serversTransport` | Defines the reference to a [ServersTransport](#kind-serverstransport). The ServersTransport namespace is assumed to be the [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) namespace (see [ServersTransport reference](#serverstransport-reference)). |
 | [15] | `services[n].healthCheck`      | Defines the HealthCheck when service references a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/) of type ExternalName.                                                                                                                               |
@@ -409,7 +409,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
 
     ```yaml tab="IngressRoute"
     # All resources definition must be declared
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test-name
@@ -456,7 +456,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
     ```yaml tab="Middlewares"
     # All resources definition must be declared
     # Prefixing with /foo
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: middleware1
@@ -467,7 +467,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
     ```
 
     ```yaml tab="TLSOption"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSOption
     metadata:
       name: opt
@@ -513,7 +513,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
         
         ```yaml tab="IngressRoute"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRoute
         metadata:
           name: test.route
@@ -543,7 +543,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
         
         ```yaml tab="ExternalName Service"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRoute
         metadata:
           name: test.route
@@ -574,7 +574,7 @@ Register the `IngressRoute` [kind](../../reference/dynamic-configuration/kuberne
         
         ```yaml tab="Both sides"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRoute
         metadata:
           name: test.route
@@ -611,7 +611,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
 !!! info "Declaring and using Kubernetes Service Load Balancing"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -671,7 +671,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
 
         ```yaml
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRoute
         metadata:
           name: test.route
@@ -710,7 +710,7 @@ Register the `Middleware` [kind](../../reference/dynamic-configuration/kubernete
 ??? "Declaring and Referencing a Middleware"
     
     ```yaml tab="Middleware"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: stripprefix
@@ -723,7 +723,7 @@ Register the `Middleware` [kind](../../reference/dynamic-configuration/kubernete
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -753,12 +753,12 @@ Register the `Middleware` [kind](../../reference/dynamic-configuration/kubernete
 
 More information about available middlewares in the dedicated [middlewares section](../../middlewares/http/overview.md).
 
-### Kind: `TraefikService`
+### Kind: `IngressService`
 
-`TraefikService` is the CRD implementation of a ["Hanzo Ingress Service"](../services/index.md).
+`IngressService` is the CRD implementation of a ["Hanzo Ingress Service"](../services/index.md).
 
-Register the `TraefikService` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `TraefikService` objects,
-referencing services in the [`IngressRoute`](#kind-ingressroute) objects, or recursively in others `TraefikService` objects.
+Register the `IngressService` [kind](../../reference/dynamic-configuration/kubernetes-crd.md#definitions) in the Kubernetes cluster before creating `IngressService` objects,
+referencing services in the [`IngressRoute`](#kind-ingressroute) objects, or recursively in others `IngressService` objects.
 
 !!! info "Disambiguate Hanzo Ingress and Kubernetes Services"
 
@@ -767,9 +767,9 @@ referencing services in the [`IngressRoute`](#kind-ingressroute) objects, or rec
     The field `kind` allows the following values:
     
     * `Service` (default value): to reference a [Kubernetes Service](https://kubernetes.io/docs/concepts/services-networking/service/)
-    * `TraefikService`: to reference another [Traefik Service](../services/index.md)
+    * `IngressService`: to reference another [Traefik Service](../services/index.md)
 
-`TraefikService` object allows to use any (valid) combinations of:
+`IngressService` object allows to use any (valid) combinations of:
 
 * [Weighted Round Robin](#weighted-round-robin) load balancing.
 * [Mirroring](#mirroring).
@@ -781,7 +781,7 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
 ??? "Declaring and Using Weighted Round Robin"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -796,12 +796,12 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
         services:
         - name: wrr1
           namespace: default
-          kind: TraefikService
+          kind: IngressService
     ```
     
     ```yaml tab="Weighted Round Robin"
-    apiVersion: traefik.io/v1alpha1
-    kind: TraefikService
+    apiVersion: hanzo.ai/v1alpha1
+    kind: IngressService
     metadata:
       name: wrr1
       namespace: default
@@ -813,15 +813,15 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
             port: 80
             weight: 1
           - name: wrr2
-            kind: TraefikService
+            kind: IngressService
             weight: 1
           - name: mirror1
-            kind: TraefikService
+            kind: IngressService
             weight: 1
 
     ---
-    apiVersion: traefik.io/v1alpha1
-    kind: TraefikService
+    apiVersion: hanzo.ai/v1alpha1
+    kind: IngressService
     metadata:
       name: wrr2
       namespace: default
@@ -888,7 +888,7 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
 ??? "Declaring and Using Mirroring"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -903,13 +903,13 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
         services:
         - name: mirror1
           namespace: default
-          kind: TraefikService
+          kind: IngressService
     ```
     
     ```yaml tab="Mirroring k8s Service"
     # Mirroring from a k8s Service
-    apiVersion: traefik.io/v1alpha1
-    kind: TraefikService
+    apiVersion: hanzo.ai/v1alpha1
+    kind: IngressService
     metadata:
       name: mirror1
       namespace: default
@@ -923,14 +923,14 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
             port: 80
             percent: 20
           - name: svc3                  # svc3 receives a copy of 15% of this traffic
-            kind: TraefikService
+            kind: IngressService
             percent: 15
     ```
     
     ```yaml tab="Mirroring Hanzo Ingress Service"
     # Mirroring from a Hanzo Ingress Service
-    apiVersion: traefik.io/v1alpha1
-    kind: TraefikService
+    apiVersion: hanzo.ai/v1alpha1
+    kind: IngressService
     metadata:
       name: mirror1
       namespace: default
@@ -938,13 +938,13 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
     spec:
       mirroring:
         name: wrr1                      # wrr1 receives 100% of the traffic
-        kind: TraefikService
+        kind: IngressService
         mirrors:
           - name: svc2                  # svc2 receives a copy of 20% of this traffic
             port: 80
             percent: 20
           - name: svc3                  # svc3 receives a copy of 10% of this traffic
-            kind: TraefikService
+            kind: IngressService
             percent: 10
     ```
 
@@ -982,8 +982,8 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
 
     If the optional `namespace` attribute is not set, the configuration will be applied with the namespace of the current resource.
     
-    Additionally, when the definition of the `TraefikService` is from another provider,
-    the cross-provider syntax (`service@provider`) should be used to refer to the `TraefikService`, just as in the middleware case.
+    Additionally, when the definition of the `IngressService` is from another provider,
+    the cross-provider syntax (`service@provider`) should be used to refer to the `IngressService`, just as in the middleware case.
     
     Specifying a namespace attribute in this case would not make any sense, and will be ignored (except if the provider is `kubernetescrd`).
 
@@ -1001,7 +1001,7 @@ and there is a second level because each whoami service is a `replicaset` and is
 ??? "Stickiness on two load-balancing levels"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -1016,12 +1016,12 @@ and there is a second level because each whoami service is a `replicaset` and is
         services:
         - name: wrr1
           namespace: default
-          kind: TraefikService
+          kind: IngressService
     ```
 
     ```yaml tab="Weighted Round Robin"
-    apiVersion: traefik.io/v1alpha1
-    kind: TraefikService
+    apiVersion: hanzo.ai/v1alpha1
+    kind: IngressService
     metadata:
       name: wrr1
       namespace: default
@@ -1147,7 +1147,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
 !!! info "IngressRouteTCP Attributes"
 
     ```yaml
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteTCP
     metadata:
       name: ingressroutetcpfoo
@@ -1218,7 +1218,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
 ??? example "Declaring an IngressRouteTCP"
 
     ```yaml tab="IngressRouteTCP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteTCP
     metadata:
       name: ingressroutetcpfoo
@@ -1252,7 +1252,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
     ```
     
     ```yaml tab="TLSOption"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSOption
     metadata:
       name: opt
@@ -1287,7 +1287,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
         
         ```yaml tab="Only on IngressRouteTCP"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteTCP
         metadata:
           name: test.route
@@ -1316,7 +1316,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
         
         ```yaml tab="On both sides"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteTCP
         metadata:
           name: test.route
@@ -1355,7 +1355,7 @@ Register the `IngressRouteTCP` [kind](../../reference/dynamic-configuration/kube
 
         ```yaml
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteTCP
         metadata:
           name: test.route
@@ -1393,7 +1393,7 @@ Register the `MiddlewareTCP` [kind](../../reference/dynamic-configuration/kubern
 ??? "Declaring and Referencing a MiddlewareTCP "
 
     ```yaml tab="Middleware"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: MiddlewareTCP
     metadata:
       name: ipallowlist
@@ -1405,7 +1405,7 @@ Register the `MiddlewareTCP` [kind](../../reference/dynamic-configuration/kubern
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -1444,7 +1444,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
 !!! info "IngressRouteUDP Attributes"
 
     ```yaml
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: ingressrouteudpfoo
@@ -1475,7 +1475,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
 ??? example "Declaring an IngressRouteUDP"
 
     ```yaml
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteUDP
     metadata:
       name: ingressrouteudpfoo
@@ -1507,7 +1507,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
         
         ```yaml tab="IngressRouteUDP"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteUDP
         metadata:
           name: test.route
@@ -1535,7 +1535,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
         
         ```yaml tab="ExternalName Service"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteUDP
         metadata:
           name: test.route
@@ -1564,7 +1564,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
         
         ```yaml tab="Both sides"
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteUDP
         metadata:
           name: test.route
@@ -1602,7 +1602,7 @@ Register the `IngressRouteUDP` [kind](../../reference/dynamic-configuration/kube
 
         ```yaml
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRouteUDP
         metadata:
           name: test.route
@@ -1640,7 +1640,7 @@ or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`Ingre
 !!! info "TLSOption Attributes"
    
     ```yaml tab="TLSOption"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSOption
     metadata:
       name: mytlsoption                             # [1]
@@ -1685,7 +1685,7 @@ or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`Ingre
 ??? example "Declaring and referencing a TLSOption"
    
     ```yaml tab="TLSOption"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSOption
     metadata:
       name: mytlsoption
@@ -1705,7 +1705,7 @@ or referencing TLS options in the [`IngressRoute`](#kind-ingressroute) / [`Ingre
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -1771,7 +1771,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
 
 !!! info "TLSStore Attributes"
     ```yaml tab="TLSStore"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSStore
     metadata:
       name: default
@@ -1792,7 +1792,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
 ??? example "Declaring and referencing a TLSStore"
    
     ```yaml tab="TLSStore"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: TLSStore
     metadata:
       name: default
@@ -1803,7 +1803,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutebar
@@ -1842,7 +1842,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
 !!! info "ServersTransport Attributes"
    
     ```yaml tab="ServersTransport"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: ServersTransport
     metadata:
       name: mytransport
@@ -1903,7 +1903,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
 ??? example "Declaring and referencing a ServersTransport"
    
     ```yaml tab="ServersTransport"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: ServersTransport
     metadata:
       name: mytransport
@@ -1915,7 +1915,7 @@ Register the `TLSStore` kind in the Kubernetes cluster before creating `TLSStore
     ```
     
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: testroute
@@ -1954,7 +1954,7 @@ The `default@internal` serversTransportTCP is created from the [static configura
 !!! info "ServersTransportTCP Attributes"
 
     ```yaml tab="ServersTransportTCP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: ServersTransportTCP
     metadata:
       name: mytransport
@@ -2003,7 +2003,7 @@ The `default@internal` serversTransportTCP is created from the [static configura
 ??? example "Declaring and referencing a ServersTransportTCP"
 
     ```yaml tab="ServersTransportTCP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: ServersTransportTCP
     metadata:
       name: mytransport
@@ -2016,7 +2016,7 @@ The `default@internal` serversTransportTCP is created from the [static configura
     ```
     
     ```yaml tab="IngressRouteTCP"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRouteTCP
     metadata:
       name: testroute

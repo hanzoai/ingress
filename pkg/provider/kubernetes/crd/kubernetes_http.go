@@ -13,7 +13,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/tls"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -93,8 +93,8 @@ func (p *Provider) loadIngressRouteConfiguration(ctx context.Context, client Cli
 
 			switch {
 			case len(route.Services) > 1:
-				spec := traefikv1alpha1.TraefikServiceSpec{
-					Weighted: &traefikv1alpha1.WeightedRoundRobin{
+				spec := hanzoaiv1alpha1.IngressServiceSpec{
+					Weighted: &hanzoaiv1alpha1.WeightedRoundRobin{
 						Services: route.Services,
 					},
 				}
@@ -172,7 +172,7 @@ func (p *Provider) loadIngressRouteConfiguration(ctx context.Context, client Cli
 	return conf
 }
 
-func makeMiddlewareKeys(ctx context.Context, namespace string, middlewares []traefikv1alpha1.MiddlewareRef, allowCrossNamespace bool) ([]string, error) {
+func makeMiddlewareKeys(ctx context.Context, namespace string, middlewares []hanzoaiv1alpha1.MiddlewareRef, allowCrossNamespace bool) ([]string, error) {
 	var mds []string
 
 	for _, mi := range middlewares {
@@ -213,7 +213,7 @@ func makeMiddlewareKeys(ctx context.Context, namespace string, middlewares []tra
 
 // resolveParentRouterNames resolves parent IngressRoute references to router names.
 // It returns the list of parent router names and an error if one occurred during processing.
-func resolveParentRouterNames(client Client, ingressRoute *traefikv1alpha1.IngressRoute, allowCrossNamespace bool) ([]string, error) {
+func resolveParentRouterNames(client Client, ingressRoute *hanzoaiv1alpha1.IngressRoute, allowCrossNamespace bool) ([]string, error) {
 	// If no parent refs, return empty list (not an error).
 	if len(ingressRoute.Spec.ParentRefs) == 0 {
 		return nil, nil
@@ -232,7 +232,7 @@ func resolveParentRouterNames(client Client, ingressRoute *traefikv1alpha1.Ingre
 			return nil, fmt.Errorf("cross-namespace reference to parent IngressRoute %s/%s not allowed", parentNamespace, parentRef.Name)
 		}
 
-		var parentIngressRoute *traefikv1alpha1.IngressRoute
+		var parentIngressRoute *hanzoaiv1alpha1.IngressRoute
 		for _, ir := range client.GetIngressRoutes() {
 			if ir.Name == parentRef.Name && ir.Namespace == parentNamespace {
 				parentIngressRoute = ir
@@ -264,9 +264,9 @@ type configBuilder struct {
 	disableClusterScopeResources bool
 }
 
-// buildTraefikService creates the configuration for the traefik service defined in tService,
+// buildIngressService creates the configuration for the traefik service defined in tService,
 // and adds it to the given conf map.
-func (c configBuilder) buildTraefikService(ctx context.Context, tService *traefikv1alpha1.TraefikService, conf map[string]*dynamic.Service) error {
+func (c configBuilder) buildIngressService(ctx context.Context, tService *hanzoaiv1alpha1.IngressService, conf map[string]*dynamic.Service) error {
 	id := provider.Normalize(makeID(tService.Namespace, tService.Name))
 
 	switch {
@@ -284,7 +284,7 @@ func (c configBuilder) buildTraefikService(ctx context.Context, tService *traefi
 
 // buildServicesLB creates the configuration for the load-balancer of services named id, and defined in tService.
 // It adds it to the given conf map.
-func (c configBuilder) buildServicesLB(ctx context.Context, namespace string, tService traefikv1alpha1.TraefikServiceSpec, id string, conf map[string]*dynamic.Service) error {
+func (c configBuilder) buildServicesLB(ctx context.Context, namespace string, tService hanzoaiv1alpha1.IngressServiceSpec, id string, conf map[string]*dynamic.Service) error {
 	var wrrServices []dynamic.WRRService
 
 	for _, service := range tService.Weighted.Services {
@@ -339,7 +339,7 @@ func (c configBuilder) buildServicesLB(ctx context.Context, namespace string, tS
 
 // buildMirroring creates the configuration for the mirroring service named id, and defined by tService.
 // It adds it to the given conf map.
-func (c configBuilder) buildMirroring(ctx context.Context, tService *traefikv1alpha1.TraefikService, id string, conf map[string]*dynamic.Service) error {
+func (c configBuilder) buildMirroring(ctx context.Context, tService *hanzoaiv1alpha1.IngressService, id string, conf map[string]*dynamic.Service) error {
 	fullNameMain, k8sService, err := c.nameAndService(ctx, tService.Namespace, tService.Spec.Mirroring.LoadBalancerSpec)
 	if err != nil {
 		return err
@@ -379,7 +379,7 @@ func (c configBuilder) buildMirroring(ctx context.Context, tService *traefikv1al
 }
 
 // buildServersLB creates the configuration for the load-balancer of servers defined by svc.
-func (c configBuilder) buildServersLB(ctx context.Context, namespace string, svc traefikv1alpha1.LoadBalancerSpec) (*dynamic.Service, error) {
+func (c configBuilder) buildServersLB(ctx context.Context, namespace string, svc hanzoaiv1alpha1.LoadBalancerSpec) (*dynamic.Service, error) {
 	lb := &dynamic.ServersLoadBalancer{}
 	lb.SetDefaults()
 
@@ -533,7 +533,7 @@ func (c configBuilder) makeServersTransportKey(parentNamespace string, serversTr
 	return provider.Normalize(makeID(parentNamespace, serversTransportName)), nil
 }
 
-func (c configBuilder) loadServers(parentNamespace string, svc traefikv1alpha1.LoadBalancerSpec) ([]dynamic.Server, error) {
+func (c configBuilder) loadServers(parentNamespace string, svc hanzoaiv1alpha1.LoadBalancerSpec) ([]dynamic.Server, error) {
 	namespace := namespaceOrFallback(svc, parentNamespace)
 
 	if !isNamespaceAllowed(c.allowCrossNamespace, parentNamespace, namespace) {
@@ -686,7 +686,7 @@ func (c configBuilder) loadServers(parentNamespace string, svc traefikv1alpha1.L
 // In addition, if the service is a Kubernetes one,
 // it generates and returns the configuration part for such a service,
 // so that the caller can add it to the global config map.
-func (c configBuilder) nameAndService(ctx context.Context, parentNamespace string, service traefikv1alpha1.LoadBalancerSpec) (string, *dynamic.Service, error) {
+func (c configBuilder) nameAndService(ctx context.Context, parentNamespace string, service hanzoaiv1alpha1.LoadBalancerSpec) (string, *dynamic.Service, error) {
 	svcCtx := log.Ctx(ctx).With().Str(logs.ServiceName, service.Name).Logger().WithContext(ctx)
 
 	namespace := namespaceOrFallback(service, parentNamespace)
@@ -706,7 +706,7 @@ func (c configBuilder) nameAndService(ctx context.Context, parentNamespace strin
 
 		return fullName, serversLB, nil
 
-	case "TraefikService":
+	case "IngressService":
 		return fullServiceName(svcCtx, namespace, service, intstr.FromInt(0)), nil, nil
 
 	default:
@@ -714,7 +714,7 @@ func (c configBuilder) nameAndService(ctx context.Context, parentNamespace strin
 	}
 }
 
-func (c configBuilder) buildHRW(ctx context.Context, tService *traefikv1alpha1.TraefikService, id string, conf map[string]*dynamic.Service) error {
+func (c configBuilder) buildHRW(ctx context.Context, tService *hanzoaiv1alpha1.IngressService, id string, conf map[string]*dynamic.Service) error {
 	var hrwServices []dynamic.HRWService
 	for _, hrwService := range tService.Spec.HighestRandomWeight.Services {
 		hrwServiceName, k8sService, err := c.nameAndService(ctx, tService.Namespace, hrwService.LoadBalancerSpec)
@@ -755,7 +755,7 @@ func splitSvcNameProvider(name string) (string, string) {
 	return svc, pvd
 }
 
-func fullServiceName(ctx context.Context, namespace string, service traefikv1alpha1.LoadBalancerSpec, port intstr.IntOrString) string {
+func fullServiceName(ctx context.Context, namespace string, service hanzoaiv1alpha1.LoadBalancerSpec, port intstr.IntOrString) string {
 	if (port.Type == intstr.Int && port.IntVal != 0) || (port.Type == intstr.String && port.StrVal != "") {
 		return provider.Normalize(fmt.Sprintf("%s-%s-%s", namespace, service.Name, &port))
 	}
@@ -776,7 +776,7 @@ func fullServiceName(ctx context.Context, namespace string, service traefikv1alp
 	return provider.Normalize(name) + providerNamespaceSeparator + pName
 }
 
-func namespaceOrFallback(lb traefikv1alpha1.LoadBalancerSpec, fallback string) string {
+func namespaceOrFallback(lb hanzoaiv1alpha1.LoadBalancerSpec, fallback string) string {
 	if lb.Namespace != "" {
 		return lb.Namespace
 	}
@@ -784,7 +784,7 @@ func namespaceOrFallback(lb traefikv1alpha1.LoadBalancerSpec, fallback string) s
 }
 
 // getTLSHTTP mutates tlsConfigs.
-func getTLSHTTP(ctx context.Context, ingressRoute *traefikv1alpha1.IngressRoute, k8sClient Client, tlsConfigs map[string]*tls.CertAndStores) error {
+func getTLSHTTP(ctx context.Context, ingressRoute *hanzoaiv1alpha1.IngressRoute, k8sClient Client, tlsConfigs map[string]*tls.CertAndStores) error {
 	if ingressRoute.Spec.TLS == nil {
 		return nil
 	}

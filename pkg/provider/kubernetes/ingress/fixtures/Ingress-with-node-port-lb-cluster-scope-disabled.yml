@@ -24,7 +24,7 @@ metadata:
   name: service1
   namespace: testing
   annotations:
-    traefik.ingress.kubernetes.io/service.nodeportlb: "true"
+    ingress.kubernetes.io/service.nodeportlb: "true"
 
 spec:
   ports:

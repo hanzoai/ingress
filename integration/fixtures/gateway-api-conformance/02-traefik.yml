@@ -4,7 +4,7 @@ apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: traefik
 spec:
-  controllerName: traefik.io/gateway-controller
+  controllerName: hanzo.ai/gateway-controller
 
 ---
 kind: Namespace
@@ -49,7 +49,7 @@ spec:
             - --entrypoints.web.address=:80
             - --entrypoints.websecure.address=:443
             - --entrypoints.web8080.address=:8080
-            - --entrypoints.traefik.address=:9000
+            - --entrypoints.ingress.address=:9000
             - --providers.kubernetesgateway.experimentalChannel
             - --providers.kubernetesgateway.statusaddress.service.namespace=traefik
             - --providers.kubernetesgateway.statusaddress.service.name=traefik

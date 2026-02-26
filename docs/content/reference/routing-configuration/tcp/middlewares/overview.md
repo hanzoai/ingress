@@ -81,7 +81,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: MiddlewareTCP
 metadata:
   name: foo-ip-allowlist
@@ -92,7 +92,7 @@ spec:
       - 192.168.1.7
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRouteTCP
 metadata:
   name: ingressroute

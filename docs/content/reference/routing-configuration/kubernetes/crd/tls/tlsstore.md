@@ -15,7 +15,7 @@ Before creating `TLSStore` objects, you need to apply the [Kubernetes CRDs](http
 ## Configuration Example
 
 ```yaml tab="TLSStore"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSStore
 metadata:
   name: default

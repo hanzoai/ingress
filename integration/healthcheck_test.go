@@ -52,7 +52,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration() {
 		Server2 string
 	}{s.whoami1IP, s.whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
@@ -114,7 +114,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration_Passive() {
 		Server1 string
 	}{s.whoami1IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
@@ -162,7 +162,7 @@ func (s *HealthCheckSuite) TestMultipleEntrypoints() {
 		Server2 string
 	}{s.whoami1IP, s.whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
@@ -233,7 +233,7 @@ func (s *HealthCheckSuite) TestPortOverload() {
 		Server1 string
 	}{s.whoami1IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("Host(`test.localhost`)"))
@@ -264,7 +264,7 @@ func (s *HealthCheckSuite) TestMultipleRoutersOnSameService() {
 		Server1 string
 	}{s.whoami1IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
@@ -327,7 +327,7 @@ func (s *HealthCheckSuite) TestPropagate() {
 		Server4 string
 	}{s.whoami1IP, s.whoami2IP, s.whoami3IP, s.whoami4IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
@@ -574,7 +574,7 @@ func (s *HealthCheckSuite) TestPropagateNoHealthCheck() {
 		Server1 string
 	}{s.whoami1IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`noop.localhost`)"), try.BodyNotContains("Host(`root.localhost`)"))
@@ -599,7 +599,7 @@ func (s *HealthCheckSuite) TestPropagateReload() {
 		Server2 string
 	}{s.whoami1IP, s.whoami2IP})
 
-	s.traefikCmd(withConfigFile(withoutHealthCheck))
+	s.ingressCmd(withConfigFile(withoutHealthCheck))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))

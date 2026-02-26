@@ -19,7 +19,7 @@ Below is an advanced configuration that enables the Distributed RateLimit middle
 ```yaml tab="Middleware Distributed Rate Limit"
 # Here, a limit of 100 requests per second is allowed.
 # In addition, a burst of 200 requests is allowed.
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-distributedratelimit
@@ -64,7 +64,7 @@ The middleware is based on a [token bucket](https://en.wikipedia.org/wiki/Token_
 In this analogy, the `limit` and `period` parameters define the **rate** at which the bucket refills, and the `burst` is the size (volume) of the bucket.
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-ratelimit

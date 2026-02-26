@@ -299,7 +299,7 @@ func (p *Provider) loadTCPServers(namespace string, route *gatev1alpha2.TCPRoute
 func (p *Provider) loadTCPBackendRef(backendRef gatev1.BackendRef) (string, error) {
 	// Support for cross-provider references (e.g: api@internal).
 	// This provides the same behavior as for IngressRoutes.
-	if *backendRef.Kind == "TraefikService" && strings.Contains(string(backendRef.Name), "@") {
+	if *backendRef.Kind == "IngressService" && strings.Contains(string(backendRef.Name), "@") {
 		return string(backendRef.Name), nil
 	}
 

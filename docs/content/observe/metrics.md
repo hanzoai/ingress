@@ -69,7 +69,7 @@ http:
 
 ```yaml tab="Kubernetes"
 # ingressroute.yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: my-router

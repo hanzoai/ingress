@@ -249,7 +249,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default

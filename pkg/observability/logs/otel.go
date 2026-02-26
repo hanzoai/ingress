@@ -27,7 +27,7 @@ func SetupOTelLogger(ctx context.Context, logger zerolog.Logger, config *types.O
 		return zerolog.Logger{}, fmt.Errorf("setting up OpenTelemetry logger provider: %w", err)
 	}
 
-	return logger.Hook(&otelLoggerHook{logger: provider.Logger("traefik")}), nil
+	return logger.Hook(&otelLoggerHook{logger: provider.Logger("ingress")}), nil
 }
 
 // otelLoggerHook is a zerolog hook that forwards logs to OpenTelemetry.

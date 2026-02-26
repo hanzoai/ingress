@@ -36,7 +36,7 @@ func (p *Prometheus) SetDefaults() {
 	p.Buckets = []float64{0.1, 0.3, 1.2, 5}
 	p.AddEntryPointsLabels = true
 	p.AddServicesLabels = true
-	p.EntryPoint = "traefik"
+	p.EntryPoint = "ingress"
 }
 
 // Datadog contains address and metrics pushing interval configuration.
@@ -64,7 +64,7 @@ func (d *Datadog) SetDefaults() {
 	d.PushInterval = types.Duration(10 * time.Second)
 	d.AddEntryPointsLabels = true
 	d.AddServicesLabels = true
-	d.Prefix = "traefik"
+	d.Prefix = "ingress"
 }
 
 // Statsd contains address and metrics pushing interval configuration.
@@ -83,7 +83,7 @@ func (s *Statsd) SetDefaults() {
 	s.PushInterval = types.Duration(10 * time.Second)
 	s.AddEntryPointsLabels = true
 	s.AddServicesLabels = true
-	s.Prefix = "traefik"
+	s.Prefix = "ingress"
 }
 
 // InfluxDB2 contains address, token and metrics pushing interval configuration.
@@ -130,7 +130,7 @@ func (o *OTLP) SetDefaults() {
 	o.AddServicesLabels = true
 	o.ExplicitBoundaries = []float64{.005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10}
 	o.PushInterval = types.Duration(10 * time.Second)
-	o.ServiceName = OTelTraefikServiceName
+	o.ServiceName = OTelIngressServiceName
 }
 
 // Statistics provides options for monitoring request and response stats.

@@ -18,7 +18,7 @@ import (
 	"github.com/spiffe/go-spiffe/v2/svid/x509svid"
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -189,7 +189,7 @@ func (d *DialerManager) Build(config *dynamic.TCPServersLoadBalancer, isTLS bool
 
 			if st.TLS.PeerCertURI != "" {
 				tlsConfig.VerifyPeerCertificate = func(rawCerts [][]byte, _ [][]*x509.Certificate) error {
-					return traefiktls.VerifyPeerCertificate(st.TLS.PeerCertURI, tlsConfig, rawCerts)
+					return ingresstls.VerifyPeerCertificate(st.TLS.PeerCertURI, tlsConfig, rawCerts)
 				}
 			}
 		}

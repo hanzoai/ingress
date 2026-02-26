@@ -65,13 +65,13 @@ func logDeprecations(arguments []string) (bool, error) {
 	// FILE
 	// Find the config file using the same logic as the normal file loader.
 	finder := cli.Finder{
-		BasePaths:  []string{"/etc/traefik/traefik", "$XDG_CONFIG_HOME/traefik", "$HOME/.config/traefik", "./traefik"},
+		BasePaths:  []string{"/etc/ingress/ingress", "$XDG_CONFIG_HOME/ingress", "$HOME/.config/ingress", "./ingress"},
 		Extensions: []string{"toml", "yaml", "yml"},
 	}
 
-	configFile, ok := argsLabels["traefik.configfile"]
+	configFile, ok := argsLabels["ingress.configfile"]
 	if !ok {
-		configFile = argsLabels["traefik.configFile"]
+		configFile = argsLabels["ingress.configFile"]
 	}
 
 	filePath, err := finder.Find(configFile)
@@ -129,7 +129,7 @@ func logDeprecations(arguments []string) (bool, error) {
 }
 
 // flattenToLabels recursively flattens a nested map into label key-value pairs.
-// Example: {"experimental": {"http3": true}} -> {"traefik.experimental.http3": "true"}.
+// Example: {"experimental": {"http3": true}} -> {"ingress.experimental.http3": "true"}.
 func flattenToLabels(config any, currKey string, labels map[string]string) {
 	switch v := config.(type) {
 	case map[string]any:
@@ -147,7 +147,7 @@ func flattenToLabels(config any, currKey string, labels map[string]string) {
 		}
 	default:
 		// Convert value to string and create label with traefik prefix.
-		labels["traefik."+currKey] = fmt.Sprintf("%v", v)
+		labels["ingress."+currKey] = fmt.Sprintf("%v", v)
 	}
 }
 
@@ -161,7 +161,7 @@ func parseDeprecatedConfig(labels map[string]string) (*configuration, error) {
 	}
 
 	// Convert labels to node tree.
-	node, err := parser.DecodeToNode(labels, "traefik")
+	node, err := parser.DecodeToNode(labels, "ingress")
 	if err != nil {
 		return nil, fmt.Errorf("decoding to node: %w", err)
 	}

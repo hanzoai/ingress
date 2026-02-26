@@ -21,7 +21,7 @@ func TestHTTPSuite(t *testing.T) {
 }
 
 func (s *HTTPSuite) TestSimpleConfiguration() {
-	s.traefikCmd(withConfigFile("fixtures/http/simple.toml"))
+	s.ingressCmd(withConfigFile("fixtures/http/simple.toml"))
 
 	// Expect a 404 as we configured nothing.
 	err := try.GetRequest("http://127.0.0.1:8000/", time.Second, try.StatusCodeIs(http.StatusNotFound))

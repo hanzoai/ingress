@@ -3,7 +3,7 @@ kind: IngressClass
 metadata:
   name: traefik-lb
 spec:
-  controller: traefik.io/ingress-controller
+  controller: hanzo.ai/ingress-controller
 
 ---
 kind: Ingress

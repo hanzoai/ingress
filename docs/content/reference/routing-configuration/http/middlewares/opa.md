@@ -16,7 +16,7 @@ The OPA middleware works as an [OPA agent](https://www.openpolicyagent.org/).
 ## Configuration Example
 
 ```yaml tab="Allow requests with specific JWT claim"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: opa-allow-jwt-claim
@@ -37,7 +37,7 @@ spec:
 ```
 
 ```yaml tab="Deny requests with JSON Accept Header"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: opa-deny-json

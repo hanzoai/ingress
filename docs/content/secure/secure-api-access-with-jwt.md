@@ -34,7 +34,7 @@ Hanzo API Gateway provides many kinds of sources to perform the token validation
 To allow the Hanzo API Gateway to validate a JWT with a secret value stored in a Kubernetes Secret, apply the following configuration:
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-jwt
@@ -56,7 +56,7 @@ stringData:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: my-app
@@ -113,7 +113,7 @@ spec:
 To allow the Hanzo API Gateway to validate a JWT using an Identity Provider, such as Keycloak and Azure AD in the examples below, apply the following configuration:
 
 ```yaml tab="JWKS with Keycloak URL"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-jwt
@@ -131,7 +131,7 @@ spec:
 ```
 
 ```yaml tab="JWKS with Azure AD URL"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-jwt
@@ -143,7 +143,7 @@ spec:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: my-app

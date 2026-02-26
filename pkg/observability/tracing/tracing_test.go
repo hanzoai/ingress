@@ -85,7 +85,7 @@ func TestTracing(t *testing.T) {
 				t.Helper()
 
 				attributes := resourceAttributes(traces)
-				assert.Equal(t, "traefik", attributes["service.name"])
+				assert.Equal(t, "ingress", attributes["service.name"])
 				assert.Equal(t, "dev", attributes["service.version"])
 			},
 		},
@@ -352,7 +352,7 @@ func TestTracing(t *testing.T) {
 			})
 
 			tracingConfig := &static.Tracing{
-				ServiceName:        "traefik",
+				ServiceName:        "ingress",
 				SampleRate:         1.0,
 				ResourceAttributes: test.resourceAttributes,
 				OTLP: &otypes.OTelTracing{
