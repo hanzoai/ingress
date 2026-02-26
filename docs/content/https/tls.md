@@ -134,7 +134,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSStore
 metadata:
   name: default
@@ -195,7 +195,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSStore
 metadata:
   name: default
@@ -240,7 +240,7 @@ The TLS options allow one to configure some parameters of the TLS connection.
     There may exist only one TLSOption with the name `default` (across all namespaces) - otherwise they will be dropped.  
     To explicitly use a different TLSOption (and using the Kubernetes Ingress resources)
     you'll have to add an annotation to the Ingress in the following form:
-    `traefik.ingress.kubernetes.io/router.tls.options: <resource-namespace>-<resource-name>@kubernetescrd`
+    `ingress.kubernetes.io/router.tls.options: <resource-namespace>-<resource-name>@kubernetescrd`
 
 ### Minimum TLS Version
 
@@ -269,7 +269,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -279,7 +279,7 @@ spec:
   minVersion: VersionTLS12
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: mintls13
@@ -320,7 +320,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -330,7 +330,7 @@ spec:
   maxVersion: VersionTLS13
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: maxtls12
@@ -365,7 +365,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -410,7 +410,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -446,7 +446,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -485,7 +485,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -539,7 +539,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default
@@ -577,7 +577,7 @@ tls:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: TLSOption
 metadata:
   name: default

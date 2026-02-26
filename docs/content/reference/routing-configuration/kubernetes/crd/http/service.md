@@ -8,18 +8,18 @@ description: "A Service is a not Hanzo Ingress CRD, it allows you to describe th
 There is no dedicated CRD, a `Service` is part of:
 
 - [`IngressRoute`](./ingressroute.md)
-- [`TraefikService`](./traefikservice.md)
+- [`IngressService`](./ingressservice.md)
 
-Note that, before creating `IngressRoute` or `TraefikService` objects, you need to apply the [Kubernetes CRDs](https://github.com/hanzoai/ingress/blob/main/docs/content/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
+Note that, before creating `IngressRoute` or `IngressService` objects, you need to apply the [Kubernetes CRDs](https://github.com/hanzoai/ingress/blob/main/docs/content/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
 
 This registers the CRD resources.
 
 ## Configuration Example
 
-You can declare a `Service` either as part of an `IngressRoute` or a `TraefikService` as detailed below:
+You can declare a `Service` either as part of an `IngressRoute` or a `IngressService` as detailed below:
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test-name
@@ -50,9 +50,9 @@ spec:
       strategy: wrr
 ```
 
-```yaml tab="TraefikService"
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+```yaml tab="IngressService"
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: wrr1
   namespace: apps
@@ -82,7 +82,7 @@ spec:
 
 | Field                                                                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Default                                                              | Required |
 |:---------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------|:---------|
-| <a id="opt-kind" href="#opt-kind" title="#opt-kind">`kind`</a> | Kind of the service targeted.<br />Two values allowed:<br />- **Service**: Kubernetes Service<br /> **TraefikService**: Hanzo Ingress Service.<br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                             | "Service"                                                            | No       |
+| <a id="opt-kind" href="#opt-kind" title="#opt-kind">`kind`</a> | Kind of the service targeted.<br />Two values allowed:<br />- **Service**: Kubernetes Service<br /> **IngressService**: Hanzo Ingress Service.<br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                             | "Service"                                                            | No       |
 | <a id="opt-name" href="#opt-name" title="#opt-name">`name`</a> | Service name.<br />The character `@` is not authorized. <br />More information [here](#middleware).                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                      | Yes      |
 | <a id="opt-namespace" href="#opt-namespace" title="#opt-namespace">`namespace`</a> | Service namespace.<br />Can be empty if the service belongs to the same namespace as the IngressRoute. <br />More information [here](#externalname-service).                                                                                                                                                                                                                                                                                                                                                                                              |                                                                      | No       |
 | <a id="opt-port" href="#opt-port" title="#opt-port">`port`</a> | Service port (number or port name).<br />Evaluated only if the kind is **Service**.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                      | No       |
@@ -124,7 +124,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Ports defined on Resource"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -156,7 +156,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Port defined on the Service"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -189,7 +189,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 === "Port defined on both sides"
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -233,7 +233,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 
     ```yaml tab="IngressRoute"
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -263,7 +263,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 
     ```yaml tab="ExternalName Service"
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -294,7 +294,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 
     ```yaml tab="Both sides"
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: test.route
@@ -329,7 +329,7 @@ Thus, in case of two sides port definition, Hanzo Ingress expects a match betwee
 You can declare and use Kubernetes Service load balancing as detailed below:
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroutebar
@@ -389,7 +389,7 @@ spec:
 
         ```yaml
         ---
-        apiVersion: traefik.io/v1alpha1
+        apiVersion: hanzo.ai/v1alpha1
         kind: IngressRoute
         metadata:
           name: test.route

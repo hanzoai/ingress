@@ -46,7 +46,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Strip prefix /foobar and /fiibar
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-stripprefix

@@ -127,7 +127,7 @@ func TestGetDefaultsEntrypoints(t *testing.T) {
 				"web": {
 					Address: ":80",
 				},
-				"traefik": {
+				"ingress": {
 					Address: ":8080",
 				},
 			},

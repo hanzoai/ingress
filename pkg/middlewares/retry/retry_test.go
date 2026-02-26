@@ -129,7 +129,7 @@ func TestRetry(t *testing.T) {
 			})
 
 			retryListener := &countingRetryListener{}
-			retry, err := New(t.Context(), next, test.config, retryListener, "traefikTest")
+			retry, err := New(t.Context(), next, test.config, retryListener, "ingressTest")
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()
@@ -149,7 +149,7 @@ func TestRetryEmptyServerList(t *testing.T) {
 	})
 
 	retryListener := &countingRetryListener{}
-	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, retryListener, "traefikTest")
+	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, retryListener, "ingressTest")
 	require.NoError(t, err)
 
 	recorder := httptest.NewRecorder()
@@ -185,7 +185,7 @@ func TestMultipleRetriesShouldNotLooseHeaders(t *testing.T) {
 		rw.WriteHeader(http.StatusNoContent)
 	})
 
-	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, &countingRetryListener{}, "traefikTest")
+	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, &countingRetryListener{}, "ingressTest")
 	require.NoError(t, err)
 
 	res := httptest.NewRecorder()
@@ -219,7 +219,7 @@ func TestRetryShouldNotLooseHeadersOnWrite(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, &countingRetryListener{}, "traefikTest")
+	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 3}, &countingRetryListener{}, "ingressTest")
 	require.NoError(t, err)
 
 	res := httptest.NewRecorder()
@@ -243,7 +243,7 @@ func TestRetryWithFlush(t *testing.T) {
 		}
 	})
 
-	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 1}, &countingRetryListener{}, "traefikTest")
+	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 1}, &countingRetryListener{}, "ingressTest")
 	require.NoError(t, err)
 
 	responseRecorder := httptest.NewRecorder()
@@ -312,7 +312,7 @@ func TestRetryWebsocket(t *testing.T) {
 			})
 
 			retryListener := &countingRetryListener{}
-			retryH, err := New(t.Context(), next, dynamic.Retry{Attempts: test.maxRequestAttempts}, retryListener, "traefikTest")
+			retryH, err := New(t.Context(), next, dynamic.Retry{Attempts: test.maxRequestAttempts}, retryListener, "ingressTest")
 			require.NoError(t, err)
 
 			retryServer := httptest.NewServer(retryH)
@@ -345,7 +345,7 @@ func Test1xxResponses(t *testing.T) {
 	})
 
 	retryListener := &countingRetryListener{}
-	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 1}, retryListener, "traefikTest")
+	retry, err := New(t.Context(), next, dynamic.Retry{Attempts: 1}, retryListener, "ingressTest")
 	require.NoError(t, err)
 
 	server := httptest.NewServer(retry)
@@ -628,7 +628,7 @@ func TestRetryHTTPStatusCodes(t *testing.T) {
 			})
 
 			retryListener := &countingRetryListener{}
-			retry, err := New(t.Context(), next, test.config, retryListener, "traefikTest")
+			retry, err := New(t.Context(), next, test.config, retryListener, "ingressTest")
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()
@@ -727,7 +727,7 @@ func TestRetryHTTPStatusCodesConfigValidation(t *testing.T) {
 				rw.WriteHeader(http.StatusOK)
 			})
 
-			_, err := New(t.Context(), next, test.config, &countingRetryListener{}, "traefikTest")
+			_, err := New(t.Context(), next, test.config, &countingRetryListener{}, "ingressTest")
 
 			if test.expectError {
 				require.Error(t, err)
@@ -753,7 +753,7 @@ func TestRetryHTTPStatusCodesLargeBodyError(t *testing.T) {
 	})
 
 	retryListener := &countingRetryListener{}
-	retry, err := New(t.Context(), next, config, retryListener, "traefikTest")
+	retry, err := New(t.Context(), next, config, retryListener, "ingressTest")
 	require.NoError(t, err)
 
 	recorder := httptest.NewRecorder()

@@ -84,13 +84,13 @@ func Test_defaultRule(t *testing.T) {
 					Name:    "Test",
 					Address: "127.0.0.1",
 					Tags: []string{
-						"traefik.domain=example.com",
+						"ingress.domain=example.com",
 					},
 					Port:      9999,
 					ExtraConf: configuration{Enable: true},
 				},
 			},
-			rule: `Host("{{ .Name }}.{{ index .Labels "traefik.domain" }}")`,
+			rule: `Host("{{ .Name }}.{{ index .Labels "ingress.domain" }}")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -608,7 +608,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader=true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader=true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -665,9 +665,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
-						"traefik.http.routers.Router1.service = Service1",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.routers.Router1.service = Service1",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -723,7 +723,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.enable=true",
+						"ingress.enable=true",
 					},
 					Address:   "",
 					Port:      -1,
@@ -759,7 +759,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -815,8 +815,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -872,9 +872,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
-						"traefik.http.services.Service1.loadbalancer.passhostheader= true",
-						"traefik.http.services.Service2.loadbalancer.passhostheader = true",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.services.Service1.loadbalancer.passhostheader= true",
+						"ingress.http.services.Service2.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -939,7 +939,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -949,7 +949,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = false",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = false",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -991,7 +991,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = false",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = false",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1001,7 +1001,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1011,7 +1011,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id3",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1053,7 +1053,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1063,7 +1063,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1123,7 +1123,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 42",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1186,7 +1186,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 42",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1196,7 +1196,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 42",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1262,7 +1262,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 42",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1272,7 +1272,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 41",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 41",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1332,7 +1332,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1342,7 +1342,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`bar.com`)",
+						"ingress.http.routers.Router1.rule = Host(`bar.com`)",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1396,7 +1396,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1406,7 +1406,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.routers.Router1.rule = Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule = Host(`foo.com`)",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -1465,7 +1465,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.wrong.label = 42",
+						"ingress.wrong.label = 42",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1522,8 +1522,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.scheme = h2c",
-						"traefik.http.services.Service1.LoadBalancer.server.port = 8080",
+						"ingress.http.services.Service1.LoadBalancer.server.scheme = h2c",
+						"ingress.http.services.Service1.LoadBalancer.server.port = 8080",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1580,7 +1580,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1637,8 +1637,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.preservepath = true",
+						"ingress.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.preservepath = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1696,8 +1696,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.port = 1234",
+						"ingress.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.port = 1234",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1733,8 +1733,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.scheme = https",
+						"ingress.http.services.Service1.LoadBalancer.server.url = http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.scheme = https",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1770,8 +1770,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.services.Service1.LoadBalancer.server.port = ",
-						"traefik.http.services.Service2.LoadBalancer.server.port = 8080",
+						"ingress.http.services.Service1.LoadBalancer.server.port = ",
+						"ingress.http.services.Service2.LoadBalancer.server.port = 8080",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1870,7 +1870,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount = 42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount = 42",
 					},
 					Address:   "127.0.0.2",
 					ExtraConf: configuration{Enable: true},
@@ -1905,7 +1905,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.enable=false",
+						"ingress.enable=false",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -1941,14 +1941,14 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tags=foo",
+						"ingress.tags=foo",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
 					ExtraConf: configuration{Enable: true},
 				},
 			},
-			constraints: `Tag("traefik.tags=bar")`,
+			constraints: `Tag("ingress.tags=bar")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -1978,14 +1978,14 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tags=foo",
+						"ingress.tags=foo",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
 					ExtraConf: configuration{Enable: true},
 				},
 			},
-			constraints: `Tag("traefik.tags=foo")`,
+			constraints: `Tag("ingress.tags=foo")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -2036,8 +2036,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.http.middlewares.Middleware1.basicauth.users = test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0",
-						"traefik.http.routers.Test.middlewares = Middleware1",
+						"ingress.http.middlewares.Middleware1.basicauth.users = test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0",
+						"ingress.http.routers.Test.middlewares = Middleware1",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2104,9 +2104,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.Test.rule = HostSNI(`foo.bar`)",
-						"traefik.tcp.middlewares.Middleware1.ipallowlist.sourcerange = foobar, fiibar",
-						"traefik.tcp.routers.Test.middlewares = Middleware1",
+						"ingress.tcp.routers.Test.rule = HostSNI(`foo.bar`)",
+						"ingress.tcp.middlewares.Middleware1.ipallowlist.sourcerange = foobar, fiibar",
+						"ingress.tcp.routers.Test.middlewares = Middleware1",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2164,8 +2164,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls = true",
+						"ingress.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2217,7 +2217,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.foo.entrypoints = mydns",
+						"ingress.udp.routers.foo.entrypoints = mydns",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2268,7 +2268,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.foo.tls = true",
+						"ingress.tcp.routers.foo.tls = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2314,9 +2314,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls.options = foo",
-						"traefik.tcp.services.foo.loadbalancer.server.port = 80",
+						"ingress.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls.options = foo",
+						"ingress.tcp.services.foo.loadbalancer.server.port = 80",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2370,8 +2370,8 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.foo.entrypoints = mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port = 80",
+						"ingress.udp.routers.foo.entrypoints = mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port = 80",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2422,10 +2422,10 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls = true",
-						"traefik.tcp.services.foo.loadbalancer.server.port = 80",
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls = true",
+						"ingress.tcp.services.foo.loadbalancer.server.port = 80",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2435,10 +2435,10 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls = true",
-						"traefik.tcp.services.foo.loadbalancer.server.port = 80",
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.tcp.routers.foo.rule = HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls = true",
+						"ingress.tcp.services.foo.loadbalancer.server.port = 80",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -2517,9 +2517,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.foo.entrypoints = mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port = 80",
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.udp.routers.foo.entrypoints = mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port = 80",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2529,9 +2529,9 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id2",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.foo.entrypoints = mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port = 80",
-						"traefik.http.services.Service1.loadbalancer.passhostheader = true",
+						"ingress.udp.routers.foo.entrypoints = mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port = 80",
+						"ingress.http.services.Service1.loadbalancer.passhostheader = true",
 					},
 					Address:   "127.0.0.2",
 					Port:      9999,
@@ -2609,7 +2609,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.services.foo.loadbalancer.server.port = 80",
+						"ingress.tcp.services.foo.loadbalancer.server.port = 80",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2655,7 +2655,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.services.foo.loadbalancer.server.port = 80",
+						"ingress.udp.services.foo.loadbalancer.server.port = 80",
 					},
 					Address:   "127.0.0.1",
 					Port:      9999,
@@ -2702,7 +2702,7 @@ func Test_buildConfig(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.services.foo.loadbalancer.server.port = 80",
+						"ingress.tcp.services.foo.loadbalancer.server.port = 80",
 					},
 					Address:   "127.0.0.1",
 					Port:      80,
@@ -2762,7 +2762,7 @@ func Test_buildConfig(t *testing.T) {
 					Name:       "Test",
 					Namespace:  "ns",
 					Tags: []string{
-						"traefik.nomad.canary = true",
+						"ingress.nomad.canary = true",
 					},
 					Address: "127.0.0.2",
 					Port:    80,
@@ -2844,7 +2844,7 @@ func Test_buildConfig(t *testing.T) {
 					Name:       "Test",
 					Namespace:  "ns",
 					Tags: []string{
-						"traefik.tcp.routers.test.rule = HostSNI(`foobar`)",
+						"ingress.tcp.routers.test.rule = HostSNI(`foobar`)",
 					},
 					Address:   "127.0.0.1",
 					Port:      80,
@@ -2857,8 +2857,8 @@ func Test_buildConfig(t *testing.T) {
 					Name:       "Test",
 					Namespace:  "ns",
 					Tags: []string{
-						"traefik.nomad.canary = true",
-						"traefik.tcp.routers.test-canary.rule = HostSNI(`canary.foobar`)",
+						"ingress.nomad.canary = true",
+						"ingress.tcp.routers.test-canary.rule = HostSNI(`canary.foobar`)",
 					},
 					Address: "127.0.0.2",
 					Port:    80,
@@ -2924,7 +2924,7 @@ func Test_buildConfig(t *testing.T) {
 					Name:       "Test",
 					Namespace:  "ns",
 					Tags: []string{
-						"traefik.udp.routers.test.entrypoints = udp",
+						"ingress.udp.routers.test.entrypoints = udp",
 					},
 					Address:   "127.0.0.1",
 					Port:      80,
@@ -2937,8 +2937,8 @@ func Test_buildConfig(t *testing.T) {
 					Name:       "Test",
 					Namespace:  "ns",
 					Tags: []string{
-						"traefik.nomad.canary = true",
-						"traefik.udp.routers.test-canary.entrypoints = udp",
+						"ingress.nomad.canary = true",
+						"ingress.udp.routers.test-canary.entrypoints = udp",
 					},
 					Address: "127.0.0.2",
 					Port:    80,
@@ -3005,9 +3005,9 @@ func Test_buildConfig(t *testing.T) {
 					Port:      9999,
 					ExtraConf: configuration{Enable: true},
 					Tags: []string{
-						"traefik.tls.stores.default.defaultgeneratedcert.resolver = foobar",
-						"traefik.tls.stores.default.defaultgeneratedcert.domain.main = foobar",
-						"traefik.tls.stores.default.defaultgeneratedcert.domain.sans = foobar, fiibar",
+						"ingress.tls.stores.default.defaultgeneratedcert.resolver = foobar",
+						"ingress.tls.stores.default.defaultgeneratedcert.domain.main = foobar",
+						"ingress.tls.stores.default.defaultgeneratedcert.domain.sans = foobar, fiibar",
 					},
 				},
 			},
@@ -3095,7 +3095,7 @@ func Test_buildConfigAllowEmptyServicesTrue(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.enable=true",
+						"ingress.enable=true",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3148,7 +3148,7 @@ func Test_buildConfigAllowEmptyServicesTrue(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.test.rule = HostSNI(`foobar`)",
+						"ingress.tcp.routers.test.rule = HostSNI(`foobar`)",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3193,7 +3193,7 @@ func Test_buildConfigAllowEmptyServicesTrue(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.test.entrypoints = udp",
+						"ingress.udp.routers.test.entrypoints = udp",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3263,7 +3263,7 @@ func Test_buildConfigAllowEmptyServicesFalseDefault(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.enable=true",
+						"ingress.enable=true",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3299,7 +3299,7 @@ func Test_buildConfigAllowEmptyServicesFalseDefault(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.tcp.routers.test.rule = HostSNI(`foobar`)",
+						"ingress.tcp.routers.test.rule = HostSNI(`foobar`)",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3335,7 +3335,7 @@ func Test_buildConfigAllowEmptyServicesFalseDefault(t *testing.T) {
 					ID:   "id1",
 					Name: "Test",
 					Tags: []string{
-						"traefik.udp.routers.test.entrypoints = udp",
+						"ingress.udp.routers.test.entrypoints = udp",
 					},
 					Address:   "",
 					Port:      -1,
@@ -3401,19 +3401,19 @@ func Test_keepItem(t *testing.T) {
 		{
 			name: "constraint matches",
 			i: item{
-				Tags:      []string{"traefik.tags=foo"},
+				Tags:      []string{"ingress.tags=foo"},
 				ExtraConf: configuration{Enable: true},
 			},
-			constraints: `Tag("traefik.tags=foo")`,
+			constraints: `Tag("ingress.tags=foo")`,
 			exp:         true,
 		},
 		{
 			name: "constraint not match",
 			i: item{
-				Tags:      []string{"traefik.tags=foo"},
+				Tags:      []string{"ingress.tags=foo"},
 				ExtraConf: configuration{Enable: true},
 			},
-			constraints: `Tag("traefik.tags=bar")`,
+			constraints: `Tag("ingress.tags=bar")`,
 			exp:         false,
 		},
 	}

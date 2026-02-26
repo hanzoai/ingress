@@ -25,7 +25,7 @@ whoami:
 ```yaml tab="IngressRoute"
 # As a Kubernetes Hanzo Ingress IngressRoute
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: stripprefix
@@ -35,7 +35,7 @@ spec:
       - /stripit
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: ingressroute

@@ -60,7 +60,7 @@ func (w *middlewareTracing) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 
 		req = req.WithContext(tracingCtx)
 
-		span.SetAttributes(attribute.String("traefik.middleware.name", w.name))
+		span.SetAttributes(attribute.String("ingress.middleware.name", w.name))
 	}
 
 	if w.next != nil {

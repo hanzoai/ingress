@@ -2,7 +2,7 @@ services:
   whoami:
     image: traefik/whoami
     labels:
-      traefik.http.routers.route1.rule: PathPrefix(`/foo`)
-      traefik.http.routers.route1.middlewares: passtls
-      traefik.http.routers.route1.tls: true
-      traefik.http.middlewares.passtls.passtlsclientcert.pem: true
+      ingress.http.routers.route1.rule: PathPrefix(`/foo`)
+      ingress.http.routers.route1.middlewares: passtls
+      ingress.http.routers.route1.tls: true
+      ingress.http.middlewares.passtls.passtlsclientcert.pem: true

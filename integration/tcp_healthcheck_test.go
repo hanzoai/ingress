@@ -44,7 +44,7 @@ func (s *TCPHealthCheckSuite) TestSimpleConfiguration() {
 		Server2 string
 	}{s.whoamitcp1IP, s.whoamitcp2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Traefik.
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("HostSNI(`*`)"))

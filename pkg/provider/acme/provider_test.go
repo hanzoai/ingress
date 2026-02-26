@@ -20,7 +20,7 @@ func TestGetUncheckedCertificates(t *testing.T) {
 	wildcardSafe.Set(wildcardMap)
 
 	domainMap := make(map[string]*tls.Certificate)
-	domainMap["traefik.wtf"] = &tls.Certificate{}
+	domainMap["ingress.wtf"] = &tls.Certificate{}
 
 	domainSafe := &safe.Safe{}
 	domainSafe.Set(domainMap)
@@ -59,22 +59,22 @@ func TestGetUncheckedCertificates(t *testing.T) {
 		},
 		{
 			desc:            "domain CN and SANs to generate",
-			domains:         []string{"traefik.wtf", "foo.traefik.wtf"},
-			expectedDomains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains:         []string{"ingress.wtf", "foo.traefik.wtf"},
+			expectedDomains: []string{"ingress.wtf", "foo.traefik.wtf"},
 		},
 		{
 			desc:            "domain CN already exists in dynamic certificates and SANs to generate",
-			domains:         []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains:         []string{"ingress.wtf", "foo.traefik.wtf"},
 			dynamicCerts:    domainSafe,
 			expectedDomains: []string{"foo.traefik.wtf"},
 		},
 		{
 			desc:    "domain CN already exists in ACME certificates and SANs to generate",
-			domains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains: []string{"ingress.wtf", "foo.traefik.wtf"},
 			acmeCertificates: []*CertAndStore{
 				{
 					Certificate: Certificate{
-						Domain: types.Domain{Main: "traefik.wtf"},
+						Domain: types.Domain{Main: "ingress.wtf"},
 					},
 				},
 			},
@@ -82,17 +82,17 @@ func TestGetUncheckedCertificates(t *testing.T) {
 		},
 		{
 			desc:            "domain already exists in dynamic certificates",
-			domains:         []string{"traefik.wtf"},
+			domains:         []string{"ingress.wtf"},
 			dynamicCerts:    domainSafe,
 			expectedDomains: nil,
 		},
 		{
 			desc:    "domain already exists in ACME certificates",
-			domains: []string{"traefik.wtf"},
+			domains: []string{"ingress.wtf"},
 			acmeCertificates: []*CertAndStore{
 				{
 					Certificate: Certificate{
-						Domain: types.Domain{Main: "traefik.wtf"},
+						Domain: types.Domain{Main: "ingress.wtf"},
 					},
 				},
 			},
@@ -118,7 +118,7 @@ func TestGetUncheckedCertificates(t *testing.T) {
 		},
 		{
 			desc:    "root domain with wildcard in ACME certificates",
-			domains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains: []string{"ingress.wtf", "foo.traefik.wtf"},
 			acmeCertificates: []*CertAndStore{
 				{
 					Certificate: Certificate{
@@ -126,22 +126,22 @@ func TestGetUncheckedCertificates(t *testing.T) {
 					},
 				},
 			},
-			expectedDomains: []string{"traefik.wtf"},
+			expectedDomains: []string{"ingress.wtf"},
 		},
 		{
 			desc:    "all domains already managed by ACME",
-			domains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains: []string{"ingress.wtf", "foo.traefik.wtf"},
 			resolvingDomains: map[string]struct{}{
-				"traefik.wtf":     {},
+				"ingress.wtf":     {},
 				"foo.traefik.wtf": {},
 			},
 			expectedDomains: []string{},
 		},
 		{
 			desc:    "one domain already managed by ACME",
-			domains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			domains: []string{"ingress.wtf", "foo.traefik.wtf"},
 			resolvingDomains: map[string]struct{}{
-				"traefik.wtf": {},
+				"ingress.wtf": {},
 			},
 			expectedDomains: []string{"foo.traefik.wtf"},
 		},
@@ -155,10 +155,10 @@ func TestGetUncheckedCertificates(t *testing.T) {
 		},
 		{
 			desc:    "wildcard domain already managed by ACME checks domains and another domain checks one other domain, one domain still unchecked",
-			domains: []string{"traefik.wtf", "bar.traefik.wtf", "foo.traefik.wtf", "acme.wtf"},
+			domains: []string{"ingress.wtf", "bar.traefik.wtf", "foo.traefik.wtf", "acme.wtf"},
 			resolvingDomains: map[string]struct{}{
 				"*.traefik.wtf": {},
-				"traefik.wtf":   {},
+				"ingress.wtf":   {},
 			},
 			expectedDomains: []string{"acme.wtf"},
 		},
@@ -173,7 +173,7 @@ func TestGetUncheckedCertificates(t *testing.T) {
 			}
 
 			acmeProvider := Provider{
-				// certificateStore: &traefiktls.CertificateStore{
+				// certificateStore: &ingresstls.CertificateStore{
 				// 	DynamicCerts: test.dynamicCerts,
 				// },
 				certificates:     test.acmeCertificates,
@@ -203,10 +203,10 @@ func TestProvider_sanitizeDomains(t *testing.T) {
 		},
 		{
 			desc:            "no wildcard",
-			domains:         types.Domain{Main: "traefik.wtf", SANs: []string{"foo.traefik.wtf"}},
+			domains:         types.Domain{Main: "ingress.wtf", SANs: []string{"foo.traefik.wtf"}},
 			dnsChallenge:    &DNSChallenge{},
 			expectedErr:     "",
-			expectedDomains: []string{"traefik.wtf", "foo.traefik.wtf"},
+			expectedDomains: []string{"ingress.wtf", "foo.traefik.wtf"},
 		},
 		{
 			desc:            "no domain",
@@ -224,10 +224,10 @@ func TestProvider_sanitizeDomains(t *testing.T) {
 		},
 		{
 			desc:            "wildcard and SANs",
-			domains:         types.Domain{Main: "*.traefik.wtf", SANs: []string{"traefik.wtf"}},
+			domains:         types.Domain{Main: "*.traefik.wtf", SANs: []string{"ingress.wtf"}},
 			dnsChallenge:    &DNSChallenge{},
 			expectedErr:     "",
-			expectedDomains: []string{"*.traefik.wtf", "traefik.wtf"},
+			expectedDomains: []string{"*.traefik.wtf", "ingress.wtf"},
 		},
 		{
 			desc:            "wildcard SANs",
@@ -266,20 +266,20 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 			domains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 				{
 					Main: "*.foo.acme.wtf",
 				},
 				{
 					Main: "acme02.wtf",
-					SANs: []string{"traefik.acme02.wtf", "bar.foo"},
+					SANs: []string{"ingress.acme02.wtf", "bar.foo"},
 				},
 			},
 			expectedDomains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 				{
 					Main: "*.foo.acme.wtf",
@@ -287,7 +287,7 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 				},
 				{
 					Main: "acme02.wtf",
-					SANs: []string{"traefik.acme02.wtf", "bar.foo"},
+					SANs: []string{"ingress.acme02.wtf", "bar.foo"},
 				},
 			},
 		},
@@ -318,17 +318,17 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 			domains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 			},
 			expectedDomains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 			},
 		},
@@ -337,17 +337,17 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 			domains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf"},
+					SANs: []string{"ingress.acme.wtf"},
 				},
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "foo.bar"},
+					SANs: []string{"ingress.acme.wtf", "foo.bar"},
 				},
 			},
 			expectedDomains: []types.Domain{
 				{
 					Main: "acme.wtf",
-					SANs: []string{"traefik.acme.wtf"},
+					SANs: []string{"ingress.acme.wtf"},
 				},
 				{
 					Main: "foo.bar",
@@ -360,7 +360,7 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 			domains: []types.Domain{
 				{
 					Main: "who.acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "bar.acme.wtf"},
+					SANs: []string{"ingress.acme.wtf", "bar.acme.wtf"},
 				},
 				{
 					Main: "*.acme.wtf",
@@ -395,7 +395,7 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 			desc: "domain partially checked by wildcard",
 			domains: []types.Domain{
 				{
-					Main: "traefik.acme.wtf",
+					Main: "ingress.acme.wtf",
 					SANs: []string{"acme.wtf", "foo.bar"},
 				},
 				{
@@ -403,7 +403,7 @@ func TestDeleteUnnecessaryDomains(t *testing.T) {
 				},
 				{
 					Main: "who.acme.wtf",
-					SANs: []string{"traefik.acme.wtf", "bar.acme.wtf"},
+					SANs: []string{"ingress.acme.wtf", "bar.acme.wtf"},
 				},
 			},
 			expectedDomains: []types.Domain{

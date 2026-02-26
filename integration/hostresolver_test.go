@@ -28,7 +28,7 @@ func (s *HostResolverSuite) TearDownSuite() {
 }
 
 func (s *HostResolverSuite) TestSimpleConfig() {
-	s.traefikCmd(withConfigFile("fixtures/simple_hostresolver.toml"))
+	s.ingressCmd(withConfigFile("fixtures/simple_hostresolver.toml"))
 
 	testCase := []struct {
 		desc   string

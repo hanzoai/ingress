@@ -160,7 +160,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.domain": "foo.bar",
+						"ingress.domain": "foo.bar",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -175,7 +175,7 @@ func TestDynConfBuilder_DefaultRule(t *testing.T) {
 					},
 				},
 			},
-			defaultRule: `Host("{{ .Name }}.{{ index .Labels "traefik.domain" }}")`,
+			defaultRule: `Host("{{ .Name }}.{{ index .Labels "ingress.domain" }}")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -444,7 +444,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.test": "",
+						"ingress.http.services.test": "",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -488,7 +488,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.services.test": "",
+						"ingress.tcp.services.test": "",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -532,7 +532,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.services.test": "",
+						"ingress.udp.services.test": "",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -821,7 +821,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -886,9 +886,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
-						"traefik.http.routers.Router1.rule":                          "Host(`foo.com`)",
-						"traefik.http.routers.Router1.service":                       "Service1",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.routers.Router1.rule":                          "Host(`foo.com`)",
+						"ingress.http.routers.Router1.service":                       "Service1",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -952,7 +952,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1016,8 +1016,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule":                          "Host(`foo.com`)",
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.routers.Router1.rule":                          "Host(`foo.com`)",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1081,9 +1081,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule":                          "Host(`foo.com`)",
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
-						"traefik.http.services.Service2.loadbalancer.passhostheader": "true",
+						"ingress.http.routers.Router1.rule":                          "Host(`foo.com`)",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service2.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1156,8 +1156,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule":    "Host(`foo.com`)",
-						"traefik.http.routers.Router1.service": "Service1",
+						"ingress.http.routers.Router1.rule":    "Host(`foo.com`)",
+						"ingress.http.routers.Router1.service": "Service1",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1222,7 +1222,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1241,7 +1241,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "false",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "false",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1292,7 +1292,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "false",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "false",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1311,7 +1311,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1330,7 +1330,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1381,7 +1381,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1400,7 +1400,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1468,7 +1468,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1540,7 +1540,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1559,7 +1559,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1634,7 +1634,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1653,7 +1653,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "41",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "41",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1722,7 +1722,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1741,7 +1741,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "41",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "41",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1760,7 +1760,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "40",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "40",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1832,7 +1832,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1851,7 +1851,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`bar.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`bar.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1914,7 +1914,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1933,7 +1933,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`bar.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`bar.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -1952,7 +1952,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foobar.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foobar.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2018,7 +2018,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2037,7 +2037,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2104,7 +2104,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2122,7 +2122,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test2",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.routers.Router1.rule": "Host(`foo.com`)",
+						"ingress.http.routers.Router1.rule": "Host(`foo.com`)",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2195,7 +2195,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.wrong.label": "42",
+						"ingress.wrong.label": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2260,8 +2260,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.scheme": "h2c",
-						"traefik.http.services.Service1.LoadBalancer.server.port":   "8080",
+						"ingress.http.services.Service1.LoadBalancer.server.scheme": "h2c",
+						"ingress.http.services.Service1.LoadBalancer.server.port":   "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2326,8 +2326,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.port": "",
-						"traefik.http.services.Service2.LoadBalancer.server.port": "8080",
+						"ingress.http.services.Service1.LoadBalancer.server.port": "",
+						"ingress.http.services.Service2.LoadBalancer.server.port": "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2400,7 +2400,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.url": "http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.url": "http://1.2.3.4:5678",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2465,8 +2465,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.url":          "http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.preservepath": "true",
+						"ingress.http.services.Service1.LoadBalancer.server.url":          "http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.preservepath": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2532,8 +2532,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.url":  "http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.port": "1234",
+						"ingress.http.services.Service1.LoadBalancer.server.url":  "http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.port": "1234",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2577,8 +2577,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Service1.LoadBalancer.server.url":    "http://1.2.3.4:5678",
-						"traefik.http.services.Service1.LoadBalancer.server.scheme": "https",
+						"ingress.http.services.Service1.LoadBalancer.server.url":    "http://1.2.3.4:5678",
+						"ingress.http.services.Service1.LoadBalancer.server.scheme": "https",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2662,7 +2662,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.inflightreq.amount": "42",
+						"ingress.http.middlewares.Middleware1.inflightreq.amount": "42",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{},
@@ -2704,7 +2704,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.enable": "false",
+						"ingress.enable": "false",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2828,7 +2828,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Name:        "Test",
 					Health:      containertypes.Unhealthy,
 					Labels: map[string]string{
-						"traefik.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
 					},
 				},
 			},
@@ -2863,7 +2863,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Name:        "Test",
 					Health:      containertypes.Unhealthy,
 					Labels: map[string]string{
-						"traefik.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
 					},
 				},
 			},
@@ -2906,7 +2906,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Name:        "Test",
 					Health:      containertypes.Unhealthy,
 					Labels: map[string]string{
-						"traefik.udp.routers.foo": "true",
+						"ingress.udp.routers.foo": "true",
 					},
 				},
 			},
@@ -2940,7 +2940,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.routers.foo": "true",
+						"ingress.udp.routers.foo": "true",
 					},
 					Health: containertypes.Unhealthy,
 				},
@@ -2982,7 +2982,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tags": "foo",
+						"ingress.tags": "foo",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -2997,7 +2997,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					},
 				},
 			},
-			constraints: `Label("traefik.tags", "bar")`,
+			constraints: `Label("ingress.tags", "bar")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -3027,7 +3027,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tags": "foo",
+						"ingress.tags": "foo",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3042,7 +3042,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					},
 				},
 			},
-			constraints: `Label("traefik.tags", "foo")`,
+			constraints: `Label("ingress.tags", "foo")`,
 			expected: &dynamic.Configuration{
 				TCP: &dynamic.TCPConfiguration{
 					Routers:           map[string]*dynamic.TCPRouter{},
@@ -3093,8 +3093,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.middlewares.Middleware1.basicauth.users": "test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0",
-						"traefik.http.routers.Test.middlewares":                "Middleware1",
+						"ingress.http.middlewares.Middleware1.basicauth.users": "test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0",
+						"ingress.http.routers.Test.middlewares":                "Middleware1",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3169,9 +3169,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.routers.Test.rule":                               "HostSNI(`foo.bar`)",
-						"traefik.tcp.middlewares.Middleware1.ipallowlist.sourcerange": "foobar, fiibar",
-						"traefik.tcp.routers.Test.middlewares":                        "Middleware1",
+						"ingress.tcp.routers.Test.rule":                               "HostSNI(`foo.bar`)",
+						"ingress.tcp.middlewares.Middleware1.ipallowlist.sourcerange": "foobar, fiibar",
+						"ingress.tcp.routers.Test.middlewares":                        "Middleware1",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3237,8 +3237,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls":  "true",
+						"ingress.tcp.routers.foo.rule": "HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls":  "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3298,7 +3298,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.routers.foo.entrypoints": "mydns",
+						"ingress.udp.routers.foo.entrypoints": "mydns",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3357,7 +3357,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.routers.foo.tls": "true",
+						"ingress.tcp.routers.foo.tls": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3411,9 +3411,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.routers.foo.rule":                      "HostSNI(`foo.bar`)",
-						"traefik.tcp.routers.foo.tls.options":               "foo",
-						"traefik.tcp.services.foo.loadbalancer.server.port": "8080",
+						"ingress.tcp.routers.foo.rule":                      "HostSNI(`foo.bar`)",
+						"ingress.tcp.routers.foo.tls.options":               "foo",
+						"ingress.tcp.services.foo.loadbalancer.server.port": "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3475,8 +3475,8 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.routers.foo.entrypoints":               "mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port": "8080",
+						"ingress.udp.routers.foo.entrypoints":               "mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port": "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3535,9 +3535,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.routers.foo.entrypoints":                        "mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port":          "8080",
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.udp.routers.foo.entrypoints":                        "mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port":          "8080",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3556,9 +3556,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.routers.foo.entrypoints":                        "mydns",
-						"traefik.udp.services.foo.loadbalancer.server.port":          "8080",
-						"traefik.http.services.Service1.loadbalancer.passhostheader": "true",
+						"ingress.udp.routers.foo.entrypoints":                        "mydns",
+						"ingress.udp.services.foo.loadbalancer.server.port":          "8080",
+						"ingress.http.services.Service1.loadbalancer.passhostheader": "true",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3644,7 +3644,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.udp.services.foo.loadbalancer.server.port": "8080",
+						"ingress.udp.services.foo.loadbalancer.server.port": "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3699,7 +3699,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tcp.services.foo.loadbalancer.server.port": "8080",
+						"ingress.tcp.services.foo.loadbalancer.server.port": "8080",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3753,7 +3753,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.http.services.Test.loadbalancer.server.port": "80",
+						"ingress.http.services.Test.loadbalancer.server.port": "80",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -3826,9 +3826,9 @@ func TestDynConfBuilder_build(t *testing.T) {
 					ServiceName: "Test",
 					Name:        "Test",
 					Labels: map[string]string{
-						"traefik.tls.stores.default.defaultgeneratedcert.resolver":    "foobar",
-						"traefik.tls.stores.default.defaultgeneratedcert.domain.main": "foobar",
-						"traefik.tls.stores.default.defaultgeneratedcert.domain.sans": "foobar, fiibar",
+						"ingress.tls.stores.default.defaultgeneratedcert.resolver":    "foobar",
+						"ingress.tls.stores.default.defaultgeneratedcert.domain.main": "foobar",
+						"ingress.tls.stores.default.defaultgeneratedcert.domain.sans": "foobar, fiibar",
 					},
 					NetworkSettings: networkSettings{
 						Ports: nat.PortMap{
@@ -4260,7 +4260,7 @@ func TestDynConfBuilder_build_allowNonRunning(t *testing.T) {
 					Status:      "exited",
 					Health:      "",
 					Labels: map[string]string{
-						"traefik.tcp.routers.Test.rule": "HostSNI(`test.localhost`)",
+						"ingress.tcp.routers.Test.rule": "HostSNI(`test.localhost`)",
 					},
 					ExtraConf: configuration{
 						Enable:          true,
@@ -4320,7 +4320,7 @@ func TestDynConfBuilder_build_allowNonRunning(t *testing.T) {
 					Status:      "exited",
 					Health:      "",
 					Labels: map[string]string{
-						"traefik.udp.routers.Test.entrypoints": "udp",
+						"ingress.udp.routers.Test.entrypoints": "udp",
 					},
 					ExtraConf: configuration{
 						Enable:          true,
@@ -4713,7 +4713,7 @@ func TestDynConfBuilder_getIPAddress_swarm(t *testing.T) {
 		{
 			service: swarmService(
 				serviceLabels(map[string]string{
-					"traefik.swarm.network": "barnet",
+					"ingress.swarm.network": "barnet",
 				}),
 				withEndpointSpec(modeVIP),
 				withEndpoint(

@@ -69,8 +69,8 @@ spec:
     task: whoami5
 
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: wrr2
   namespace: default
@@ -83,8 +83,8 @@ spec:
         port: 8080
 
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: wrr1
   namespace: default
@@ -97,8 +97,8 @@ spec:
         port: 8080
 
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: mirror1
   namespace: default
@@ -106,14 +106,14 @@ metadata:
 spec:
   mirroring:
     name: wrr1
-    kind: TraefikService
+    kind: IngressService
     mirrors:
       - name: wrr2
-        kind: TraefikService
+        kind: IngressService
         percent: 30
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route
@@ -129,4 +129,4 @@ spec:
     priority: 12
     services:
     - name: mirror1
-      kind: TraefikService
+      kind: IngressService

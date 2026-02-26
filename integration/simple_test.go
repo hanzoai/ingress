@@ -45,7 +45,7 @@ func (s *SimpleSuite) TearDownSuite() {
 }
 
 func (s *SimpleSuite) TestInvalidConfigShouldFail() {
-	_, output := s.cmdTraefik(withConfigFile("fixtures/invalid_configuration.toml"))
+	_, output := s.cmdIngress(withConfigFile("fixtures/invalid_configuration.toml"))
 
 	err := try.Do(500*time.Millisecond, func() error {
 		expected := "expected '.' or '=', but got '{' instead"
@@ -61,7 +61,7 @@ func (s *SimpleSuite) TestInvalidConfigShouldFail() {
 }
 
 func (s *SimpleSuite) TestSimpleDefaultConfig() {
-	s.cmdTraefik(withConfigFile("fixtures/simple_default.toml"))
+	s.cmdIngress(withConfigFile("fixtures/simple_default.toml"))
 
 	// Expected a 404 as we did not configure anything
 	err := try.GetRequest("http://127.0.0.1:8000/", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
@@ -82,7 +82,7 @@ func (s *SimpleSuite) TestSimpleFastProxy() {
 		Server: srv1.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -114,7 +114,7 @@ func (s *SimpleSuite) TestXForwardedForDisabled() {
 		DynamicConfPath: dynamicConf,
 	})
 
-	s.traefikCmd(withConfigFile(staticConf))
+	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Traefik to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
@@ -160,7 +160,7 @@ func (s *SimpleSuite) TestXForwardedForEnabled() {
 		DynamicConfPath: dynamicConf,
 	})
 
-	s.traefikCmd(withConfigFile(staticConf))
+	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Traefik to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
@@ -209,7 +209,7 @@ func (s *SimpleSuite) TestXForwardedForDisabledFastProxy() {
 		DynamicConfPath: dynamicConf,
 	})
 
-	s.traefikCmd(withConfigFile(staticConf))
+	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Traefik to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
@@ -258,7 +258,7 @@ func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 		DynamicConfPath: dynamicConf,
 	})
 
-	s.traefikCmd(withConfigFile(staticConf))
+	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Traefik to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
@@ -286,14 +286,14 @@ func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 }
 
 func (s *SimpleSuite) TestWithWebConfig() {
-	s.cmdTraefik(withConfigFile("fixtures/simple_web.toml"))
+	s.cmdIngress(withConfigFile("fixtures/simple_web.toml"))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 }
 
 func (s *SimpleSuite) TestPrintHelp() {
-	_, output := s.cmdTraefik("--help")
+	_, output := s.cmdIngress("--help")
 
 	err := try.Do(500*time.Millisecond, func() error {
 		expected := "Usage:"
@@ -324,7 +324,7 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 		Server string
 	}{whoamiURL})
 
-	cmd, _ := s.cmdTraefik(withConfigFile(file))
+	cmd, _ := s.cmdIngress(withConfigFile(file))
 
 	// Wait for Traefik to turn ready.
 	err := try.GetRequest("http://127.0.0.1:8000/", 2*time.Second, try.StatusCodeIs(http.StatusNotFound))
@@ -381,7 +381,7 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 
 func (s *SimpleSuite) TestCustomPingTerminationStatusCode() {
 	file := s.adaptFile("fixtures/custom_ping_termination_status_code.toml", struct{}{})
-	cmd, _ := s.cmdTraefik(withConfigFile(file))
+	cmd, _ := s.cmdIngress(withConfigFile(file))
 
 	// Wait for Traefik to turn ready.
 	err := try.GetRequest("http://127.0.0.1:8001/", 2*time.Second, try.StatusCodeIs(http.StatusNotFound))
@@ -416,7 +416,7 @@ func (s *SimpleSuite) TestStatsWithMultipleEntryPoint() {
 		Server1 string
 		Server2 string
 	}{whoami1URL, whoami2URL})
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
@@ -443,7 +443,7 @@ func (s *SimpleSuite) TestNoAuthOnPing() {
 	defer s.composeDown()
 
 	file := s.adaptFile("./fixtures/simple_auth.toml", struct{}{})
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8001/api/rawdata", 2*time.Second, try.StatusCodeIs(http.StatusUnauthorized))
 	require.NoError(s.T(), err)
@@ -458,7 +458,7 @@ func (s *SimpleSuite) TestDefaultEntryPointHTTP() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
+	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -473,7 +473,7 @@ func (s *SimpleSuite) TestWithNonExistingEntryPoint() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
+	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -488,7 +488,7 @@ func (s *SimpleSuite) TestMetricsPrometheusDefaultEntryPoint() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
+	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
 	require.NoError(s.T(), err)
@@ -519,7 +519,7 @@ func (s *SimpleSuite) TestMetricsPrometheusTwoRoutersOneService() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addentrypointslabels=false", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
+	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addentrypointslabels=false", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -543,10 +543,10 @@ func (s *SimpleSuite) TestMetricsPrometheusTwoRoutersOneService() {
 		require.NoError(s.T(), err)
 
 		// Reqs count of 1 for both routers
-		assert.Contains(s.T(), string(body), "traefik_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router1@docker\",service=\"whoami1@docker\"} 1")
-		assert.Contains(s.T(), string(body), "traefik_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router2@docker\",service=\"whoami1@docker\"} 1")
+		assert.Contains(s.T(), string(body), "ingress_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router1@docker\",service=\"whoami1@docker\"} 1")
+		assert.Contains(s.T(), string(body), "ingress_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router2@docker\",service=\"whoami1@docker\"} 1")
 		// Reqs count of 2 for service behind both routers
-		assert.Contains(s.T(), string(body), "traefik_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"whoami1@docker\"} 2")
+		assert.Contains(s.T(), string(body), "ingress_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"whoami1@docker\"} 2")
 	}
 }
 
@@ -569,7 +569,7 @@ func (s *SimpleSuite) TestMetricsWithBufferingMiddleware() {
 
 	file := s.adaptFile("fixtures/simple_metrics_with_buffer_middleware.toml", struct{ IP string }{IP: strings.TrimPrefix(server.URL, "http://")})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/without`)"))
 	require.NoError(s.T(), err)
@@ -599,27 +599,27 @@ func (s *SimpleSuite) TestMetricsWithBufferingMiddleware() {
 	require.NoError(s.T(), err)
 
 	// For allowed requests and responses, the entrypoint and service metrics have the same status code.
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 1")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_bytes_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 0")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_responses_bytes_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 31")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 1")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_bytes_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 0")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_responses_bytes_total{code=\"200\",entrypoint=\"webA\",method=\"GET\",protocol=\"http\"} 31")
 
-	assert.Contains(s.T(), string(body), "traefik_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 1")
-	assert.Contains(s.T(), string(body), "traefik_service_requests_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 0")
-	assert.Contains(s.T(), string(body), "traefik_service_responses_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 31")
+	assert.Contains(s.T(), string(body), "ingress_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 1")
+	assert.Contains(s.T(), string(body), "ingress_service_requests_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 0")
+	assert.Contains(s.T(), string(body), "ingress_service_responses_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-without@file\"} 31")
 
 	// For forbidden requests, the entrypoints have metrics, the services don't.
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 1")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_bytes_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 0")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_responses_bytes_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 24")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 1")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_bytes_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 0")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_responses_bytes_total{code=\"413\",entrypoint=\"webB\",method=\"GET\",protocol=\"http\"} 24")
 
 	// For disallowed responses, the entrypoint and service metrics don't have the same status code.
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_bytes_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 0")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_requests_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 1")
-	assert.Contains(s.T(), string(body), "traefik_entrypoint_responses_bytes_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 21")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_bytes_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 0")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_requests_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 1")
+	assert.Contains(s.T(), string(body), "ingress_entrypoint_responses_bytes_total{code=\"500\",entrypoint=\"webC\",method=\"GET\",protocol=\"http\"} 21")
 
-	assert.Contains(s.T(), string(body), "traefik_service_requests_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 0")
-	assert.Contains(s.T(), string(body), "traefik_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 1")
-	assert.Contains(s.T(), string(body), "traefik_service_responses_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 31")
+	assert.Contains(s.T(), string(body), "ingress_service_requests_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 0")
+	assert.Contains(s.T(), string(body), "ingress_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 1")
+	assert.Contains(s.T(), string(body), "ingress_service_responses_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 31")
 }
 
 func (s *SimpleSuite) TestMultipleProviderSameBackendName() {
@@ -632,7 +632,7 @@ func (s *SimpleSuite) TestMultipleProviderSameBackendName() {
 	whoami2IP := s.getComposeServiceIP("whoami2")
 	file := s.adaptFile("fixtures/multiple_provider.toml", struct{ IP string }{IP: whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -650,7 +650,7 @@ func (s *SimpleSuite) TestIPStrategyAllowlist() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd(withConfigFile("fixtures/simple_allowlist.toml"))
+	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override"))
 	require.NoError(s.T(), err)
@@ -713,7 +713,7 @@ func (s *SimpleSuite) TestIPStrategyWhitelist() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd(withConfigFile("fixtures/simple_whitelist.toml"))
+	s.ingressCmd(withConfigFile("fixtures/simple_whitelist.toml"))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override"))
 	require.NoError(s.T(), err)
@@ -776,7 +776,7 @@ func (s *SimpleSuite) TestXForwardedHeaders() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd(withConfigFile("fixtures/simple_allowlist.toml"))
+	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
 		try.BodyContains("override.remoteaddr.allowlist.docker.local"))
@@ -805,7 +805,7 @@ func (s *SimpleSuite) TestMultiProvider() {
 
 	file := s.adaptFile("fixtures/multiprovider.toml", struct{ Server string }{Server: whoamiURL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("service"))
 	require.NoError(s.T(), err)
@@ -850,7 +850,7 @@ func (s *SimpleSuite) TestSimpleConfigurationHostRequestTrailingPeriod() {
 
 	file := s.adaptFile("fixtures/file/simple-hosts.toml", struct{ Server string }{Server: whoamiURL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	testCases := []struct {
 		desc        string
@@ -886,7 +886,7 @@ func (s *SimpleSuite) TestSimpleConfigurationHostRequestTrailingPeriod() {
 func (s *SimpleSuite) TestWithDefaultRuleSyntax() {
 	file := s.adaptFile("fixtures/with_default_rule_syntax.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -916,7 +916,7 @@ func (s *SimpleSuite) TestWithDefaultRuleSyntax() {
 func (s *SimpleSuite) TestWithoutDefaultRuleSyntax() {
 	file := s.adaptFile("fixtures/without_default_rule_syntax.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
@@ -946,7 +946,7 @@ func (s *SimpleSuite) TestWithoutDefaultRuleSyntax() {
 func (s *SimpleSuite) TestRouterConfigErrors() {
 	file := s.adaptFile("fixtures/router_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// All errors
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/routers", 1000*time.Millisecond, try.BodyContains(`["middleware \"unknown@file\" does not exist","found different TLS options for routers on the same host snitest.net, so using the default TLS options instead"]`))
@@ -968,7 +968,7 @@ func (s *SimpleSuite) TestRouterConfigErrors() {
 func (s *SimpleSuite) TestServiceConfigErrors() {
 	file := s.adaptFile("fixtures/service_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
@@ -983,7 +983,7 @@ func (s *SimpleSuite) TestServiceConfigErrors() {
 func (s *SimpleSuite) TestTCPRouterConfigErrors() {
 	file := s.adaptFile("fixtures/router_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// router3 has an error because it uses an unknown entrypoint
 	err := try.GetRequest("http://127.0.0.1:8080/api/tcp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
@@ -997,7 +997,7 @@ func (s *SimpleSuite) TestTCPRouterConfigErrors() {
 func (s *SimpleSuite) TestTCPServiceConfigErrors() {
 	file := s.adaptFile("fixtures/tcp/service_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/tcp/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
@@ -1012,7 +1012,7 @@ func (s *SimpleSuite) TestTCPServiceConfigErrors() {
 func (s *SimpleSuite) TestUDPRouterConfigErrors() {
 	file := s.adaptFile("fixtures/router_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/udp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
 	require.NoError(s.T(), err)
@@ -1021,7 +1021,7 @@ func (s *SimpleSuite) TestUDPRouterConfigErrors() {
 func (s *SimpleSuite) TestUDPServiceConfigErrors() {
 	file := s.adaptFile("fixtures/udp/service_errors.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/udp/services", 1000*time.Millisecond, try.BodyContains(`["the UDP service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
@@ -1047,7 +1047,7 @@ func (s *SimpleSuite) TestWRRServer() {
 		Server2 string
 	}{Server1: "http://" + whoami1IP, Server2: "http://" + whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
@@ -1090,7 +1090,7 @@ func (s *SimpleSuite) TestLeastTimeServer() {
 		Server2 string
 	}{Server1: "http://" + whoami1IP, Server2: "http://" + whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
@@ -1150,7 +1150,7 @@ func (s *SimpleSuite) TestLeastTimeHeterogeneousPerformance() {
 		Server2 string
 	}{Server1: fastServer.URL, Server2: slowServer.URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
@@ -1193,7 +1193,7 @@ func (s *SimpleSuite) TestWRR() {
 		Server2 string
 	}{Server1: "http://" + whoami1IP, Server2: "http://" + whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
 	require.NoError(s.T(), err)
@@ -1236,7 +1236,7 @@ func (s *SimpleSuite) TestWRRSticky() {
 		Server2 string
 	}{Server1: "http://" + whoami1IP, Server2: "http://" + whoami2IP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
 	require.NoError(s.T(), err)
@@ -1294,7 +1294,7 @@ func (s *SimpleSuite) TestMirror() {
 		Mirror2Server string
 	}{MainServer: mainServer, Mirror1Server: mirror1Server, Mirror2Server: mirror2Server})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
@@ -1374,7 +1374,7 @@ func (s *SimpleSuite) TestMirrorWithBody() {
 		Mirror2Server string
 	}{MainServer: mainServer, Mirror1Server: mirror1Server, Mirror2Server: mirror2Server})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
@@ -1487,7 +1487,7 @@ func (s *SimpleSuite) TestMirrorCanceled() {
 		Mirror2Server string
 	}{MainServer: mainServer, Mirror1Server: mirror1Server, Mirror2Server: mirror2Server})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
@@ -1539,7 +1539,7 @@ func (s *SimpleSuite) TestHighestRandomWeight() {
 		Service3Server string
 	}{Service1Server: service1Server, Service2Server: service2Server, Service3Server: service3Server})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 3*time.Second, try.BodyContains("service1", "service2", "service3", "hrw"))
 	require.NoError(s.T(), err)
@@ -1587,7 +1587,7 @@ func (s *SimpleSuite) TestSecureAPI() {
 
 	file := s.adaptFile("./fixtures/simple_secure_api.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8000/secure/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
@@ -1636,7 +1636,7 @@ func (s *SimpleSuite) TestContentTypeDisableAutoDetect() {
 		Server: srv1.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file), "--log.level=DEBUG")
+	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
@@ -1689,7 +1689,7 @@ func (s *SimpleSuite) TestMuxer() {
 		Server1 string
 	}{whoami1URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("!Host"))
 	require.NoError(s.T(), err)
@@ -1798,7 +1798,7 @@ func (s *SimpleSuite) TestDebugLog() {
 
 	file := s.adaptFile("fixtures/simple_debug_log.toml", struct{}{})
 
-	_, output := s.cmdTraefik(withConfigFile(file))
+	_, output := s.cmdIngress(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
 	require.NoError(s.T(), err)
@@ -1830,7 +1830,7 @@ func (s *SimpleSuite) TestEncodeSemicolons() {
 		Server1 string
 	}{whoami1URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`other.localhost`)"))
 	require.NoError(s.T(), err)
@@ -1886,7 +1886,7 @@ func (s *SimpleSuite) TestDenyFragment() {
 	s.composeUp()
 	defer s.composeDown()
 
-	s.traefikCmd(withConfigFile(s.adaptFile("fixtures/simple_deny.toml", struct{}{})))
+	s.ingressCmd(withConfigFile(s.adaptFile("fixtures/simple_deny.toml", struct{}{})))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`deny.localhost`)"))
 	require.NoError(s.T(), err)
@@ -1925,7 +1925,7 @@ func (s *SimpleSuite) TestMaxHeaderBytes() {
 		TestServer string
 	}{ts.URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	testCases := []struct {
 		name           string
@@ -2021,7 +2021,7 @@ func (s *SimpleSuite) TestSimpleOCSP() {
 		ResponderURL string
 	}{responder.URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	select {
 	case <-responderCalled:
@@ -2101,7 +2101,7 @@ func (s *SimpleSuite) TestSanitizePath() {
 		DefaultRuleSyntax string
 	}{whoami1URL, "v3"})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
 	require.NoError(s.T(), err)
@@ -2199,7 +2199,7 @@ func (s *SimpleSuite) TestSanitizePathSyntaxV2() {
 		DefaultRuleSyntax string
 	}{whoami1URL, "v2"})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
 	require.NoError(s.T(), err)
@@ -2299,7 +2299,7 @@ func (s *SimpleSuite) TestEncodedCharactersDifferentEntryPoints() {
 		Server1 string
 	}{whoami1URL})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
@@ -2373,7 +2373,7 @@ func (s *SimpleSuite) TestDDOS() {
 
 	file := s.adaptFile("fixtures/simple_ddos.toml", struct{}{})
 
-	_, output := s.cmdTraefik(withConfigFile(file))
+	_, output := s.cmdIngress(withConfigFile(file))
 
 	defer func() {
 		if s.T().Failed() {
@@ -2436,7 +2436,7 @@ func (s *SimpleSuite) TestFailoverService() {
 		FallbackServer: whoami2IP,
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Traefik to be ready
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("failover-service"))
@@ -2571,7 +2571,7 @@ func (s *SimpleSuite) TestFailoverServiceWithStatusCode() {
 		FallbackServer: fallbackServer.URL,
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Traefik to be ready and verify the configuration is loaded
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("PathPrefix"))
@@ -2598,7 +2598,7 @@ func (s *SimpleSuite) TestServiceMiddleware() {
 		Server string
 	}{Server: "http://" + whoamiIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Traefik to be ready
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("service1"))

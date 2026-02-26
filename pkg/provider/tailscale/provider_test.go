@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -133,7 +133,7 @@ func TestProvider_findDomains(t *testing.T) {
 func TestProvider_findNewDomains(t *testing.T) {
 	p := Provider{
 		ResolverName: "foo",
-		certByDomain: map[string]traefiktls.Certificate{
+		certByDomain: map[string]ingresstls.Certificate{
 			"foo.com": {},
 		},
 	}
@@ -145,7 +145,7 @@ func TestProvider_findNewDomains(t *testing.T) {
 func TestProvider_purgeUnusedCerts(t *testing.T) {
 	p := Provider{
 		ResolverName: "foo",
-		certByDomain: map[string]traefiktls.Certificate{
+		certByDomain: map[string]ingresstls.Certificate{
 			"foo.com": {},
 			"bar.com": {},
 		},
@@ -161,26 +161,26 @@ func TestProvider_purgeUnusedCerts(t *testing.T) {
 func TestProvider_sendDynamicConfig(t *testing.T) {
 	testCases := []struct {
 		desc         string
-		certByDomain map[string]traefiktls.Certificate
-		want         []*traefiktls.CertAndStores
+		certByDomain map[string]ingresstls.Certificate
+		want         []*ingresstls.CertAndStores
 	}{
 		{
 			desc: "without certificates",
 		},
 		{
 			desc: "with certificates",
-			certByDomain: map[string]traefiktls.Certificate{
+			certByDomain: map[string]ingresstls.Certificate{
 				"foo.com": {CertFile: "foo.crt", KeyFile: "foo.key"},
 				"bar.com": {CertFile: "bar.crt", KeyFile: "bar.key"},
 			},
-			want: []*traefiktls.CertAndStores{
+			want: []*ingresstls.CertAndStores{
 				{
-					Certificate: traefiktls.Certificate{CertFile: "bar.crt", KeyFile: "bar.key"},
-					Stores:      []string{traefiktls.DefaultTLSStoreName},
+					Certificate: ingresstls.Certificate{CertFile: "bar.crt", KeyFile: "bar.key"},
+					Stores:      []string{ingresstls.DefaultTLSStoreName},
 				},
 				{
-					Certificate: traefiktls.Certificate{CertFile: "foo.crt", KeyFile: "foo.key"},
-					Stores:      []string{traefiktls.DefaultTLSStoreName},
+					Certificate: ingresstls.Certificate{CertFile: "foo.crt", KeyFile: "foo.key"},
+					Stores:      []string{ingresstls.DefaultTLSStoreName},
 				},
 			},
 		},

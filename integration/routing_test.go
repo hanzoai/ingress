@@ -104,7 +104,7 @@ func (s *RoutingSuite) TestMultiLayerRoutingWithAuth() {
 		DeveloperIP: developerIP,
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("parent-router"))
 	require.NoError(s.T(), err)

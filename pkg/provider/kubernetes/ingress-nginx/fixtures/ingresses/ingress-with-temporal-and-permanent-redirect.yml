@@ -5,7 +5,7 @@ metadata:
   name: ingress-with-redirect
   namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.traefik.io"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://www.hanzo.ai"
     nginx.ingress.kubernetes.io/temporal-redirect: "https://www.google.com"
 
 spec:

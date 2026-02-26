@@ -80,43 +80,43 @@ func (s *K8sSuite) TearDownSuite() {
 }
 
 func (s *K8sSuite) TestIngressConfiguration() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_default.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_default.toml"))
 
 	s.testConfiguration("testdata/rawdata-ingress.json", "8080")
 }
 
 func (s *K8sSuite) TestIngressLabelSelector() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_ingress_label_selector.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_ingress_label_selector.toml"))
 
 	s.testConfiguration("testdata/rawdata-ingress-label-selector.json", "8080")
 }
 
 func (s *K8sSuite) TestCRDConfiguration() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_crd.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_crd.toml"))
 
 	s.testConfiguration("testdata/rawdata-crd.json", "8000")
 }
 
 func (s *K8sSuite) TestCRDLabelSelector() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_crd_label_selector.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_crd_label_selector.toml"))
 
 	s.testConfiguration("testdata/rawdata-crd-label-selector.json", "8000")
 }
 
 func (s *K8sSuite) TestGatewayConfiguration() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_gateway.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_gateway.toml"))
 
 	s.testConfiguration("testdata/rawdata-gateway.json", "8080")
 }
 
 func (s *K8sSuite) TestIngressclass() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_ingressclass.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_ingressclass.toml"))
 
 	s.testConfiguration("testdata/rawdata-ingressclass.json", "8080")
 }
 
 func (s *K8sSuite) TestDisableIngressclassLookup() {
-	s.traefikCmd(withConfigFile("fixtures/k8s_ingressclass_disabled.toml"))
+	s.ingressCmd(withConfigFile("fixtures/k8s_ingressclass_disabled.toml"))
 
 	s.testConfiguration("testdata/rawdata-ingressclass-disabled.json", "8080")
 }

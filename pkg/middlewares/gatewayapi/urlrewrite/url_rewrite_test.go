@@ -112,7 +112,7 @@ func TestURLRewriteHandler(t *testing.T) {
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
 
-			handler := NewURLRewrite(t.Context(), next, test.config, "traefikTest")
+			handler := NewURLRewrite(t.Context(), next, test.config, "ingressTest")
 
 			recorder := httptest.NewRecorder()
 			req := httptest.NewRequest(http.MethodGet, test.url, nil)

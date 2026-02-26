@@ -550,9 +550,9 @@ In v3, the Kubernetes Ingress default path matching does not support regexes any
 Two levels of remediation are possible:
 
 - Interpret the default path matcher `PathPrefix` with v2 syntax.
-This can done globally for all routers with the [static configuration](#configure-the-default-syntax-in-static-configuration) or on a per-router basis by using the [traefik.ingress.kubernetes.io/router.rulesyntax](../routing/providers/kubernetes-ingress.md#annotations) annotation.
+This can done globally for all routers with the [static configuration](#configure-the-default-syntax-in-static-configuration) or on a per-router basis by using the [ingress.kubernetes.io/router.rulesyntax](../routing/providers/kubernetes-ingress.md#annotations) annotation.
 
-- Adapt the path regex to be compatible with the Go regex syntax and change the default path matcher to use the `PathRegexp` matcher with the [`traefik.ingress.kubernetes.io/router.pathmatcher`](../routing/providers/kubernetes-ingress.md#annotations) annotation.
+- Adapt the path regex to be compatible with the Go regex syntax and change the default path matcher to use the `PathRegexp` matcher with the [`ingress.kubernetes.io/router.pathmatcher`](../routing/providers/kubernetes-ingress.md#annotations) annotation.
 
 ## Operations Changes
 
@@ -690,7 +690,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route

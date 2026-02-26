@@ -29,8 +29,8 @@ package fake
 import (
 	applyconfiguration "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration"
 	clientset "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
-	faketraefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1/fake"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
+	fakehanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
@@ -133,7 +133,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// TraefikV1alpha1 retrieves the TraefikV1alpha1Client
-func (c *Clientset) TraefikV1alpha1() traefikv1alpha1.TraefikV1alpha1Interface {
-	return &faketraefikv1alpha1.FakeTraefikV1alpha1{Fake: &c.Fake}
+// HanzoV1alpha1 retrieves the HanzoV1alpha1Client
+func (c *Clientset) HanzoV1alpha1() hanzoaiv1alpha1.HanzoV1alpha1Interface {
+	return &fakehanzoaiv1alpha1.FakeHanzoV1alpha1{Fake: &c.Fake}
 }

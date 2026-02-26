@@ -188,7 +188,7 @@ func (r *retry) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			var tracingCtx context.Context
 			tracingCtx, currentSpan = tracer.Start(initialCtx, typeName, trace.WithSpanKind(trace.SpanKindInternal))
 
-			currentSpan.SetAttributes(attribute.String("traefik.middleware.name", r.name))
+			currentSpan.SetAttributes(attribute.String("ingress.middleware.name", r.name))
 			// Only add the attribute "http.resend_count" defined by semantic conventions starting from second attempt.
 			if attempts > 1 {
 				currentSpan.SetAttributes(semconv.HTTPRequestResendCount(attempts - 1))

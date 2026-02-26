@@ -13,7 +13,7 @@ The OIDC Authentication middleware secures your applications by delegating the a
 ## Configuration Example
 
 ```yaml tab="Middleware OIDC"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oidc
@@ -125,7 +125,7 @@ If the router rule is accepting all paths on a domain, no extra work is needed.
 If the router rule is specific about the paths allowed, the path set in this option should be included.
 
 ```yaml tab="Defining specific rule for redirectUrl"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -173,7 +173,7 @@ See the following examples.
     Only `http` and `https` schemes are supported.
 
 ```yaml tab="Defining the redirectUrl"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oidc
@@ -299,7 +299,7 @@ urn:k8s:secret:[name]:[valueKey]
 ```
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oidc
@@ -389,7 +389,7 @@ The following Redis modes are supported:
 For more information about Redis, we recommend the [official Redis documentation](https://redis.io/docs/ "Link to official Redis documentation").
 
 ```yaml tab="Defining Redis connection"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oidc

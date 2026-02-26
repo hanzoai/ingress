@@ -11,7 +11,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -151,8 +151,8 @@ func createMessage(certs map[string]*Certificate) dynamic.Message {
 	}
 
 	for _, cert := range certs {
-		certConf := &traefiktls.CertAndStores{
-			Certificate: traefiktls.Certificate{
+		certConf := &ingresstls.CertAndStores{
+			Certificate: ingresstls.Certificate{
 				CertFile: types.FileOrContent(cert.Certificate),
 				KeyFile:  types.FileOrContent(cert.Key),
 			},

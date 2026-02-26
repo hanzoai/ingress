@@ -41,7 +41,7 @@ spec:
             - --entrypoints.pwebsecure.address=:443
             - --entrypoints.privweb.address=:8080
             - --entrypoints.privwebsecure.address=:4443
-            - --entrypoints.traefik.address=:9000
+            - --entrypoints.ingress.address=:9000
             - --experimental.knative
             - --providers.knative.publicEntrypoints=pweb,pwebsecure
             - --providers.knative.publicService.namespace=traefik

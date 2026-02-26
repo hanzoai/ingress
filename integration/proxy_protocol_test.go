@@ -43,7 +43,7 @@ func (s *ProxyProtocolSuite) TestProxyProtocolTrusted() {
 		WhoamiIP  string
 	}{WhoamiIP: s.whoamiIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8000/whoami", 10*time.Second)
 	require.NoError(s.T(), err)
@@ -63,7 +63,7 @@ func (s *ProxyProtocolSuite) TestProxyProtocolNotTrusted() {
 		WhoamiIP  string
 	}{WhoamiIP: s.whoamiIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:9000/whoami", 10*time.Second)
 	require.NoError(s.T(), err)

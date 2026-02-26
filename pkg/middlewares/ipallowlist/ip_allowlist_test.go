@@ -44,7 +44,7 @@ func TestNewIPAllowLister(t *testing.T) {
 			t.Parallel()
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-			allowLister, err := New(t.Context(), next, test.allowList, "traefikTest")
+			allowLister, err := New(t.Context(), next, test.allowList, "ingressTest")
 
 			if test.expectedError {
 				assert.Error(t, err)
@@ -104,7 +104,7 @@ func TestIPAllowLister_ServeHTTP(t *testing.T) {
 			t.Parallel()
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
-			allowLister, err := New(t.Context(), next, test.allowList, "traefikTest")
+			allowLister, err := New(t.Context(), next, test.allowList, "ingressTest")
 			require.NoError(t, err)
 
 			recorder := httptest.NewRecorder()

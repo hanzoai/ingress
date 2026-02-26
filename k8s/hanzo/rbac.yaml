@@ -21,7 +21,7 @@ rules:
 - apiGroups: ["networking.k8s.io"]
   resources: ["ingresses/status"]
   verbs: ["update"]
-- apiGroups: ["traefik.io"]
+- apiGroups: ["hanzo.ai"]
   resources: ["*"]
   verbs: ["get", "list", "watch"]
 ---

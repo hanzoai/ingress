@@ -17,7 +17,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Allow encoded slash in the request path.
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-encodedchars

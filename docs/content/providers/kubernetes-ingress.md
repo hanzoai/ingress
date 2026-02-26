@@ -243,7 +243,7 @@ Otherwise, Ingresses missing the annotation, having an empty value, or the value
     metadata:
       name: traefik-lb
     spec:
-      controller: traefik.io/ingress-controller
+      controller: hanzo.ai/ingress-controller
     ```
 
     ```yaml tab="Ingress"
@@ -510,7 +510,7 @@ providers:
 _Optional, Default: false_
 
 Defines whether to use Native Kubernetes load-balancing mode by default.
-For more information, please check out the `traefik.ingress.kubernetes.io/service.nativelb` [service annotation documentation](../routing/providers/kubernetes-ingress.md#on-service).
+For more information, please check out the `ingress.kubernetes.io/service.nativelb` [service annotation documentation](../routing/providers/kubernetes-ingress.md#on-service).
 
 ```yaml tab="File (YAML)"
 providers:

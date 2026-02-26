@@ -41,7 +41,7 @@ type specificConfiguration struct {
 
 func (p *Shared) extractDockerLabels(container dockerData) (configuration, error) {
 	conf := labelConfiguration{Enable: p.ExposedByDefault}
-	if err := label.Decode(container.Labels, &conf, "traefik.docker.", "traefik.enable"); err != nil {
+	if err := label.Decode(container.Labels, &conf, "ingress.docker.", "ingress.enable"); err != nil {
 		return configuration{}, fmt.Errorf("decoding Docker labels: %w", err)
 	}
 
@@ -64,7 +64,7 @@ func (p *Shared) extractDockerLabels(container dockerData) (configuration, error
 
 func (p *Shared) extractSwarmLabels(container dockerData) (configuration, error) {
 	labelConf := labelConfiguration{Enable: p.ExposedByDefault}
-	if err := label.Decode(container.Labels, &labelConf, "traefik.enable", "traefik.docker.", "traefik.swarm."); err != nil {
+	if err := label.Decode(container.Labels, &labelConf, "ingress.enable", "ingress.docker.", "ingress.swarm."); err != nil {
 		return configuration{}, fmt.Errorf("decoding Swarm labels: %w", err)
 	}
 

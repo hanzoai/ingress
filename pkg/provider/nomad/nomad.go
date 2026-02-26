@@ -31,7 +31,7 @@ const (
 
 	// defaultPrefix is the default prefix used in tag values indicating the service
 	// should be consumed and exposed via traefik.
-	defaultPrefix = "traefik"
+	defaultPrefix = "ingress"
 )
 
 var _ provider.Provider = (*Provider)(nil)
@@ -488,12 +488,12 @@ func (p *Provider) getExtraConf(tags []string) configuration {
 	labels := tagsToLabels(tags, p.Prefix)
 
 	enabled := p.ExposedByDefault
-	if v, exists := labels["traefik.enable"]; exists {
+	if v, exists := labels["ingress.enable"]; exists {
 		enabled = strings.EqualFold(v, "true")
 	}
 
 	var canary bool
-	if v, exists := labels["traefik.nomad.canary"]; exists {
+	if v, exists := labels["ingress.nomad.canary"]; exists {
 		canary = strings.EqualFold(v, "true")
 	}
 

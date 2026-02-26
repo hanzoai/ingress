@@ -35,8 +35,8 @@ import (
 
 const (
 	annotationKubernetesIngressClass     = "kubernetes.io/ingress.class"
-	traefikDefaultIngressClass           = "traefik"
-	traefikDefaultIngressClassController = "traefik.io/ingress-controller"
+	defaultIngressClass           = "ingress"
+	defaultIngressClassController = "hanzo.ai/ingress-controller"
 	defaultPathMatcher                   = "PathPrefix"
 )
 
@@ -516,7 +516,7 @@ func (p *Provider) shouldProcessIngress(ingress *netv1.Ingress, ingressClasses [
 	}
 
 	return p.IngressClass == ingress.Annotations[annotationKubernetesIngressClass] ||
-		len(p.IngressClass) == 0 && ingress.Annotations[annotationKubernetesIngressClass] == traefikDefaultIngressClass
+		len(p.IngressClass) == 0 && ingress.Annotations[annotationKubernetesIngressClass] == defaultIngressClass
 }
 
 func (p *Provider) loadService(client Client, namespace string, backend netv1.IngressBackend) (*dynamic.Service, error) {

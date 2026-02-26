@@ -18,7 +18,7 @@ Custom claim validation can be configured with [Custom Claims Validation](#claim
 ## Configuration Example
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-jwt
@@ -144,7 +144,7 @@ urn:k8s:secret:[name]:[valueKey]
 ```
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-jwt

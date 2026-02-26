@@ -1,7 +1,7 @@
 site_name: Traefik
 site_description: Traefik Documentation
-site_author: traefik.io
-site_url: https://doc.traefik.io/traefik
+site_author: hanzo.ai
+site_url: https://doc.hanzo.ai/traefik
 dev_addr: localhost:8000
 
 repo_name: 'GitHub'
@@ -215,16 +215,16 @@ nav:
         - 'Basic': 'expose/swarm/basic.md'
         - 'Advanced': 'expose/swarm/advanced.md'
   - 'Secure':
-      - '<span class="nav-link-with-icon">Secure Access with JWT <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-jwt.md'
-      - '<span class="nav-link-with-icon">Secure Access with OIDC <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-oidc.md'
-      - '<span class="nav-link-with-icon">Secure Access with a WAF <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-waf.md'
+      - '<span class="nav-link-with-icon">Secure Access with JWT <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-jwt.md'
+      - '<span class="nav-link-with-icon">Secure Access with OIDC <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-oidc.md'
+      - '<span class="nav-link-with-icon">Secure Access with a WAF <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'secure/secure-api-access-with-waf.md'
   - 'Observe':
       - 'Overview': 'observe/overview.md'
       - 'Logs & Access Logs': 'observe/logs-and-access-logs.md'
       - 'Metrics': 'observe/metrics.md'
       - 'Tracing': 'observe/tracing.md'
   - 'Extend': 'extend/extend-traefik.md'
-  - '<span class="nav-link-with-icon">Govern <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'govern/index.md'
+  - '<span class="nav-link-with-icon">Govern <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>': 'govern/index.md'
   - 'Migrate':
       - 'Ingress NGINX to Traefik': 'migrate/nginx-to-traefik.md'
       - 'Traefik v3 minor migrations': 'migrate/v3.md'
@@ -296,7 +296,7 @@ nav:
             - 'Middlewares' :
               - 'Overview' : 'reference/routing-configuration/http/middlewares/overview.md'
               - 'AddPrefix' : 'reference/routing-configuration/http/middlewares/addprefix.md'
-              - '<span class="nav-link-with-icon">APIKey <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/apikey.md'
+              - '<span class="nav-link-with-icon">APIKey <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/apikey.md'
               - 'BasicAuth' : 'reference/routing-configuration/http/middlewares/basicauth.md'
               - 'Buffering': 'reference/routing-configuration/http/middlewares/buffering.md'
               - 'Chain': 'reference/routing-configuration/http/middlewares/chain.md'
@@ -304,21 +304,21 @@ nav:
               - 'Compress': 'reference/routing-configuration/http/middlewares/compress.md'
               - 'ContentType': 'reference/routing-configuration/http/middlewares/contenttype.md'
               - 'DigestAuth': 'reference/routing-configuration/http/middlewares/digestauth.md'
-              - '<span class="nav-link-with-icon">Distributed RateLimit <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/distributed-ratelimit.md'
+              - '<span class="nav-link-with-icon">Distributed RateLimit <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/distributed-ratelimit.md'
               - 'EncodedCharacters': 'reference/routing-configuration/http/middlewares/encodedcharacters.md'
               - 'Errors': 'reference/routing-configuration/http/middlewares/errorpages.md'
               - 'ForwardAuth': 'reference/routing-configuration/http/middlewares/forwardauth.md'
               - 'GrpcWeb': 'reference/routing-configuration/http/middlewares/grpcweb.md'
               - 'Headers': 'reference/routing-configuration/http/middlewares/headers.md'
-              - '<span class="nav-link-with-icon">HMAC <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/hmac.md'
+              - '<span class="nav-link-with-icon">HMAC <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/hmac.md'
               - 'IPAllowList': 'reference/routing-configuration/http/middlewares/ipallowlist.md'
               - 'InFlightReq': 'reference/routing-configuration/http/middlewares/inflightreq.md'
-              - '<span class="nav-link-with-icon">JWT <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/jwt.md'
-              - '<span class="nav-link-with-icon">LDAP <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/ldap.md'
-              - '<span class="nav-link-with-icon">Token Introspection <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oauth2-token-introspection.md'
-              - '<span class="nav-link-with-icon">Client Credentials <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oauth2-client-credentials.md'
-              - '<span class="nav-link-with-icon">OIDC <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oidc.md'
-              - '<span class="nav-link-with-icon">OPA <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/opa.md'
+              - '<span class="nav-link-with-icon">JWT <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/jwt.md'
+              - '<span class="nav-link-with-icon">LDAP <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/ldap.md'
+              - '<span class="nav-link-with-icon">Token Introspection <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oauth2-token-introspection.md'
+              - '<span class="nav-link-with-icon">Client Credentials <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oauth2-client-credentials.md'
+              - '<span class="nav-link-with-icon">OIDC <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/oidc.md'
+              - '<span class="nav-link-with-icon">OPA <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/opa.md'
               - 'PassTLSClientCert': 'reference/routing-configuration/http/middlewares/passtlsclientcert.md'
               - 'RateLimit': 'reference/routing-configuration/http/middlewares/ratelimit.md'
               - 'RedirectRegex': 'reference/routing-configuration/http/middlewares/redirectregex.md'
@@ -328,7 +328,7 @@ nav:
               - 'Retry': 'reference/routing-configuration/http/middlewares/retry.md'
               - 'StripPrefix': 'reference/routing-configuration/http/middlewares/stripprefix.md'
               - 'StripPrefixRegex': 'reference/routing-configuration/http/middlewares/stripprefixregex.md'
-              - '<span class="nav-link-with-icon">WAF <img src="https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/waf.md'
+              - '<span class="nav-link-with-icon">WAF <img src="https://doc.hanzo.ai/traefik-hub/img/ps-traefik-hub-logo-light.svg" class="menu-icon" alt="Traefik Hub API Gateway"></span>' : 'reference/routing-configuration/http/middlewares/waf.md'
           - 'TCP' :
               - 'Routing' :
                 - 'Router' : 'reference/routing-configuration/tcp/routing/router.md'
@@ -351,7 +351,7 @@ nav:
             - 'HTTP' :
               - 'IngressRoute' : 'reference/routing-configuration/kubernetes/crd/http/ingressroute.md'
               - 'Service' : 'reference/routing-configuration/kubernetes/crd/http/service.md'
-              - 'TraefikService' : 'reference/routing-configuration/kubernetes/crd/http/traefikservice.md'
+              - 'IngressService' : 'reference/routing-configuration/kubernetes/crd/http/ingressservice.md'
               - 'ServersTransport' : 'reference/routing-configuration/kubernetes/crd/http/serverstransport.md'
               - 'Middleware' : 'reference/routing-configuration/kubernetes/crd/http/middleware.md'
               - 'TLSOption' : 'reference/routing-configuration/kubernetes/crd/tls/tlsoption.md'

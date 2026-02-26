@@ -366,7 +366,7 @@ func TestLoad(t *testing.T) {
 				"TRAEFIK_LOG_LEVEL":                "DEBUG",
 				"TRAEFIK_ENTRYPOINT_TEST_HTTP_TLS": "true",
 				"TRAEFIK_PROVIDERS_MARATHON":       "true",
-				"TRAEFIK_PILOT_TOKEN":              "xxx",
+				"INGRESS_PILOT_TOKEN":              "xxx",
 			},
 			wantDeprecated: true,
 		},
@@ -405,7 +405,7 @@ func TestLoad(t *testing.T) {
 
 	for _, test := range testCases {
 		t.Run(test.desc, func(t *testing.T) {
-			tconfig := cmd.NewTraefikConfiguration()
+			tconfig := cmd.NewIngressConfiguration()
 			c := &cli.Command{Configuration: tconfig}
 			l := DeprecationLoader{}
 

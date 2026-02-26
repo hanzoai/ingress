@@ -137,7 +137,7 @@ extraObjects:
     stringData:
       username: admin
       password: "P@ssw0rd"      # Replace with an Actual Password
-  - apiVersion: traefik.io/v1alpha1
+  - apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: dashboard-auth

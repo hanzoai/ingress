@@ -2358,7 +2358,7 @@ Release canceled.
 
 **Bug fixes:**
 - **[acme]** Update go-acme/lego to v4.9.1 ([#9550](https://github.com/traefik/traefik/pull/9550) by [ldez](https://github.com/ldez))
-- **[k8s/crd]** Support of allowEmptyServices in TraefikService ([#9424](https://github.com/traefik/traefik/pull/9424) by [jeromeguiard](https://github.com/jeromeguiard))
+- **[k8s/crd]** Support of allowEmptyServices in IngressService ([#9424](https://github.com/traefik/traefik/pull/9424) by [jeromeguiard](https://github.com/jeromeguiard))
 - **[logs]** Remove logs of the request ([#9574](https://github.com/traefik/traefik/pull/9574) by [ldez](https://github.com/ldez))
 - **[plugins]** Increase the timeout on plugin download ([#9529](https://github.com/traefik/traefik/pull/9529) by [ldez](https://github.com/ldez))
 - **[server]** Update golang.org/x/net ([#9582](https://github.com/traefik/traefik/pull/9582) by [ldez](https://github.com/ldez))

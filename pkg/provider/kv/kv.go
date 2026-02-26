@@ -30,7 +30,7 @@ type Provider struct {
 
 // SetDefaults sets the default values.
 func (p *Provider) SetDefaults() {
-	p.RootKey = "traefik"
+	p.RootKey = "ingress"
 }
 
 // Init the provider.

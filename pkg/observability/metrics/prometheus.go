@@ -18,7 +18,7 @@ import (
 
 const (
 	// MetricNamePrefix prefix of all metric names.
-	MetricNamePrefix = "traefik_"
+	MetricNamePrefix = "ingress_"
 
 	// server meta information.
 	metricConfigPrefix          = MetricNamePrefix + "config_"

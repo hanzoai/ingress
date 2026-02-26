@@ -12,7 +12,7 @@ This registers the `ServersTransport` kind and other CRD resources.
 It can be applied on a service using:
 
 - The option `services.serverstransport` on a [`IngressRoute`](./ingressroute.md) (if the service is a Kubernetes Service)
-- The option `serverstransport` on a [`TraefikService`](./traefikservice.md) (if the service is a Kubernetes Service)
+- The option `serverstransport` on a [`IngressService`](./ingressservice.md) (if the service is a Kubernetes Service)
 
 !!! note "Reference a ServersTransport CRD from another namespace"
 
@@ -21,7 +21,7 @@ It can be applied on a service using:
 ## Configuration Example
 
 ```yaml tab="serversTransport"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: ServersTransport
 metadata:
   name: mytransport
@@ -33,7 +33,7 @@ spec:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: testroute

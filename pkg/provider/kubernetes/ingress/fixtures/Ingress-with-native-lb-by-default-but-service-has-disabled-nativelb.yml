@@ -24,7 +24,7 @@ metadata:
   name: native-disabled-svc
   namespace: default
   annotations:
-    traefik.ingress.kubernetes.io/service.nativelb: "false"
+    ingress.kubernetes.io/service.nativelb: "false"
 spec:
   ports:
     - name: web

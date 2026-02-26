@@ -13,7 +13,7 @@ import (
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
 	"github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
@@ -2660,10 +2660,10 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 		entryPoints           map[string]Entrypoint
 	}{
 		{
-			desc:  "Simple HTTPRoute with TraefikService",
-			paths: []string{"services.yml", "httproute/simple_with_TraefikService.yml"},
+			desc:  "Simple HTTPRoute with IngressService",
+			paths: []string{"services.yml", "httproute/simple_with_IngressService.yml"},
 			groupKindBackendFuncs: map[string]map[string]BuildBackendFunc{
-				traefikv1alpha1.GroupName: {"TraefikService": func(name, namespace string) (string, *dynamic.Service, error) {
+				hanzoaiv1alpha1.GroupName: {"IngressService": func(name, namespace string) (string, *dynamic.Service, error) {
 					return name, nil, nil
 				}},
 			},
@@ -2710,10 +2710,10 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 			},
 		},
 		{
-			desc:  "Simple HTTPRoute with TraefikService with service configuration",
-			paths: []string{"services.yml", "httproute/simple_with_TraefikService.yml"},
+			desc:  "Simple HTTPRoute with IngressService with service configuration",
+			paths: []string{"services.yml", "httproute/simple_with_IngressService.yml"},
 			groupKindBackendFuncs: map[string]map[string]BuildBackendFunc{
-				traefikv1alpha1.GroupName: {"TraefikService": func(name, namespace string) (string, *dynamic.Service, error) {
+				hanzoaiv1alpha1.GroupName: {"IngressService": func(name, namespace string) (string, *dynamic.Service, error) {
 					return name, &dynamic.Service{LoadBalancer: &dynamic.ServersLoadBalancer{Strategy: dynamic.BalancerStrategyWRR, Servers: []dynamic.Server{{URL: "foobar"}}}}, nil
 				}},
 			},
@@ -2768,8 +2768,8 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 			},
 		},
 		{
-			desc:  "Simple HTTPRoute with invalid TraefikService kind",
-			paths: []string{"services.yml", "httproute/simple_with_TraefikService.yml"},
+			desc:  "Simple HTTPRoute with invalid IngressService kind",
+			paths: []string{"services.yml", "httproute/simple_with_IngressService.yml"},
 			entryPoints: map[string]Entrypoint{"web": {
 				Address: ":80",
 			}},
@@ -2815,9 +2815,9 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 		},
 		{
 			desc:  "Simple HTTPRoute with backendFunc error",
-			paths: []string{"services.yml", "httproute/simple_with_TraefikService.yml"},
+			paths: []string{"services.yml", "httproute/simple_with_IngressService.yml"},
 			groupKindBackendFuncs: map[string]map[string]BuildBackendFunc{
-				traefikv1alpha1.GroupName: {"TraefikService": func(name, namespace string) (string, *dynamic.Service, error) {
+				hanzoaiv1alpha1.GroupName: {"IngressService": func(name, namespace string) (string, *dynamic.Service, error) {
 					return "", nil, errors.New("BOOM")
 				}},
 			},
@@ -2868,7 +2868,7 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 			desc:  "Simple HTTPRoute, with myservice@file service",
 			paths: []string{"services.yml", "httproute/simple_cross_provider.yml"},
 			groupKindBackendFuncs: map[string]map[string]BuildBackendFunc{
-				traefikv1alpha1.GroupName: {"TraefikService": func(name, namespace string) (string, *dynamic.Service, error) {
+				hanzoaiv1alpha1.GroupName: {"IngressService": func(name, namespace string) (string, *dynamic.Service, error) {
 					// func should never be executed in case of cross-provider reference.
 					return "", nil, errors.New("BOOM")
 				}},
@@ -2940,7 +2940,7 @@ func TestLoadHTTPRoutes_backendExtensionRef(t *testing.T) {
 			desc:  "Simple HTTPRoute, with appProtocol service",
 			paths: []string{"services.yml", "httproute/with_app_protocol_service.yml"},
 			groupKindBackendFuncs: map[string]map[string]BuildBackendFunc{
-				traefikv1alpha1.GroupName: {"TraefikService": func(name, namespace string) (string, *dynamic.Service, error) {
+				hanzoaiv1alpha1.GroupName: {"IngressService": func(name, namespace string) (string, *dynamic.Service, error) {
 					// func should never be executed in case of cross-provider reference.
 					return "", nil, errors.New("BOOM")
 				}},
@@ -3124,7 +3124,7 @@ func TestLoadHTTPRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return namespace + "-" + name, nil, nil
 				}},
 			},
@@ -3194,7 +3194,7 @@ func TestLoadHTTPRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter with middleware creation",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return namespace + "-" + name, &dynamic.Middleware{Headers: &dynamic.Headers{CustomRequestHeaders: map[string]string{"Test-Header": "Test"}}}, nil
 				}},
 			},
@@ -3312,7 +3312,7 @@ func TestLoadHTTPRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter with filterFunc error",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return "", nil, errors.New("BOOM")
 				}},
 			},
@@ -3410,7 +3410,7 @@ func TestLoadGRPCRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return namespace + "-" + name, nil, nil
 				}},
 			},
@@ -3480,7 +3480,7 @@ func TestLoadGRPCRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter with middleware creation",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return namespace + "-" + name, &dynamic.Middleware{Headers: &dynamic.Headers{CustomRequestHeaders: map[string]string{"Test-Header": "Test"}}}, nil
 				}},
 			},
@@ -3601,7 +3601,7 @@ func TestLoadGRPCRoutes_filterExtensionRef(t *testing.T) {
 		{
 			desc: "ExtensionRef filter with filterFunc error",
 			groupKindFilterFuncs: map[string]map[string]BuildFilterFunc{
-				traefikv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
+				hanzoaiv1alpha1.GroupName: {"Middleware": func(name, namespace string) (string, *dynamic.Middleware, error) {
 					return "", nil, errors.New("BOOM")
 				}},
 			},

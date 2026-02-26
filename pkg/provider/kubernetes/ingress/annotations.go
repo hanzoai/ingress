@@ -10,7 +10,7 @@ import (
 
 const (
 	// https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#syntax-and-character-set
-	annotationsPrefix = "traefik.ingress.kubernetes.io/"
+	annotationsPrefix = "ingress.kubernetes.io/"
 )
 
 var annotationsRegex = regexp.MustCompile(`(.+)\.(\w+)\.(\d+)\.(.+)`)
@@ -65,7 +65,7 @@ func parseRouterConfig(annotations map[string]string) (*RouterConfig, error) {
 
 	cfg := &RouterConfig{}
 
-	err := label.Decode(labels, cfg, "traefik.router.")
+	err := label.Decode(labels, cfg, "ingress.router.")
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func parseServiceConfig(annotations map[string]string) (*ServiceConfig, error) {
 
 	cfg := &ServiceConfig{}
 
-	err := label.Decode(labels, cfg, "traefik.service.")
+	err := label.Decode(labels, cfg, "ingress.service.")
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,8 @@ func convertAnnotations(annotations map[string]string) map[string]string {
 			continue
 		}
 
-		newKey := strings.ReplaceAll(key, "ingress.kubernetes.io/", "")
+		// Convert ingress.kubernetes.io/router.foo annotation to ingress.router.foo label format.
+		newKey := "ingress." + strings.TrimPrefix(key, annotationsPrefix)
 
 		if annotationsRegex.MatchString(newKey) {
 			newKey = annotationsRegex.ReplaceAllString(newKey, "$1.$2[$3].$4")

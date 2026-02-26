@@ -13,7 +13,7 @@ The API Key authentication middleware allows you to secure an API by requiring a
 ## Configuration Example
 
 ```yaml tab="Middleware API Key"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-apikey

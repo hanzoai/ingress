@@ -38,14 +38,14 @@ import (
 var (
 	showLog                      = flag.Bool("tlog", false, "always show Traefik logs")
 	gatewayAPIConformanceRunTest = flag.String("gatewayAPIConformanceRunTest", "", "runs a specific Gateway API conformance test")
-	traefikVersion               = flag.String("traefikVersion", "dev", "defines the Traefik version")
+	ingressVersion               = flag.String("ingressVersion", "dev", "defines the Traefik version")
 )
 
 const (
 	k3sImage                = "docker.io/rancher/k3s:v1.34.2-k3s1"
-	traefikImage            = "traefik/traefik:latest"
+	ingressImage            = "ingress/traefik:latest"
 	traefikDeployment       = "deployments/traefik"
-	traefikNamespace        = "traefik"
+	ingressNamespace        = "ingress"
 	tailscaleSecretFilePath = "tailscale.secret"
 )
 
@@ -289,8 +289,8 @@ func (s *BaseSuite) composeDown() {
 	s.containers = map[string]testcontainers.Container{}
 }
 
-func (s *BaseSuite) cmdTraefik(args ...string) (*exec.Cmd, *bytes.Buffer) {
-	binName := "traefik"
+func (s *BaseSuite) cmdIngress(args ...string) (*exec.Cmd, *bytes.Buffer) {
+	binName := "ingress"
 	if runtime.GOOS == "windows" {
 		binName += ".exe"
 	}
@@ -324,14 +324,14 @@ func (s *BaseSuite) killCmd(cmd *exec.Cmd) {
 	time.Sleep(100 * time.Millisecond)
 }
 
-func (s *BaseSuite) traefikCmd(args ...string) *exec.Cmd {
-	cmd, out := s.cmdTraefik(args...)
+func (s *BaseSuite) ingressCmd(args ...string) *exec.Cmd {
+	cmd, out := s.cmdIngress(args...)
 
 	s.T().Cleanup(func() {
 		if s.T().Failed() || *showLog {
 			s.displayLogK3S()
 			s.displayLogCompose()
-			s.displayTraefikLog(out)
+			s.displayIngressLog(out)
 		}
 	})
 
@@ -372,7 +372,7 @@ func (s *BaseSuite) displayLogCompose() {
 	}
 }
 
-func (s *BaseSuite) displayTraefikLog(output *bytes.Buffer) {
+func (s *BaseSuite) displayIngressLog(output *bytes.Buffer) {
 	if output == nil || output.Len() == 0 {
 		log.Info().Msg("No Traefik logs.")
 	} else {
@@ -492,7 +492,7 @@ func (s *BaseSuite) waitForTraefik(containerName string) {
 	require.NoError(s.T(), err)
 }
 
-func (s *BaseSuite) displayTraefikLogFile(path string) {
+func (s *BaseSuite) displayIngressLogFile(path string) {
 	if s.T().Failed() {
 		if _, err := os.Stat(path); !os.IsNotExist(err) {
 			content, errRead := os.ReadFile(path)

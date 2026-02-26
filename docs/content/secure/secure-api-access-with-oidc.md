@@ -22,7 +22,7 @@ Once the authentication is complete, users are redirected back to the middleware
 To allow the OIDC Middleware to use the credentials provided by the requests, apply the following configuration:
 
 ```yaml tab="Middleware OIDC"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: oidc-login
@@ -47,7 +47,7 @@ stringData:
 ```
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: secure-applications-apigateway-oauth2-client-credentials

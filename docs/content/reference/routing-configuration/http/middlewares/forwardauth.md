@@ -42,7 +42,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Forward authentication to example.com
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-auth

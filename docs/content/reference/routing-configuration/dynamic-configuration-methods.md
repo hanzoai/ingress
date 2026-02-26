@@ -112,10 +112,10 @@ For Kubernetes providers, you can configure Hanzo Ingress using the native Ingre
       name: whoami
       namespace: apps
       annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/router.priority: "42"
-        traefik.ingress.kubernetes.io/router.tls: "true"
-        traefik.ingress.kubernetes.io/router.tls.options: apps-opt@kubernetescrd
+        ingress.kubernetes.io/router.entrypoints: websecure
+        ingress.kubernetes.io/router.priority: "42"
+        ingress.kubernetes.io/router.tls: "true"
+        ingress.kubernetes.io/router.tls.options: apps-opt@kubernetescrd
     spec:
       rules:
         - host: my-domain.example.com

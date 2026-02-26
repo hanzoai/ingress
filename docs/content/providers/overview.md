@@ -82,7 +82,7 @@ For the list of the providers names, see the [supported providers](#supported-pr
     ```
 
     ```yaml tab="IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: ingressroutestripprefix
@@ -104,7 +104,7 @@ For the list of the providers names, see the [supported providers](#supported-pr
     ```
 
     ```yaml tab="Ingress"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: stripprefix
@@ -123,7 +123,7 @@ For the list of the providers names, see the [supported providers](#supported-pr
       annotations:
         # referencing a middleware from Kubernetes CRD provider: 
         # <middleware-namespace>-<middleware-name>@kubernetescrd
-        "traefik.ingress.kubernetes.io/router.middlewares": appspace-stripprefix@kubernetescrd
+        "ingress.kubernetes.io/router.middlewares": appspace-stripprefix@kubernetescrd
     spec:
       # ... regular ingress definition
     ```

@@ -20,7 +20,7 @@ import (
 	"github.com/spiffe/go-spiffe/v2/spiffetls/tlsconfig"
 	"github.com/spiffe/go-spiffe/v2/svid/x509svid"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -177,7 +177,7 @@ func (t *TransportManager) createTLSConfig(cfg *dynamic.ServersTransport) (*tls.
 		cipherSuites := make([]uint16, 0)
 		if cfg.CipherSuites != nil {
 			for _, cipher := range cfg.CipherSuites {
-				if cipherID, exists := traefiktls.CipherSuites[cipher]; exists {
+				if cipherID, exists := ingresstls.CipherSuites[cipher]; exists {
 					cipherSuites = append(cipherSuites, cipherID)
 				} else {
 					log.Error().Msgf("Invalid cipher: %v, falling back to default CipherSuite.", cipher)
@@ -189,7 +189,7 @@ func (t *TransportManager) createTLSConfig(cfg *dynamic.ServersTransport) (*tls.
 
 		var minVersion uint16
 		if cfg.MinVersion != "" {
-			if value, exists := traefiktls.MinVersion[cfg.MinVersion]; exists {
+			if value, exists := ingresstls.MinVersion[cfg.MinVersion]; exists {
 				minVersion = value
 			} else {
 				log.Error().Msgf("Invalid TLS minimum version: %s", cfg.MinVersion)
@@ -198,7 +198,7 @@ func (t *TransportManager) createTLSConfig(cfg *dynamic.ServersTransport) (*tls.
 
 		var maxVersion uint16
 		if cfg.MaxVersion != "" {
-			if value, exists := traefiktls.MaxVersion[cfg.MaxVersion]; exists {
+			if value, exists := ingresstls.MaxVersion[cfg.MaxVersion]; exists {
 				maxVersion = value
 			} else {
 				log.Error().Msgf("Invalid TLS maximum version: %s", cfg.MaxVersion)
@@ -225,7 +225,7 @@ func (t *TransportManager) createTLSConfig(cfg *dynamic.ServersTransport) (*tls.
 
 		if cfg.PeerCertURI != "" {
 			config.VerifyPeerCertificate = func(rawCerts [][]byte, _ [][]*x509.Certificate) error {
-				return traefiktls.VerifyPeerCertificate(cfg.PeerCertURI, config, rawCerts)
+				return ingresstls.VerifyPeerCertificate(cfg.PeerCertURI, config, rawCerts)
 			}
 		}
 	}
