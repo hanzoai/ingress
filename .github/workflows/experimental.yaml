@@ -3,7 +3,7 @@ name: Build experimental image on branch
 on:
   push:
     branches:
-      - master
+      - main
       - v*
 
 permissions:
