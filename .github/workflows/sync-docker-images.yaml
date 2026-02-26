@@ -1,6 +1,6 @@
 name: Sync Docker Images
 
-# Disabled: this workflow syncs upstream traefik images which is not needed.
+# Disabled: this workflow syncs upstream images which is not needed.
 # Keep workflow_dispatch for manual use if needed.
 on:
   workflow_dispatch:

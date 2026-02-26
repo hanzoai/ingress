@@ -1,11 +1,11 @@
 ---
-title: 'Providing Dynamic Configuration to Traefik'
-description: 'Learn about the different methods for providing dynamic configuration to Traefik. Read the technical documentation.'
+title: 'Providing Dynamic Configuration to Hanzo Ingress'
+description: 'Learn about the different methods for providing dynamic configuration to Hanzo Ingress. Read the technical documentation.'
 ---
 
-# Providing Dynamic (Routing) Configuration to Traefik
+# Providing Dynamic (Routing) Configuration to Hanzo Ingress
 
-Dynamic configuration—now also known as routing configuration—defines how Traefik routes incoming requests to the correct services. This is distinct from install configuration (formerly known as static configuration), which sets up Traefik’s core components and providers.
+Dynamic configuration—now also known as routing configuration—defines how Hanzo Ingress routes incoming requests to the correct services. This is distinct from install configuration (formerly known as static configuration), which sets up Hanzo Ingress’s core components and providers.
 
 Depending on your environment and preferences, there are several ways to supply this routing configuration:
 
@@ -21,7 +21,7 @@ The File provider allows you to define routing configuration in static files usi
 
 ### Enabling the File Provider
 
-To enable the File provider, add the following to your Traefik install configuration:
+To enable the File provider, add the following to your Hanzo Ingress install configuration:
 
 ```yaml tab="YAML"
 providers:
@@ -65,7 +65,7 @@ providers:
 
 ## Using Labels With Docker and ECS
 
-When using Docker or Amazon ECS, you can define routing configuration using container labels. This method allows Traefik to automatically discover services and apply configurations without the need for additional files.
+When using Docker or Amazon ECS, you can define routing configuration using container labels. This method allows Hanzo Ingress to automatically discover services and apply configurations without the need for additional files.
 
 ???+ example "Example with Docker"
 
@@ -101,7 +101,7 @@ When using Docker or Amazon ECS, you can define routing configuration using cont
 
 ## Using Kubernetes Providers
 
-For Kubernetes providers, you can configure Traefik using the native Ingress or custom resources (like IngressRoute). Annotations in your Ingress or IngressRoute definition allow you to define routing rules and middleware settings. For example:
+For Kubernetes providers, you can configure Hanzo Ingress using the native Ingress or custom resources (like IngressRoute). Annotations in your Ingress or IngressRoute definition allow you to define routing rules and middleware settings. For example:
 
 ???+ example "Example with Kubernetes"
 
@@ -135,7 +135,7 @@ For Kubernetes providers, you can configure Traefik using the native Ingress or 
 
 ## Using Key-Value Pairs With KV Providers
 
-For [KV providers](./other-providers/kv.md) you can configure Traefik with key-value pairs.
+For [KV providers](./other-providers/kv.md) you can configure Hanzo Ingress with key-value pairs.
 
 ???+ example "Examples"
 

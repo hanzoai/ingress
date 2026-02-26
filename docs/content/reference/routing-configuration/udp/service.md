@@ -1,5 +1,5 @@
 ---
-title: "Traefik UDP Services Documentation"
+title: "Hanzo Ingress UDP Services Documentation"
 description: "A service is in charge of connecting incoming requests to the Servers that can handle them. Read the technical documentation. Read the technical documentation."
 --- 
 

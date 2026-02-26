@@ -1,24 +1,24 @@
-# Exposing Services with Traefik on Docker Swarm - Basic
+# Exposing Services with Hanzo Ingress on Docker Swarm - Basic
 
-This guide will help you get started with exposing your services through Traefik Proxy using Docker Swarm. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
+This guide will help you get started with exposing your services through Hanzo Ingress using Docker Swarm. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
 
 ## Prerequisites
 
 - Docker Swarm cluster initialized
 - Basic understanding of Docker Swarm concepts
-- Traefik deployed using the [Traefik Docker Swarm Setup guide](../../setup/swarm.md)
+- Hanzo Ingress deployed using the [Docker Swarm Setup guide](../../setup/swarm.md)
 
 
 ## Expose Your First HTTP Service
 
-Let's expose a simple HTTP service using the [whoami](https://hub.docker.com/r/traefik/whoami) application. This will demonstrate basic routing to a backend service.
+Let's expose a simple HTTP service using the [whoami](https://github.com/hanzoai/whoami) application. This will demonstrate basic routing to a backend service.
 
 First, update your existing `docker-compose.yml` file if you haven't already:
 
 ```yaml
 services:
   whoami:
-    image: traefik/whoami
+    image: hanzoai/whoami
     networks:
       - traefik_proxy
     deploy:
@@ -65,7 +65,7 @@ X-Forwarded-Server: 5789f594e7d5
 X-Real-Ip: 10.0.1.1
 ```
 
-This confirms that Traefik is successfully routing requests to your whoami application.
+This confirms that Hanzo Ingress is successfully routing requests to your whoami application.
 
 ## Add Routing Rules
 
@@ -78,7 +78,7 @@ Update your `docker-compose.yml` to add another service:
 
 # New service
   whoami-api:
-    image: traefik/whoami
+    image: hanzoai/whoami
     networks:
       - traefik_proxy
     environment:
@@ -122,7 +122,7 @@ Let's secure our service with HTTPS by adding TLS. We'll start with a self-signe
 
 ### Create a Self-Signed Certificate
 
-Generate a self-signed certificate and dynamic config file to tell Traefik where the cert lives:
+Generate a self-signed certificate and dynamic config file to tell Hanzo Ingress where the cert lives:
 
 ```bash
 mkdir -p certs
@@ -132,7 +132,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout certs/local.key -out certs/local.crt \
   -subj "/CN=*.swarm.localhost"
 
-# dynamic config that tells Traefik where the cert lives
+# dynamic config that tells Hanzo Ingress where the cert lives
 cat > certs/tls.yml <<'EOF'
 tls:
   certificates:
@@ -152,7 +152,7 @@ docker config create swarm-tls.yml certs/tls.yml
 Update your `docker-compose.yml` file with the following changes:
 
 ```yaml
-# Add to the Traefik command section:
+# Add to the Hanzo Ingress command section:
 command:
   # ... existing commands ...
   - "--entryPoints.websecure.address=:443"
@@ -181,7 +181,7 @@ Your browser can access https://whoami.swarm.localhost/ for the service. You'll 
 
 ## Next Steps
 
-Now that you've mastered the basics of exposing services with Traefik on Docker Swarm, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
+Now that you've mastered the basics of exposing services with Hanzo Ingress on Docker Swarm, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
 
 Continue to the [Advanced Guide](advanced.md) to learn about:
 

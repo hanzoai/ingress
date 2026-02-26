@@ -1,14 +1,14 @@
 ---
-title: "Traefik Consul Documentation"
-description: "Use Consul as a provider for configuration discovery in Traefik Proxy. Automate and store your configurations with Consul. Read the technical documentation."
+title: "Hanzo Ingress Consul Documentation"
+description: "Use Consul as a provider for configuration discovery in Hanzo Ingress. Automate and store your configurations with Consul. Read the technical documentation."
 ---
 
-# Traefik & Consul
+# Hanzo Ingress & Consul
 
 A Story of KV store & Containers
 {: .subtitle }
 
-Store your configuration in Consul and let Traefik do the rest!
+Store your configuration in Consul and let Hanzo Ingress do the rest!
 
 ## Routing Configuration
 

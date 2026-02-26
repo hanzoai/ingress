@@ -210,7 +210,7 @@ metadata:
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
 spec:
-  controller: hanzo.ai/ingress-controller
+  controller: traefik.io/ingress-controller
 ```
 
 Any Ingress resource without an explicit `ingressClassName` is automatically picked up.

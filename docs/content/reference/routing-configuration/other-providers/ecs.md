@@ -1,12 +1,12 @@
 ---
-title: "Traefik ECS Documentation"
-description: "AWS ECS is a provider for routing and load balancing in Traefik Proxy. Read the technical documentation to get started."
+title: "Hanzo Ingress ECS Documentation"
+description: "AWS ECS is a provider for routing and load balancing in Hanzo Ingress. Read the technical documentation to get started."
 ---
 
-# Traefik & ECS
+# Hanzo Ingress & ECS
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With ECS, Traefik can leverage labels attached to a container to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With ECS, Hanzo Ingress can leverage labels attached to a container to generate routing rules.
 
 !!! warning "Labels & sensitive data"
 
@@ -70,8 +70,8 @@ With ECS, Traefik can leverage labels attached to a container to generate routin
     }
     ```
 
-    !!! important "Traefik Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
-        By default, Traefik uses the first exposed port of a container.
+    !!! important "Hanzo Ingress Connecting to the Wrong Port: `HTTP/502 Gateway Error`"
+        By default, Hanzo Ingress uses the first exposed port of a container.
 
         Setting the label `traefik.http.services.xxx.loadbalancer.server.port`
         overrides that behavior.
@@ -110,11 +110,11 @@ With ECS, Traefik can leverage labels attached to a container to generate routin
 
 !!! tip "TLS Default Generated Certificates"
 
-    To learn how to configure Traefik default generated certificate, refer to the [TLS Certificates](../http/tls/tls-certificates.md#acme-default-certificate) page.
+    To learn how to configure Hanzo Ingress default generated certificate, refer to the [TLS Certificates](../http/tls/tls-certificates.md#acme-default-certificate) page.
 
 ### General
 
-Traefik creates, for each elastic service, a corresponding [service](../http/load-balancing/service.md) and [router](../http/routing/rules-and-priority.md).
+Hanzo Ingress creates, for each elastic service, a corresponding [service](../http/load-balancing/service.md) and [router](../http/routing/rules-and-priority.md).
 
 The Service automatically gets a server per elastic container, and the router gets a default rule attached to it, based on the service name.
 
@@ -221,7 +221,7 @@ You can declare TCP Routers and/or Services using labels.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same elastic service (but you have to do so manually).
 
 #### TCP Routers
@@ -266,7 +266,7 @@ You can declare UDP Routers and/or Services using tags.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same elastic service (but you have to do so manually).
 
 #### TCP Middleware
@@ -314,4 +314,4 @@ More information about available middlewares in the dedicated [middlewares secti
 
 | Label | Description | Value |
 |------|-------------|-------|
-| <a id="opt-traefik-enable" href="#opt-traefik-enable" title="#opt-traefik-enable">`traefik.enable`</a> | You can tell Traefik to consider (or not) the ECS service by setting `traefik.enable` to true or false.<br/>This option overrides the value of `exposedByDefault`. | `true` |
+| <a id="opt-traefik-enable" href="#opt-traefik-enable" title="#opt-traefik-enable">`traefik.enable`</a> | You can tell Hanzo Ingress to consider (or not) the ECS service by setting `traefik.enable` to true or false.<br/>This option overrides the value of `exposedByDefault`. | `true` |

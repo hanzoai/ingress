@@ -1,14 +1,14 @@
 ---
-title: "Traefik Etcd Documentation"
-description: "Use Etcd as a provider for configuration discovery in Traefik Proxy. Automate and store your configurations with Etcd. Read the technical documentation."
+title: "Hanzo Ingress Etcd Documentation"
+description: "Use Etcd as a provider for configuration discovery in Hanzo Ingress. Automate and store your configurations with Etcd. Read the technical documentation."
 ---
 
-# Traefik & Etcd
+# Hanzo Ingress & Etcd
 
 A Story of KV store & Containers
 {: .subtitle }
 
-Store your configuration in etcd and let Traefik do the rest!
+Store your configuration in etcd and let Hanzo Ingress do the rest!
 
 ## Routing Configuration
 

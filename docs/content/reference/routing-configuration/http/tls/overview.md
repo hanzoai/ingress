@@ -1,12 +1,12 @@
 ---
-title: "Traefik HTTP TLS Documentation"
-description: "Learn how to configure the transport layer security (TLS) connection for HTTP services in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress HTTP TLS Documentation"
+description: "Learn how to configure the transport layer security (TLS) connection for HTTP services in Hanzo Ingress. Read the technical documentation."
 ---
 
 ## General
 
 When an HTTP router is configured to handle HTTPS traffic, include a `tls` field in its definition.
-This field tells Traefik that the router should process only TLS requests and ignore non-TLS traffic.
+This field tells Hanzo Ingress that the router should process only TLS requests and ignore non-TLS traffic.
 
 By default, an HTTP router with a TLS field will terminate the TLS connections,
 meaning that it will send decrypted data to the services.
@@ -83,7 +83,7 @@ labels:
 The `tls.certResolver` option allows you to specify a certificate resolver for automatic certificate generation via ACME providers (such as Let's Encrypt).
 
 When a certificate resolver is configured for a router,
-Traefik will automatically obtain and manage TLS certificates for the domains specified in the router's rule (in the `Host` matcher) or in the `tls.domains` configuration (with `tls.domains` taking precedence).
+Hanzo Ingress will automatically obtain and manage TLS certificates for the domains specified in the router's rule (in the `Host` matcher) or in the `tls.domains` configuration (with `tls.domains` taking precedence).
 
 !!! important "Prerequisites"
 
@@ -98,6 +98,6 @@ but the `tls.domains` option allows you to explicitly specify the domains and Su
 
 This provides fine-grained control over certificate generation and takes precedence over domains automatically extracted from router rules.
 
-Every domain must have A/AAAA records pointing to Traefik.
+Every domain must have A/AAAA records pointing to Hanzo Ingress.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

@@ -1,13 +1,13 @@
 ---
-title: "Setup Traefik on Kubernetes"
-description: "Learn how to Setup Traefik on Kubernetes with HTTP/HTTPS entrypoints, redirects, secure dashboard, basic TLS, metrics, tracing, access‑logs."
+title: "Setup Hanzo Ingress on Kubernetes"
+description: "Learn how to Setup Hanzo Ingress on Kubernetes with HTTP/HTTPS entrypoints, redirects, secure dashboard, basic TLS, metrics, tracing, access‑logs."
 ---
 
-This guide provides an in-depth walkthrough for installing and configuring Traefik Proxy within a Kubernetes cluster using the official Helm chart. In this guide, we'll cover the following:
+This guide provides an in-depth walkthrough for installing and configuring Hanzo Ingress within a Kubernetes cluster using the official Helm chart. In this guide, we'll cover the following:
 
 - Configure standard HTTP (`web`) and HTTPS (`websecure`) entry points, 
 - Implement automatic redirection from HTTP to HTTPS
-- Secure the Traefik Dashboard using Basic Authentication.
+- Secure the Hanzo Ingress Dashboard using Basic Authentication.
 - Deploy a demo application to test the setup
 - Explore some other key configuration options
 
@@ -29,7 +29,7 @@ k3d cluster create traefik \
   --k3s-arg "--disable=traefik@server:0"
 ```
 
-Ports `80` and `443` reach Traefik from the host, while port `8000` remains free for later demos. The built-in Traefik shipped with k3s is disabled to avoid conflicts.
+Ports `80` and `443` reach Hanzo Ingress from the host, while port `8000` remains free for later demos. The built-in Hanzo Ingress shipped with k3s is disabled to avoid conflicts.
 
 Check the context:
 
@@ -49,10 +49,10 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 ## Add the chart repo and namespace
 
-Using Helm streamlines Kubernetes application deployment. Helm packages applications into "charts," which are collections of template files describing Kubernetes resources. We use the official Traefik Helm chart for a managed and customizable installation.
+Using Helm streamlines Kubernetes application deployment. Helm packages applications into "charts," which are collections of template files describing Kubernetes resources. We use the official Hanzo Ingress Helm chart for a managed and customizable installation.
 
 ```bash
-helm repo add traefik https://traefik.github.io/charts
+helm repo add traefik https://hanzoai.github.io/charts
 helm repo update
 kubectl create namespace traefik
 ```
@@ -61,7 +61,7 @@ The first command registers the `traefik` repository alias pointing to the offic
 
 ## Create a Local Self‑Signed TLS Secret
 
-Traefik's Gateway listeners require a certificate whenever a listener uses `protocol: HTTPS`.  
+Hanzo Ingress's Gateway listeners require a certificate whenever a listener uses `protocol: HTTPS`.  
 
 For local development create a throw‑away self‑signed certificate and
 store it in a Kubernetes Secret named **local‑selfsigned‑tls**.  
@@ -85,7 +85,7 @@ The Gateway's HTTPS listener references this secret via `certificateRefs`.
 Without it, the helm chart validation fails and the HTTP→HTTPS redirect chain breaks.
 
 !!! info "Production tip"
-    The self-signed certificate above is **only for local development**. For production, either store a certificate issued by your organization's CA in a Secret or let an automated issuer such as cert-manager or Traefik's ACME (Let's Encrypt) generate certificates on demand. Update the `certificateRefs` in the `websecure` listener—or use `traefik.io/tls.certresolver`—so clients receive a trusted certificate and no longer see browser warnings.
+    The self-signed certificate above is **only for local development**. For production, either store a certificate issued by your organization's CA in a Secret or let an automated issuer such as cert-manager or Hanzo Ingress's ACME (Let's Encrypt) generate certificates on demand. Update the `certificateRefs` in the `websecure` listener—or use `traefik.io/tls.certresolver`—so clients receive a trusted certificate and no longer see browser warnings.
 
 ## Prepare Helm Chart Configuration Values
 
@@ -150,7 +150,7 @@ ingressClass:
   enabled: false
 
 # Enable Gateway API Provider & Disables the KubernetesIngress provider
-# Providers tell Traefik where to find routing configuration.
+# Providers tell Hanzo Ingress where to find routing configuration.
 providers:
   kubernetesIngress:
      enabled: false
@@ -168,7 +168,7 @@ gateway:
 
     websecure:         # HTTPS listener that matches entryPoint `websecure`
       port: 443
-      protocol: HTTPS  # TLS terminates inside Traefik
+      protocol: HTTPS  # TLS terminates inside Hanzo Ingress
       namespacePolicy:
         from: All
       mode: Terminate
@@ -181,7 +181,7 @@ gateway:
 logs:
   general:
     level: INFO
-  # This enables access logs, outputting them to Traefik's standard output by default. The [Access Logs Documentation](https://doc.traefik.io/traefik/observability/access-logs/) covers formatting, filtering, and output options.
+  # This enables access logs, outputting them to Hanzo Ingress's standard output by default. The [Access Logs Documentation](https://github.com/hanzoai/ingress/blob/main/docs/content/observability/access-logs/) covers formatting, filtering, and output options.
   access:
     enabled: true
 
@@ -191,7 +191,7 @@ metrics:
     enabled: true
 ```
 
-## Install the Traefik Using the Helm Values
+## Install the Hanzo Ingress Using the Helm Values
 
 Now, apply the configuration using the Helm client.
 
@@ -211,13 +211,13 @@ helm install traefik traefik/traefik \
 
 ## Accessing the Dashboard
 
-Now that Traefik is deployed, you can access its dashboard at [https://dashboard.docker.localhost/](https://dashboard.docker.localhost/). When you access this link, your browser will prompt for the username and password. Ensure you use the credentials set in the `values.yaml` file to log in. Upon successful login, the dashboard will be displayed as shown below:
+Now that Hanzo Ingress is deployed, you can access its dashboard at [https://dashboard.docker.localhost/](https://dashboard.docker.localhost/). When you access this link, your browser will prompt for the username and password. Ensure you use the credentials set in the `values.yaml` file to log in. Upon successful login, the dashboard will be displayed as shown below:
 
-![Traefik Dashboard](../assets/img/setup/traefik-dashboard.png)
+![Hanzo Ingress Dashboard](../assets/img/setup/traefik-dashboard.png)
 
 ## Deploy a Demo Application
 
-To test the setup, deploy the [Traefik whoami](https://github.com/traefik/whoami) application in the Kubernetes cluster. Create a file named `whoami.yaml` and paste the following:
+To test the setup, deploy the [whoami](https://github.com/hanzoai/whoami) application in the Kubernetes cluster. Create a file named `whoami.yaml` and paste the following:
 
 ```yaml
 apiVersion: apps/v1
@@ -237,7 +237,7 @@ spec:
     spec:
       containers:
         - name: whoami
-          image: traefik/whoami
+          image: hanzoai/whoami
           ports:
             - containerPort: 80
 ---
@@ -269,7 +269,7 @@ metadata:
   namespace: traefik
 spec:
   parentRefs:
-    - name: traefik-gateway # Name of the Gateway that Traefik creates when you enable the Gateway API provider
+    - name: traefik-gateway # Name of the Gateway that Hanzo Ingress creates when you enable the Gateway API provider
   hostnames:
     - "whoami.docker.localhost"
   rules:
@@ -288,7 +288,7 @@ Apply the manifest:
 kubectl apply -f whoami-route.yaml
 ```
 
-After you apply the manifest, navigate to the Routes in the Traefik Dashboard; you’ll see that the [https://whoami.docker.localhost](https://whoami.docker.localhost) route has been created.
+After you apply the manifest, navigate to the Routes in the Hanzo Ingress Dashboard; you’ll see that the [https://whoami.docker.localhost](https://whoami.docker.localhost) route has been created.
 
 ![Route](../assets/img/setup/route-in-dashboard.png)
 
@@ -324,13 +324,13 @@ You can also open a browser and navigate to [https://whoami.docker.localhost](ht
 
 ## Other Key Configuration Areas
 
-The above setup provides a secure base, but Traefik offers much more. Here's a brief overview of other essential configurations, with minimal examples using Helm `values.yaml` overrides. 
+The above setup provides a secure base, but Hanzo Ingress offers much more. Here's a brief overview of other essential configurations, with minimal examples using Helm `values.yaml` overrides. 
 
 These examples illustrate how to enable features; consult the main documentation for detailed options.
 
 ### TLS Certificate Management (Let's Encrypt)
 
-On the `websecure` entry point TLS is enabled by default. However, it currently lacks a valid certificate. Traefik can automatically obtain and renew TLS certificates from Let's Encrypt using the ACME protocol.
+On the `websecure` entry point TLS is enabled by default. However, it currently lacks a valid certificate. Hanzo Ingress can automatically obtain and renew TLS certificates from Let's Encrypt using the ACME protocol.
 
 *Example `values.yaml` addition:*
 
@@ -356,12 +356,12 @@ This enables a certificate resolver named `le`, configures the mandatory email a
 
 ### Gateway API & ACME
 
-Traefik’s built‑in ACME/Let’s Encrypt integration works for IngressRoute and Ingress resources, but it does not issue certificates for Gateway API listeners.
+Hanzo Ingress’s built‑in ACME/Let’s Encrypt integration works for IngressRoute and Ingress resources, but it does not issue certificates for Gateway API listeners.
 If you’re using the Gateway API, install [cert‑manager](https://cert-manager.io/docs/) (or another certificate controller) and reference the secret it creates in `gateway.listeners.websecure.certificateRefs`.
 
 ### Metrics (Prometheus)
 
-Traefik can expose detailed metrics in Prometheus format, essential for monitoring its performance and the traffic it handles.
+Hanzo Ingress can expose detailed metrics in Prometheus format, essential for monitoring its performance and the traffic it handles.
 
 *Example `values.yaml` addition:*
 
@@ -381,7 +381,7 @@ This enables the Prometheus endpoint on a dedicated `metrics` entry point (port 
 
 ### Tracing (OTel)
 
-Distributed tracing helps understand request latency and flow through your system, including Traefik itself.
+Distributed tracing helps understand request latency and flow through your system, including Hanzo Ingress itself.
 
 *Example `values.yaml` addition:*
 
@@ -396,6 +396,6 @@ This enables OTel tracing and specifies the collector endpoint. Consult the [Tra
     
 ## Conclusion
 
-This setup establishes Traefik with secure dashboard access and HTTPS redirection, along with pointers to enable observability & TLS.
+This setup establishes Hanzo Ingress with secure dashboard access and HTTPS redirection, along with pointers to enable observability & TLS.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

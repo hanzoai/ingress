@@ -5,8 +5,8 @@ SHA := $(shell git rev-parse HEAD)
 VERSION_GIT := $(if $(TAG_NAME),$(TAG_NAME),$(SHA))
 VERSION := $(if $(VERSION),$(VERSION),$(VERSION_GIT))
 
-BIN_NAME := traefik
-CODENAME ?= cheddar
+BIN_NAME := hanzo-ingress
+CODENAME ?= hanzo
 
 DATE := $(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 
@@ -31,7 +31,7 @@ dist:
 .PHONY: build-webui-image
 #? build-webui-image: Build WebUI Docker image
 build-webui-image:
-	docker build -t traefik-webui -f webui/buildx.Dockerfile webui
+	docker build -t hanzo-ingress-webui -f webui/buildx.Dockerfile webui
 
 .PHONY: clean-webui
 #? clean-webui: Clean WebUI static generated assets
@@ -42,8 +42,8 @@ clean-webui:
 
 webui/static/index.html:
 	$(MAKE) build-webui-image
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' traefik-webui yarn build:prod
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' traefik-webui chown -R $(shell id -u):$(shell id -g) ./static
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn build:prod
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui chown -R $(shell id -u):$(shell id -g) ./static
 	printf 'For more information see `webui/readme.md`' > webui/static/DONT-EDIT-FILES-IN-THIS-DIRECTORY.md
 
 .PHONY: generate-webui
@@ -77,7 +77,7 @@ binary-linux-amd64:
 
 binary-windows-amd64: export GOOS := windows
 binary-windows-amd64: export GOARCH := amd64
-binary-windows-amd64: export BIN_NAME := traefik.exe
+binary-windows-amd64: export BIN_NAME := hanzo-ingress.exe
 binary-windows-amd64:
 	@$(MAKE) binary
 
@@ -103,7 +103,7 @@ test-integration:
 .PHONY: test-gateway-api-conformance
 #? test-gateway-api-conformance: Run the Gateway API conformance tests
 test-gateway-api-conformance: build-image-dirty
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go test ./integration -v -tags gatewayAPIConformance -test.run GatewayAPIConformanceSuite -traefikVersion="v3.7" $(TESTFLAGS)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go test ./integration -v -tags gatewayAPIConformance -test.run GatewayAPIConformanceSuite $(TESTFLAGS)
 
 .PHONY: test-knative-conformance
 #? test-knative-conformance: Run the Knative conformance tests
@@ -114,8 +114,8 @@ test-knative-conformance: build-image-dirty
 #? test-ui-unit: Run the unit tests for the webui
 test-ui-unit:
 	$(MAKE) build-webui-image
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' traefik-webui yarn --cwd webui install
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' traefik-webui yarn --cwd webui test:unit:ci
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn --cwd webui install
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn --cwd webui test:unit:ci
 
 .PHONY: pull-images
 #? pull-images: Pull all Docker images to avoid timeout during integration tests

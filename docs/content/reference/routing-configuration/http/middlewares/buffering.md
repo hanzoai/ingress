@@ -1,11 +1,11 @@
 ---
-title: "Traefik Buffering Documentation"
-description: "The HTTP buffering middleware in Traefik Proxy limits the size of requests that can be forwarded to Services. Read the technical documentation."
+title: "Hanzo Ingress Buffering Documentation"
+description: "The HTTP buffering middleware in Hanzo Ingress limits the size of requests that can be forwarded to Services. Read the technical documentation."
 ---
 
 The `buffering` middleware limits the size of requests that can be forwarded to services.
 
-With buffering, Traefik reads the entire request into memory (possibly buffering large requests into disk), and rejects requests that are over a specified size limit.
+With buffering, Hanzo Ingress reads the entire request into memory (possibly buffering large requests into disk), and rejects requests that are over a specified size limit.
 
 This can help services avoid large amounts of data (`multipart/form-data` for example), and can minimize the time spent sending data to a Service
 

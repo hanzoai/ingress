@@ -1,6 +1,6 @@
 ---
-title: "Traefik RedirectScheme Documentation"
-description: "In Traefik Proxy's HTTP middleware, RedirectScheme redirects clients to different schemes/ports. Read the technical documentation."
+title: "Hanzo Ingress RedirectScheme Documentation"
+description: "In Hanzo Ingress's HTTP middleware, RedirectScheme redirects clients to different schemes/ports. Read the technical documentation."
 ---
 
 # RedirectScheme
@@ -16,10 +16,10 @@ The RedirectScheme middleware redirects the request if the request scheme is dif
 
 !!! warning "When behind another reverse-proxy"
 
-    When there is at least one other reverse-proxy between the client and Traefik, 
+    When there is at least one other reverse-proxy between the client and Hanzo Ingress, 
     the other reverse-proxy (i.e. the last hop) needs to be a [trusted](../../routing/entrypoints.md#forwarded-headers) one. 
     
-    Otherwise, Traefik would clean up the `X-Forwarded` headers coming from this last hop,
+    Otherwise, Hanzo Ingress would clean up the `X-Forwarded` headers coming from this last hop,
     and as the RedirectScheme middleware relies on them to determine the scheme used,
     it would not function as intended.
 

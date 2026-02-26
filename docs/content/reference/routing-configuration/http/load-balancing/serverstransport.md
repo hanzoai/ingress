@@ -1,9 +1,9 @@
 ---
 title: "ServersTransport"
-description: "ServersTransport allows configuring the connection between Traefik and the HTTP servers."
+description: "ServersTransport allows configuring the connection between Hanzo Ingress and the HTTP servers."
 ---
 
-ServersTransport allows you to configure the transport between Traefik and your HTTP servers.
+ServersTransport allows you to configure the transport between Hanzo Ingress and your HTTP servers.
 
 ## Configuration Example
 

@@ -1,6 +1,6 @@
-# Exposing Services with Traefik on Kubernetes - Basic
+# Exposing Services with Hanzo Ingress on Kubernetes - Basic
 
-This guide will help you get started with exposing your services through Traefik Proxy on Kubernetes. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
+This guide will help you get started with exposing your services through Hanzo Ingress on Kubernetes. You'll learn the fundamentals of routing HTTP traffic, setting up path-based routing, and securing your services with TLS.
 
 For routing, this guide gives you two options:
 
@@ -11,13 +11,13 @@ Feel free to choose the one that fits your needs best.
 
 ## Prerequisites
 
-- A Kubernetes cluster with Traefik Proxy installed
+- A Kubernetes cluster with Hanzo Ingress installed
 - `kubectl` configured to interact with your cluster
-- Traefik deployed using the [Traefik Kubernetes Setup guide](../../setup/kubernetes.md)
+- Hanzo Ingress deployed using the [Kubernetes Setup guide](../../setup/kubernetes.md)
 
 ## Expose Your First HTTP Service
 
-Let's expose a simple HTTP service using the [whoami](https://github.com/traefik/whoami) application. This will demonstrate basic routing to a backend service.
+Let's expose a simple HTTP service using the [whoami](https://github.com/hanzoai/whoami) application. This will demonstrate basic routing to a backend service.
 
 First, create the deployment and service:
 
@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
         ports:
         - containerPort: 80
 ---
@@ -73,7 +73,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway  # This Gateway is automatically created by Traefik
+  - name: traefik-gateway  # This Gateway is automatically created by Hanzo Ingress
   hostnames:
   - "whoami.docker.localhost"
   rules:
@@ -126,7 +126,7 @@ curl -H "Host: whoami.docker.localhost" http://localhost/
 ```
 
 !!! info
-    Make sure to remove the `ports.web.redirections` block from the `values.yaml` file if you followed the Kubernetes Setup Guide to install Traefik otherwise you will be redirected to the HTTPS entrypoint:
+    Make sure to remove the `ports.web.redirections` block from the `values.yaml` file if you followed the Kubernetes Setup Guide to install Hanzo Ingress otherwise you will be redirected to the HTTPS entrypoint:
 
     ```yaml
     redirections:
@@ -156,7 +156,7 @@ X-Forwarded-Server: traefik-76cbd5b89c-rx5xn
 X-Real-Ip: 10.42.0.1
 ```
 
-This confirms that Traefik is successfully routing requests to your whoami application.
+This confirms that Hanzo Ingress is successfully routing requests to your whoami application.
 
 ## Add Routing Rules
 
@@ -182,7 +182,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
         env:
         - name: WHOAMI_NAME
           value: "API Service"
@@ -318,7 +318,7 @@ kubectl create secret tls whoami-tls --cert=tls.crt --key=tls.key
 ```
 
 !!! important "Prerequisite for Gateway API with TLS"
-    Before using the Gateway API with TLS, you must define the `websecure` listener in your Traefik installation. This is typically done in your Helm values.
+    Before using the Gateway API with TLS, you must define the `websecure` listener in your Hanzo Ingress installation. This is typically done in your Helm values.
 
     Example configuration in `values.yaml`:
     ```yaml
@@ -341,7 +341,7 @@ kubectl create secret tls whoami-tls --cert=tls.crt --key=tls.key
               group: ""
     ```
 
-    See the Traefik Kubernetes Setup Guide for complete installation details.
+    See the Hanzo Ingress Kubernetes Setup Guide for complete installation details.
 
 ### Gateway API with TLS
 
@@ -428,7 +428,7 @@ Your browser can also access https://whoami.docker.localhost/ (you'll need to ac
 
 ## Next Steps
 
-Now that you've mastered the basics of exposing services with Traefik on Kubernetes, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
+Now that you've mastered the basics of exposing services with Hanzo Ingress on Kubernetes, you're ready to explore more advanced features like middlewares, Let's Encrypt certificates, sticky sessions, and multi-layer routing.
 
 Continue to the [Advanced Guide](advanced.md) to learn about:
 

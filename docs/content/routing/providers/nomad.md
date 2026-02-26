@@ -1,19 +1,19 @@
 ---
-title: "Traefik Nomad Service Discovery Routing"
-description: "Learn how to use Nomad Service Discovery as a provider for routing configurations in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Nomad Service Discovery Routing"
+description: "Learn how to use Nomad Service Discovery as a provider for routing configurations in Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik and Nomad Service Discovery
+# Hanzo Ingress and Nomad Service Discovery
 
 A story of Tags, Services & Nomads
 {: .subtitle }
 
 ![Nomad](../../assets/img/providers/nomad.png)
 
-Attach tags to your Nomad services and let Traefik do the rest!
+Attach tags to your Nomad services and let Hanzo Ingress do the rest!
 
-One of the best feature of Traefik is to delegate the routing configuration to the application level.
-With Nomad, Traefik can leverage tags attached to a service to generate routing rules.
+One of the best feature of Hanzo Ingress is to delegate the routing configuration to the application level.
+With Nomad, Hanzo Ingress can leverage tags attached to a service to generate routing rules.
 
 !!! warning "Tags & sensitive data"
 
@@ -29,9 +29,9 @@ With Nomad, Traefik can leverage tags attached to a service to generate routing 
 
 ### General
 
-Traefik creates, for each Nomad service, a corresponding Traefik [service](../services/index.md) and [router](../routers/index.md).
+Hanzo Ingress creates, for each Nomad service, a corresponding Hanzo Ingress [service](../services/index.md) and [router](../routers/index.md).
 
-The Traefik service automatically gets a server per instance in this Nomad service, and the router gets a default rule attached to it, based on the Nomad service name.
+The Hanzo Ingress service automatically gets a server per instance in this Nomad service, and the router gets a default rule attached to it, based on the Nomad service name.
 
 ### Routers
 
@@ -390,7 +390,7 @@ You can declare TCP Routers and/or Services using tags.
 
 !!! warning "TCP and HTTP"
 
-    If you declare a TCP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
+    If you declare a TCP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no TCP Router/Service is defined).
     You can declare both a TCP Router/Service and an HTTP Router/Service for the same Nomad service (but you have to do so manually).
 
 #### TCP Routers
@@ -515,7 +515,7 @@ You can declare UDP Routers and/or Services using tags.
 
 !!! warning "UDP and HTTP"
 
-    If you declare a UDP Router/Service, it will prevent Traefik from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
+    If you declare a UDP Router/Service, it will prevent Hanzo Ingress from automatically creating an HTTP Router/Service (like it does by default if no UDP Router/Service is defined).
     You can declare both a UDP Router/Service and an HTTP Router/Service for the same Nomad service (but you have to do so manually).
 
 #### UDP Routers
@@ -554,7 +554,7 @@ You can declare UDP Routers and/or Services using tags.
 traefik.enable=true
 ```
 
-You can tell Traefik to consider (or not) the service by setting `traefik.enable` to true or false.
+You can tell Hanzo Ingress to consider (or not) the service by setting `traefik.enable` to true or false.
 
 This option overrides the value of `exposedByDefault`.
 
@@ -564,14 +564,14 @@ This option overrides the value of `exposedByDefault`.
 traefik.nomad.canary=true
 ```
 
-When Nomad orchestrator is a provider (of service registration) for Traefik,
-one might have the need to distinguish within Traefik between a [Canary](https://learn.hashicorp.com/tutorials/nomad/job-blue-green-and-canary-deployments#deploy-with-canaries) instance of a service, or a production one.
+When Nomad orchestrator is a provider (of service registration) for Hanzo Ingress,
+one might have the need to distinguish within Hanzo Ingress between a [Canary](https://learn.hashicorp.com/tutorials/nomad/job-blue-green-and-canary-deployments#deploy-with-canaries) instance of a service, or a production one.
 For example if one does not want them to be part of the same load-balancer.
 
 Therefore, this option, which is meant to be provided as one of the values of the `canary_tags` field in the Nomad [service stanza](https://www.nomadproject.io/docs/job-specification/service#canary_tags),
-allows Traefik to identify that the associated instance is a canary one.
+allows Hanzo Ingress to identify that the associated instance is a canary one.
 
 #### Port Lookup
 
-Traefik is capable of detecting the port to use, by following the default Nomad Service Discovery flow.
+Hanzo Ingress is capable of detecting the port to use, by following the default Nomad Service Discovery flow.
 That means, if you just expose lets say port `:1337` on the Nomad job, traefik will pick up this port and use it.

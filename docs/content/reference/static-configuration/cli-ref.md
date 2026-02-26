@@ -340,10 +340,10 @@ Maximum number of requests before closing a keep-alive connection. (Default: ```
 Maximum duration before closing a keep-alive connection. (Default: ```0```)
 
 `--entrypoints.<name>.transport.lifecycle.gracetimeout`:  
-Duration to give active requests a chance to finish before Traefik stops. (Default: ```10```)
+Duration to give active requests a chance to finish before Hanzo Ingress stops. (Default: ```10```)
 
 `--entrypoints.<name>.transport.lifecycle.requestacceptgracetimeout`:  
-Duration to keep accepting requests before Traefik initiates the graceful shutdown procedure. (Default: ```0```)
+Duration to keep accepting requests before Hanzo Ingress initiates the graceful shutdown procedure. (Default: ```0```)
 
 `--entrypoints.<name>.transport.respondingtimeouts.idletimeout`:  
 IdleTimeout is the maximum amount duration an idle (keep-alive) connection will remain idle before closing itself. If zero, no timeout is set. (Default: ```180```)
@@ -358,7 +358,7 @@ WriteTimeout is the maximum duration before timing out writes of the response. I
 Timeout defines how long to wait on an idle session before releasing the related resources. (Default: ```3```)
 
 `--experimental.abortonpluginfailure`:  
-Defines whether all plugins must be loaded successfully for Traefik to start. (Default: ```false```)
+Defines whether all plugins must be loaded successfully for Hanzo Ingress to start. (Default: ```false```)
 
 `--experimental.fastproxy`:  
 Enables the FastProxy implementation. (Default: ```false```)
@@ -430,16 +430,16 @@ resolv.conf used for DNS resolving (Default: ```/etc/resolv.conf```)
 The maximal depth of DNS recursive resolving (Default: ```5```)
 
 `--log`:  
-Traefik log settings. (Default: ```false```)
+Hanzo Ingress log settings. (Default: ```false```)
 
 `--log.compress`:  
 Determines if the rotated log files should be compressed using gzip. (Default: ```false```)
 
 `--log.filepath`:  
-Traefik log file path. Stdout is used when omitted or empty.
+Hanzo Ingress log file path. Stdout is used when omitted or empty.
 
 `--log.format`:  
-Traefik log format: json | common (Default: ```common```)
+Hanzo Ingress log format: json | common (Default: ```common```)
 
 `--log.level`:  
 Log level set to traefik logs. (Default: ```ERROR```)
@@ -736,7 +736,7 @@ Enable Consul Connect support. (Default: ```false```)
 Consider every service as Connect capable by default. (Default: ```false```)
 
 `--providers.consulcatalog.constraints`:  
-Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container.
+Constraints is an expression that Hanzo Ingress matches against the container's labels to determine whether to create any route for that container.
 
 `--providers.consulcatalog.defaultrule`:  
 Default rule. (Default: ```Host(`{{ normalize .Name }}`)```)
@@ -790,7 +790,7 @@ Interval for check Consul API. (Default: ```15```)
 Forces the read to be fully consistent. (Default: ```false```)
 
 `--providers.consulcatalog.servicename`:  
-Name of the Traefik service in Consul Catalog (needs to be registered via the orchestrator or manually). (Default: ```traefik```)
+Name of the Hanzo Ingress service in Consul Catalog (needs to be registered via the orchestrator or manually). (Default: ```traefik```)
 
 `--providers.consulcatalog.stale`:  
 Use stale consistency for catalog reads. (Default: ```false```)
@@ -808,7 +808,7 @@ Enable Docker backend with default settings. (Default: ```false```)
 Disregards the Docker containers health checks with respect to the creation or removal of the corresponding services. (Default: ```false```)
 
 `--providers.docker.constraints`:  
-Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container.
+Constraints is an expression that Hanzo Ingress matches against the container's labels to determine whether to create any route for that container.
 
 `--providers.docker.defaultrule`:  
 Default rule. (Default: ```Host(`{{ normalize .Name }}`)```)
@@ -862,7 +862,7 @@ Auto discover cluster. (Default: ```false```)
 ECS Cluster names. (Default: ```default```)
 
 `--providers.ecs.constraints`:  
-Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container.
+Constraints is an expression that Hanzo Ingress matches against the container's labels to determine whether to create any route for that container.
 
 `--providers.ecs.defaultrule`:  
 Default rule. (Default: ```Host(`{{ normalize .Name }}`)```)
@@ -1135,7 +1135,7 @@ Enable Nomad backend with default settings. (Default: ```false```)
 Allow the creation of services without endpoints. (Default: ```false```)
 
 `--providers.nomad.constraints`:  
-Constraints is an expression that Traefik matches against the Nomad service's tags to determine whether to create route(s) for that service.
+Constraints is an expression that Hanzo Ingress matches against the Nomad service's tags to determine whether to create route(s) for that service.
 
 `--providers.nomad.defaultrule`:  
 Default rule. (Default: ```Host(`{{ normalize .Name }}`)```)
@@ -1255,7 +1255,7 @@ Enable Docker Swarm backend with default settings. (Default: ```false```)
 Disregards the Docker containers health checks with respect to the creation or removal of the corresponding services. (Default: ```false```)
 
 `--providers.swarm.constraints`:  
-Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container.
+Constraints is an expression that Hanzo Ingress matches against the container's labels to determine whether to create any route for that container.
 
 `--providers.swarm.defaultrule`:  
 Default rule. (Default: ```Host(`{{ normalize .Name }}`)```)

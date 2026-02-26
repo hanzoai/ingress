@@ -1,15 +1,15 @@
 ---
 title: "Logs and Access Logs"
-description: "Logs and Access Logs in Traefik Proxy provide real-time insight into the health of your system. They enable swift error detection and intervention through alerts. By centralizing logs, you can streamline the debugging process during incident resolution."
+description: "Logs and Access Logs in Hanzo Ingress provide real-time insight into the health of your system. They enable swift error detection and intervention through alerts. By centralizing logs, you can streamline the debugging process during incident resolution."
 ---
 
 ## Logs
 
-Logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+Logs concern everything that happens to Hanzo Ingress itself (startup, configuration, events, shutdown, and so on).
 
 ### Configuration Example
 
-To enable and configure logs in Traefik Proxy, you can use the static configuration file or Helm values if you are using the [Helm chart](https://github.com/traefik/traefik-helm-chart).
+To enable and configure logs in Hanzo Ingress, you can use the static configuration file or Helm values if you are using the [Helm chart](https://github.com/hanzoai/ingress-helm-chart).
 
 ```yaml tab="Structured (YAML)"
 log:
@@ -35,11 +35,11 @@ logs:
 
 ## Access Logs
 
-Access logs concern everything that happens to the requests handled by Traefik.
+Access logs concern everything that happens to the requests handled by Hanzo Ingress.
 
 ### Configuration Example
 
-To enable and configure access logs in Traefik Proxy, you can use the static configuration file or Helm values if you are using the [Helm chart](https://github.com/traefik/traefik-helm-chart).
+To enable and configure access logs in Hanzo Ingress, you can use the static configuration file or Helm values if you are using the [Helm chart](https://github.com/hanzoai/ingress-helm-chart).
 
 The following example enables access logs in JSON format, filters them to only include specific status codes, and customizes the fields that are kept or dropped.
 
@@ -153,15 +153,15 @@ When the `observability` options are not defined on a router, it inherits the be
 
 ## Log Formats
 
-Traefik Proxy supports the following log formats:
+Hanzo Ingress supports the following log formats:
 
-- `common` - Traefik's extended CLF format (default)
+- `common` - Hanzo Ingress's extended CLF format (default)
 - `genericCLF` - Generic CLF format compatible with standard log analyzers
 - `json` - JSON format for structured logging
 
 ## Access Log Filters
 
-You can configure Traefik Proxy to only record access logs for requests that match certain criteria. This is useful for reducing the volume of logs and focusing on specific events.
+You can configure Hanzo Ingress to only record access logs for requests that match certain criteria. This is useful for reducing the volume of logs and focusing on specific events.
 
 The available filters are:
 

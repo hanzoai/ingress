@@ -1,6 +1,6 @@
 ---
-title: "Traefik TCP Routers Rules & Priority Documentation"
-description: "In Traefik Proxy, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
+title: "Hanzo Ingress TCP Routers Rules & Priority Documentation"
+description: "In Hanzo Ingress, a router is in charge of connecting incoming requests to the Services that can handle them. Read the technical documentation."
 ---
 
 
@@ -114,9 +114,9 @@ ClientIP(`fe80::/10`)
 The `ALPN` matcher allows matching connections the given protocol.
 
 It would be a security issue to let a user-defined router catch the response to
-an ACME TLS challenge previously initiated by Traefik.
+an ACME TLS challenge previously initiated by Hanzo Ingress.
 For this reason, the `ALPN` matcher is not allowed to match the `ACME-TLS/1`
-protocol, and Traefik returns an error if this is attempted.
+protocol, and Hanzo Ingress returns an error if this is attempted.
 
 #### Example
 
@@ -197,7 +197,7 @@ A value of `0` for the priority is ignored: `priority: 0` means that the default
 
 Negative priority values are supported.
 
-Traefik reserves a range of priorities for its internal routers, the maximum user-defined router priority value is:
+Hanzo Ingress reserves a range of priorities for its internal routers, the maximum user-defined router priority value is:
 
 - `(MaxInt32 - 1000)` for 32-bit platforms,
 - `(MaxInt64 - 1000)` for 64-bit platforms.

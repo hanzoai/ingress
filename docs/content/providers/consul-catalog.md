@@ -1,16 +1,16 @@
 ---
 title: "Consul Catalog Configuration Discovery"
-description: "Learn how to use Consul Catalog as a provider for configuration discovery in Traefik Proxy. Read the technical documentation."
+description: "Learn how to use Consul Catalog as a provider for configuration discovery in Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik & Consul Catalog
+# Hanzo Ingress & Consul Catalog
 
 A Story of Tags, Services & Instances
 {: .subtitle }
 
 ![Consul Catalog](../assets/img/providers/consul.png)
 
-Attach tags to your services and let Traefik do the rest!
+Attach tags to your services and let Hanzo Ingress do the rest!
 
 ## Configuration Examples
 
@@ -71,7 +71,7 @@ providers:
 
 _required, Default="traefik"_
 
-The prefix for Consul Catalog tags defining Traefik labels.
+The prefix for Consul Catalog tags defining Hanzo Ingress labels.
 
 ```yaml tab="File (YAML)"
 providers:
@@ -236,7 +236,7 @@ providers:
 _Optional, Default=""_
 
 Defines the datacenter to use.
-If not provided in Traefik, Consul uses the default agent datacenter.
+If not provided in Hanzo Ingress, Consul uses the default agent datacenter.
 
 ```yaml tab="File (YAML)"
 providers:
@@ -474,7 +474,7 @@ providers:
 
 _Optional, Default=true_
 
-Expose Consul Catalog services by default in Traefik.
+Expose Consul Catalog services by default in Hanzo Ingress.
 If set to `false`, services that don't have a `traefik.enable=true` tag will be ignored from the resulting routing configuration.
 
 For additional information, refer to [Restrict the Scope of Service Discovery](./overview.md#exposedbydefault-and-traefikenable).
@@ -529,19 +529,19 @@ providers:
 # ...
 ```
 
-??? info "Default rule and Traefik service"
+??? info "Default rule and Hanzo Ingress service"
 
-    The exposure of the Traefik container, combined with the default rule mechanism,
+    The exposure of the Hanzo Ingress container, combined with the default rule mechanism,
     can lead to create a router targeting itself in a loop.
     In this case, to prevent an infinite loop,
-    Traefik adds an internal middleware to refuse the request if it comes from the same router.
+    Hanzo Ingress adds an internal middleware to refuse the request if it comes from the same router.
 
 ### `connectAware`
 
 _Optional, Default=false_
 
 Enable Consul Connect support.
-If set to `true`, Traefik will be enabled to communicate with Connect services.
+If set to `true`, Hanzo Ingress will be enabled to communicate with Connect services.
 
 ```toml tab="File (TOML)"
 [providers.consulCatalog]
@@ -566,7 +566,7 @@ providers:
 _Optional, Default=false_
 
 Consider every service as Connect capable by default.
-If set to `true`, Traefik will consider every Consul Catalog service to be Connect capable by default.
+If set to `true`, Hanzo Ingress will consider every Consul Catalog service to be Connect capable by default.
 The option can be overridden on an instance basis with the `traefik.consulcatalog.connect` tag.
 
 ```toml tab="File (TOML)"
@@ -591,7 +591,7 @@ providers:
 
 _Optional, Default="traefik"_
 
-Name of the Traefik service in Consul Catalog.
+Name of the Hanzo Ingress service in Consul Catalog.
 
 ```toml tab="File (TOML)"
 [providers.consulCatalog]
@@ -615,7 +615,7 @@ providers:
 
 _Optional, Default=""_
 
-The `constraints` option can be set to an expression that Traefik matches against the service tags to determine whether
+The `constraints` option can be set to an expression that Hanzo Ingress matches against the service tags to determine whether
 to create any route for that service. If none of the service tags match the expression, no route for that service is
 created. If the expression is empty, all detected services are included.
 

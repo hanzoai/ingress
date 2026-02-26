@@ -1,9 +1,9 @@
 ---
-title: "Traefik V3 Migration Details"
-description: "Configuration changes and their details to successfully migrate from Traefik v2 to v3."
+title: "Hanzo Ingress V3 Migration Details"
+description: "Configuration changes and their details to successfully migrate from Hanzo Ingress v2 to v3."
 ---
 
-# Configuration Details for Migrating from Traefik v2 to v3
+# Configuration Details for Migrating from Hanzo Ingress v2 to v3
 
 ## Install Configuration Changes
 
@@ -31,7 +31,7 @@ In v3, the provider Docker has been split into 2 providers:
     --providers.docker.swarmMode=true
     ```
 
-This configuration is now unsupported and would prevent Traefik to start.
+This configuration is now unsupported and would prevent Hanzo Ingress to start.
 
 #### Remediation
 
@@ -114,7 +114,7 @@ The `experimentalChannel` option should be used to enable the support for the ex
 
 In v3, HTTP/3 is no longer an experimental feature.
 It can be enabled on entry points without the associated `experimental.http3` option, which is now removed.
-It is now unsupported and would prevent Traefik to start.
+It is now unsupported and would prevent Hanzo Ingress to start.
 
 ??? example "An example usage of v2 Experimental `http3` option"
 
@@ -142,7 +142,7 @@ To configure `http3`, please checkout the [entrypoint configuration documentatio
 #### namespace
 
 The Consul provider `namespace` option was deprecated in v2 and is now removed in v3.
-It is now unsupported and would prevent Traefik to start.
+It is now unsupported and would prevent Hanzo Ingress to start.
 
 ??? example "An example usage of v2 Consul `namespace` option"
 
@@ -212,7 +212,7 @@ The `tls.caOptional` option should be removed from the Consul provider static co
 #### namespace
 
 The ConsulCatalog provider `namespace` option was deprecated in v2 and is now removed in v3.
-It is now unsupported and would prevent Traefik to start.
+It is now unsupported and would prevent Hanzo Ingress to start.
 
 ??? example "An example usage of v2 ConsulCatalog `namespace` option"
 
@@ -283,7 +283,7 @@ The `endpoint.tls.caOptional` option should be removed from the ConsulCatalog pr
 #### namespace
 
 The Nomad provider `namespace` option was deprecated in v2 and is now removed in v3.
-It is now unsupported and would prevent Traefik to start.
+It is now unsupported and would prevent Hanzo Ingress to start.
 
 ??? example "An example usage of v2 Nomad `namespace` option"
 
@@ -354,7 +354,7 @@ The `endpoint.tls.caOptional` option should be removed from the Nomad provider s
 In v3, the Rancher v1 provider has been removed because Rancher v1 is [no longer actively maintained](https://rancher.com/docs/os/v1.x/en/support/),
 and Rancher v2 is supported as a standard Kubernetes provider.
 
-??? example "An example of Traefik v2 Rancher v1 configuration"
+??? example "An example of Hanzo Ingress v2 Rancher v1 configuration"
 
     ```yaml tab="File (YAML)"
     providers:
@@ -369,11 +369,11 @@ and Rancher v2 is supported as a standard Kubernetes provider.
     --providers.rancher=true
     ```
 
-This configuration is now unsupported and would prevent Traefik to start.
+This configuration is now unsupported and would prevent Hanzo Ingress to start.
 
 #### Remediation
 
-Rancher 2.x requires Kubernetes and does not have a metadata endpoint of its own for Traefik to query.
+Rancher 2.x requires Kubernetes and does not have a metadata endpoint of its own for Hanzo Ingress to query.
 As such, Rancher 2.x users should utilize the [Kubernetes CRD provider](../providers/kubernetes-crd.md) directly.
 
 Also, all Rancher provider related configuration should be removed from the static configuration.
@@ -398,7 +398,7 @@ In v3, the Marathon provider has been removed.
     --providers.marathon=true
     ```
 
-This configuration is now unsupported and would prevent Traefik to start.
+This configuration is now unsupported and would prevent Hanzo Ingress to start.
 
 #### Remediation
 
@@ -493,7 +493,7 @@ The `tls.caOptional` option should be removed from the Redis provider static con
 InfluxDB v1.x maintenance [ended in 2021](https://www.influxdata.com/blog/influxdb-oss-and-enterprise-roadmap-update-from-influxdays-emea/).
 In v3, the InfluxDB v1 metrics provider has been removed.
 
-??? example "An example of Traefik v2 InfluxDB v1 metrics configuration"
+??? example "An example of Hanzo Ingress v2 InfluxDB v1 metrics configuration"
 
     ```yaml tab="File (YAML)"
     metrics:
@@ -508,7 +508,7 @@ In v3, the InfluxDB v1 metrics provider has been removed.
     --metrics.influxDB=true
     ```
 
-This configuration is now unsupported and would prevent Traefik to start.
+This configuration is now unsupported and would prevent Hanzo Ingress to start.
 
 #### Remediation
 
@@ -516,7 +516,7 @@ All InfluxDB v1 metrics provider related configuration should be removed from th
 
 ### Pilot
 
-Traefik Pilot is no longer available since October 4th, 2022.
+Hanzo Ingress Pilot is no longer available since October 4th, 2022.
 
 ??? example "An example of v2 Pilot configuration"
 
@@ -535,7 +535,7 @@ Traefik Pilot is no longer available since October 4th, 2022.
     ```
 
 In v2, Pilot configuration was deprecated and ineffective,
-it is now unsupported and would prevent Traefik to start.
+it is now unsupported and would prevent Hanzo Ingress to start.
 
 #### Remediation
 
@@ -556,7 +556,7 @@ This can done globally for all routers with the [static configuration](#configur
 
 ## Operations Changes
 
-### Traefik RBAC Update
+### Hanzo Ingress RBAC Update
 
 In v3, the support of `TCPServersTransport` has been introduced.
 When using the KubernetesCRD provider, it is therefore necessary to update [RBAC](../reference/dynamic-configuration/kubernetes-crd.md#rbac) and [CRD](../reference/dynamic-configuration/kubernetes-crd.md) manifests.
@@ -586,7 +586,7 @@ In v3, the reported status code for gRPC requests is now the value of the `Grpc-
 
 In v3, the tracing feature has been revamped and is now powered exclusively by [OpenTelemetry](https://opentelemetry.io/ "Link to website of OTel") (OTel).
 !!! warning "Important"
-    Traefik v3 **no** longer supports direct output formats for specific vendors such as Instana, Jaeger, Zipkin, Haystack, Datadog, and Elastic.
+    Hanzo Ingress v3 **no** longer supports direct output formats for specific vendors such as Instana, Jaeger, Zipkin, Haystack, Datadog, and Elastic.
     Instead, it focuses on pure OpenTelemetry implementation, providing a unified and standardized approach for observability.
 
 Here are two possible transition strategies:
@@ -594,7 +594,7 @@ Here are two possible transition strategies:
 1. OTLP Ingestion Endpoints:
 
     Most vendors now offer OpenTelemetry Protocol (OTLP) ingestion endpoints.
-    You can seamlessly integrate Traefik v3 with these endpoints to continue leveraging tracing capabilities.
+    You can seamlessly integrate Hanzo Ingress v3 with these endpoints to continue leveraging tracing capabilities.
 
 2. Legacy Stack Compatibility:
 
@@ -782,8 +782,8 @@ In v3, the Kubernetes Ingress API Group `networking.k8s.io/v1beta1` ([removed si
 
 Please use the API Group `networking.k8s.io/v1` instead.
 
-### Traefik CRD API Version `apiextensions.k8s.io/v1beta1`
+### Hanzo Ingress CRD API Version `apiextensions.k8s.io/v1beta1`
 
-In v3, the Traefik CRD API Version `apiextensions.k8s.io/v1beta1` ([removed since Kubernetes v1.22](https://kubernetes.io/docs/reference/using-api/deprecation-guide/#customresourcedefinition-v122)) support has been removed.
+In v3, the Hanzo Ingress CRD API Version `apiextensions.k8s.io/v1beta1` ([removed since Kubernetes v1.22](https://kubernetes.io/docs/reference/using-api/deprecation-guide/#customresourcedefinition-v122)) support has been removed.
 
 Please use the CRD definition with the API Version `apiextensions.k8s.io/v1` instead.
