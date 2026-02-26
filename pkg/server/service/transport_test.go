@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -556,8 +556,8 @@ func TestMTLS(t *testing.T) {
 			RootCAs: []types.FileOrContent{types.FileOrContent(LocalhostCert)},
 
 			// For mTLS
-			Certificates: traefiktls.Certificates{
-				traefiktls.Certificate{
+			Certificates: ingresstls.Certificates{
+				ingresstls.Certificate{
 					CertFile: types.FileOrContent(mTLSCert),
 					KeyFile:  types.FileOrContent(mTLSKey),
 				},

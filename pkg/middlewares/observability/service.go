@@ -38,7 +38,7 @@ func (t *serviceTracing) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 		req = req.WithContext(tracingCtx)
 
-		span.SetAttributes(attribute.String("traefik.service.name", t.service))
+		span.SetAttributes(attribute.String("ingress.service.name", t.service))
 	}
 
 	t.next.ServeHTTP(rw, req)

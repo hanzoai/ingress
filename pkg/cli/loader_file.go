@@ -29,15 +29,15 @@ func (f *FileLoader) Load(args []string, cmd *cli.Command) (bool, error) {
 		return false, err
 	}
 
-	configFileFlag := "traefik.configfile"
-	if _, ok := ref["traefik.configFile"]; ok {
-		configFileFlag = "traefik.configFile"
+	configFileFlag := "ingress.configfile"
+	if _, ok := ref["ingress.configFile"]; ok {
+		configFileFlag = "ingress.configFile"
 	}
 
 	if f.ConfigFileFlag != "" {
-		configFileFlag = "traefik." + f.ConfigFileFlag
+		configFileFlag = "ingress." + f.ConfigFileFlag
 		if _, ok := ref[strings.ToLower(configFileFlag)]; ok {
-			configFileFlag = "traefik." + strings.ToLower(f.ConfigFileFlag)
+			configFileFlag = "ingress." + strings.ToLower(f.ConfigFileFlag)
 		}
 	}
 
@@ -64,7 +64,7 @@ func (f *FileLoader) Load(args []string, cmd *cli.Command) (bool, error) {
 // It stops as soon as decoding one of them is successful.
 func loadConfigFiles(configFile string, element any) (string, error) {
 	finder := cli.Finder{
-		BasePaths:  []string{"/etc/traefik/traefik", "$XDG_CONFIG_HOME/traefik", "$HOME/.config/traefik", "./traefik"},
+		BasePaths:  []string{"/etc/ingress/ingress", "$XDG_CONFIG_HOME/ingress", "$HOME/.config/ingress", "./ingress"},
 		Extensions: []string{"toml", "yaml", "yml"},
 	}
 

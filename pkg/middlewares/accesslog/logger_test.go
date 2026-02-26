@@ -137,7 +137,7 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 		{
 			desc:       "Common format with log body and Dual Output (File logging + OTEL)",
 			format:     CommonFormat,
-			filePath:   filepath.Join(t.TempDir(), "traefik.log"),
+			filePath:   filepath.Join(t.TempDir(), "ingress.log"),
 			dualOutput: true,
 			bodyCheckFn: func(t *testing.T, log string) {
 				t.Helper()
@@ -249,7 +249,7 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 }
 
 func TestLogRotation(t *testing.T) {
-	fileName := filepath.Join(t.TempDir(), "traefik.log")
+	fileName := filepath.Join(t.TempDir(), "ingress.log")
 	rotatedFileName := fileName + ".rotated"
 
 	config := &otypes.AccessLog{FilePath: fileName, Format: CommonFormat}

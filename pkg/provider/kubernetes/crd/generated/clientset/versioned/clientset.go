@@ -30,7 +30,7 @@ import (
 	fmt "fmt"
 	http "net/http"
 
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -38,18 +38,18 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	TraefikV1alpha1() traefikv1alpha1.TraefikV1alpha1Interface
+	HanzoV1alpha1() hanzoaiv1alpha1.HanzoV1alpha1Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	traefikV1alpha1 *traefikv1alpha1.TraefikV1alpha1Client
+	hanzoaiV1alpha1 *hanzoaiv1alpha1.HanzoV1alpha1Client
 }
 
-// TraefikV1alpha1 retrieves the TraefikV1alpha1Client
-func (c *Clientset) TraefikV1alpha1() traefikv1alpha1.TraefikV1alpha1Interface {
-	return c.traefikV1alpha1
+// HanzoV1alpha1 retrieves the HanzoV1alpha1Client
+func (c *Clientset) HanzoV1alpha1() hanzoaiv1alpha1.HanzoV1alpha1Interface {
+	return c.hanzoaiV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -96,7 +96,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.traefikV1alpha1, err = traefikv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.hanzoaiV1alpha1, err = hanzoaiv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.traefikV1alpha1 = traefikv1alpha1.New(c)
+	cs.hanzoaiV1alpha1 = hanzoaiv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

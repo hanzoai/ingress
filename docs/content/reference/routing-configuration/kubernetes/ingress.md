@@ -19,7 +19,7 @@ kind: Ingress
 metadata:
   name: myingress
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    ingress.kubernetes.io/router.entrypoints: web
 
 spec:
   rules:
@@ -51,31 +51,31 @@ spec:
 
 ### On Ingress
 
-??? info "`traefik.ingress.kubernetes.io/router.entrypoints`"
+??? info "`ingress.kubernetes.io/router.entrypoints`"
 
     See [entry points](../../install-configuration/entrypoints.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.entrypoints: ep1,ep2
+    ingress.kubernetes.io/router.entrypoints: ep1,ep2
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.middlewares`"
+??? info "`ingress.kubernetes.io/router.middlewares`"
 
     See [middlewares overview](../http/middlewares/overview.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.middlewares: auth@file,default-prefix@kubernetescrd
+    ingress.kubernetes.io/router.middlewares: auth@file,default-prefix@kubernetescrd
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.priority`"
+??? info "`ingress.kubernetes.io/router.priority`"
 
     See [priority](../http/routing/rules-and-priority.md#priority-calculation) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.priority: "42"
+    ingress.kubernetes.io/router.priority: "42"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.rulesyntax`"
+??? info "`ingress.kubernetes.io/router.rulesyntax`"
 
     !!! warning
 
@@ -85,10 +85,10 @@ spec:
     See [rule syntax](../http/routing/rules-and-priority.md#rulesyntax) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.rulesyntax: "v2"
+    ingress.kubernetes.io/router.rulesyntax: "v2"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.pathmatcher`"
+??? info "`ingress.kubernetes.io/router.pathmatcher`"
 
     Overrides the default router rule type used for a path.
     Only path-related matcher name should be specified: `Path`, `PathPrefix` or `PathRegexp`.
@@ -96,76 +96,76 @@ spec:
     Default `PathPrefix`
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.pathmatcher: Path
+    ingress.kubernetes.io/router.pathmatcher: Path
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.tls`"
+??? info "`ingress.kubernetes.io/router.tls`"
 
     <!-- See [tls](../http/tls/tls-certificates.md) for more information. -->
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/router.tls: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.tls.certresolver`"
+??? info "`ingress.kubernetes.io/router.tls.certresolver`"
 
     <!-- See [certResolver](.) for more information. -->
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
+    ingress.kubernetes.io/router.tls.certresolver: myresolver
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.tls.domains.n.main`"
+??? info "`ingress.kubernetes.io/router.tls.domains.n.main`"
 
     <!-- See [domains](.) for more information. -->
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.tls.domains.0.main: example.org
+    ingress.kubernetes.io/router.tls.domains.0.main: example.org
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.tls.domains.n.sans`"
+??? info "`ingress.kubernetes.io/router.tls.domains.n.sans`"
 
     <!-- See [domains](.) for more information. -->
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.tls.domains.0.sans: test.example.org,dev.example.org
+    ingress.kubernetes.io/router.tls.domains.0.sans: test.example.org,dev.example.org
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.tls.options`"
+??? info "`ingress.kubernetes.io/router.tls.options`"
 
     See [options](../kubernetes/crd/tls/tlsoption.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.tls.options: foobar@file
+    ingress.kubernetes.io/router.tls.options: foobar@file
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.observability.accesslogs`"
+??? info "`ingress.kubernetes.io/router.observability.accesslogs`"
 
     See [here](../http/routing/observability.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.observability.accesslogs: true
+    ingress.kubernetes.io/router.observability.accesslogs: true
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.observability.metrics`"
+??? info "`ingress.kubernetes.io/router.observability.metrics`"
 
     See [here](../http/routing/observability.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.observability.metrics: true
+    ingress.kubernetes.io/router.observability.metrics: true
     ```
 
-??? info "`traefik.ingress.kubernetes.io/router.observability.tracing`"
+??? info "`ingress.kubernetes.io/router.observability.tracing`"
 
     See [here](../http/routing/observability.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/router.observability.tracing: true
+    ingress.kubernetes.io/router.observability.tracing: true
     ```
 
 ### On Service
 
-??? info "`traefik.ingress.kubernetes.io/service.nativelb`"
+??? info "`ingress.kubernetes.io/service.nativelb`"
 
     Controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
     The Kubernetes Service itself does load-balance to the pods.
@@ -173,87 +173,87 @@ spec:
     By default, NativeLB is false.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.nativelb: "true"
+    ingress.kubernetes.io/service.nativelb: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.nodeportlb`"
+??? info "`ingress.kubernetes.io/service.nodeportlb`"
 
     Controls, when creating the load-balancer, whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
     It allows services to be reachable when Hanzo Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
     By default, NodePortLB is false.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.nodeportlb: "true"
+    ingress.kubernetes.io/service.nodeportlb: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.serversscheme`"
+??? info "`ingress.kubernetes.io/service.serversscheme`"
 
     Overrides the default scheme.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.serversscheme: h2c
+    ingress.kubernetes.io/service.serversscheme: h2c
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.serverstransport`"
+??? info "`ingress.kubernetes.io/service.serverstransport`"
 
     See [ServersTransport](../kubernetes/crd/http/serverstransport.md) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.serverstransport: foobar@file
+    ingress.kubernetes.io/service.serverstransport: foobar@file
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.passhostheader`"
+??? info "`ingress.kubernetes.io/service.passhostheader`"
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.passhostheader: "true"
+    ingress.kubernetes.io/service.passhostheader: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    ingress.kubernetes.io/service.sticky.cookie: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie.name`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie.name`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie.name: foobar
+    ingress.kubernetes.io/service.sticky.cookie.name: foobar
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie.secure`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie.secure`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "true"
+    ingress.kubernetes.io/service.sticky.cookie.secure: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie.samesite`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie.samesite`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie.samesite: "none"
+    ingress.kubernetes.io/service.sticky.cookie.samesite: "none"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie.httponly`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie.httponly`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
+    ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
     ```
 
-??? info "`traefik.ingress.kubernetes.io/service.sticky.cookie.maxage`"
+??? info "`ingress.kubernetes.io/service.sticky.cookie.maxage`"
 
-    See [sticky sessions](../kubernetes/crd/http/traefikservice.md#stickiness-on-multiple-levels) for more information.
+    See [sticky sessions](../kubernetes/crd/http/ingressservice.md#stickiness-on-multiple-levels) for more information.
 
     ```yaml
-    traefik.ingress.kubernetes.io/service.sticky.cookie.maxage: 42
+    ingress.kubernetes.io/service.sticky.cookie.maxage: 42
     ```
 
 ## TLS
@@ -352,7 +352,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     metadata:
       name: myingress
       annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        ingress.kubernetes.io/router.entrypoints: websecure
 
     spec:
       rules:
@@ -474,7 +474,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
 To enable TLS on the underlying router created from an Ingress, one should configure it through annotations:
 
 ```yaml
-traefik.ingress.kubernetes.io/router.tls: "true"
+ingress.kubernetes.io/router.tls: "true"
 ```
 
 For more options, please refer to the available [annotations](#on-ingress).
@@ -487,8 +487,8 @@ For more options, please refer to the available [annotations](#on-ingress).
     metadata:
       name: myingress
       annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/router.tls: "true"
+        ingress.kubernetes.io/router.entrypoints: websecure
+        ingress.kubernetes.io/router.tls: "true"
 
     spec:
       rules:
@@ -564,7 +564,7 @@ TLS certificates can be managed in Secrets objects.
 !!! info "Routing directly to [Kubernetes services](https://kubernetes.io/docs/concepts/services-networking/service/ "Link to Kubernetes service docs")"
 
     To route directly to the Kubernetes service,
-    one can use the `traefik.ingress.kubernetes.io/service.nativelb` annotation on the Kubernetes service.
+    one can use the `ingress.kubernetes.io/service.nativelb` annotation on the Kubernetes service.
     It controls, when creating the load-balancer,
     whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
 
@@ -579,7 +579,7 @@ There are 3 ways to configure Hanzo Ingress to use HTTPS to communicate with pod
 
 1. If the service port defined in the ingress spec is `443` (note that you can still use `targetPort` to use a different port on your pod).
 1. If the service port defined in the ingress spec has a name that starts with `https` (such as `https-api`, `https-web` or just `https`).
-1. If the service spec includes the annotation `traefik.ingress.kubernetes.io/service.serversscheme: https`.
+1. If the service spec includes the annotation `ingress.kubernetes.io/service.serversscheme: https`.
 
 If either of those configuration options exist, then the backend communication protocol is assumed to be TLS,
 and will connect via TLS automatically.
@@ -617,6 +617,6 @@ This will allow users to create a "default router" that will match all unmatched
     Due to Hanzo Ingress's use of priorities, you may have to set this ingress priority lower than other ingresses in your environment,
     to avoid this global ingress from satisfying requests that could match other ingresses.
 
-    To do this, use the `traefik.ingress.kubernetes.io/router.priority` annotation (as seen in [Annotations on Ingress](#on-ingress)) on your ingresses accordingly.
+    To do this, use the `ingress.kubernetes.io/router.priority` annotation (as seen in [Annotations on Ingress](#on-ingress)) on your ingresses accordingly.
 
 {% include-markdown "includes/traefik-for-business-applications.md" %}

@@ -67,48 +67,48 @@ func (s *RedisSuite) TestSimpleConfiguration() {
 	})
 
 	data := map[string]string{
-		"traefik/http/routers/Router0/entryPoints/0": "web",
-		"traefik/http/routers/Router0/middlewares/0": "compressor",
-		"traefik/http/routers/Router0/middlewares/1": "striper",
-		"traefik/http/routers/Router0/service":       "simplesvc",
-		"traefik/http/routers/Router0/rule":          "Host(`kv1.localhost`)",
-		"traefik/http/routers/Router0/priority":      "42",
-		"traefik/http/routers/Router0/tls":           "true",
+		"ingress/http/routers/Router0/entryPoints/0": "web",
+		"ingress/http/routers/Router0/middlewares/0": "compressor",
+		"ingress/http/routers/Router0/middlewares/1": "striper",
+		"ingress/http/routers/Router0/service":       "simplesvc",
+		"ingress/http/routers/Router0/rule":          "Host(`kv1.localhost`)",
+		"ingress/http/routers/Router0/priority":      "42",
+		"ingress/http/routers/Router0/tls":           "true",
 
-		"traefik/http/routers/Router1/rule":                 "Host(`kv2.localhost`)",
-		"traefik/http/routers/Router1/priority":             "42",
-		"traefik/http/routers/Router1/tls/domains/0/main":   "aaa.localhost",
-		"traefik/http/routers/Router1/tls/domains/0/sans/0": "aaa.aaa.localhost",
-		"traefik/http/routers/Router1/tls/domains/0/sans/1": "bbb.aaa.localhost",
-		"traefik/http/routers/Router1/tls/domains/1/main":   "bbb.localhost",
-		"traefik/http/routers/Router1/tls/domains/1/sans/0": "aaa.bbb.localhost",
-		"traefik/http/routers/Router1/tls/domains/1/sans/1": "bbb.bbb.localhost",
-		"traefik/http/routers/Router1/entryPoints/0":        "web",
-		"traefik/http/routers/Router1/service":              "simplesvc",
+		"ingress/http/routers/Router1/rule":                 "Host(`kv2.localhost`)",
+		"ingress/http/routers/Router1/priority":             "42",
+		"ingress/http/routers/Router1/tls/domains/0/main":   "aaa.localhost",
+		"ingress/http/routers/Router1/tls/domains/0/sans/0": "aaa.aaa.localhost",
+		"ingress/http/routers/Router1/tls/domains/0/sans/1": "bbb.aaa.localhost",
+		"ingress/http/routers/Router1/tls/domains/1/main":   "bbb.localhost",
+		"ingress/http/routers/Router1/tls/domains/1/sans/0": "aaa.bbb.localhost",
+		"ingress/http/routers/Router1/tls/domains/1/sans/1": "bbb.bbb.localhost",
+		"ingress/http/routers/Router1/entryPoints/0":        "web",
+		"ingress/http/routers/Router1/service":              "simplesvc",
 
-		"traefik/http/services/simplesvc/loadBalancer/servers/0/url": "http://10.0.1.1:8888",
-		"traefik/http/services/simplesvc/loadBalancer/servers/1/url": "http://10.0.1.1:8889",
+		"ingress/http/services/simplesvc/loadBalancer/servers/0/url": "http://10.0.1.1:8888",
+		"ingress/http/services/simplesvc/loadBalancer/servers/1/url": "http://10.0.1.1:8889",
 
-		"traefik/http/services/srvcA/loadBalancer/servers/0/url": "http://10.0.1.2:8888",
-		"traefik/http/services/srvcA/loadBalancer/servers/1/url": "http://10.0.1.2:8889",
+		"ingress/http/services/srvcA/loadBalancer/servers/0/url": "http://10.0.1.2:8888",
+		"ingress/http/services/srvcA/loadBalancer/servers/1/url": "http://10.0.1.2:8889",
 
-		"traefik/http/services/srvcB/loadBalancer/servers/0/url": "http://10.0.1.3:8888",
-		"traefik/http/services/srvcB/loadBalancer/servers/1/url": "http://10.0.1.3:8889",
+		"ingress/http/services/srvcB/loadBalancer/servers/0/url": "http://10.0.1.3:8888",
+		"ingress/http/services/srvcB/loadBalancer/servers/1/url": "http://10.0.1.3:8889",
 
-		"traefik/http/services/mirror/mirroring/service":           "simplesvc",
-		"traefik/http/services/mirror/mirroring/mirrors/0/name":    "srvcA",
-		"traefik/http/services/mirror/mirroring/mirrors/0/percent": "42",
-		"traefik/http/services/mirror/mirroring/mirrors/1/name":    "srvcB",
-		"traefik/http/services/mirror/mirroring/mirrors/1/percent": "42",
+		"ingress/http/services/mirror/mirroring/service":           "simplesvc",
+		"ingress/http/services/mirror/mirroring/mirrors/0/name":    "srvcA",
+		"ingress/http/services/mirror/mirroring/mirrors/0/percent": "42",
+		"ingress/http/services/mirror/mirroring/mirrors/1/name":    "srvcB",
+		"ingress/http/services/mirror/mirroring/mirrors/1/percent": "42",
 
-		"traefik/http/services/Service03/weighted/services/0/name":   "srvcA",
-		"traefik/http/services/Service03/weighted/services/0/weight": "42",
-		"traefik/http/services/Service03/weighted/services/1/name":   "srvcB",
-		"traefik/http/services/Service03/weighted/services/1/weight": "42",
+		"ingress/http/services/Service03/weighted/services/0/name":   "srvcA",
+		"ingress/http/services/Service03/weighted/services/0/weight": "42",
+		"ingress/http/services/Service03/weighted/services/1/name":   "srvcB",
+		"ingress/http/services/Service03/weighted/services/1/weight": "42",
 
-		"traefik/http/middlewares/compressor/compress":            "true",
-		"traefik/http/middlewares/striper/stripPrefix/prefixes/0": "foo",
-		"traefik/http/middlewares/striper/stripPrefix/prefixes/1": "bar",
+		"ingress/http/middlewares/compressor/compress":            "true",
+		"ingress/http/middlewares/striper/stripPrefix/prefixes/0": "foo",
+		"ingress/http/middlewares/striper/stripPrefix/prefixes/1": "bar",
 	}
 
 	for k, v := range data {
@@ -116,7 +116,7 @@ func (s *RedisSuite) TestSimpleConfiguration() {
 		require.NoError(s.T(), err)
 	}
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// wait for traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,

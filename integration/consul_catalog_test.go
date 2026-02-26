@@ -58,7 +58,7 @@ func (s *ConsulCatalogSuite) TestWithNotExposedByDefaultAndDefaultsSettings() {
 	reg1 := &api.AgentServiceRegistration{
 		ID:      "whoami1",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami1"),
 	}
@@ -68,7 +68,7 @@ func (s *ConsulCatalogSuite) TestWithNotExposedByDefaultAndDefaultsSettings() {
 	reg2 := &api.AgentServiceRegistration{
 		ID:      "whoami2",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami2"),
 	}
@@ -78,7 +78,7 @@ func (s *ConsulCatalogSuite) TestWithNotExposedByDefaultAndDefaultsSettings() {
 	reg3 := &api.AgentServiceRegistration{
 		ID:      "whoami3",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami3"),
 	}
@@ -93,7 +93,7 @@ func (s *ConsulCatalogSuite) TestWithNotExposedByDefaultAndDefaultsSettings() {
 
 	file := s.adaptFile("fixtures/consul_catalog/default_not_exposed.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -128,8 +128,8 @@ func (s *ConsulCatalogSuite) TestByLabels() {
 		ID:   "whoami1",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.http.routers.router1.rule=Path(`/whoami`)",
+			"ingress.enable=true",
+			"ingress.http.routers.router1.rule=Path(`/whoami`)",
 		},
 		Port:    80,
 		Address: containerIP,
@@ -145,7 +145,7 @@ func (s *ConsulCatalogSuite) TestByLabels() {
 
 	file := s.adaptFile("fixtures/consul_catalog/default_not_exposed.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContainsOr("Hostname: whoami1", "Hostname: whoami2", "Hostname: whoami3"))
 	require.NoError(s.T(), err)
@@ -168,14 +168,14 @@ func (s *ConsulCatalogSuite) TestSimpleConfiguration() {
 	reg := &api.AgentServiceRegistration{
 		ID:      "whoami1",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami1"),
 	}
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -202,14 +202,14 @@ func (s *ConsulCatalogSuite) TestSimpleConfigurationWithWatch() {
 	reg := &api.AgentServiceRegistration{
 		ID:      "whoami1",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami1"),
 	}
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -271,14 +271,14 @@ func (s *ConsulCatalogSuite) TestRegisterServiceWithoutIP() {
 	reg := &api.AgentServiceRegistration{
 		ID:      "whoami1",
 		Name:    "whoami",
-		Tags:    []string{"traefik.enable=true"},
+		Tags:    []string{"ingress.enable=true"},
 		Port:    80,
 		Address: "",
 	}
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/api/http/services", nil)
 	require.NoError(s.T(), err)
@@ -311,7 +311,7 @@ func (s *ConsulCatalogSuite) TestDefaultConsulService() {
 	require.NoError(s.T(), err)
 
 	// Start traefik
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -340,9 +340,9 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithTCPLabels() {
 		ID:   "whoamitcp",
 		Name: "whoamitcp",
 		Tags: []string{
-			"traefik.tcp.Routers.Super.Rule=HostSNI(`my.super.host`)",
-			"traefik.tcp.Routers.Super.tls=true",
-			"traefik.tcp.Services.Super.Loadbalancer.server.port=8080",
+			"ingress.tcp.Routers.Super.Rule=HostSNI(`my.super.host`)",
+			"ingress.tcp.Routers.Super.tls=true",
+			"ingress.tcp.Services.Super.Loadbalancer.server.port=8080",
 		},
 		Port:    8080,
 		Address: s.getComposeServiceIP("whoamitcp"),
@@ -352,7 +352,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithTCPLabels() {
 	require.NoError(s.T(), err)
 
 	// Start traefik
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
 	require.NoError(s.T(), err)
@@ -382,7 +382,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithLabels() {
 		ID:   "whoami1",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.http.Routers.Super.Rule=Host(`my.super.host`)",
+			"ingress.http.Routers.Super.Rule=Host(`my.super.host`)",
 		},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami1"),
@@ -396,7 +396,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithLabels() {
 		ID:   "whoami2",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.http.Routers.SuperHost.Rule=Host(`my-super.host`)",
+			"ingress.http.Routers.SuperHost.Rule=Host(`my-super.host`)",
 		},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami2"),
@@ -405,7 +405,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithLabels() {
 	require.NoError(s.T(), err)
 
 	// Start traefik
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -441,9 +441,9 @@ func (s *ConsulCatalogSuite) TestSameServiceIDOnDifferentConsulAgent() {
 
 	// Start a container with some tags
 	tags := []string{
-		"traefik.enable=true",
-		"traefik.http.Routers.Super.service=whoami",
-		"traefik.http.Routers.Super.Rule=Host(`my.super.host`)",
+		"ingress.enable=true",
+		"ingress.http.Routers.Super.service=whoami",
+		"ingress.http.Routers.Super.Rule=Host(`my.super.host`)",
 	}
 
 	reg1 := &api.AgentServiceRegistration{
@@ -467,7 +467,7 @@ func (s *ConsulCatalogSuite) TestSameServiceIDOnDifferentConsulAgent() {
 	require.NoError(s.T(), err)
 
 	// Start traefik
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
 	require.NoError(s.T(), err)
@@ -506,7 +506,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithOneMissingLabels() {
 		ID:   "whoami1",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.random.value=my.super.host",
+			"ingress.random.value=my.super.host",
 		},
 		Port:    80,
 		Address: s.getComposeServiceIP("whoami1"),
@@ -516,7 +516,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithOneMissingLabels() {
 	require.NoError(s.T(), err)
 
 	// Start traefik
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
 	require.NoError(s.T(), err)
@@ -532,8 +532,8 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithOneMissingLabels() {
 func (s *ConsulCatalogSuite) TestConsulServiceWithHealthCheck() {
 	whoamiIP := s.getComposeServiceIP("whoami1")
 	tags := []string{
-		"traefik.enable=true",
-		"traefik.http.routers.router1.rule=Path(`/whoami`)",
+		"ingress.enable=true",
+		"ingress.http.routers.router1.rule=Path(`/whoami`)",
 	}
 
 	reg1 := &api.AgentServiceRegistration{
@@ -562,7 +562,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithHealthCheck() {
 
 	file := s.adaptFile("fixtures/consul_catalog/simple.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 2*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
@@ -611,9 +611,9 @@ func (s *ConsulCatalogSuite) TestConsulConnect() {
 		ID:   "uuid-api1",
 		Name: "uuid-api",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.consulcatalog.connect=true",
-			"traefik.http.routers.router1.rule=Path(`/`)",
+			"ingress.enable=true",
+			"ingress.consulcatalog.connect=true",
+			"ingress.http.routers.router1.rule=Path(`/`)",
 		},
 		Connect: &api.AgentServiceConnect{
 			Native: true,
@@ -629,9 +629,9 @@ func (s *ConsulCatalogSuite) TestConsulConnect() {
 		ID:   "whoami1",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.http.routers.router2.rule=Path(`/whoami`)",
-			"traefik.http.routers.router2.service=whoami",
+			"ingress.enable=true",
+			"ingress.http.routers.router2.rule=Path(`/whoami`)",
+			"ingress.http.routers.router2.service=whoami",
 		},
 		Port:    80,
 		Address: whoamiIP,
@@ -646,7 +646,7 @@ func (s *ConsulCatalogSuite) TestConsulConnect() {
 	}
 	file := s.adaptFile("fixtures/consul_catalog/connect.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8000/", 10*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
@@ -670,8 +670,8 @@ func (s *ConsulCatalogSuite) TestConsulConnect_ByDefault() {
 		ID:   "uuid-api1",
 		Name: "uuid-api",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.http.routers.router1.rule=Path(`/`)",
+			"ingress.enable=true",
+			"ingress.http.routers.router1.rule=Path(`/`)",
 		},
 		Connect: &api.AgentServiceConnect{
 			Native: true,
@@ -687,9 +687,9 @@ func (s *ConsulCatalogSuite) TestConsulConnect_ByDefault() {
 		ID:   "whoami1",
 		Name: "whoami1",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.http.routers.router2.rule=Path(`/whoami`)",
-			"traefik.http.routers.router2.service=whoami",
+			"ingress.enable=true",
+			"ingress.http.routers.router2.rule=Path(`/whoami`)",
+			"ingress.http.routers.router2.service=whoami",
 		},
 		Port:    80,
 		Address: whoamiIP,
@@ -702,10 +702,10 @@ func (s *ConsulCatalogSuite) TestConsulConnect_ByDefault() {
 		ID:   "whoami2",
 		Name: "whoami2",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.consulcatalog.connect=false",
-			"traefik.http.routers.router2.rule=Path(`/whoami2`)",
-			"traefik.http.routers.router2.service=whoami2",
+			"ingress.enable=true",
+			"ingress.consulcatalog.connect=false",
+			"ingress.http.routers.router2.rule=Path(`/whoami2`)",
+			"ingress.http.routers.router2.service=whoami2",
 		},
 		Port:    80,
 		Address: whoami2IP,
@@ -720,7 +720,7 @@ func (s *ConsulCatalogSuite) TestConsulConnect_ByDefault() {
 	}
 	file := s.adaptFile("fixtures/consul_catalog/connect_by_default.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8000/", 10*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
@@ -749,9 +749,9 @@ func (s *ConsulCatalogSuite) TestConsulConnect_NotAware() {
 		ID:   "uuid-api1",
 		Name: "uuid-api",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.consulcatalog.connect=true",
-			"traefik.http.routers.router1.rule=Path(`/`)",
+			"ingress.enable=true",
+			"ingress.consulcatalog.connect=true",
+			"ingress.http.routers.router1.rule=Path(`/`)",
 		},
 		Connect: &api.AgentServiceConnect{
 			Native: true,
@@ -767,9 +767,9 @@ func (s *ConsulCatalogSuite) TestConsulConnect_NotAware() {
 		ID:   "whoami1",
 		Name: "whoami",
 		Tags: []string{
-			"traefik.enable=true",
-			"traefik.http.routers.router2.rule=Path(`/whoami`)",
-			"traefik.http.routers.router2.service=whoami",
+			"ingress.enable=true",
+			"ingress.http.routers.router2.rule=Path(`/whoami`)",
+			"ingress.http.routers.router2.service=whoami",
 		},
 		Port:    80,
 		Address: whoamiIP,
@@ -784,7 +784,7 @@ func (s *ConsulCatalogSuite) TestConsulConnect_NotAware() {
 	}
 	file := s.adaptFile("fixtures/consul_catalog/connect_not_aware.toml", tempObjects)
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8000/", 10*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)

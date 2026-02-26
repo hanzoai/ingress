@@ -43,7 +43,7 @@ func (s *ErrorPagesSuite) TestSimpleConfiguration() {
 		Server2 string
 	}{"http://" + s.BackendIP + ":80", s.ErrorPageIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	frontendReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080", nil)
 	require.NoError(s.T(), err)
@@ -60,7 +60,7 @@ func (s *ErrorPagesSuite) TestErrorPage() {
 		Server2 string
 	}{s.BackendIP, s.ErrorPageIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	frontendReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080", nil)
 	require.NoError(s.T(), err)
@@ -77,7 +77,7 @@ func (s *ErrorPagesSuite) TestStatusRewrites() {
 		Server2 string
 	}{s.BackendIP, s.ErrorPageIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	frontendReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080", nil)
 	require.NoError(s.T(), err)
@@ -106,7 +106,7 @@ func (s *ErrorPagesSuite) TestErrorPageFlush() {
 		Server2 string
 	}{srv.URL, s.ErrorPageIP})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	frontendReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080", nil)
 	require.NoError(s.T(), err)

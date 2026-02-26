@@ -24,7 +24,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Sets the maximum request body to 2MB
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: limit
@@ -70,7 +70,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: limit
@@ -109,7 +109,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: limit
@@ -150,7 +150,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: limit
@@ -189,7 +189,7 @@ labels:
 ```
 
 ```yaml tab="Kubernetes"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: limit
@@ -230,7 +230,7 @@ You can have the Buffering middleware replay the request using `retryExpression`
     ```
 
     ```yaml tab="Kubernetes"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: limit

@@ -184,7 +184,7 @@ func TestRequestRedirectHandler(t *testing.T) {
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
 
-			handler, err := NewRequestRedirect(t.Context(), next, test.config, "traefikTest")
+			handler, err := NewRequestRedirect(t.Context(), next, test.config, "ingressTest")
 			if test.wantErr {
 				require.Error(t, err)
 				require.Nil(t, handler)

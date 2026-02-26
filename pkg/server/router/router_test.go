@@ -23,7 +23,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
 	"github.com/hanzoai/ingress/v3/pkg/server/service"
 	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 )
 
 func TestRouterManager_Get(t *testing.T) {
@@ -327,7 +327,7 @@ func TestRouterManager_Get(t *testing.T) {
 
 			serviceManager := service.NewManager(rtConf.Services, nil, nil, transportManager, proxyBuilderMock{})
 			middlewaresBuilder := middleware.NewBuilder(rtConf.Middlewares, serviceManager, nil)
-			tlsManager := traefiktls.NewManager(nil)
+			tlsManager := ingresstls.NewManager(nil)
 
 			parser, err := httpmuxer.NewSyntaxParser()
 			require.NoError(t, err)
@@ -357,7 +357,7 @@ func TestRuntimeConfiguration(t *testing.T) {
 		serviceConfig    map[string]*dynamic.Service
 		routerConfig     map[string]*dynamic.Router
 		middlewareConfig map[string]*dynamic.Middleware
-		tlsOptions       map[string]traefiktls.Options
+		tlsOptions       map[string]ingresstls.Options
 		expectedError    int
 	}{
 		{
@@ -622,7 +622,7 @@ func TestRuntimeConfiguration(t *testing.T) {
 					TLS:         &dynamic.RouterTLSConfig{},
 				},
 			},
-			tlsOptions:    map[string]traefiktls.Options{},
+			tlsOptions:    map[string]ingresstls.Options{},
 			expectedError: 1,
 		},
 		{
@@ -650,9 +650,9 @@ func TestRuntimeConfiguration(t *testing.T) {
 					},
 				},
 			},
-			tlsOptions: map[string]traefiktls.Options{
+			tlsOptions: map[string]ingresstls.Options{
 				"broken-tlsOption": {
-					ClientAuth: traefiktls.ClientAuth{
+					ClientAuth: ingresstls.ClientAuth{
 						ClientAuthType: "foobar",
 					},
 				},
@@ -682,9 +682,9 @@ func TestRuntimeConfiguration(t *testing.T) {
 					TLS:         &dynamic.RouterTLSConfig{},
 				},
 			},
-			tlsOptions: map[string]traefiktls.Options{
+			tlsOptions: map[string]ingresstls.Options{
 				"default": {
-					ClientAuth: traefiktls.ClientAuth{
+					ClientAuth: ingresstls.ClientAuth{
 						ClientAuthType: "foobar",
 					},
 				},
@@ -714,7 +714,7 @@ func TestRuntimeConfiguration(t *testing.T) {
 
 			serviceManager := service.NewManager(rtConf.Services, nil, nil, transportManager, proxyBuilderMock{})
 			middlewaresBuilder := middleware.NewBuilder(rtConf.Middlewares, serviceManager, nil)
-			tlsManager := traefiktls.NewManager(nil)
+			tlsManager := ingresstls.NewManager(nil)
 			tlsManager.UpdateConfigs(t.Context(), nil, test.tlsOptions, nil)
 
 			parser, err := httpmuxer.NewSyntaxParser()
@@ -796,7 +796,7 @@ func TestProviderOnMiddlewares(t *testing.T) {
 
 	serviceManager := service.NewManager(rtConf.Services, nil, nil, transportManager, nil)
 	middlewaresBuilder := middleware.NewBuilder(rtConf.Middlewares, serviceManager, nil)
-	tlsManager := traefiktls.NewManager(nil)
+	tlsManager := ingresstls.NewManager(nil)
 
 	parser, err := httpmuxer.NewSyntaxParser()
 	require.NoError(t, err)
@@ -851,7 +851,7 @@ func BenchmarkRouterServe(b *testing.B) {
 
 	serviceManager := service.NewManager(rtConf.Services, nil, nil, staticTransportManager{res}, nil)
 	middlewaresBuilder := middleware.NewBuilder(rtConf.Middlewares, serviceManager, nil)
-	tlsManager := traefiktls.NewManager(nil)
+	tlsManager := ingresstls.NewManager(nil)
 
 	parser, err := httpmuxer.NewSyntaxParser()
 	require.NoError(b, err)

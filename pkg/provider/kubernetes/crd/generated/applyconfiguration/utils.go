@@ -28,8 +28,8 @@ package applyconfiguration
 
 import (
 	internal "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/internal"
-	traefikiov1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/traefikio/v1alpha1"
-	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/hanzoai/v1alpha1"
+	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	managedfields "k8s.io/apimachinery/pkg/util/managedfields"
@@ -39,125 +39,125 @@ import (
 // apply configuration type exists for the given GroupVersionKind.
 func ForKind(kind schema.GroupVersionKind) interface{} {
 	switch kind {
-	// Group=traefik.io, Version=v1alpha1
+	// Group=hanzo.ai, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithKind("BasicAuth"):
-		return &traefikiov1alpha1.BasicAuthApplyConfiguration{}
+		return &hanzoaiv1alpha1.BasicAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Buffering"):
-		return &traefikiov1alpha1.BufferingApplyConfiguration{}
+		return &hanzoaiv1alpha1.BufferingApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Certificate"):
-		return &traefikiov1alpha1.CertificateApplyConfiguration{}
+		return &hanzoaiv1alpha1.CertificateApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Chain"):
-		return &traefikiov1alpha1.ChainApplyConfiguration{}
+		return &hanzoaiv1alpha1.ChainApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("CircuitBreaker"):
-		return &traefikiov1alpha1.CircuitBreakerApplyConfiguration{}
+		return &hanzoaiv1alpha1.CircuitBreakerApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ClientAuth"):
-		return &traefikiov1alpha1.ClientAuthApplyConfiguration{}
+		return &hanzoaiv1alpha1.ClientAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ClientTLS"):
-		return &traefikiov1alpha1.ClientTLSApplyConfiguration{}
+		return &hanzoaiv1alpha1.ClientTLSApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ClientTLSWithCAOptional"):
-		return &traefikiov1alpha1.ClientTLSWithCAOptionalApplyConfiguration{}
+		return &hanzoaiv1alpha1.ClientTLSWithCAOptionalApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Compress"):
-		return &traefikiov1alpha1.CompressApplyConfiguration{}
+		return &hanzoaiv1alpha1.CompressApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("DigestAuth"):
-		return &traefikiov1alpha1.DigestAuthApplyConfiguration{}
+		return &hanzoaiv1alpha1.DigestAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ErrorPage"):
-		return &traefikiov1alpha1.ErrorPageApplyConfiguration{}
+		return &hanzoaiv1alpha1.ErrorPageApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ForwardAuth"):
-		return &traefikiov1alpha1.ForwardAuthApplyConfiguration{}
+		return &hanzoaiv1alpha1.ForwardAuthApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ForwardingTimeouts"):
-		return &traefikiov1alpha1.ForwardingTimeoutsApplyConfiguration{}
+		return &hanzoaiv1alpha1.ForwardingTimeoutsApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("HighestRandomWeight"):
-		return &traefikiov1alpha1.HighestRandomWeightApplyConfiguration{}
+		return &hanzoaiv1alpha1.HighestRandomWeightApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRoute"):
-		return &traefikiov1alpha1.IngressRouteApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteRef"):
-		return &traefikiov1alpha1.IngressRouteRefApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteRefApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteSpec"):
-		return &traefikiov1alpha1.IngressRouteSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteTCP"):
-		return &traefikiov1alpha1.IngressRouteTCPApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteTCPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteTCPSpec"):
-		return &traefikiov1alpha1.IngressRouteTCPSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteTCPSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteUDP"):
-		return &traefikiov1alpha1.IngressRouteUDPApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteUDPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("IngressRouteUDPSpec"):
-		return &traefikiov1alpha1.IngressRouteUDPSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.IngressRouteUDPSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("LoadBalancerSpec"):
-		return &traefikiov1alpha1.LoadBalancerSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.LoadBalancerSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Middleware"):
-		return &traefikiov1alpha1.MiddlewareApplyConfiguration{}
+		return &hanzoaiv1alpha1.MiddlewareApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MiddlewareRef"):
-		return &traefikiov1alpha1.MiddlewareRefApplyConfiguration{}
+		return &hanzoaiv1alpha1.MiddlewareRefApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MiddlewareSpec"):
-		return &traefikiov1alpha1.MiddlewareSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.MiddlewareSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MiddlewareTCP"):
-		return &traefikiov1alpha1.MiddlewareTCPApplyConfiguration{}
+		return &hanzoaiv1alpha1.MiddlewareTCPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MiddlewareTCPSpec"):
-		return &traefikiov1alpha1.MiddlewareTCPSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.MiddlewareTCPSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Mirroring"):
-		return &traefikiov1alpha1.MirroringApplyConfiguration{}
+		return &hanzoaiv1alpha1.MirroringApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("MirrorService"):
-		return &traefikiov1alpha1.MirrorServiceApplyConfiguration{}
+		return &hanzoaiv1alpha1.MirrorServiceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ObjectReference"):
-		return &traefikiov1alpha1.ObjectReferenceApplyConfiguration{}
+		return &hanzoaiv1alpha1.ObjectReferenceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("PassiveServerHealthCheck"):
-		return &traefikiov1alpha1.PassiveServerHealthCheckApplyConfiguration{}
+		return &hanzoaiv1alpha1.PassiveServerHealthCheckApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RateLimit"):
-		return &traefikiov1alpha1.RateLimitApplyConfiguration{}
+		return &hanzoaiv1alpha1.RateLimitApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Redis"):
-		return &traefikiov1alpha1.RedisApplyConfiguration{}
+		return &hanzoaiv1alpha1.RedisApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ResponseForwarding"):
-		return &traefikiov1alpha1.ResponseForwardingApplyConfiguration{}
+		return &hanzoaiv1alpha1.ResponseForwardingApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Retry"):
-		return &traefikiov1alpha1.RetryApplyConfiguration{}
+		return &hanzoaiv1alpha1.RetryApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RootCA"):
-		return &traefikiov1alpha1.RootCAApplyConfiguration{}
+		return &hanzoaiv1alpha1.RootCAApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Route"):
-		return &traefikiov1alpha1.RouteApplyConfiguration{}
+		return &hanzoaiv1alpha1.RouteApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RouteTCP"):
-		return &traefikiov1alpha1.RouteTCPApplyConfiguration{}
+		return &hanzoaiv1alpha1.RouteTCPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("RouteUDP"):
-		return &traefikiov1alpha1.RouteUDPApplyConfiguration{}
+		return &hanzoaiv1alpha1.RouteUDPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServerHealthCheck"):
-		return &traefikiov1alpha1.ServerHealthCheckApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServerHealthCheckApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServersTransport"):
-		return &traefikiov1alpha1.ServersTransportApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServersTransportApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServersTransportSpec"):
-		return &traefikiov1alpha1.ServersTransportSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServersTransportSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServersTransportTCP"):
-		return &traefikiov1alpha1.ServersTransportTCPApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServersTransportTCPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServersTransportTCPSpec"):
-		return &traefikiov1alpha1.ServersTransportTCPSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServersTransportTCPSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("Service"):
-		return &traefikiov1alpha1.ServiceApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServiceApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServiceTCP"):
-		return &traefikiov1alpha1.ServiceTCPApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServiceTCPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("ServiceUDP"):
-		return &traefikiov1alpha1.ServiceUDPApplyConfiguration{}
+		return &hanzoaiv1alpha1.ServiceUDPApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLS"):
-		return &traefikiov1alpha1.TLSApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSClientConfig"):
-		return &traefikiov1alpha1.TLSClientConfigApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSClientConfigApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSOption"):
-		return &traefikiov1alpha1.TLSOptionApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSOptionApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSOptionRef"):
-		return &traefikiov1alpha1.TLSOptionRefApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSOptionRefApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSOptionSpec"):
-		return &traefikiov1alpha1.TLSOptionSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSOptionSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSStore"):
-		return &traefikiov1alpha1.TLSStoreApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSStoreApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSStoreRef"):
-		return &traefikiov1alpha1.TLSStoreRefApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSStoreRefApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSStoreSpec"):
-		return &traefikiov1alpha1.TLSStoreSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSStoreSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("TLSTCP"):
-		return &traefikiov1alpha1.TLSTCPApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("TraefikService"):
-		return &traefikiov1alpha1.TraefikServiceApplyConfiguration{}
-	case v1alpha1.SchemeGroupVersion.WithKind("TraefikServiceSpec"):
-		return &traefikiov1alpha1.TraefikServiceSpecApplyConfiguration{}
+		return &hanzoaiv1alpha1.TLSTCPApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("IngressService"):
+		return &hanzoaiv1alpha1.IngressServiceApplyConfiguration{}
+	case v1alpha1.SchemeGroupVersion.WithKind("IngressServiceSpec"):
+		return &hanzoaiv1alpha1.IngressServiceSpecApplyConfiguration{}
 	case v1alpha1.SchemeGroupVersion.WithKind("WeightedRoundRobin"):
-		return &traefikiov1alpha1.WeightedRoundRobinApplyConfiguration{}
+		return &hanzoaiv1alpha1.WeightedRoundRobinApplyConfiguration{}
 
 	}
 	return nil

@@ -38,7 +38,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/provider/acme"
 	"github.com/hanzoai/ingress/v3/pkg/provider/aggregator"
 	"github.com/hanzoai/ingress/v3/pkg/provider/tailscale"
-	"github.com/hanzoai/ingress/v3/pkg/provider/traefik"
+	"github.com/hanzoai/ingress/v3/pkg/provider/builtins"
 	"github.com/hanzoai/ingress/v3/pkg/proxy"
 	"github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
 	"github.com/hanzoai/ingress/v3/pkg/redactor"
@@ -47,17 +47,17 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
 	"github.com/hanzoai/ingress/v3/pkg/server/service"
 	"github.com/hanzoai/ingress/v3/pkg/tcp"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/version"
 )
 
 func main() {
 	// traefik config inits
-	tConfig := cmd.NewTraefikConfiguration()
+	tConfig := cmd.NewIngressConfiguration()
 
 	loaders := []cli.ResourceLoader{&tcli.DeprecationLoader{}, &tcli.FileLoader{}, &tcli.FlagLoader{}, &tcli.EnvLoader{}}
 
-	cmdTraefik := &cli.Command{
+	cmdIngress := &cli.Command{
 		Name: "hanzo-ingress",
 		Description: `Hanzo Ingress is a cloud-native reverse proxy and load balancer for Hanzo infrastructure.
 Based on Traefik. Documentation: https://doc.traefik.io/traefik/`,
@@ -68,19 +68,19 @@ Based on Traefik. Documentation: https://doc.traefik.io/traefik/`,
 		},
 	}
 
-	err := cmdTraefik.AddCommand(healthcheck.NewCmd(&tConfig.Configuration, loaders))
+	err := cmdIngress.AddCommand(healthcheck.NewCmd(&tConfig.Configuration, loaders))
 	if err != nil {
 		stdlog.Println(err)
 		os.Exit(1)
 	}
 
-	err = cmdTraefik.AddCommand(cmdVersion.NewCmd())
+	err = cmdIngress.AddCommand(cmdVersion.NewCmd())
 	if err != nil {
 		stdlog.Println(err)
 		os.Exit(1)
 	}
 
-	err = cli.Execute(cmdTraefik)
+	err = cli.Execute(cmdIngress)
 	if err != nil {
 		log.Error().Err(err).Msg("Command error")
 		logrus.Exit(1)
@@ -178,14 +178,14 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 	routinesPool := safe.NewPool(ctx)
 
 	// adds internal provider
-	err := providerAggregator.AddProvider(traefik.New(*staticConfiguration))
+	err := providerAggregator.AddProvider(builtins.New(*staticConfiguration))
 	if err != nil {
 		return nil, err
 	}
 
 	// ACME
 
-	tlsManager := traefiktls.NewManager(staticConfiguration.OCSP)
+	tlsManager := ingresstls.NewManager(staticConfiguration.OCSP)
 	routinesPool.GoCtx(tlsManager.Run)
 
 	httpChallengeProvider := acme.NewChallengeHTTP()
@@ -452,7 +452,7 @@ func switchRouter(routerFactory *server.RouterFactory, serverEntryPointsTCP serv
 }
 
 // initACMEProvider creates and registers acme.Provider instances corresponding to the configured ACME certificate resolvers.
-func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.ProviderAggregator, tlsManager *traefiktls.Manager, httpChallengeProvider, tlsChallengeProvider challenge.Provider, routinesPool *safe.Pool) []*acme.Provider {
+func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.ProviderAggregator, tlsManager *ingresstls.Manager, httpChallengeProvider, tlsChallengeProvider challenge.Provider, routinesPool *safe.Pool) []*acme.Provider {
 	localStores := map[string]*acme.LocalStore{}
 
 	var resolvers []*acme.Provider

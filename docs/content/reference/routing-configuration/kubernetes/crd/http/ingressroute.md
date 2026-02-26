@@ -14,7 +14,7 @@ This registers the `IngressRoute` kind and other CRD resources.
 You can declare an `IngressRoute` as detailed below:
 
 ```yaml tab="IngressRoute"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test-name
@@ -96,7 +96,7 @@ spec:
 | <a id="opt-routesn-observability-metrics" href="#opt-routesn-observability-metrics" title="#opt-routesn-observability-metrics">`routes[n].`<br />`observability.`<br />`metrics`</a> | Defines whether the route will produce [metrics](../../../../install-configuration/observability/metrics.md). See [here](../../../http/routing/observability.md) for more information.                                                                                                                                                                                           | false   | No       |
 | <a id="opt-routesn-observability-tracing" href="#opt-routesn-observability-tracing" title="#opt-routesn-observability-tracing">`routes[n].`<br />`observability.`<br />`tracing`</a> | Defines whether the route will produce [traces](../../../../install-configuration/observability/tracing.md). See [here](../../../http/routing/observability.md) for more information.                                                                                                                                                                                            | false   | No       |
 | <a id="opt-tls" href="#opt-tls" title="#opt-tls">`tls`</a> | TLS configuration.<br />Can be an empty value(`{}`):<br />A self signed is generated in such a case<br />(or the [default certificate](../tls/tlsstore.md) is used if it is defined.)                                                                                                                                                                                                   |         | No       |
-| <a id="opt-routesn-services" href="#opt-routesn-services" title="#opt-routesn-services">`routes[n].`<br />`services`</a> | List of any combination of [TraefikService](./traefikservice.md) and [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/). <br /> Exhaustive list of option in the [`Service`](./service.md#configuration-options) documentation.                                                                                                              |         | No       |
+| <a id="opt-routesn-services" href="#opt-routesn-services" title="#opt-routesn-services">`routes[n].`<br />`services`</a> | List of any combination of [IngressService](./ingressservice.md) and [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/). <br /> Exhaustive list of option in the [`Service`](./service.md#configuration-options) documentation.                                                                                                              |         | No       |
 | <a id="opt-tls-secretName" href="#opt-tls-secretName" title="#opt-tls-secretName">`tls.secretName`</a> | [Secret](https://kubernetes.io/docs/concepts/configuration/secret/) name used to store the certificate (in the same namesapce as the `IngressRoute`)                                                                                                                                                                                                                             | ""      | No       |
 | <a id="opt-tls-options-name" href="#opt-tls-options-name" title="#opt-tls-options-name">`tls.`<br />`options.name`</a> | Name of the [`TLSOption`](../tls/tlsoption.md) to use.<br />More information [here](#tls-options).                                                                                                                                                                                                                                                                                      | ""      | No       |
 | <a id="opt-tls-options-namespace" href="#opt-tls-options-namespace" title="#opt-tls-options-namespace">`tls.`<br />`options.namespace`</a> | Namespace of the [`TLSOption`](../tls/tlsoption.md) to use.                                                                                                                                                                                                                                                                                                                             | ""      | No       |
@@ -120,7 +120,7 @@ same namespace as the IngressRoute)
 ??? example "IngressRoute attached to a few middlewares"
 
     ```yaml 
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: my-app
@@ -152,7 +152,7 @@ same namespace as the IngressRoute)
     The field `kind` allows the following values:
 
     - `Service` (default value): to reference a [Kubernetes Service](https://kubernetes.io/docs/concepts/services-networking/service/)
-    - `TraefikService`: to reference an object [`TraefikService`](../http/traefikservice.md)
+    - `IngressService`: to reference an object [`IngressService`](../http/ingressservice.md)
 
 
 ### TLS Options
@@ -185,7 +185,7 @@ TLS options references, a conflict occurs, such as in the example below.
 ??? example
 
     ```yaml tab="IngressRoute01"
-      apiVersion: traefik.io/v1alpha1
+      apiVersion: hanzo.ai/v1alpha1
       kind: IngressRoute
       metadata:
         name: IngressRoute01
@@ -204,7 +204,7 @@ TLS options references, a conflict occurs, such as in the example below.
     ```
 
     ```yaml tab="IngressRoute02"
-      apiVersion: traefik.io/v1alpha1
+      apiVersion: hanzo.ai/v1alpha1
       kind: IngressRoute
       metadata:
         name: IngressRoute02
@@ -272,7 +272,7 @@ When a child IngressRoute references a parent IngressRoute with multiple routes,
 ??? example "Parent IngressRoute with ForwardAuth and Child IngressRoutes"
 
     ```yaml tab="Parent IngressRoute"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: api-parent
@@ -290,7 +290,7 @@ When a child IngressRoute references a parent IngressRoute with multiple routes,
             - name: auth-middleware
               namespace: default
     ---
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
       name: auth-middleware
@@ -305,7 +305,7 @@ When a child IngressRoute references a parent IngressRoute with multiple routes,
 
     ```yaml tab="Child IngressRoutes"
     # Child IngressRoute for admin users
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: api-admin
@@ -322,7 +322,7 @@ When a child IngressRoute references a parent IngressRoute with multiple routes,
               port: 80
     ---
     # Child IngressRoute for regular users
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: api-user

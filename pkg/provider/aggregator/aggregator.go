@@ -10,7 +10,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/config/static"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
 	"github.com/hanzoai/ingress/v3/pkg/provider/file"
-	"github.com/hanzoai/ingress/v3/pkg/provider/traefik"
+	"github.com/hanzoai/ingress/v3/pkg/provider/builtins"
 	"github.com/hanzoai/ingress/v3/pkg/redactor"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
 )
@@ -160,7 +160,7 @@ func (p *ProviderAggregator) AddProvider(provider provider.Provider) error {
 	switch provider.(type) {
 	case *file.Provider:
 		p.fileProvider = provider
-	case *traefik.Provider:
+	case *builtins.Provider:
 		p.internalProvider = provider
 	default:
 		p.providers = append(p.providers, provider)

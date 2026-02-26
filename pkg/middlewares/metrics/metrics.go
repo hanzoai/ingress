@@ -17,7 +17,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/retry"
 	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"google.golang.org/grpc/codes"
 )
 
@@ -146,7 +146,7 @@ func (m *metricsMiddleware) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 	if req.TLS != nil {
 		var tlsLabels []string
 		tlsLabels = append(tlsLabels, m.baseLabels...)
-		tlsLabels = append(tlsLabels, "tls_version", traefiktls.GetVersion(req.TLS), "tls_cipher", traefiktls.GetCipherName(req.TLS))
+		tlsLabels = append(tlsLabels, "tls_version", ingresstls.GetVersion(req.TLS), "tls_cipher", ingresstls.GetCipherName(req.TLS))
 
 		m.reqsTLSCounter.With(tlsLabels...).Add(1)
 	}

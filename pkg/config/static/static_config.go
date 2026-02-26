@@ -37,7 +37,7 @@ import (
 
 const (
 	// DefaultInternalEntryPointName the name of the default internal entry point.
-	DefaultInternalEntryPointName = "traefik"
+	DefaultInternalEntryPointName = "ingress"
 
 	// DefaultGraceTimeout controls how long Traefik serves pending requests
 	// prior to shutting down.
@@ -70,7 +70,7 @@ type Configuration struct {
 	Metrics *otypes.Metrics `description:"Enable a metrics exporter." json:"metrics,omitempty" toml:"metrics,omitempty" yaml:"metrics,omitempty" export:"true"`
 	Ping    *ping.Handler   `description:"Enable ping." json:"ping,omitempty" toml:"ping,omitempty" yaml:"ping,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 
-	Log       *otypes.TraefikLog `description:"Traefik log settings." json:"log,omitempty" toml:"log,omitempty" yaml:"log,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	Log       *otypes.IngressLog `description:"Traefik log settings." json:"log,omitempty" toml:"log,omitempty" yaml:"log,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	AccessLog *otypes.AccessLog  `description:"Access log settings." json:"accessLog,omitempty" toml:"accessLog,omitempty" yaml:"accessLog,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	Tracing   *Tracing           `description:"Tracing configuration." json:"tracing,omitempty" toml:"tracing,omitempty" yaml:"tracing,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 
@@ -225,7 +225,7 @@ type Tracing struct {
 
 // SetDefaults sets the default values.
 func (t *Tracing) SetDefaults() {
-	t.ServiceName = "traefik"
+	t.ServiceName = "ingress"
 	t.SampleRate = 1.0
 
 	t.OTLP = &otypes.OTelTracing{}

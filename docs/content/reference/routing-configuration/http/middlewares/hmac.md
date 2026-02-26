@@ -29,7 +29,7 @@ request body is validated and ensures that the given headers must be included in
 request.
 
 ```yaml tab="Middleware HMAC"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: hmac-auth

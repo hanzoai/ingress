@@ -27,7 +27,7 @@ import (
 const knativeNamespace = "knative-serving"
 
 var imageNames = []string{
-	traefikImage,
+	ingressImage,
 	"ko.local/grpc-ping:latest",
 	"ko.local/httpproxy:latest",
 	"ko.local/retry:latest",
@@ -66,7 +66,7 @@ func (s *KnativeConformanceSuite) SetupSuite() {
 	}
 
 	if !slices.ContainsFunc(images, func(img testcontainers.ImageInfo) bool {
-		return img.Name == traefikImage
+		return img.Name == ingressImage
 	}) {
 		s.T().Fatal("Traefik image is not present")
 	}
@@ -90,7 +90,7 @@ func (s *KnativeConformanceSuite) SetupSuite() {
 		}
 	}
 
-	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", traefikNamespace, traefikDeployment, "--for=condition=Available", "--timeout=10s"})
+	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", ingressNamespace, traefikDeployment, "--for=condition=Available", "--timeout=10s"})
 	if err != nil || exitCode > 0 {
 		s.T().Fatalf("Traefik pod is not ready: %v", err)
 	}
@@ -127,7 +127,7 @@ func (s *KnativeConformanceSuite) TearDownSuite() {
 			}
 		}
 
-		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", traefikNamespace, traefikDeployment})
+		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", ingressNamespace, traefikDeployment})
 		if err == nil || exitCode == 0 {
 			if res, err := io.ReadAll(result); err == nil {
 				s.T().Log(string(res))
@@ -166,7 +166,7 @@ func (s *KnativeConformanceSuite) TestKnativeConformance() {
 		s.T().Fatal(err)
 	}
 
-	if err = flag.CommandLine.Set("ingressClass", "traefik.ingress.networking.knative.dev"); err != nil {
+	if err = flag.CommandLine.Set("ingressClass", "ingress.networking.knative.dev"); err != nil {
 		s.T().Fatal(err)
 	}
 

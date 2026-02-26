@@ -3,7 +3,7 @@ kind: IngressClass
 metadata:
   name: traefik-keep
 spec:
-  controller: traefik.io/ingress-controller
+  controller: hanzo.ai/ingress-controller
 
 ---
 kind: Ingress
@@ -30,7 +30,7 @@ kind: IngressClass
 metadata:
   name: traefik-drop
 spec:
-  controller: traefik.io/ingress-controller
+  controller: hanzo.ai/ingress-controller
 
 ---
 kind: Ingress

@@ -22,7 +22,7 @@ import (
 	tcpmiddleware "github.com/hanzoai/ingress/v3/pkg/server/middleware/tcp"
 	"github.com/hanzoai/ingress/v3/pkg/server/service/tcp"
 	tcp2 "github.com/hanzoai/ingress/v3/pkg/tcp"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/tls/generate"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
@@ -174,13 +174,13 @@ func Test_Routing(t *testing.T) {
 	require.NoError(t, err)
 
 	// Creates the tlsManager and defines the TLS 1.0 and 1.2 TLSOptions.
-	tlsManager := traefiktls.NewManager(nil)
+	tlsManager := ingresstls.NewManager(nil)
 	tlsManager.UpdateConfigs(
 		t.Context(),
-		map[string]traefiktls.Store{
+		map[string]ingresstls.Store{
 			tlsalpn01.ACMETLS1Protocol: {},
 		},
-		map[string]traefiktls.Options{
+		map[string]ingresstls.Options{
 			"default": {
 				MinVersion: "VersionTLS10",
 				MaxVersion: "VersionTLS10",
@@ -194,8 +194,8 @@ func Test_Routing(t *testing.T) {
 				MaxVersion: "VersionTLS12",
 			},
 		},
-		[]*traefiktls.CertAndStores{{
-			Certificate: traefiktls.Certificate{CertFile: types.FileOrContent(certPEM), KeyFile: types.FileOrContent(keyPEM)},
+		[]*ingresstls.CertAndStores{{
+			Certificate: ingresstls.Certificate{CertFile: types.FileOrContent(certPEM), KeyFile: types.FileOrContent(keyPEM)},
 			Stores:      []string{tlsalpn01.ACMETLS1Protocol},
 		}})
 

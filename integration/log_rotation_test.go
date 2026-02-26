@@ -18,7 +18,7 @@ import (
 	"github.com/hanzoai/ingress/v3/integration/try"
 )
 
-const traefikTestAccessLogFileRotated = traefikTestAccessLogFile + ".rotated"
+const ingressTestAccessLogFileRotated = ingressTestAccessLogFile + ".rotated"
 
 // Log rotation integration test suite.
 type LogRotationSuite struct{ BaseSuite }
@@ -30,9 +30,9 @@ func TestLogRotationSuite(t *testing.T) {
 func (s *LogRotationSuite) SetupSuite() {
 	s.BaseSuite.SetupSuite()
 
-	os.Remove(traefikTestAccessLogFile)
-	os.Remove(traefikTestLogFile)
-	os.Remove(traefikTestAccessLogFileRotated)
+	os.Remove(ingressTestAccessLogFile)
+	os.Remove(ingressTestLogFile)
+	os.Remove(ingressTestAccessLogFileRotated)
 
 	s.createComposeProject("access_log")
 	s.composeUp()
@@ -42,9 +42,9 @@ func (s *LogRotationSuite) TearDownSuite() {
 	s.BaseSuite.TearDownSuite()
 
 	generatedFiles := []string{
-		traefikTestLogFile,
-		traefikTestAccessLogFile,
-		traefikTestAccessLogFileRotated,
+		ingressTestLogFile,
+		ingressTestAccessLogFile,
+		ingressTestAccessLogFileRotated,
 	}
 
 	for _, filename := range generatedFiles {
@@ -56,11 +56,11 @@ func (s *LogRotationSuite) TearDownSuite() {
 
 func (s *LogRotationSuite) TestAccessLogRotation() {
 	// Start Traefik
-	cmd, _ := s.cmdTraefik(withConfigFile("fixtures/access_log/access_log_base.toml"))
-	defer s.displayTraefikLogFile(traefikTestLogFile)
+	cmd, _ := s.cmdIngress(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	defer s.displayIngressLogFile(ingressTestLogFile)
 
 	// Verify Traefik started ok
-	s.verifyEmptyErrorLog("traefik.log")
+	s.verifyEmptyErrorLog("ingress.log")
 
 	s.waitForTraefik("server1")
 
@@ -73,7 +73,7 @@ func (s *LogRotationSuite) TestAccessLogRotation() {
 	require.NoError(s.T(), err)
 
 	// Rename access log
-	err = os.Rename(traefikTestAccessLogFile, traefikTestAccessLogFileRotated)
+	err = os.Rename(ingressTestAccessLogFile, ingressTestAccessLogFileRotated)
 	require.NoError(s.T(), err)
 
 	// in the midst of the requests, issue SIGUSR1 signal to server process
@@ -87,23 +87,23 @@ func (s *LogRotationSuite) TestAccessLogRotation() {
 	require.NoError(s.T(), err)
 
 	// Verify access.log.rotated output as expected
-	s.logAccessLogFile(traefikTestAccessLogFileRotated)
-	lineCount := s.verifyLogLines(traefikTestAccessLogFileRotated, 0, true)
+	s.logAccessLogFile(ingressTestAccessLogFileRotated)
+	lineCount := s.verifyLogLines(ingressTestAccessLogFileRotated, 0, true)
 	assert.GreaterOrEqual(s.T(), lineCount, 1)
 
 	// make sure that the access log file is at least created before we do assertions on it
 	err = try.Do(1*time.Second, func() error {
-		_, err := os.Stat(traefikTestAccessLogFile)
+		_, err := os.Stat(ingressTestAccessLogFile)
 		return err
 	})
 	assert.NoError(s.T(), err, "access log file was not created in time")
 
 	// Verify access.log output as expected
-	s.logAccessLogFile(traefikTestAccessLogFile)
-	lineCount = s.verifyLogLines(traefikTestAccessLogFile, lineCount, true)
+	s.logAccessLogFile(ingressTestAccessLogFile)
+	lineCount = s.verifyLogLines(ingressTestAccessLogFile, lineCount, true)
 	assert.Equal(s.T(), 3, lineCount)
 
-	s.verifyEmptyErrorLog(traefikTestLogFile)
+	s.verifyEmptyErrorLog(ingressTestLogFile)
 }
 
 func (s *LogRotationSuite) logAccessLogFile(fileName string) {
@@ -114,11 +114,11 @@ func (s *LogRotationSuite) logAccessLogFile(fileName string) {
 
 func (s *LogRotationSuite) verifyEmptyErrorLog(name string) {
 	err := try.Do(5*time.Second, func() error {
-		traefikLog, e2 := os.ReadFile(name)
+		ingressLog, e2 := os.ReadFile(name)
 		if e2 != nil {
 			return e2
 		}
-		assert.Empty(s.T(), string(traefikLog))
+		assert.Empty(s.T(), string(ingressLog))
 
 		return nil
 	})

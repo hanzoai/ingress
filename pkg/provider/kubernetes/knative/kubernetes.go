@@ -33,7 +33,7 @@ import (
 
 const (
 	providerName            = "knative"
-	traefikIngressClassName = "traefik.ingress.networking.knative.dev"
+	ingressClassName = "ingress.networking.knative.dev"
 )
 
 // ServiceRef holds a Kubernetes service reference.
@@ -202,7 +202,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) (*dynamic.Configuratio
 			Str("namespace", ingress.Namespace).
 			Logger()
 
-		if ingress.Annotations[knativenetworking.IngressClassAnnotationKey] != traefikIngressClassName {
+		if ingress.Annotations[knativenetworking.IngressClassAnnotationKey] != ingressClassName {
 			logger.Debug().Msgf("Skipping Ingress %s/%s", ingress.Namespace, ingress.Name)
 			continue
 		}

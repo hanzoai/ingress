@@ -16,7 +16,7 @@ import (
 
 func TestDigestAuthError(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.DigestAuth{
@@ -28,7 +28,7 @@ func TestDigestAuthError(t *testing.T) {
 
 func TestDigestAuthFail(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.DigestAuth{
@@ -105,7 +105,7 @@ func TestDigestAuthUsersFromFile(t *testing.T) {
 			}
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprintln(w, "traefik")
+				fmt.Fprintln(w, "ingress")
 			})
 
 			authenticator, err := NewDigest(t.Context(), next, authenticatorConfiguration, "authName")
@@ -147,7 +147,7 @@ func TestDigestAuthUsersFromFile(t *testing.T) {
 			err = res.Body.Close()
 			require.NoError(t, err)
 
-			require.NotContains(t, "traefik", string(body))
+			require.NotContains(t, "ingress", string(body))
 		})
 	}
 }

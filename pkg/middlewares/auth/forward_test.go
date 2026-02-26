@@ -31,7 +31,7 @@ import (
 
 func TestForwardAuthFail(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +84,7 @@ func TestForwardAuthSuccess(t *testing.T) {
 		w.Header().Add("Set-Cookie", "authCookie=Backend")
 		w.Header().Add("Set-Cookie", "backendCookie=Backend")
 		w.Header().Add("Other-Header", "BackendHeaderValue")
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.ForwardAuth{
@@ -271,7 +271,7 @@ func TestForwardAuthRedirect(t *testing.T) {
 	t.Cleanup(authTs.Close)
 
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.ForwardAuth{Address: authTs.URL}
@@ -322,7 +322,7 @@ func TestForwardAuthRemoveHopByHopHeaders(t *testing.T) {
 	t.Cleanup(authTs.Close)
 
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.ForwardAuth{Address: authTs.URL}
@@ -367,7 +367,7 @@ func TestForwardAuthFailResponseHeaders(t *testing.T) {
 	t.Cleanup(authTs.Close)
 
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.ForwardAuth{
@@ -988,7 +988,7 @@ func Test_ForwardAuthMaxResponseBodySize(t *testing.T) {
 			t.Cleanup(server.Close)
 
 			next := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprintln(w, "traefik")
+				fmt.Fprintln(w, "ingress")
 			}))
 
 			maxResponseBodySize := test.maxResponseBodySize

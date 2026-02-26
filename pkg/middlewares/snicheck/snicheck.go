@@ -7,7 +7,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/requestdecorator"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 )
 
 // SNICheck is an HTTP handler that checks whether the TLS configuration for the server name is the same as for the host header.
@@ -79,7 +79,7 @@ func findTLSOptionName(tlsOptionsForHost map[string]string, host string, fqdn bo
 		return name
 	}
 
-	return traefiktls.DefaultTLSConfigName
+	return ingresstls.DefaultTLSConfigName
 }
 
 func findTLSOptName(tlsOptionsForHost map[string]string, host string, fqdn bool) string {

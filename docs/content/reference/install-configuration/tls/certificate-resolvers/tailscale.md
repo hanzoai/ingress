@@ -65,7 +65,7 @@ a Tailscale certificate resolver needs to be configured as below.
     ```
 
     ```yaml tab="Kubernetes"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: blogtls
@@ -119,7 +119,7 @@ a Tailscale certificate resolver needs to be configured as below.
     ```
 
     ```yaml tab="Kubernetes"
-    apiVersion: traefik.io/v1alpha1
+    apiVersion: hanzo.ai/v1alpha1
     kind: IngressRoute
     metadata:
       name: blogtls

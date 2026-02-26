@@ -17,7 +17,7 @@ while they are valid. This reduces latency and the number of calls made to the a
 ## Configuration Example
 
 ```yaml tab="Middleware OAuth Client Credentials"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-client-creds
@@ -176,7 +176,7 @@ urn:k8s:secret:[name]:[valueKey]
 ```
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-client-creds

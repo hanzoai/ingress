@@ -36,7 +36,7 @@ labels:
 
 ```yaml tab="Kubernetes"
 # Latency Check
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: latency-check
