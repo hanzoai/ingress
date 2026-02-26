@@ -25,31 +25,31 @@ var (
 )
 
 const (
-	influxDBConfigReloadsName           = "traefik.config.reload.total"
-	influxDBLastConfigReloadSuccessName = "traefik.config.reload.lastSuccessTimestamp"
-	influxDBOpenConnsName               = "traefik.open.connections"
+	influxDBConfigReloadsName           = "ingress.config.reload.total"
+	influxDBLastConfigReloadSuccessName = "ingress.config.reload.lastSuccessTimestamp"
+	influxDBOpenConnsName               = "ingress.open.connections"
 
-	influxDBTLSCertsNotAfterTimestampName = "traefik.tls.certs.notAfterTimestamp"
+	influxDBTLSCertsNotAfterTimestampName = "ingress.tls.certs.notAfterTimestamp"
 
-	influxDBEntryPointReqsName        = "traefik.entrypoint.requests.total"
-	influxDBEntryPointReqsTLSName     = "traefik.entrypoint.requests.tls.total"
-	influxDBEntryPointReqDurationName = "traefik.entrypoint.request.duration"
-	influxDBEntryPointReqsBytesName   = "traefik.entrypoint.requests.bytes.total"
-	influxDBEntryPointRespsBytesName  = "traefik.entrypoint.responses.bytes.total"
+	influxDBEntryPointReqsName        = "ingress.entrypoint.requests.total"
+	influxDBEntryPointReqsTLSName     = "ingress.entrypoint.requests.tls.total"
+	influxDBEntryPointReqDurationName = "ingress.entrypoint.request.duration"
+	influxDBEntryPointReqsBytesName   = "ingress.entrypoint.requests.bytes.total"
+	influxDBEntryPointRespsBytesName  = "ingress.entrypoint.responses.bytes.total"
 
-	influxDBRouterReqsName         = "traefik.router.requests.total"
-	influxDBRouterReqsTLSName      = "traefik.router.requests.tls.total"
-	influxDBRouterReqsDurationName = "traefik.router.request.duration"
-	influxDBRouterReqsBytesName    = "traefik.router.requests.bytes.total"
-	influxDBRouterRespsBytesName   = "traefik.router.responses.bytes.total"
+	influxDBRouterReqsName         = "ingress.router.requests.total"
+	influxDBRouterReqsTLSName      = "ingress.router.requests.tls.total"
+	influxDBRouterReqsDurationName = "ingress.router.request.duration"
+	influxDBRouterReqsBytesName    = "ingress.router.requests.bytes.total"
+	influxDBRouterRespsBytesName   = "ingress.router.responses.bytes.total"
 
-	influxDBServiceReqsName         = "traefik.service.requests.total"
-	influxDBServiceReqsTLSName      = "traefik.service.requests.tls.total"
-	influxDBServiceReqsDurationName = "traefik.service.request.duration"
-	influxDBServiceRetriesTotalName = "traefik.service.retries.total"
-	influxDBServiceServerUpName     = "traefik.service.server.up"
-	influxDBServiceReqsBytesName    = "traefik.service.requests.bytes.total"
-	influxDBServiceRespsBytesName   = "traefik.service.responses.bytes.total"
+	influxDBServiceReqsName         = "ingress.service.requests.total"
+	influxDBServiceReqsTLSName      = "ingress.service.requests.tls.total"
+	influxDBServiceReqsDurationName = "ingress.service.request.duration"
+	influxDBServiceRetriesTotalName = "ingress.service.retries.total"
+	influxDBServiceServerUpName     = "ingress.service.server.up"
+	influxDBServiceReqsBytesName    = "ingress.service.requests.bytes.total"
+	influxDBServiceRespsBytesName   = "ingress.service.responses.bytes.total"
 )
 
 // RegisterInfluxDB2 creates metrics exporter for InfluxDB2.

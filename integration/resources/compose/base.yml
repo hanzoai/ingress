@@ -2,11 +2,11 @@ services:
   whoami1:
     image: traefik/whoami
     labels:
-      traefik.enable: true
-      traefik.http.routers.router1.rule: PathPrefix(`/whoami`)
-      traefik.http.routers.router2.rule: PathPrefix(`/whoami2`)
+      ingress.enable: true
+      ingress.http.routers.router1.rule: PathPrefix(`/whoami`)
+      ingress.http.routers.router2.rule: PathPrefix(`/whoami2`)
 
   whoami2:
     image: traefik/whoami
     labels:
-      traefik.enable: false
+      ingress.enable: false

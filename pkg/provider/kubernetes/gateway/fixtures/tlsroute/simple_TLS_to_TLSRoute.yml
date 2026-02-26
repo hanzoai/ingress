@@ -16,7 +16,7 @@ metadata:
   name: my-gateway-class
   namespace: default
 spec:
-  controllerName: traefik.io/gateway-controller
+  controllerName: hanzo.ai/gateway-controller
 
 ---
 kind: Gateway

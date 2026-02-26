@@ -128,7 +128,7 @@ labels:
 # Here, an average of 100 requests per second is allowed.
 # In addition, a burst of 200 requests is allowed.
 # Redis distributed rate limiting is configured with all available options.
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-ratelimit

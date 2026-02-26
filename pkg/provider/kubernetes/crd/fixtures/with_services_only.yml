@@ -34,8 +34,8 @@ spec:
     task: whoami5
 
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: wrr1
   namespace: default

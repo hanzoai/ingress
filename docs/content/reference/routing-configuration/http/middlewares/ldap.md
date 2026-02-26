@@ -15,7 +15,7 @@ The LDAP middleware will look for user credentials in the `Authorization` header
 ## Configuration Examples
 
 ```yaml tab="Basic usage"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-ldap-auth
@@ -28,7 +28,7 @@ spec:
 ```
 
 ```yaml tab="Basic usage with bind need"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-ldap-auth
@@ -43,7 +43,7 @@ spec:
 ```
 
 ```yaml tab="Enabling search, bind & WWW-Authenticate header"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-ldap-auth

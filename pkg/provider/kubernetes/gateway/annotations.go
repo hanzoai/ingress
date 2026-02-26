@@ -7,7 +7,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/config/label"
 )
 
-const annotationsPrefix = "traefik.io/"
+const annotationsPrefix = "hanzo.ai/"
 
 // ServiceConfig is the service's root configuration from annotations.
 type ServiceConfig struct {
@@ -27,7 +27,7 @@ func parseServiceAnnotations(annotations map[string]string) (ServiceConfig, erro
 		return svcConf, nil
 	}
 
-	if err := label.Decode(labels, &svcConf, "traefik.service."); err != nil {
+	if err := label.Decode(labels, &svcConf, "ingress.service."); err != nil {
 		return svcConf, fmt.Errorf("decoding labels: %w", err)
 	}
 
@@ -46,7 +46,8 @@ func convertAnnotations(annotations map[string]string) map[string]string {
 			continue
 		}
 
-		newKey := strings.ReplaceAll(key, "io/", "")
+		// Convert hanzo.ai/service.foo annotation to ingress.service.foo label format.
+		newKey := "ingress." + strings.TrimPrefix(key, annotationsPrefix)
 		result[newKey] = value
 	}
 

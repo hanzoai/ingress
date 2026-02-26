@@ -4,25 +4,25 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: traefikservices.traefik.io
+  name: ingressservices.hanzo.ai
 spec:
-  group: traefik.io
+  group: hanzo.ai
   names:
-    kind: TraefikService
-    listKind: TraefikServiceList
-    plural: traefikservices
-    singular: traefikservice
+    kind: IngressService
+    listKind: IngressServiceList
+    plural: ingressservices
+    singular: ingressservice
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-
-          TraefikService is the CRD implementation of a Traefik Service.
-          TraefikService object allows to:
+          IngressService is the CRD implementation of a Traefik Service.
+          IngressService object allows to:
           - Apply weight to Services on load-balancing
           - Mirror traffic on services
-          More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/traefikservice/
+          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/
         properties:
           apiVersion:
             description: |-
@@ -42,7 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: TraefikServiceSpec defines the desired state of a TraefikService.
+            description: IngressServiceSpec defines the desired state of a IngressService.
             properties:
               highestRandomWeight:
                 description: HighestRandomWeight defines the highest random weight
@@ -50,7 +50,7 @@ spec:
                 properties:
                   services:
                     description: Services defines the list of Kubernetes Service and/or
-                      TraefikService to load-balance, with weight.
+                      IngressService to load-balance, with weight.
                     items:
                       description: Service defines an upstream HTTP service to proxy
                         traffic to.
@@ -129,7 +129,7 @@ spec:
                           description: Kind defines the kind of the Service.
                           enum:
                           - Service
-                          - TraefikService
+                          - IngressService
                           type: string
                         middlewares:
                           description: Middlewares defines the list of references
@@ -152,12 +152,12 @@ spec:
                           type: array
                         name:
                           description: |-
-                            Name defines the name of the referenced Kubernetes Service or TraefikService.
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
                             The differentiation between the two is specified in the Kind field.
                           type: string
                         namespace:
                           description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or TraefikService.
+                            Kubernetes Service or IngressService.
                           type: string
                         nativeLB:
                           description: |-
@@ -233,7 +233,7 @@ spec:
                         sticky:
                           description: |-
                             Sticky defines the sticky sessions configuration.
-                            More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                           properties:
                             cookie:
                               description: Cookie defines the sticky cookie configuration.
@@ -292,7 +292,7 @@ spec:
                           type: string
                         weight:
                           description: |-
-                            Weight defines the weight and should only be specified when Name references a TraefikService object
+                            Weight defines the weight and should only be specified when Name references a IngressService object
                             (and to be precise, one that embeds a Weighted Round Robin).
                           minimum: 0
                           type: integer
@@ -378,7 +378,7 @@ spec:
                     description: Kind defines the kind of the Service.
                     enum:
                     - Service
-                    - TraefikService
+                    - IngressService
                     type: string
                   maxBodySize:
                     description: |-
@@ -490,7 +490,7 @@ spec:
                           description: Kind defines the kind of the Service.
                           enum:
                           - Service
-                          - TraefikService
+                          - IngressService
                           type: string
                         middlewares:
                           description: Middlewares defines the list of references
@@ -513,12 +513,12 @@ spec:
                           type: array
                         name:
                           description: |-
-                            Name defines the name of the referenced Kubernetes Service or TraefikService.
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
                             The differentiation between the two is specified in the Kind field.
                           type: string
                         namespace:
                           description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or TraefikService.
+                            Kubernetes Service or IngressService.
                           type: string
                         nativeLB:
                           description: |-
@@ -599,7 +599,7 @@ spec:
                         sticky:
                           description: |-
                             Sticky defines the sticky sessions configuration.
-                            More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                           properties:
                             cookie:
                               description: Cookie defines the sticky cookie configuration.
@@ -658,7 +658,7 @@ spec:
                           type: string
                         weight:
                           description: |-
-                            Weight defines the weight and should only be specified when Name references a TraefikService object
+                            Weight defines the weight and should only be specified when Name references a IngressService object
                             (and to be precise, one that embeds a Weighted Round Robin).
                           minimum: 0
                           type: integer
@@ -668,12 +668,12 @@ spec:
                     type: array
                   name:
                     description: |-
-                      Name defines the name of the referenced Kubernetes Service or TraefikService.
+                      Name defines the name of the referenced Kubernetes Service or IngressService.
                       The differentiation between the two is specified in the Kind field.
                     type: string
                   namespace:
                     description: Namespace defines the namespace of the referenced
-                      Kubernetes Service or TraefikService.
+                      Kubernetes Service or IngressService.
                     type: string
                   nativeLB:
                     description: |-
@@ -748,7 +748,7 @@ spec:
                   sticky:
                     description: |-
                       Sticky defines the sticky sessions configuration.
-                      More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                     properties:
                       cookie:
                         description: Cookie defines the sticky cookie configuration.
@@ -806,7 +806,7 @@ spec:
                     type: string
                   weight:
                     description: |-
-                      Weight defines the weight and should only be specified when Name references a TraefikService object
+                      Weight defines the weight and should only be specified when Name references a IngressService object
                       (and to be precise, one that embeds a Weighted Round Robin).
                     minimum: 0
                     type: integer
@@ -818,7 +818,7 @@ spec:
                 properties:
                   services:
                     description: Services defines the list of Kubernetes Service and/or
-                      TraefikService to load-balance, with weight.
+                      IngressService to load-balance, with weight.
                     items:
                       description: Service defines an upstream HTTP service to proxy
                         traffic to.
@@ -897,7 +897,7 @@ spec:
                           description: Kind defines the kind of the Service.
                           enum:
                           - Service
-                          - TraefikService
+                          - IngressService
                           type: string
                         middlewares:
                           description: Middlewares defines the list of references
@@ -920,12 +920,12 @@ spec:
                           type: array
                         name:
                           description: |-
-                            Name defines the name of the referenced Kubernetes Service or TraefikService.
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
                             The differentiation between the two is specified in the Kind field.
                           type: string
                         namespace:
                           description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or TraefikService.
+                            Kubernetes Service or IngressService.
                           type: string
                         nativeLB:
                           description: |-
@@ -1001,7 +1001,7 @@ spec:
                         sticky:
                           description: |-
                             Sticky defines the sticky sessions configuration.
-                            More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                           properties:
                             cookie:
                               description: Cookie defines the sticky cookie configuration.
@@ -1060,7 +1060,7 @@ spec:
                           type: string
                         weight:
                           description: |-
-                            Weight defines the weight and should only be specified when Name references a TraefikService object
+                            Weight defines the weight and should only be specified when Name references a IngressService object
                             (and to be precise, one that embeds a Weighted Round Robin).
                           minimum: 0
                           type: integer
@@ -1071,7 +1071,7 @@ spec:
                   sticky:
                     description: |-
                       Sticky defines whether sticky sessions are enabled.
-                      More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/traefikservice/#stickiness-and-load-balancing
+                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/#stickiness-and-load-balancing
                     properties:
                       cookie:
                         description: Cookie defines the sticky cookie configuration.

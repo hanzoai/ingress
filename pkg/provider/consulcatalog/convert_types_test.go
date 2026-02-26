@@ -27,9 +27,9 @@ func Test_tagsToNeutralLabels(t *testing.T) {
 				"test.ddd=04=to",
 			},
 			expected: map[string]string{
-				"traefik.aaa": "01",
-				"traefik.bbb": "02",
-				"traefik.ddd": "04=to",
+				"ingress.aaa": "01",
+				"ingress.bbb": "02",
+				"ingress.ddd": "04=to",
 			},
 		},
 
@@ -43,10 +43,10 @@ func Test_tagsToNeutralLabels(t *testing.T) {
 				"test.ddd=04=to",
 			},
 			expected: map[string]string{
-				"traefik.test.aaa": "01",
-				"traefik.test.bbb": "02",
-				"traefik.ccc":      "03",
-				"traefik.test.ddd": "04=to",
+				"ingress.test.aaa": "01",
+				"ingress.test.bbb": "02",
+				"ingress.ccc":      "03",
+				"ingress.test.ddd": "04=to",
 			},
 		},
 	}

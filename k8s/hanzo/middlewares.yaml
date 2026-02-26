@@ -1,6 +1,6 @@
 ---
 # Default CORS headers middleware
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: cors-allow-all
@@ -23,7 +23,7 @@ spec:
     accessControlMaxAge: 86400
 ---
 # Large body uploads (50MB)
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: body-size-50m
@@ -33,7 +33,7 @@ spec:
     maxRequestBodyBytes: 52428800
 ---
 # ORM docs redirect
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: orm-redirect

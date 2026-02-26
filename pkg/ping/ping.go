@@ -16,7 +16,7 @@ type Handler struct {
 
 // SetDefaults sets the default values.
 func (h *Handler) SetDefaults() {
-	h.EntryPoint = "traefik"
+	h.EntryPoint = "ingress"
 	h.TerminatingStatusCode = http.StatusServiceUnavailable
 }
 

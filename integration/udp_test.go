@@ -71,7 +71,7 @@ func (s *UDPSuite) TestWRR() {
 		WhoamiDIP: s.getComposeServiceIP("whoami-d"),
 	})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("whoami-a"))
 	require.NoError(s.T(), err)

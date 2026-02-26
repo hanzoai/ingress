@@ -23,7 +23,7 @@ To learn how to write rules, please visit [Coraza documentation](https://coraza.
 ## Configuration Examples
 
 ```yaml tab="Deny the /admin path"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: waf
@@ -36,7 +36,7 @@ spec:
 ```
 
 ```yaml tab="Allow only GET methods"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: wafcrs

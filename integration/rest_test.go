@@ -40,7 +40,7 @@ func (s *RestSuite) TearDownSuite() {
 }
 
 func (s *RestSuite) TestSimpleConfigurationInsecure() {
-	s.traefikCmd(withConfigFile("fixtures/rest/simple.toml"))
+	s.ingressCmd(withConfigFile("fixtures/rest/simple.toml"))
 
 	// wait for Traefik
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("rest@internal"))
@@ -132,7 +132,7 @@ func (s *RestSuite) TestSimpleConfigurationInsecure() {
 func (s *RestSuite) TestSimpleConfiguration() {
 	file := s.adaptFile("fixtures/rest/simple_secure.toml", struct{}{})
 
-	s.traefikCmd(withConfigFile(file))
+	s.ingressCmd(withConfigFile(file))
 
 	// Expected a 404 as we did not configure anything.
 	err := try.GetRequest("http://127.0.0.1:8000/", 1000*time.Millisecond, try.StatusCodeIs(http.StatusNotFound))

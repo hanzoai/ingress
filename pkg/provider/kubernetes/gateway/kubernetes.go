@@ -20,7 +20,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/job"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
 	"github.com/hanzoai/ingress/v3/pkg/tls"
@@ -37,13 +37,13 @@ import (
 const (
 	providerName = "kubernetesgateway"
 
-	controllerName = "traefik.io/gateway-controller"
+	controllerName = "hanzo.ai/gateway-controller"
 
 	groupCore    = "core"
 	groupGateway = "gateway.networking.k8s.io"
 
 	kindGateway        = "Gateway"
-	kindTraefikService = "TraefikService"
+	kindIngressService = "IngressService"
 	kindHTTPRoute      = "HTTPRoute"
 	kindGRPCRoute      = "GRPCRoute"
 	kindTCPRoute       = "TCPRoute"
@@ -1257,16 +1257,16 @@ func throttleEvents(ctx context.Context, throttleDuration time.Duration, pool *s
 	return eventsChanBuffered
 }
 
-func isTraefikService(ref gatev1.BackendRef) bool {
+func isIngressService(ref gatev1.BackendRef) bool {
 	if ref.Kind == nil || ref.Group == nil {
 		return false
 	}
 
-	return *ref.Group == traefikv1alpha1.GroupName && *ref.Kind == kindTraefikService
+	return *ref.Group == hanzoaiv1alpha1.GroupName && *ref.Kind == kindIngressService
 }
 
 func isInternalService(ref gatev1.BackendRef) bool {
-	return isTraefikService(ref) && strings.HasSuffix(string(ref.Name), "@internal")
+	return isIngressService(ref) && strings.HasSuffix(string(ref.Name), "@internal")
 }
 
 // makeListenerKey joins protocol, hostname, and port of a listener into a string key.

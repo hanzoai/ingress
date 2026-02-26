@@ -1,6 +1,6 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: sticky-default
   namespace: default
@@ -18,8 +18,8 @@ spec:
         port: 8443
 
 ---
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: sticky
   namespace: default
@@ -38,7 +38,7 @@ spec:
         port: 8443
 
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test2.route
@@ -53,9 +53,9 @@ spec:
       kind: Rule
       services:
         - name: sticky
-          kind: TraefikService
+          kind: IngressService
         - name: sticky-default
-          kind: TraefikService
+          kind: IngressService
 
     - match: Host(`k8s-service`)
       kind: Rule

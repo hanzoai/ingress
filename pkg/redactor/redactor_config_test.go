@@ -30,7 +30,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/provider/kv/redis"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kv/zk"
 	"github.com/hanzoai/ingress/v3/pkg/provider/rest"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )
 
@@ -136,7 +136,7 @@ func init() {
 				ServerName:         "foo",
 				InsecureSkipVerify: true,
 				RootCAs:            []types.FileOrContent{"rootca.pem"},
-				Certificates: []traefiktls.Certificate{
+				Certificates: []ingresstls.Certificate{
 					{
 						CertFile: "cert.pem",
 						KeyFile:  "key.pem",
@@ -398,7 +398,7 @@ func init() {
 					ServerName:         "foo",
 					InsecureSkipVerify: true,
 					RootCAs:            []types.FileOrContent{"rootca.pem"},
-					Certificates: []traefiktls.Certificate{
+					Certificates: []ingresstls.Certificate{
 						{
 							CertFile: "cert.pem",
 							KeyFile:  "key.pem",
@@ -441,31 +441,31 @@ func init() {
 		},
 	}
 	config.TLS = &dynamic.TLSConfiguration{
-		Options: map[string]traefiktls.Options{
+		Options: map[string]ingresstls.Options{
 			"foo": {
 				MinVersion:       "foo",
 				MaxVersion:       "foo",
 				CipherSuites:     []string{"foo"},
 				CurvePreferences: []string{"foo"},
-				ClientAuth: traefiktls.ClientAuth{
+				ClientAuth: ingresstls.ClientAuth{
 					CAFiles:        []types.FileOrContent{"ca.pem"},
 					ClientAuthType: "RequireAndVerifyClientCert",
 				},
 				SniStrict: true,
 			},
 		},
-		Certificates: []*traefiktls.CertAndStores{
+		Certificates: []*ingresstls.CertAndStores{
 			{
-				Certificate: traefiktls.Certificate{
+				Certificate: ingresstls.Certificate{
 					CertFile: "cert.pem",
 					KeyFile:  "key.pem",
 				},
 				Stores: []string{"foo"},
 			},
 		},
-		Stores: map[string]traefiktls.Store{
+		Stores: map[string]ingresstls.Store{
 			"foo": {
-				DefaultCertificate: &traefiktls.Certificate{
+				DefaultCertificate: &ingresstls.Certificate{
 					CertFile: "cert.pem",
 					KeyFile:  "key.pem",
 				},
@@ -829,7 +829,7 @@ func TestDo_staticConfiguration(t *testing.T) {
 		TerminatingStatusCode: 42,
 	}
 
-	config.Log = &otypes.TraefikLog{
+	config.Log = &otypes.IngressLog{
 		Level:      "Level",
 		Format:     "json",
 		FilePath:   "/foo/path",

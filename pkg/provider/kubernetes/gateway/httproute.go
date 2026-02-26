@@ -311,7 +311,7 @@ func (p *Provider) loadService(ctx context.Context, listener gatewayListener, co
 func (p *Provider) loadHTTPBackendRef(namespace string, backendRef gatev1.HTTPBackendRef) (string, *dynamic.Service, error) {
 	// Support for cross-provider references (e.g: api@internal).
 	// This provides the same behavior as for IngressRoutes.
-	if *backendRef.Kind == "TraefikService" && strings.Contains(string(backendRef.Name), "@") {
+	if *backendRef.Kind == "IngressService" && strings.Contains(string(backendRef.Name), "@") {
 		return string(backendRef.Name), nil, nil
 	}
 

@@ -2,9 +2,9 @@ services:
   whoami1:
     image: traefik/whoami
     labels:
-      traefik.http.routers.router-mini.Rule: PathPrefix(`/whoami`)
-      traefik.http.routers.router-mini.service: service-mini
-      traefik.http.services.service-mini.loadbalancer.server.port: 80
-      traefik.enable: true
+      ingress.http.routers.router-mini.Rule: PathPrefix(`/whoami`)
+      ingress.http.routers.router-mini.service: service-mini
+      ingress.http.services.service-mini.loadbalancer.server.port: 80
+      ingress.enable: true
     deploy:
       replicas: 2

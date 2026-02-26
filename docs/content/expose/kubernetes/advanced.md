@@ -24,7 +24,7 @@ Middlewares allow you to modify requests or responses as they pass through Hanzo
 ### Create Middlewares
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: secure-headers
@@ -39,7 +39,7 @@ spec:
     stsPreload: true
     stsSeconds: 31536000
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: ip-allowlist
@@ -128,7 +128,7 @@ This approach uses the Gateway API's native filter mechanism rather than annotat
 Update your existing IngressRoute to include middlewares:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -213,7 +213,7 @@ helm upgrade traefik traefik/traefik -n traefik --reuse-values -f values.yaml
 Update your IngressRoute with the Let's Encrypt certificate:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -364,11 +364,11 @@ kubectl scale deployment whoami --replicas=3
 
 ### Using Gateway API with Hanzo IngressService
 
-First, create the `TraefikService` for sticky sessions:
+First, create the `IngressService` for sticky sessions:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: whoami-sticky
   namespace: default
@@ -391,7 +391,7 @@ Save this as `whoami-sticky-service.yaml` and apply it:
 kubectl apply -f whoami-sticky-service.yaml
 ```
 
-Now update your `HTTPRoute` with an annotation referencing the `TraefikService`:
+Now update your `HTTPRoute` with an annotation referencing the `IngressService`:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -429,8 +429,8 @@ spec:
         type: PathPrefix
         value: /
     backendRefs:
-    - group: traefik.io          # <── tell Gateway this is a TraefikService
-      kind: TraefikService
+    - group: traefik.io          # <── tell Gateway this is a IngressService
+      kind: IngressService
       name: whoami-sticky
     filters:
     - type: ExtensionRef
@@ -456,11 +456,11 @@ kubectl apply -f whoami-route.yaml
 
 ### Using IngressRoute with Hanzo IngressService
 
-First, create the `TraefikService` for sticky sessions:
+First, create the `IngressService` for sticky sessions:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
-kind: TraefikService
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressService
 metadata:
   name: whoami-sticky
   namespace: default
@@ -482,10 +482,10 @@ Save this as `whoami-sticky-service.yaml` and apply it:
 kubectl apply -f whoami-sticky-service.yaml
 ```
 
-Now update your IngressRoute to use this `TraefikService`:
+Now update your IngressRoute to use this `IngressService`:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: whoami
@@ -509,7 +509,7 @@ spec:
     - name: ip-allowlist
     services:
     - name: whoami-sticky  # Changed from whoami to whoami-sticky
-      kind: TraefikService  # Added kind: TraefikService
+      kind: IngressService  # Added kind: IngressService
   tls:
     certResolver: le
 ```
@@ -660,7 +660,7 @@ stringData:
     admin:$apr1$DmXR3Add$wfdbGw6RWIhFb0ffXMM4d0
     user:$apr1$GJtcIY1o$mSLdsWYeXpPHVsxGDqadI.
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: auth-middleware
@@ -670,7 +670,7 @@ spec:
     secret: auth-secret
     headerField: X-Auth-User
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-parent
@@ -685,7 +685,7 @@ spec:
     - name: auth-middleware
   # Note: No services and no TLS config - this is a parent IngressRoute
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-admin
@@ -701,7 +701,7 @@ spec:
     - name: admin-backend
       port: 80
 ---
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-user
@@ -756,7 +756,7 @@ You should see the response from the admin-backend service when authenticating a
 You can reference parent IngressRoutes in different namespaces by specifying the `namespace` field:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-child
@@ -787,7 +787,7 @@ spec:
 Child IngressRoutes can reference multiple parent IngressRoutes:
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: api-child

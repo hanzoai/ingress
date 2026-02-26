@@ -18,7 +18,7 @@ import (
 
 func TestBasicAuthFail(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.BasicAuth{
@@ -47,7 +47,7 @@ func TestBasicAuthFail(t *testing.T) {
 
 func TestBasicAuthSuccess(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.BasicAuth{
@@ -77,7 +77,7 @@ func TestBasicAuthSuccess(t *testing.T) {
 func TestBasicAuthUserHeader(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "test", r.Header["X-Webauth-User"][0], "auth user should be set")
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.BasicAuth{
@@ -108,7 +108,7 @@ func TestBasicAuthUserHeader(t *testing.T) {
 func TestBasicAuthHeaderRemoved(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Empty(t, r.Header.Get(authorizationHeader))
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.BasicAuth{
@@ -140,7 +140,7 @@ func TestBasicAuthHeaderRemoved(t *testing.T) {
 func TestBasicAuthHeaderPresent(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.NotEmpty(t, r.Header.Get(authorizationHeader))
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 
 	auth := dynamic.BasicAuth{
@@ -170,7 +170,7 @@ func TestBasicAuthHeaderPresent(t *testing.T) {
 
 func TestBasicAuthConcurrentHashOnce(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "traefik")
+		fmt.Fprintln(w, "ingress")
 	})
 	auth := dynamic.BasicAuth{
 		Users: []string{"test:$2a$04$.8sTYfcxbSplCtoxt5TdJOgpBYkarKtZYsYfYxQ1edbYRuO1DNi0e"},
@@ -243,7 +243,7 @@ func TestBasicAuthUsersFromFile(t *testing.T) {
 			userFileContent: "test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/\ntest2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0\n",
 			givenUsers:      []string{"test2:$apr1$mK.GtItK$ncnLYvNLek0weXdxo68690"},
 			expectedUsers:   map[string]string{"test": "test", "test2": "overridden"},
-			realm:           "traefik",
+			realm:           "ingress",
 		},
 		{
 			desc:            "Should skip comments",
@@ -273,7 +273,7 @@ func TestBasicAuthUsersFromFile(t *testing.T) {
 			}
 
 			next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprintln(w, "traefik")
+				fmt.Fprintln(w, "ingress")
 			})
 
 			authenticator, err := NewBasic(t.Context(), next, authenticatorConfiguration, "authName")
@@ -318,7 +318,7 @@ func TestBasicAuthUsersFromFile(t *testing.T) {
 			err = res.Body.Close()
 			require.NoError(t, err)
 
-			require.NotContains(t, "traefik", string(body))
+			require.NotContains(t, "ingress", string(body))
 		})
 	}
 }

@@ -23,8 +23,8 @@ import (
 )
 
 const (
-	traefikTestLogFile       = "traefik.log"
-	traefikTestAccessLogFile = "access.log"
+	ingressTestLogFile       = "ingress.log"
+	ingressTestAccessLogFile = "access.log"
 )
 
 // AccessLogSuite tests suite.
@@ -53,20 +53,20 @@ func (s *AccessLogSuite) TearDownSuite() {
 }
 
 func (s *AccessLogSuite) TearDownTest() {
-	s.displayTraefikLogFile(traefikTestLogFile)
-	_ = os.Remove(traefikTestAccessLogFile)
+	s.displayIngressLogFile(ingressTestLogFile)
+	_ = os.Remove(ingressTestAccessLogFile)
 }
 
 func (s *AccessLogSuite) TestAccessLog() {
 	ensureWorkingDirectoryIsClean()
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	defer func() {
-		traefikLog, err := os.ReadFile(traefikTestLogFile)
+		ingressLog, err := os.ReadFile(ingressTestLogFile)
 		require.NoError(s.T(), err)
-		log.Info().Msg(string(traefikLog))
+		log.Info().Msg(string(ingressLog))
 	}()
 
 	s.waitForTraefik("server1")
@@ -130,7 +130,7 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontend() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -194,7 +194,7 @@ func (s *AccessLogSuite) TestAccessLogDigestAuthMiddleware() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -303,7 +303,7 @@ func (s *AccessLogSuite) TestAccessLogFrontendRedirect() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -355,7 +355,7 @@ func (s *AccessLogSuite) TestAccessLogJSONFrontendRedirect() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log_json_config.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log_json_config.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -409,7 +409,7 @@ func (s *AccessLogSuite) TestAccessLogRateLimit() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -453,7 +453,7 @@ func (s *AccessLogSuite) TestAccessLogBackendNotFound() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.waitForTraefik("server1")
 
@@ -493,7 +493,7 @@ func (s *AccessLogSuite) TestAccessLogFrontendAllowlist() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -533,7 +533,7 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontendSuccess() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -574,7 +574,7 @@ func (s *AccessLogSuite) TestAccessLogPreflightHeadersMiddleware() {
 	}
 
 	// Start Traefik
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
@@ -606,12 +606,12 @@ func (s *AccessLogSuite) TestAccessLogDisabledForInternals() {
 	ensureWorkingDirectoryIsClean()
 
 	// Start Traefik.
-	s.traefikCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
+	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	defer func() {
-		traefikLog, err := os.ReadFile(traefikTestLogFile)
+		ingressLog, err := os.ReadFile(ingressTestLogFile)
 		require.NoError(s.T(), err)
-		log.Info().Msg(string(traefikLog))
+		log.Info().Msg(string(ingressLog))
 	}()
 
 	// waitForTraefik makes at least one call to the rawdata api endpoint,
@@ -652,10 +652,10 @@ func (s *AccessLogSuite) TestAccessLogDisabledForInternals() {
 }
 
 func (s *AccessLogSuite) checkNoOtherTraefikProblems() {
-	traefikLog, err := os.ReadFile(traefikTestLogFile)
+	ingressLog, err := os.ReadFile(ingressTestLogFile)
 	require.NoError(s.T(), err)
-	if len(traefikLog) > 0 {
-		fmt.Printf("%s\n", string(traefikLog))
+	if len(ingressLog) > 0 {
+		fmt.Printf("%s\n", string(ingressLog))
 	}
 }
 
@@ -695,7 +695,7 @@ func (s *AccessLogSuite) checkAccessLogExactValuesOutput(values []accessLogValue
 func (s *AccessLogSuite) extractLines() []string {
 	s.T().Helper()
 
-	accessLog, err := os.ReadFile(traefikTestAccessLogFile)
+	accessLog, err := os.ReadFile(ingressTestAccessLogFile)
 	require.NoError(s.T(), err)
 
 	lines := strings.Split(string(accessLog), "\n")
@@ -713,7 +713,7 @@ func (s *AccessLogSuite) checkStatsForLogFile() {
 	s.T().Helper()
 
 	err := try.Do(1*time.Second, func() error {
-		if _, errStat := os.Stat(traefikTestLogFile); errStat != nil {
+		if _, errStat := os.Stat(ingressTestLogFile); errStat != nil {
 			return fmt.Errorf("could not get stats for log file: %w", errStat)
 		}
 		return nil
@@ -722,19 +722,19 @@ func (s *AccessLogSuite) checkStatsForLogFile() {
 }
 
 func ensureWorkingDirectoryIsClean() {
-	os.Remove(traefikTestAccessLogFile)
-	os.Remove(traefikTestLogFile)
+	os.Remove(ingressTestAccessLogFile)
+	os.Remove(ingressTestLogFile)
 }
 
 func (s *AccessLogSuite) checkTraefikStarted() []byte {
 	s.T().Helper()
 
-	traefikLog, err := os.ReadFile(traefikTestLogFile)
+	ingressLog, err := os.ReadFile(ingressTestLogFile)
 	require.NoError(s.T(), err)
-	if len(traefikLog) > 0 {
-		fmt.Printf("%s\n", string(traefikLog))
+	if len(ingressLog) > 0 {
+		fmt.Printf("%s\n", string(ingressLog))
 	}
-	return traefikLog
+	return ingressLog
 }
 
 func (s *BaseSuite) CheckAccessLogFormat(line string, i int) {

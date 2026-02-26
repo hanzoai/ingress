@@ -96,14 +96,14 @@ func TestMatchDomain(t *testing.T) {
 	}{
 		{
 			desc:       "exact match",
-			certDomain: "traefik.wtf",
-			domain:     "traefik.wtf",
+			certDomain: "ingress.wtf",
+			domain:     "ingress.wtf",
 			expected:   true,
 		},
 		{
 			desc:       "wildcard and root domain",
 			certDomain: "*.traefik.wtf",
-			domain:     "traefik.wtf",
+			domain:     "ingress.wtf",
 			expected:   false,
 		},
 		{

@@ -15,7 +15,7 @@ The metadata can be used to restrict the access to applications. For more inform
 ## Configuration Example
 
 ```yaml tab="Middleware OAuth Token Introspection"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oauth-intro
@@ -149,7 +149,7 @@ urn:k8s:secret:[name]:[valueKey]
 ```
 
 ```yaml tab="Middleware JWT"
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-oauth-intro

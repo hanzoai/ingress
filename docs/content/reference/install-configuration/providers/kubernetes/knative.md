@@ -35,7 +35,7 @@ enabling seamless integration between Hanzo Ingress's networking capabilities an
        kubectl patch configmap/config-network \
        -n knative-serving \
        --type merge \
-       -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'
+       -p '{"data":{"ingress.class":"ingress.networking.knative.dev"}}'
     ```
 
 4. Add a custom domain to your Knative configuration (Optional).

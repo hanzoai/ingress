@@ -33,7 +33,7 @@ import (
 	tcpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/tcp"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
-	traefiktls "github.com/hanzoai/ingress/v3/pkg/tls"
+	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 	"github.com/hanzoai/ingress/v3/pkg/version"
 )
@@ -143,7 +143,7 @@ type Provider struct {
 	account                *Account
 	client                 *lego.Client
 	configurationChan      chan<- dynamic.Message
-	tlsManager             *traefiktls.Manager
+	tlsManager             *ingresstls.Manager
 	clientMutex            sync.Mutex
 	configFromListenerChan chan dynamic.Configuration
 	pool                   *safe.Pool
@@ -152,7 +152,7 @@ type Provider struct {
 }
 
 // SetTLSManager sets the tls manager to use.
-func (p *Provider) SetTLSManager(tlsManager *traefiktls.Manager) {
+func (p *Provider) SetTLSManager(tlsManager *ingresstls.Manager) {
 	p.tlsManager = tlsManager
 }
 
@@ -536,13 +536,13 @@ func (p *Provider) watchNewDomains(ctx context.Context) {
 							domains := deleteUnnecessaryDomains(ctxRouter, route.TLS.Domains)
 							for _, domain := range domains {
 								safe.Go(func() {
-									dom, cert, err := p.resolveCertificate(ctx, domain, traefiktls.DefaultTLSStoreName)
+									dom, cert, err := p.resolveCertificate(ctx, domain, ingresstls.DefaultTLSStoreName)
 									if err != nil {
 										logger.Error().Err(err).Strs("domains", domain.ToStrArray()).Msg("Unable to obtain ACME certificate for domains")
 										return
 									}
 
-									err = p.addCertificateForDomain(dom, cert, traefiktls.DefaultTLSStoreName)
+									err = p.addCertificateForDomain(dom, cert, ingresstls.DefaultTLSStoreName)
 									if err != nil {
 										logger.Error().Err(err).Strs("domains", dom.ToStrArray()).Msg("Error adding certificate for domains")
 									}
@@ -554,7 +554,7 @@ func (p *Provider) watchNewDomains(ctx context.Context) {
 								logger.Error().Err(err).Msg("Error parsing domains in provider ACME")
 								continue
 							}
-							p.resolveDomains(ctxRouter, domains, traefiktls.DefaultTLSStoreName)
+							p.resolveDomains(ctxRouter, domains, ingresstls.DefaultTLSStoreName)
 						}
 					}
 				}
@@ -572,13 +572,13 @@ func (p *Provider) watchNewDomains(ctx context.Context) {
 							domains := deleteUnnecessaryDomains(ctxRouter, route.TLS.Domains)
 							for _, domain := range domains {
 								safe.Go(func() {
-									dom, cert, err := p.resolveCertificate(ctx, domain, traefiktls.DefaultTLSStoreName)
+									dom, cert, err := p.resolveCertificate(ctx, domain, ingresstls.DefaultTLSStoreName)
 									if err != nil {
 										logger.Error().Err(err).Strs("domains", domain.ToStrArray()).Msg("Unable to obtain ACME certificate for domains")
 										return
 									}
 
-									err = p.addCertificateForDomain(dom, cert, traefiktls.DefaultTLSStoreName)
+									err = p.addCertificateForDomain(dom, cert, ingresstls.DefaultTLSStoreName)
 									if err != nil {
 										logger.Error().Err(err).Strs("domains", dom.ToStrArray()).Msg("Error adding certificate for domain")
 									}
@@ -590,7 +590,7 @@ func (p *Provider) watchNewDomains(ctx context.Context) {
 								logger.Error().Err(err).Msg("Error parsing domains in provider ACME")
 								continue
 							}
-							p.resolveDomains(ctxRouter, domains, traefiktls.DefaultTLSStoreName)
+							p.resolveDomains(ctxRouter, domains, ingresstls.DefaultTLSStoreName)
 						}
 					}
 				}
@@ -644,7 +644,7 @@ func (p *Provider) watchNewDomains(ctx context.Context) {
 							domain.SANs = validDomains[1:]
 						}
 
-						err = p.addCertificateForDomain(domain, cert, traefiktls.DefaultTLSStoreName)
+						err = p.addCertificateForDomain(domain, cert, ingresstls.DefaultTLSStoreName)
 						if err != nil {
 							logger.Error().Err(err).Msg("Error adding certificate for domain")
 						}
@@ -892,8 +892,8 @@ func (p *Provider) buildMessage() dynamic.Message {
 	}
 
 	for _, cert := range p.certificates {
-		certConf := &traefiktls.CertAndStores{
-			Certificate: traefiktls.Certificate{
+		certConf := &ingresstls.CertAndStores{
+			Certificate: ingresstls.Certificate{
 				CertFile: types.FileOrContent(cert.Certificate.Certificate),
 				KeyFile:  types.FileOrContent(cert.Key),
 			},

@@ -26,7 +26,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/job"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
-	traefikv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/traefikio/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/gateway"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
 	"github.com/hanzoai/ingress/v3/pkg/safe"
@@ -40,7 +40,7 @@ import (
 
 const (
 	annotationKubernetesIngressClass = "kubernetes.io/ingress.class"
-	traefikDefaultIngressClass       = "traefik"
+	defaultIngressClass       = "ingress"
 )
 
 const (
@@ -161,7 +161,7 @@ func (p *Provider) SetRouterTransform(routerTransform k8s.RouterTransform) {
 }
 
 func (p *Provider) FillExtensionBuilderRegistry(registry gateway.ExtensionBuilderRegistry) {
-	registry.RegisterFilterFuncs(traefikv1alpha1.GroupName, "Middleware", func(name, namespace string) (string, *dynamic.Middleware, error) {
+	registry.RegisterFilterFuncs(hanzoaiv1alpha1.GroupName, "Middleware", func(name, namespace string) (string, *dynamic.Middleware, error) {
 		if len(p.Namespaces) > 0 && !slices.Contains(p.Namespaces, namespace) {
 			return "", nil, fmt.Errorf("namespace %q is not allowed", namespace)
 		}
@@ -169,7 +169,7 @@ func (p *Provider) FillExtensionBuilderRegistry(registry gateway.ExtensionBuilde
 		return makeID(namespace, name) + providerNamespaceSeparator + providerName, nil, nil
 	})
 
-	registry.RegisterBackendFuncs(traefikv1alpha1.GroupName, "TraefikService", func(name, namespace string) (string, *dynamic.Service, error) {
+	registry.RegisterBackendFuncs(hanzoaiv1alpha1.GroupName, "IngressService", func(name, namespace string) (string, *dynamic.Service, error) {
 		if len(p.Namespaces) > 0 && !slices.Contains(p.Namespaces, namespace) {
 			return "", nil, fmt.Errorf("namespace %q is not allowed", namespace)
 		}
@@ -178,7 +178,7 @@ func (p *Provider) FillExtensionBuilderRegistry(registry gateway.ExtensionBuilde
 	})
 }
 
-func (p *Provider) applyRouterTransform(ctx context.Context, rt *dynamic.Router, ingress *traefikv1alpha1.IngressRoute) {
+func (p *Provider) applyRouterTransform(ctx context.Context, rt *dynamic.Router, ingress *hanzoaiv1alpha1.IngressRoute) {
 	if p.routerTransform == nil {
 		return
 	}
@@ -349,11 +349,11 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 		allowEmptyServices:        p.AllowEmptyServices,
 	}
 
-	for _, service := range client.GetTraefikServices() {
-		err := cb.buildTraefikService(ctx, service, conf.HTTP.Services)
+	for _, service := range client.GetIngressServices() {
+		err := cb.buildIngressService(ctx, service, conf.HTTP.Services)
 		if err != nil {
 			log.Ctx(ctx).Error().Str(logs.ServiceName, service.Name).Err(err).
-				Msg("Error while building TraefikService")
+				Msg("Error while building IngressService")
 			continue
 		}
 	}
@@ -645,7 +645,7 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 	return conf
 }
 
-func (p *Provider) createErrorPageMiddleware(ctx context.Context, client Client, namespace string, errorPage *traefikv1alpha1.ErrorPage) (*dynamic.ErrorPage, *dynamic.Service, error) {
+func (p *Provider) createErrorPageMiddleware(ctx context.Context, client Client, namespace string, errorPage *hanzoaiv1alpha1.ErrorPage) (*dynamic.ErrorPage, *dynamic.Service, error) {
 	if errorPage == nil {
 		return nil, nil, nil
 	}
@@ -795,7 +795,7 @@ func getSecretValue(c Client, ns, urn string) (string, error) {
 	return string(secretValue), nil
 }
 
-func createCircuitBreakerMiddleware(circuitBreaker *traefikv1alpha1.CircuitBreaker) (*dynamic.CircuitBreaker, error) {
+func createCircuitBreakerMiddleware(circuitBreaker *hanzoaiv1alpha1.CircuitBreaker) (*dynamic.CircuitBreaker, error) {
 	if circuitBreaker == nil {
 		return nil, nil
 	}
@@ -828,7 +828,7 @@ func createCircuitBreakerMiddleware(circuitBreaker *traefikv1alpha1.CircuitBreak
 	return cb, nil
 }
 
-func createCompressMiddleware(compress *traefikv1alpha1.Compress) *dynamic.Compress {
+func createCompressMiddleware(compress *hanzoaiv1alpha1.Compress) *dynamic.Compress {
 	if compress == nil {
 		return nil
 	}
@@ -859,7 +859,7 @@ func createCompressMiddleware(compress *traefikv1alpha1.Compress) *dynamic.Compr
 	return c
 }
 
-func createRateLimitMiddleware(client Client, namespace string, rateLimit *traefikv1alpha1.RateLimit) (*dynamic.RateLimit, error) {
+func createRateLimitMiddleware(client Client, namespace string, rateLimit *hanzoaiv1alpha1.RateLimit) (*dynamic.RateLimit, error) {
 	if rateLimit == nil {
 		return nil, nil
 	}
@@ -977,7 +977,7 @@ func loadRedisCredentials(namespace, secretName string, k8sClient Client) (strin
 	return string(username), string(password), nil
 }
 
-func createRetryMiddleware(retry *traefikv1alpha1.Retry) (*dynamic.Retry, error) {
+func createRetryMiddleware(retry *hanzoaiv1alpha1.Retry) (*dynamic.Retry, error) {
 	if retry == nil {
 		return nil, nil
 	}
@@ -1007,7 +1007,7 @@ func createRetryMiddleware(retry *traefikv1alpha1.Retry) (*dynamic.Retry, error)
 	return r, nil
 }
 
-func createForwardAuthMiddleware(k8sClient Client, namespace string, auth *traefikv1alpha1.ForwardAuth) (*dynamic.ForwardAuth, error) {
+func createForwardAuthMiddleware(k8sClient Client, namespace string, auth *hanzoaiv1alpha1.ForwardAuth) (*dynamic.ForwardAuth, error) {
 	if auth == nil {
 		return nil, nil
 	}
@@ -1135,7 +1135,7 @@ func loadAuthTLSSecret(namespace, secretName string, k8sClient Client) (string, 
 	return getCertificateBlocks(secret, namespace, secretName)
 }
 
-func createBasicAuthMiddleware(client Client, namespace string, basicAuth *traefikv1alpha1.BasicAuth) (*dynamic.BasicAuth, error) {
+func createBasicAuthMiddleware(client Client, namespace string, basicAuth *hanzoaiv1alpha1.BasicAuth) (*dynamic.BasicAuth, error) {
 	if basicAuth == nil {
 		return nil, nil
 	}
@@ -1182,7 +1182,7 @@ func createBasicAuthMiddleware(client Client, namespace string, basicAuth *traef
 	}, nil
 }
 
-func createDigestAuthMiddleware(client Client, namespace string, digestAuth *traefikv1alpha1.DigestAuth) (*dynamic.DigestAuth, error) {
+func createDigestAuthMiddleware(client Client, namespace string, digestAuth *hanzoaiv1alpha1.DigestAuth) (*dynamic.DigestAuth, error) {
 	if digestAuth == nil {
 		return nil, nil
 	}
@@ -1215,7 +1215,7 @@ func createDigestAuthMiddleware(client Client, namespace string, digestAuth *tra
 	}, nil
 }
 
-func createBufferingMiddleware(buffering *traefikv1alpha1.Buffering) *dynamic.Buffering {
+func createBufferingMiddleware(buffering *hanzoaiv1alpha1.Buffering) *dynamic.Buffering {
 	if buffering == nil {
 		return nil
 	}
@@ -1271,7 +1271,7 @@ func loadAuthCredentials(secret *corev1.Secret) ([]string, error) {
 	return credentials, nil
 }
 
-func createChainMiddleware(ctx context.Context, namespace string, chain *traefikv1alpha1.Chain) *dynamic.Chain {
+func createChainMiddleware(ctx context.Context, namespace string, chain *hanzoaiv1alpha1.Chain) *dynamic.Chain {
 	if chain == nil {
 		return nil
 	}
@@ -1445,7 +1445,7 @@ func buildTLSStores(ctx context.Context, client Client) (map[string]tls.Store, m
 // It continues processing other certificates even if one fails, making the TLS store resilient
 // to missing or invalid secrets. Missing secrets are logged as errors but don't prevent
 // the TLS store from being created with the certificates that are available.
-func buildCertificates(ctx context.Context, client Client, tlsStore, namespace string, certificates []traefikv1alpha1.Certificate, tlsConfigs map[string]*tls.CertAndStores) {
+func buildCertificates(ctx context.Context, client Client, tlsStore, namespace string, certificates []hanzoaiv1alpha1.Certificate, tlsConfigs map[string]*tls.CertAndStores) {
 	logger := log.Ctx(ctx).With().Str("TLSStore", tlsStore).Str("namespace", namespace).Logger()
 
 	for _, c := range certificates {
@@ -1487,7 +1487,7 @@ func makeID(namespace, name string) string {
 
 func shouldProcessIngress(ingressClass, ingressClassName string) bool {
 	return ingressClass == ingressClassName ||
-		(len(ingressClass) == 0 && ingressClassName == traefikDefaultIngressClass)
+		(len(ingressClass) == 0 && ingressClassName == defaultIngressClass)
 }
 
 // getIngressClassName returns the ingress class name from the spec field or falls back to the
