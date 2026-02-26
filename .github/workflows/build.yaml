@@ -3,7 +3,7 @@ name: Build Binaries
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - 'docs/**'
       - '**.md'
