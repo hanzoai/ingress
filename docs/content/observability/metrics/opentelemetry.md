@@ -1,6 +1,6 @@
 ---
-title: "Traefik OpenTelemetry Documentation"
-description: "Traefik supports several metrics backends, including OpenTelemetry. Learn how to implement it for observability in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress OpenTelemetry Documentation"
+description: "Hanzo Ingress supports several metrics backends, including OpenTelemetry. Learn how to implement it for observability in Hanzo Ingress. Read the technical documentation."
 ---
 
 # OpenTelemetry

@@ -1,6 +1,6 @@
 ---
-title: "Traefik RateLimit Documentation"
-description: "Traefik Proxy's HTTP RateLimit middleware ensures Services receive fair amounts of requests. Read the technical documentation."
+title: "Hanzo Ingress RateLimit Documentation"
+description: "Hanzo Ingress's HTTP RateLimit middleware ensures Services receive fair amounts of requests. Read the technical documentation."
 ---
 
 # RateLimit
@@ -211,13 +211,13 @@ If none are set, the default is to use the request's remote address field (as an
 
 #### `sourceCriterion.ipStrategy`
 
-The `ipStrategy` option defines three parameters that configures how Traefik determines the client IP: `depth`, `excludedIPs` and `ipv6Subnet`.
+The `ipStrategy` option defines three parameters that configures how Hanzo Ingress determines the client IP: `depth`, `excludedIPs` and `ipv6Subnet`.
 
 !!! important "As a middleware, rate-limiting happens before the actual proxying to the backend takes place. In addition, the previous network hop only gets appended to `X-Forwarded-For` during the last stages of proxying, i.e. after it has already passed through rate-limiting. Therefore, during rate-limiting, as the previous network hop is not yet present in `X-Forwarded-For`, it cannot be found and/or relied upon."
 
 ##### `ipStrategy.depth`
 
-The `depth` option tells Traefik to use the `X-Forwarded-For` header and select the IP located at the `depth` position (starting from the right).
+The `depth` option tells Hanzo Ingress to use the `X-Forwarded-For` header and select the IP located at the `depth` position (starting from the right).
 
 - If `depth` is greater than the total number of IPs in `X-Forwarded-For`, then the client IP is empty.
 - `depth` is ignored if its value is less than or equal to 0.
@@ -500,7 +500,7 @@ http:
 ### `redis`
 
 Enables distributed rate limit using `redis` to store the tokens.
-If not set, Traefik's in-memory storage is used by default.
+If not set, Hanzo Ingress's in-memory storage is used by default.
 
 #### `redis.endpoints`
 
@@ -704,7 +704,7 @@ http:
 
 #### `redis.tls`
 
-Same as this [config](https://doc.traefik.io/traefik/providers/redis/#tls)
+Same as this [config](https://github.com/hanzoai/ingress/blob/main/docs/content/providers/redis/#tls)
 
 _Optional_
 

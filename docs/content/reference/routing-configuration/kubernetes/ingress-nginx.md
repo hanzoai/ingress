@@ -1,19 +1,19 @@
 ---
-title: "Traefik Kubernetes Ingress NGINX Routing Configuration"
-description: "Understand the routing configuration for the Kubernetes Ingress NGINX Controller and Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress Kubernetes Ingress NGINX Routing Configuration"
+description: "Understand the routing configuration for the Kubernetes Ingress NGINX Controller and Hanzo Ingress. Read the technical documentation."
 ---
 
-# Traefik & Ingresses with NGINX Annotations
+# Hanzo Ingress & Ingresses with NGINX Annotations
 
-Enable seamless migration from NGINX Ingress Controller to Traefik with NGINX annotation compatibility.
+Enable seamless migration from NGINX Ingress Controller to Hanzo Ingress with NGINX annotation compatibility.
 {: .subtitle }
 
 !!! warning "NGINX Ingress Controller Retirement"
 
     The Kubernetes NGINX Ingress Controller project has announced its retirement in **March 2026** and will no longer receive updates or security patches.
-    Traefik provides a migration path by supporting NGINX annotations, allowing you to transition your workloads without rewriting all your Ingress configurations.
+    Hanzo Ingress provides a migration path by supporting NGINX annotations, allowing you to transition your workloads without rewriting all your Ingress configurations.
 
-    **→ See the [NGINX to Traefik Migration Guide](../../../migrate/nginx-to-traefik.md) for step-by-step instructions.**
+    **→ See the [NGINX to Hanzo Ingress Migration Guide](../../../migrate/nginx-to-traefik.md) for step-by-step instructions.**
 
     For more information about the NGINX Ingress Controller retirement, see the [official Kubernetes blog announcement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement).
 
@@ -30,7 +30,7 @@ which may lead to duplicated routers if you are also using the standard Kubernet
 
 ## Routing Configuration
 
-This provider watches for incoming Ingress events and automatically translates NGINX annotations into Traefik's dynamic configuration,
+This provider watches for incoming Ingress events and automatically translates NGINX annotations into Hanzo Ingress's dynamic configuration,
 creating the corresponding routers, services, middlewares, and other components needed to handle your traffic.
 
 !!! warning "ConfigMap Configuration and Default Behaviors"
@@ -40,10 +40,10 @@ creating the corresponding routers, services, middlewares, and other components 
 
     Important differences in default behaviors:
     
-    - **Request buffering**: NGINX enables `proxy-request-buffering` by default, while Traefik requires explicit opt-in via the provider's `proxyRequestBuffering` option.
+    - **Request buffering**: NGINX enables `proxy-request-buffering` by default, while Hanzo Ingress requires explicit opt-in via the provider's `proxyRequestBuffering` option.
 
     To ensure consistent behavior during migration,
-    review and configure Traefik's provider-level options to match your current NGINX ConfigMap settings.
+    review and configure Hanzo Ingress's provider-level options to match your current NGINX ConfigMap settings.
     See the [provider configuration options](../../install-configuration/providers/kubernetes/kubernetes-ingress-nginx.md) for available settings.
 
 ## Configuration Example
@@ -135,7 +135,7 @@ creating the corresponding routers, services, middlewares, and other components 
               namespace: default
       ```
 
-      ```yaml tab="Traefik"
+      ```yaml tab="Hanzo Ingress"
       ---
       apiVersion: v1
       kind: ServiceAccount
@@ -163,7 +163,7 @@ creating the corresponding routers, services, middlewares, and other components 
             serviceAccountName: traefik-ingress-controller
             containers:
               - name: traefik
-                image: traefik:v3.6
+                image: ghcr.io/hanzoai/ingress:v3.6
                 args:
                   - --entryPoints.web.address=:80
                   - --providers.kubernetesingressnginx
@@ -207,7 +207,7 @@ creating the corresponding routers, services, middlewares, and other components 
           spec:
             containers:
               - name: whoami
-                image: traefik/whoami
+                image: hanzoai/whoami
                 ports:
                   - containerPort: 80
 
@@ -272,7 +272,7 @@ The following annotations are organized by category for easier navigation.
  Several annotations currently listed as unsupported are actively being implemented and will become available in upcoming release.
 
 !!! tip "Preview upcoming annotation support"
-    You can follow the progress and explore annotations that are already available in the next version of Traefik by visiting the **[experimental documentation (master branch)](https://doc.traefik.io/traefik/master/reference/routing-configuration/kubernetes/ingress-nginx/)**.
+    You can follow the progress and explore annotations that are already available in the next version of Hanzo Ingress by visiting the **[experimental documentation (master branch)](https://github.com/hanzoai/ingress/blob/main/docs/content/master/reference/routing-configuration/kubernetes/ingress-nginx/)**.
 
     The experimental page reflects the state of the `master` branch and may include annotations not yet available in the current stable release. Features shown there are subject to change before the final release.
 
@@ -370,7 +370,7 @@ The following annotations are organized by category for easier navigation.
 | <a id="opt-nginx-ingress-kubernetes-ioclient-body-buffer-size" href="#opt-nginx-ingress-kubernetes-ioclient-body-buffer-size" title="#opt-nginx-ingress-kubernetes-ioclient-body-buffer-size">`nginx.ingress.kubernetes.io/client-body-buffer-size`</a> |                                                                                                               |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-buffering" href="#opt-nginx-ingress-kubernetes-ioproxy-buffering" title="#opt-nginx-ingress-kubernetes-ioproxy-buffering">`nginx.ingress.kubernetes.io/proxy-buffering`</a> |                                                                                                               |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-buffer-size" href="#opt-nginx-ingress-kubernetes-ioproxy-buffer-size" title="#opt-nginx-ingress-kubernetes-ioproxy-buffer-size">`nginx.ingress.kubernetes.io/proxy-buffer-size`</a> |                                                                                                               |
-| <a id="opt-nginx-ingress-kubernetes-ioproxy-buffers-number" href="#opt-nginx-ingress-kubernetes-ioproxy-buffers-number" title="#opt-nginx-ingress-kubernetes-ioproxy-buffers-number">`nginx.ingress.kubernetes.io/proxy-buffers-number`</a> | With Traefik, `proxy-buffer-numbers` is actually used to compute the size of a single buffer (size * number). |
+| <a id="opt-nginx-ingress-kubernetes-ioproxy-buffers-number" href="#opt-nginx-ingress-kubernetes-ioproxy-buffers-number" title="#opt-nginx-ingress-kubernetes-ioproxy-buffers-number">`nginx.ingress.kubernetes.io/proxy-buffers-number`</a> | With Hanzo Ingress, `proxy-buffer-numbers` is actually used to compute the size of a single buffer (size * number). |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-max-temp-file-size" href="#opt-nginx-ingress-kubernetes-ioproxy-max-temp-file-size" title="#opt-nginx-ingress-kubernetes-ioproxy-max-temp-file-size">`nginx.ingress.kubernetes.io/proxy-max-temp-file-size`</a> |                                                                                                               |
 
 ### Timeout
@@ -385,14 +385,14 @@ The following annotations are organized by category for easier navigation.
 
 ### Caveats and Key Behavioral Differences
 
-- **Authentication**: Forward auth behaves differently and session caching is not supported. NGINX supports sub-request based auth, while Traefik forwards the original request.
+- **Authentication**: Forward auth behaves differently and session caching is not supported. NGINX supports sub-request based auth, while Hanzo Ingress forwards the original request.
 - **Session Affinity**: Only persistent mode is supported.
 - **Leader Election**: Not supported; no cluster mode with leader election.
 - **Default Backend**: Only defaultBackend in Ingress spec is supported; the annotation is ignored.
 - **Load Balancing**: Only round_robin is supported; EWMA and IP hash are not supported.
-- **CORS**: NGINX responds with all configured headers unconditionally; Traefik handles headers differently between pre-flight and regular requests.
-- **TLS/Backend Protocols**: AUTO_HTTP, FCGI and some TLS options are not supported in Traefik.
-- **Path Handling**: Traefik preserves trailing slashes by default; NGINX removes them unless configured otherwise
+- **CORS**: NGINX responds with all configured headers unconditionally; Hanzo Ingress handles headers differently between pre-flight and regular requests.
+- **TLS/Backend Protocols**: AUTO_HTTP, FCGI and some TLS options are not supported in Hanzo Ingress.
+- **Path Handling**: Hanzo Ingress preserves trailing slashes by default; NGINX removes them unless configured otherwise
 
 ### Unsupported Annotations
 
@@ -401,7 +401,7 @@ The following annotations are organized by category for easier navigation.
     You can help extend support in two ways:
 
     - [**Open a PR**](../../../contributing/submitting-pull-requests.md) with the new annotation support.
-    - **Reach out** to the [Traefik Labs support team](https://info.traefik.io/request-commercial-support?cta=doc).
+    - **Reach out** to the [Hanzo AI support team](https://hanzo.ai).
 
     All contributions and suggestions are welcome — let's build this together!
 
@@ -441,7 +441,7 @@ The following annotations are organized by category for easier navigation.
 | <a id="opt-nginx-ingress-kubernetes-ioglobal-rate-limit-window" href="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-window" title="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-window">`nginx.ingress.kubernetes.io/global-rate-limit-window`</a> |                                                      |
 | <a id="opt-nginx-ingress-kubernetes-ioglobal-rate-limit-key" href="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-key" title="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-key">`nginx.ingress.kubernetes.io/global-rate-limit-key`</a> |                                                      |
 | <a id="opt-nginx-ingress-kubernetes-ioglobal-rate-limit-ignored-cidrs" href="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-ignored-cidrs" title="#opt-nginx-ingress-kubernetes-ioglobal-rate-limit-ignored-cidrs">`nginx.ingress.kubernetes.io/global-rate-limit-ignored-cidrs`</a> |                                                      |
-| <a id="opt-nginx-ingress-kubernetes-iopreserve-trailing-slash" href="#opt-nginx-ingress-kubernetes-iopreserve-trailing-slash" title="#opt-nginx-ingress-kubernetes-iopreserve-trailing-slash">`nginx.ingress.kubernetes.io/preserve-trailing-slash`</a> | Traefik preserves trailing slash by default.         |
+| <a id="opt-nginx-ingress-kubernetes-iopreserve-trailing-slash" href="#opt-nginx-ingress-kubernetes-iopreserve-trailing-slash" title="#opt-nginx-ingress-kubernetes-iopreserve-trailing-slash">`nginx.ingress.kubernetes.io/preserve-trailing-slash`</a> | Hanzo Ingress preserves trailing slash by default.         |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-cookie-domain" href="#opt-nginx-ingress-kubernetes-ioproxy-cookie-domain" title="#opt-nginx-ingress-kubernetes-ioproxy-cookie-domain">`nginx.ingress.kubernetes.io/proxy-cookie-domain`</a> |                                                      |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-cookie-path" href="#opt-nginx-ingress-kubernetes-ioproxy-cookie-path" title="#opt-nginx-ingress-kubernetes-ioproxy-cookie-path">`nginx.ingress.kubernetes.io/proxy-cookie-path`</a> |                                                      |                                                     |
 | <a id="opt-nginx-ingress-kubernetes-ioproxy-next-upstream" href="#opt-nginx-ingress-kubernetes-ioproxy-next-upstream" title="#opt-nginx-ingress-kubernetes-ioproxy-next-upstream">`nginx.ingress.kubernetes.io/proxy-next-upstream`</a> |                                                      |
@@ -481,6 +481,6 @@ The following annotations are organized by category for easier navigation.
 
 ### Global Configuration
 
-Traefik does not expose all global configuration options to control default behaviors for Ingresses in the same way NGINX does.
+Hanzo Ingress does not expose all global configuration options to control default behaviors for Ingresses in the same way NGINX does.
 
 Some behaviors that are globally configurable in NGINX (such as default SSL redirect, rate limiting, or affinity) are currently not supported and cannot be overridden per-Ingress as in NGINX. These limitations are noted in the annotation tables below where applicable.

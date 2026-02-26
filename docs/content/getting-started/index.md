@@ -1,18 +1,18 @@
 ---
-title: "Getting Started with Traefik"
-description: "Quick start guides for deploying Traefik in Kubernetes and Docker environments"
+title: "Getting Started with Hanzo Ingress"
+description: "Quick start guides for deploying Hanzo Ingress in Kubernetes and Docker environments"
 ---
 
-# Getting Started with Traefik
+# Getting Started with Hanzo Ingress
 
-Traefik can be deployed in various environments. Choose your preferred deployment method:
+Hanzo Ingress can be deployed in various environments. Choose your preferred deployment method:
 
-- [Kubernetes Quick Start](./kubernetes.md) - Deploy Traefik using Helm
-- [Docker Quick Start](./docker.md) - Deploy Traefik using Docker
+- [Kubernetes Quick Start](./kubernetes.md) - Deploy Hanzo Ingress using Helm
+- [Docker Quick Start](./docker.md) - Deploy Hanzo Ingress using Docker
 
 Each guide will help you:
 
-- Install Traefik
+- Install Hanzo Ingress
 - Expose the dashboard
 - Deploy a sample application
 - Configure basic routing

@@ -1,11 +1,11 @@
 ---
-title: "Traefik HTTP Documentation"
-description: "Provide your dynamic configuration via an HTTP(S) endpoint and let Traefik Proxy do the rest. Read the technical documentation."
+title: "Hanzo Ingress HTTP Documentation"
+description: "Provide your dynamic configuration via an HTTP(S) endpoint and let Hanzo Ingress do the rest. Read the technical documentation."
 ---
 
-# Traefik & HTTP
+# Hanzo Ingress & HTTP
 
-Provide your [dynamic configuration](./overview.md) via an HTTP(S) endpoint and let Traefik do the rest!
+Provide your [dynamic configuration](./overview.md) via an HTTP(S) endpoint and let Hanzo Ingress do the rest!
 
 ## Routing Configuration
 

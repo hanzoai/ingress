@@ -1,6 +1,6 @@
 ---
-title: "Traefik Compress Documentation"
-description: "Traefik Proxy's HTTP middleware lets you compress responses before sending them to the client. Read the technical documentation."
+title: "Hanzo Ingress Compress Documentation"
+description: "Hanzo Ingress's HTTP middleware lets you compress responses before sending them to the client. Read the technical documentation."
 ---
 
 # Compress

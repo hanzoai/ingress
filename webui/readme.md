@@ -1,10 +1,10 @@
-# Traefik Web UI
+# Hanzo Ingress Web UI
 
-Access to Traefik Web UI, ex: http://localhost:8080
+Access to Hanzo Ingress Web UI, ex: http://localhost:8080
 
 ## Interface
 
-Traefik Web UI provide 2 types of information:
+Hanzo Ingress Web UI provides 2 types of information:
 
 - Providers with their backends and frontends information.
 - Health of the web server.
@@ -71,6 +71,5 @@ The build allows to:
 - [Yarn](https://yarnpkg.com/)
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
-- [Faency](https://github.com/containous/faency)
 - [Vitest](https://vitest.dev/)
 - [Mock Service Worker](https://mswjs.io/)

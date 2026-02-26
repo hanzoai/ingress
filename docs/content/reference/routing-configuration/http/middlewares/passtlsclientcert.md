@@ -1,6 +1,6 @@
 ---
-title: "Traefik PassTLSClientCert Documentation"
-description: "In Traefik Proxy's HTTP middleware, the PassTLSClientCert adds selected data from passed client TLS certificates to headers. Read the technical documentation."
+title: "Hanzo Ingress PassTLSClientCert Documentation"
+description: "In Hanzo Ingress's HTTP middleware, the PassTLSClientCert adds selected data from passed client TLS certificates to headers. Read the technical documentation."
 ---
 
 The `passTLSClientCert` middleware adds the selected data from the passed client TLS certificate to a header.

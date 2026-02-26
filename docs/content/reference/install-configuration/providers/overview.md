@@ -1,13 +1,13 @@
 ---
-title: "Traefik Providers Documentation"
-description: "Learn about Providers in Traefik Proxy."
+title: "Hanzo Ingress Providers Documentation"
+description: "Learn about Providers in Hanzo Ingress."
 ---
 
 # Overview
 
 _Providers_ are infrastructure components, whether orchestrators, container engines, cloud providers, or key-value stores.
-The idea is that Traefik queries the provider APIs in order to find relevant information about routing,
-and when Traefik detects a change, it dynamically updates the routes.
+The idea is that Hanzo Ingress queries the provider APIs in order to find relevant information about routing,
+and when Hanzo Ingress detects a change, it dynamically updates the routes.
 
 ## Provider Categories
 
@@ -20,7 +20,7 @@ While each provider is different, you can think of each as belonging to one of f
 
 ## Provider Namespace
 
-When you declare certain objects in the Traefik dynamic configuration,
+When you declare certain objects in the Hanzo Ingress dynamic configuration,
 such as middleware, services, TLS options or server transports, they reside in their provider's namespace.
 For example, if you declare a middleware using a Docker label, it resides in the Docker provider namespace.
 
@@ -34,12 +34,12 @@ For the list of the providers names, see the [supported providers](#supported-pr
 <resource-name>@<provider-name>
 ```
 
-!!! important "Kubernetes Namespace vs Traefik Namespace"
+!!! important "Kubernetes Namespace vs Hanzo Ingress Namespace"
 
     As Kubernetes also has its own notion of namespace,
     one should not confuse the _provider namespace_ with the _Kubernetes Namespace_ of a resource when in the context of cross-provider usage.
 
-    In this case, since the definition of a Traefik dynamic configuration object is not in Kubernetes,
+    In this case, since the definition of a Hanzo Ingress dynamic configuration object is not in Kubernetes,
     specifying a Kubernetes Namespace when referring to the resource does not make any sense.
 
     On the other hand, if you were to declare a middleware as a Custom Resource in Kubernetes and use the non-CRD Ingress objects,
@@ -47,7 +47,7 @@ For the list of the providers names, see the [supported providers](#supported-pr
 
 ## Supported Providers
 
-Below is the list of the currently supported providers in Traefik.
+Below is the list of the currently supported providers in Hanzo Ingress.
 
 | Provider                                          | Type         | Configuration Type   | Provider Name       |
 |--------------------------------------------------------------|--------------|----------------------|---------------------|
@@ -68,10 +68,10 @@ Below is the list of the currently supported providers in Traefik.
 
 !!! info "More Providers"
 
-    The current version of Traefik does not yet support every provider that Traefik v2.11 did.
-    See the [previous version (v2.11)](https://doc.traefik.io/traefik/v2.11/) for more information.
+    The current version of Hanzo Ingress does not yet support every provider that Hanzo Ingress v2.11 did.
+    See the [previous version (v2.11)](https://github.com/hanzoai/ingress/blob/main/docs/content/v2.11/) for more information.
 
-## Referencing a Traefik Dynamic Configuration Object from Another Provider
+## Referencing a Hanzo Ingress Dynamic Configuration Object from Another Provider
 
 Declaring the add-foo-prefix in the file provider.
 
@@ -133,9 +133,9 @@ metadata:
 spec:
 ```
 
-By default, Traefik creates routes for all detected containers.
+By default, Hanzo Ingress creates routes for all detected containers.
 
-If you want to limit the scope of the Traefik service discovery,
+If you want to limit the scope of the Hanzo Ingress service discovery,
 i.e. disallow route creation for some containers,
 you can do so in two different ways:
 

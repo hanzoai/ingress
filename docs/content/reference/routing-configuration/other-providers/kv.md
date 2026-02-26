@@ -1,9 +1,9 @@
 ---
-title: "Traefik Routing Configuration with KV stores"
-description: "Read the technical documentation to learn the Traefik Routing Configuration with KV stores."
+title: "Hanzo Ingress Routing Configuration with KV stores"
+description: "Read the technical documentation to learn the Hanzo Ingress Routing Configuration with KV stores."
 ---
 
-# Traefik & KV Stores
+# Hanzo Ingress & KV Stores
 
 ## Configuration Examples
 
@@ -250,7 +250,7 @@ For example, you can define a basic setup like this:
 
 ### TLS Default Generated Certificates
 
-You can configure Traefik to use an ACME provider (like Let's Encrypt) to generate the default certificate.
+You can configure Hanzo Ingress to use an ACME provider (like Let's Encrypt) to generate the default certificate.
 
 The configuration to resolve the default certificate should be defined in a TLS store.
 

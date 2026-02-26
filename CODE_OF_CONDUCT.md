@@ -37,7 +37,7 @@ Representation of a project may be further defined and clarified by project main
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at contact@traefik.io
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at ops@hanzo.ai
 
 All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances.
 
@@ -47,7 +47,7 @@ Further details of specific enforcement policies may be posted separately.
 
 Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
 
-When an inappropriate behavior is reported, maintainers will discuss on the Maintainer's Discord before marking the message as "abuse". 
+When an inappropriate behavior is reported, maintainers will discuss before marking the message as "abuse".
 This conversation beforehand avoids one-sided decisions.
 
 The first message will be edited and marked as abuse.
@@ -55,7 +55,7 @@ The second edited message and marked as abuse results in a 7-day ban.
 The third edited message and marked as abuse results in a permanent ban.
 
 The content of edited messages is:
-`Dear user, we want traefik to provide a welcoming and respectful environment. Your [comment/issue/PR] has been reported and marked as abuse according to our [Code of Conduct](./CODE_OF_CONDUCT.md). Thank you.`
+`Dear user, we want Hanzo Ingress to provide a welcoming and respectful environment. Your [comment/issue/PR] has been reported and marked as abuse according to our [Code of Conduct](./CODE_OF_CONDUCT.md). Thank you.`
 
 The [report must be resolved](https://docs.github.com/en/communities/moderating-comments-and-conversations/managing-reported-content-in-your-organizations-repository#resolving-a-report) accordingly.
 

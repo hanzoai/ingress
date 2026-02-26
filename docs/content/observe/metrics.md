@@ -1,15 +1,15 @@
 ---
 title: "Metrics"
-description: "Metrics in Traefik Proxy offer a comprehensive view of your infrastructure's health. They allow you to monitor critical indicators like incoming traffic volume. Metrics graphs and visualizations are helpful during incident triage in understanding the causes and implementing proactive measures."
+description: "Metrics in Hanzo Ingress offer a comprehensive view of your infrastructure's health. They allow you to monitor critical indicators like incoming traffic volume. Metrics graphs and visualizations are helpful during incident triage in understanding the causes and implementing proactive measures."
 ---
 
 # Metrics
 
-Metrics in Traefik Proxy offer a comprehensive view of your infrastructure's health. They allow you to monitor critical indicators like incoming traffic volume. Metrics graphs and visualizations are helpful during incident triage in understanding the causes and implementing proactive measures.
+Metrics in Hanzo Ingress offer a comprehensive view of your infrastructure's health. They allow you to monitor critical indicators like incoming traffic volume. Metrics graphs and visualizations are helpful during incident triage in understanding the causes and implementing proactive measures.
 
 ## Available Metrics Providers
 
-Traefik Proxy supports the following metrics providers:
+Hanzo Ingress supports the following metrics providers:
 
 - OpenTelemetry
 - Prometheus
@@ -19,7 +19,7 @@ Traefik Proxy supports the following metrics providers:
 
 ## Configuration
 
-To enable metrics in Traefik Proxy, you need to configure the metrics provider in your static configuration file or helm values if you are using the [Helm chart](https://github.com/traefik/traefik-helm-chart). The following example shows how to configure the OpenTelemetry provider to send metrics to a collector.
+To enable metrics in Hanzo Ingress, you need to configure the metrics provider in your static configuration file or helm values if you are using the [Helm chart](https://github.com/hanzoai/ingress-helm-chart). The following example shows how to configure the OpenTelemetry provider to send metrics to a collector.
 
 ```yaml tab="Structured (YAML)"
 metrics:

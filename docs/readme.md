@@ -21,7 +21,7 @@
 
 ```sh
 # Pre-requisite: python3, pip and virtualenv
-DOCS="/tmp/traefik-docs"
+DOCS="/tmp/hanzo-ingress-docs"
 mkdir "$DOCS"
 virtualenv "$DOCS"
 source "$DOCS/bin/activate"

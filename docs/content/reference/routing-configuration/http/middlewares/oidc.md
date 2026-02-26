@@ -1,10 +1,10 @@
 ---
 title: 'OpenID Connect Authentication'
-description: 'Traefik Hub API Gateway - The OIDC Authentication middleware secures your applications by delegating the authentication to an external provider.'
+description: 'Hanzo API Gateway - The OIDC Authentication middleware secures your applications by delegating the authentication to an external provider.'
 ---
 
-!!! info "Traefik Hub Feature"
-    This middleware is available exclusively in [Traefik Hub](https://traefik.io/traefik-hub/). Learn more about [Traefik Hub's advanced features](https://doc.traefik.io/traefik-hub/api-gateway/intro).
+!!! info "Hanzo Feature"
+    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
 
 The OIDC Authentication middleware secures your applications by delegating the authentication to an external provider
 
@@ -101,9 +101,9 @@ stringData:
 | <a id="opt-session-httpOnly" href="#opt-session-httpOnly" title="#opt-session-httpOnly">`session.httpOnly`</a> | Forbids JavaScript from accessing the cookie. <br /> For example, through the `Document.cookie` property, the `XMLHttpRequest` API, or the `Request` API. <br /> This mitigates attacks against cross-site scripting ([XSS](https://developer.mozilla.org/en-US/docs/Glossary/XSS)). | true | No |
 | <a id="opt-session-secure" href="#opt-session-secure" title="#opt-session-secure">`session.secure`</a> | Defines whether the session cookie is only sent to the server when a request is made with the `https` scheme. | false | No |
 | <a id="opt-session-store-redis-endpoints" href="#opt-session-store-redis-endpoints" title="#opt-session-store-redis-endpoints">`session.store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.traefik-hub.svc.cluster.local:6379`) | "" | Yes      |
-| <a id="opt-session-store-redis-username" href="#opt-session-store-redis-username" title="#opt-session-store-redis-username">`session.store.redis.username`</a> | The username Traefik Hub will use to connect to Redis                                                | "" | No       |
-| <a id="opt-session-store-redis-password" href="#opt-session-store-redis-password" title="#opt-session-store-redis-password">`session.store.redis.password`</a> | The password Traefik Hub will use to connect to Redis                                                | "" | No       |
-| <a id="opt-session-store-redis-database" href="#opt-session-store-redis-database" title="#opt-session-store-redis-database">`session.store.redis.database`</a> | The database Traefik Hub will use to sore information (default: `0`)                                 | "" | No       |
+| <a id="opt-session-store-redis-username" href="#opt-session-store-redis-username" title="#opt-session-store-redis-username">`session.store.redis.username`</a> | The username Hanzo will use to connect to Redis                                                | "" | No       |
+| <a id="opt-session-store-redis-password" href="#opt-session-store-redis-password" title="#opt-session-store-redis-password">`session.store.redis.password`</a> | The password Hanzo will use to connect to Redis                                                | "" | No       |
+| <a id="opt-session-store-redis-database" href="#opt-session-store-redis-database" title="#opt-session-store-redis-database">`session.store.redis.database`</a> | The database Hanzo will use to sore information (default: `0`)                                 | "" | No       |
 | <a id="opt-session-store-redis-cluster" href="#opt-session-store-redis-cluster" title="#opt-session-store-redis-cluster">`session.store.redis.cluster`</a> | Enable Redis Cluster                                                                                 | "" | No       |
 | <a id="opt-session-store-redis-tls-caBundle" href="#opt-session-store-redis-tls-caBundle" title="#opt-session-store-redis-tls-caBundle">`session.store.redis.tls.caBundle`</a> | Custom CA bundle                                                                                     | "" | No       |
 | <a id="opt-session-store-redis-tls-cert" href="#opt-session-store-redis-tls-cert" title="#opt-session-store-redis-tls-cert">`session.store.redis.tls.cert`</a> | TLS certificate                                                                                      | "" | No       |
@@ -114,7 +114,7 @@ stringData:
 | <a id="opt-session-store-redis-sentinel-password" href="#opt-session-store-redis-sentinel-password" title="#opt-session-store-redis-sentinel-password">`session.store.redis.sentinel.password`</a> | Password to use for sentinel authentication (can be different from `password`)                       | "" | No       |
 | <a id="opt-csrf" href="#opt-csrf" title="#opt-csrf">`csrf`</a> | When enabled, a CSRF cookie, named `traefikee-csrf-token`, is bound to the OIDC session to protect service from CSRF attacks. <br /> It is based on the [Signed Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie) implementation as defined by the OWASP Foundation.<br />Moreinformation [here](#csrf). | "" | No |
 | <a id="opt-csrf-secure" href="#opt-csrf-secure" title="#opt-csrf-secure">`csrf.secure`</a> | Defines whether the CSRF cookie is only sent to the server when a request is made with the `https` scheme. | false | No |
-| <a id="opt-csrf-headerName" href="#opt-csrf-headerName" title="#opt-csrf-headerName">`csrf.headerName`</a> | Defines the name of the header used to send the CSRF token value received previously in the CSRF cookie. | TraefikHub-Csrf-Token | No |
+| <a id="opt-csrf-headerName" href="#opt-csrf-headerName" title="#opt-csrf-headerName">`csrf.headerName`</a> | Defines the name of the header used to send the CSRF token value received previously in the CSRF cookie. | HanzoIngress-Csrf-Token | No |
 
 ### redirectUrl
 

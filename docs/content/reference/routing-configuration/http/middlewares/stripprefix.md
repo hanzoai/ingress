@@ -1,6 +1,6 @@
 ---
-title: "Traefik StripPrefix Documentation"
-description: "In Traefik Proxy's HTTP middleware, StripPrefix removes prefixes from paths before forwarding requests. Read the technical documentation."
+title: "Hanzo Ingress StripPrefix Documentation"
+description: "In Hanzo Ingress's HTTP middleware, StripPrefix removes prefixes from paths before forwarding requests. Read the technical documentation."
 ---
 
 The `stripPrefix` middleware strips the matching path prefix and stores it in an `X-Forwarded-Prefix` header.

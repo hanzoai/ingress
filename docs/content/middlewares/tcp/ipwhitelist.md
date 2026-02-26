@@ -1,6 +1,6 @@
 ---
-title: "Traefik TCP Middlewares IPWhiteList"
-description: "Learn how to use IPWhiteList in TCP middleware for limiting clients to specific IPs in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress TCP Middlewares IPWhiteList"
+description: "Learn how to use IPWhiteList in TCP middleware for limiting clients to specific IPs in Hanzo Ingress. Read the technical documentation."
 ---
 
 # IPWhiteList

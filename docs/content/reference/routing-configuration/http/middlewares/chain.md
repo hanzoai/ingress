@@ -1,5 +1,5 @@
 ---
-title: "Traefik Chain Middleware Documentation"
+title: "Hanzo Ingress Chain Middleware Documentation"
 description: "The HTTP chain middleware lets you define reusable combinations of other middleware, to reuse the same groups. Read the technical documentation."
 ---
 

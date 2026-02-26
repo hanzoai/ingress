@@ -2,17 +2,17 @@
 PLEASE READ THIS MESSAGE.
 
 Documentation:
-- for Traefik v2: use branch v2.11 (fixes only)
-- for Traefik v3: use branch v3.6
+- for v2: use branch v2.11 (fixes only)
+- for v3: use branch v3.6
 
 Bug:
-- for Traefik v2: use branch v2.11 (security fixes only)
-- for Traefik v3: use branch v3.6
+- for v2: use branch v2.11 (security fixes only)
+- for v3: use branch v3.6
 
 Enhancements:
 - use branch master
 
-HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/submitting-pull-requests/
+HOW TO WRITE A GOOD PULL REQUEST? https://github.com/hanzoai/ingress/blob/main/docs/content/contributing/submitting-pull-requests.md
 
 -->
 

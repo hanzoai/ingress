@@ -1,8 +1,8 @@
-# Exposing Services with Traefik on Kubernetes - Advanced
+# Exposing Services with Hanzo Ingress on Kubernetes - Advanced
 
-This guide builds on the concepts and setup from the [Basic Guide](basic.md). Make sure you've completed the basic guide and have a working Traefik setup with Kubernetes before proceeding.
+This guide builds on the concepts and setup from the [Basic Guide](basic.md). Make sure you've completed the basic guide and have a working Hanzo Ingress setup with Kubernetes before proceeding.
 
-In this advanced guide, you'll learn how to enhance your Traefik deployment with:
+In this advanced guide, you'll learn how to enhance your Hanzo Ingress deployment with:
 
 - **Middlewares** for security headers and access control
 - **Let's Encrypt** for automated certificate management (IngressRoute)
@@ -13,13 +13,13 @@ In this advanced guide, you'll learn how to enhance your Traefik deployment with
 ## Prerequisites
 
 - Completed the [Basic Guide](basic.md)
-- A Kubernetes cluster with Traefik Proxy installed
+- A Kubernetes cluster with Hanzo Ingress installed
 - `kubectl` configured to interact with your cluster
-- Working Traefik setup from the basic guide
+- Working Hanzo Ingress setup from the basic guide
 
 ## Add Middlewares
 
-Middlewares allow you to modify requests or responses as they pass through Traefik. Let's add two useful middlewares: [Headers](../../reference/routing-configuration/http/middlewares/headers.md) for security and [IP allowlisting](../../reference/routing-configuration/http/middlewares/ipallowlist.md) for access control.
+Middlewares allow you to modify requests or responses as they pass through Hanzo Ingress. Let's add two useful middlewares: [Headers](../../reference/routing-configuration/http/middlewares/headers.md) for security and [IP allowlisting](../../reference/routing-configuration/http/middlewares/ipallowlist.md) for access control.
 
 ### Create Middlewares
 
@@ -60,7 +60,7 @@ kubectl apply -f middlewares.yaml
 
 ### Apply Middlewares with Gateway API
 
-In Gateway API, you can apply middlewares using the `ExtensionRef` filter type. This is the preferred and standard way to use Traefik middlewares with Gateway API, as it integrates directly with the HTTPRoute specification.
+In Gateway API, you can apply middlewares using the `ExtensionRef` filter type. This is the preferred and standard way to use Hanzo Ingress middlewares with Gateway API, as it integrates directly with the HTTPRoute specification.
 
 Now, update your `HTTPRoute` to reference these middlewares using the `ExtensionRef` filter:
 
@@ -121,7 +121,7 @@ Update the file `whoami-route.yaml` and apply it:
 kubectl apply -f whoami-route.yaml
 ```
 
-This approach uses the Gateway API's native filter mechanism rather than annotations. The `ExtensionRef` filter type allows you to reference Traefik middlewares directly within the HTTPRoute specification, which is more consistent with the Gateway API design principles.
+This approach uses the Gateway API's native filter mechanism rather than annotations. The `ExtensionRef` filter type allows you to reference Hanzo Ingress middlewares directly within the HTTPRoute specification, which is more consistent with the Gateway API design principles.
 
 ### Apply Middlewares with IngressRoute
 
@@ -188,11 +188,11 @@ To test the IP allowlist, you can modify the `sourceRange` in the middleware to 
 ## Generate Certificates with Let's Encrypt
 
 !!! info
-    Traefik's built-in Let's Encrypt integration works with IngressRoute but does not automatically issue certificates for Gateway API listeners. For Gateway API, you should use cert-manager or another certificate controller.
+    Hanzo Ingress's built-in Let's Encrypt integration works with IngressRoute but does not automatically issue certificates for Gateway API listeners. For Gateway API, you should use cert-manager or another certificate controller.
 
 ### Using IngressRoute with Let's Encrypt
 
-Configure a certificate resolver in your Traefik values.yaml:
+Configure a certificate resolver in your Hanzo Ingress values.yaml:
 
 ```yaml
 additionalArguments:
@@ -202,9 +202,9 @@ additionalArguments:
 ```
 
 !!! important "Public DNS Required"
-    Let's Encrypt may require a publicly accessible domain to validate domain ownership. For testing with local domains like `whoami.docker.localhost`, the certificate will remain self-signed. In production, replace it with a real domain that has a publicly accessible DNS record pointing to your Traefik instance.
+    Let's Encrypt may require a publicly accessible domain to validate domain ownership. For testing with local domains like `whoami.docker.localhost`, the certificate will remain self-signed. In production, replace it with a real domain that has a publicly accessible DNS record pointing to your Hanzo Ingress instance.
 
-Update your Traefik installation with this configuration:
+Update your Hanzo Ingress installation with this configuration:
 
 ```bash
 helm upgrade traefik traefik/traefik -n traefik --reuse-values -f values.yaml
@@ -362,7 +362,7 @@ To demonstrate sticky sessions, first scale up the deployment to 3 replicas:
 kubectl scale deployment whoami --replicas=3
 ```
 
-### Using Gateway API with TraefikService
+### Using Gateway API with Hanzo IngressService
 
 First, create the `TraefikService` for sticky sessions:
 
@@ -454,7 +454,7 @@ Update the file `whoami-route.yaml` and apply it:
 kubectl apply -f whoami-route.yaml
 ```
 
-### Using IngressRoute with TraefikService
+### Using IngressRoute with Hanzo IngressService
 
 First, create the `TraefikService` for sticky sessions:
 
@@ -585,7 +585,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
         env:
         - name: WHOAMI_NAME
           value: "Admin Backend"
@@ -620,7 +620,7 @@ spec:
     spec:
       containers:
       - name: whoami
-        image: traefik/whoami
+        image: hanzoai/whoami
         env:
         - name: WHOAMI_NAME
           value: "User Backend"
@@ -774,7 +774,7 @@ spec:
 ```
 
 !!! important "Cross-Namespace Requirement"
-    To use cross-namespace parent references, you must enable the `allowCrossNamespace` option in your Traefik Helm values:
+    To use cross-namespace parent references, you must enable the `allowCrossNamespace` option in your Hanzo Ingress Helm values:
 
     ```yaml
     providers:
@@ -815,15 +815,15 @@ In this advanced guide, you've learned how to:
 - Implement sticky sessions for stateful applications
 - Setup multi-layer routing for authentication-based routing (IngressRoute only)
 
-These advanced capabilities allow you to build production-ready Traefik deployments with Kubernetes. Each of these can be further customized to meet your specific requirements.
+These advanced capabilities allow you to build production-ready Hanzo Ingress deployments with Kubernetes. Each of these can be further customized to meet your specific requirements.
 
 ### Next Steps
 
-Now that you've mastered both basic and advanced Traefik features with Kubernetes, you might want to explore:
+Now that you've mastered both basic and advanced Hanzo Ingress features with Kubernetes, you might want to explore:
 
 - [Advanced routing options](../../reference/routing-configuration/http/routing/rules-and-priority.md) like query parameter matching, header-based routing, and more
 - [Additional middlewares](../../reference/routing-configuration/http/middlewares/overview.md) for authentication, rate limiting, and request modifications
-- [Observability features](../../reference/install-configuration/observability/metrics.md) for monitoring and debugging your Traefik deployment
+- [Observability features](../../reference/install-configuration/observability/metrics.md) for monitoring and debugging your Hanzo Ingress deployment
 - [TCP services](../../reference/routing-configuration/tcp/service.md) for exposing TCP services
 - [UDP services](../../reference/routing-configuration/udp/service.md) for exposing UDP services
 - [Kubernetes Provider documentation](../../reference/install-configuration/providers/kubernetes/kubernetes-crd.md) for more details about the Kubernetes integration

@@ -1,13 +1,13 @@
 ---
 title: "Kubernetes IngressRoute"
-description: "An IngressRoute is a Traefik CRD is in charge of connecting incoming requests to the Services that can handle them in HTTP."
+description: "An IngressRoute is a Hanzo Ingress CRD is in charge of connecting incoming requests to the Services that can handle them in HTTP."
 ---
 
-`IngressRoute` is the CRD implementation of a [Traefik HTTP router](../../../http/routing/rules-and-priority.md).
+`IngressRoute` is the CRD implementation of a [HTTP router](../../../http/routing/rules-and-priority.md).
 
-Before creating `IngressRoute` objects, you need to apply the [Traefik Kubernetes CRDs](https://doc.traefik.io/traefik/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
+Before creating `IngressRoute` objects, you need to apply the [Kubernetes CRDs](https://github.com/hanzoai/ingress/blob/main/docs/content/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
 
-This registers the `IngressRoute` kind and other Traefik-specific resources.
+This registers the `IngressRoute` kind and other CRD resources.
 
 ## Configuration Example
 
@@ -47,7 +47,7 @@ spec:
     - kind: Service
       name: foo
       namespace: apps
-      # Customize the connection between Traefik and the backend
+      # Customize the connection between Hanzo Ingress and the backend
       passHostHeader: true
       port: 80
       responseForwarding:
@@ -174,7 +174,7 @@ and it all happens before routing actually occurs.
 
 In the case of domain fronting,
 if the TLS options associated with the Host Header and the SNI are different then
-Traefik will respond with a status code `421`.
+Hanzo Ingress will respond with a status code `421`.
 
 #### Conflicting TLS Options
 

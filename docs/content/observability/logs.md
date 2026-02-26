@@ -1,6 +1,6 @@
 ---
-title: "Traefik Logs Documentation"
-description: "Logs are a key part of observability in Traefik Proxy. Read the technical documentation to learn their configurations, rotations, and time zones."
+title: "Hanzo Ingress Logs Documentation"
+description: "Logs are a key part of observability in Hanzo Ingress. Read the technical documentation to learn their configurations, rotations, and time zones."
 ---
 
 # Logs
@@ -14,13 +14,13 @@ By default, logs are written to stdout, in text format.
 
 ### General
 
-Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+Hanzo Ingress logs concern everything that happens to Hanzo Ingress itself (startup, configuration, events, shutdown, and so on).
 
 #### `filePath`
 
 By default, the logs are written to the standard output.
 You can configure a file path instead using the `filePath` option.
-When `filePath` is specified, Traefik will write logs only to that file (not to standard output).
+When `filePath` is specified, Hanzo Ingress will write logs only to that file (not to standard output).
 
 ```yaml tab="File (YAML)"
 # Writing Logs to a File

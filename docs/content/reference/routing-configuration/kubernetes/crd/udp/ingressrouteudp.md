@@ -1,13 +1,13 @@
 ---
 title: "IngressRouteUDP"
-description: "Understand the routing configuration for the Kubernetes IngressRouteUDP & Traefik CRD"
+description: "Understand the routing configuration for the Kubernetes IngressRouteUDP & Hanzo Ingress CRD"
 ---
 
-`IngressRouteUDP` is the CRD implementation of a [Traefik UDP router](../../../udp/routing/rules-priority.md).
+`IngressRouteUDP` is the CRD implementation of a [UDP router](../../../udp/routing/rules-priority.md).
 
-Before creating `IngressRouteUDP` objects, you need to apply the [Traefik Kubernetes CRDs](https://doc.traefik.io/traefik/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
+Before creating `IngressRouteUDP` objects, you need to apply the [Kubernetes CRDs](https://github.com/hanzoai/ingress/blob/main/docs/content/reference/dynamic-configuration/kubernetes-crd/#definitions) to your Kubernetes cluster.
 
-This registers the `IngressRouteUDP` kind and other Traefik-specific resources.
+This registers the `IngressRouteUDP` kind and other CRD resources.
 
 ## Configuration Example
 
@@ -20,7 +20,7 @@ metadata:
 spec:
   ingressClassName: traefik-lb
   entryPoints:
-    - fooudp  # The entry point where Traefik listens for incoming traffic.
+    - fooudp  # The entry point where Hanzo Ingress listens for incoming traffic.
   routes:
   - services:
     - name: foo # The name of the Kubernetes Service to route to.
@@ -41,16 +41,16 @@ spec:
 | <a id="opt-routesn-servicesn-port" href="#opt-routesn-servicesn-port" title="#opt-routesn-servicesn-port">`routes[n].services[n].port`</a> | Defines the port of a [Kubernetes service](https://kubernetes.io/docs/concepts/services-networking/service/). This can be a reference to a named port.|  | Yes |
 | <a id="opt-routesn-servicesn-weight" href="#opt-routesn-servicesn-weight" title="#opt-routesn-servicesn-weight">`routes[n].services[n].weight`</a> | Defines the weight to apply to the server load balancing. | 1 | No |
 | <a id="opt-routesn-servicesn-nativeLB" href="#opt-routesn-servicesn-nativeLB" title="#opt-routesn-servicesn-nativeLB">`routes[n].services[n].nativeLB`</a> | Controls, when creating the load-balancer, whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP. | false | No |
-| <a id="opt-routesn-servicesn-nodePortLB" href="#opt-routesn-servicesn-nodePortLB" title="#opt-routesn-servicesn-nodePortLB">`routes[n].services[n].nodePortLB`</a> | Controls, when creating the load-balancer, whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort. It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes. See [here](#nativelb) for more information. | false | No  |
+| <a id="opt-routesn-servicesn-nodePortLB" href="#opt-routesn-servicesn-nodePortLB" title="#opt-routesn-servicesn-nodePortLB">`routes[n].services[n].nodePortLB`</a> | Controls, when creating the load-balancer, whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort. It allows services to be reachable when Hanzo Ingress runs externally from the Kubernetes cluster but within the same network of the nodes. See [here](#nativelb) for more information. | false | No  |
 
 ### ExternalName Service
 
-Traefik backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Traefik supports defining a port in two ways:
+Hanzo Ingress backends creation needs a port to be set, however Kubernetes [ExternalName Service](https://kubernetes.io/docs/concepts/services-networking/service/#externalname) could be defined without any port. Accordingly, Hanzo Ingress supports defining a port in two ways:
 
 - only on `IngressRouteUDP` service
 - on both sides, you'll be warned if the ports don't match, and the `IngressRouteUDP` service port is used
 
-Thus, in case of two sides port definition, Traefik expects a match between ports.
+Thus, in case of two sides port definition, Hanzo Ingress expects a match between ports.
 
 === "Ports defined on Resource"
 

@@ -6,9 +6,9 @@
 DO NOT FILE ISSUES FOR GENERAL SUPPORT QUESTIONS.
 
 The issue tracker is for reporting bugs and feature requests only.
-For end-user related support questions, please refer to one of the following:
+For end-user related support questions, please refer to:
 
-- the Traefik community forum: https://community.traefik.io/
+- Hanzo AI GitHub Discussions: https://github.com/hanzoai/ingress/discussions
 
 -->
 
@@ -17,7 +17,7 @@ Bug
 <!--
 
 The configurations between 1.X and 2.X are NOT compatible.
-Please have a look here https://doc.traefik.io/traefik/getting-started/configuration-overview/.
+Please have a look here https://github.com/hanzoai/ingress/blob/main/docs/content/getting-started/configuration-overview.md
 
 -->
 
@@ -30,7 +30,7 @@ HOW TO WRITE A GOOD BUG REPORT?
 - Respect the issue template as much as possible.
 - The title should be short and descriptive.
 - Explain the conditions which led you to report this issue: the context.
-- The context should lead to something, an idea or a problem that you’re facing.
+- The context should lead to something, an idea or a problem that you're facing.
 - Remain clear and concise.
 - Format your messages to help the reader focus on what matters and understand the structure of your message, use Markdown syntax https://help.github.com/articles/github-flavored-markdown
 
@@ -44,14 +44,14 @@ HOW TO WRITE A GOOD BUG REPORT?
 
 
 
-### Output of `traefik version`: (_What version of Traefik are you using?_)
+### Output of `hanzo-ingress version`: (_What version of Hanzo Ingress are you using?_)
 
 <!--
 `latest` is not considered as a valid version.
 
-For the Traefik Docker image:
+For the Docker image:
     docker run [IMAGE] version
-    ex: docker run traefik version
+    ex: docker run ghcr.io/hanzoai/ingress version
 
 -->
 

@@ -19,9 +19,7 @@ We use [Semantic Versioning](https://semver.org/).
 
 ## Reporting a Vulnerability
 
-We want to keep Traefik safe for everyone.
-If you've discovered a security vulnerability in Traefik,
+We want to keep Hanzo Ingress safe for everyone.
+If you've discovered a security vulnerability in Hanzo Ingress,
 we appreciate your help in disclosing it to us in a responsible manner,
-by creating a [security advisory](https://github.com/traefik/traefik/security/advisories).
-
-Reported vulnerabilities can be found on [cve.mitre.org](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=traefik).
+by creating a [security advisory](https://github.com/hanzoai/ingress/security/advisories).

@@ -1,6 +1,6 @@
 ---
-title: "Traefik HTTP Middlewares IPAllowList"
-description: "Learn how to use IPAllowList in HTTP middleware for limiting clients to specific IPs in Traefik Proxy. Read the technical documentation."
+title: "Hanzo Ingress HTTP Middlewares IPAllowList"
+description: "Learn how to use IPAllowList in HTTP middleware for limiting clients to specific IPs in Hanzo Ingress. Read the technical documentation."
 ---
 
 # IPAllowList
@@ -63,14 +63,14 @@ The `sourceRange` option sets the allowed IPs (or ranges of allowed IPs by using
 
 ### `ipStrategy`
 
-The `ipStrategy` option defines two parameters that set how Traefik determines the client IP: `depth`, and `excludedIPs`.  
+The `ipStrategy` option defines two parameters that set how Hanzo Ingress determines the client IP: `depth`, and `excludedIPs`.  
 If no strategy is set, the default behavior is to match `sourceRange` against the Remote address found in the request.
 
 !!! important "As a middleware, whitelisting happens before the actual proxying to the backend takes place. In addition, the previous network hop only gets appended to `X-Forwarded-For` during the last stages of proxying, i.e. after it has already passed through whitelisting. Therefore, during whitelisting, as the previous network hop is not yet present in `X-Forwarded-For`, it cannot be matched against `sourceRange`."
 
 #### `ipStrategy.depth`
 
-The `depth` option tells Traefik to use the `X-Forwarded-For` header and take the IP located at the `depth` position (starting from the right).
+The `depth` option tells Hanzo Ingress to use the `X-Forwarded-For` header and take the IP located at the `depth` position (starting from the right).
 
 - If `depth` is greater than the total number of IPs in `X-Forwarded-For`, then the client IP will be empty.
 - `depth` is ignored if its value is less than or equal to 0.
@@ -140,7 +140,7 @@ http:
 
 #### `ipStrategy.excludedIPs`
 
-`excludedIPs` configures Traefik to scan the `X-Forwarded-For` header and select the first IP not in the list.
+`excludedIPs` configures Hanzo Ingress to scan the `X-Forwarded-For` header and select the first IP not in the list.
 
 !!! important "If `depth` is specified, `excludedIPs` is ignored."
 
