@@ -116,6 +116,6 @@ jobs:
 
       - name: Rolling update ingress
         run: |
-          kubectl -n traefik set image deployment/traefik \
-            traefik=ghcr.io/hanzoai/ingress:latest
-          kubectl -n traefik rollout status deployment/traefik --timeout=120s
+          kubectl -n hanzo set image daemonset/hanzo-ingress \
+            hanzo-ingress=ghcr.io/hanzoai/ingress:${{ github.sha }}
+          kubectl -n hanzo rollout status daemonset/hanzo-ingress --timeout=120s
