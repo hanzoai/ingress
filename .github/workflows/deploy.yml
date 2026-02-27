@@ -44,8 +44,17 @@ jobs:
           set -euo pipefail
           KMS_URL="${KMS_URL:-https://kms.hanzo.ai}"
 
+          retry() {
+            local n=0
+            until [ $n -ge 5 ]; do
+              "$@" && return 0
+              n=$((n+1)); echo "::warning::Retry $n/5..."; sleep $((n*5))
+            done
+            return 1
+          }
+
           ACCESS_TOKEN="$(
-            curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
+            retry curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
               -H "Content-Type: application/json" \
               -d "$(jq -nc --arg cid "$KMS_CLIENT_ID" --arg cs "$KMS_CLIENT_SECRET" \
                     '{clientId: $cid, clientSecret: $cs}')" \
@@ -56,7 +65,7 @@ jobs:
             echo "::error::Failed to authenticate to Hanzo KMS"; exit 1; }
 
           fetch_secret() {
-            curl -fsS "${KMS_URL}/api/v3/secrets/raw/${1}?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
+            retry curl -fsS "${KMS_URL}/api/v3/secrets/raw/${1}?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
               -H "Authorization: Bearer ${ACCESS_TOKEN}" \
             | jq -r '.secret.secretValue'
           }
@@ -148,8 +157,17 @@ jobs:
           set -euo pipefail
           KMS_URL="${KMS_URL:-https://kms.hanzo.ai}"
 
+          retry() {
+            local n=0
+            until [ $n -ge 5 ]; do
+              "$@" && return 0
+              n=$((n+1)); echo "::warning::Retry $n/5..."; sleep $((n*5))
+            done
+            return 1
+          }
+
           ACCESS_TOKEN="$(
-            curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
+            retry curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
               -H "Content-Type: application/json" \
               -d "$(jq -nc --arg cid "$KMS_CLIENT_ID" --arg cs "$KMS_CLIENT_SECRET" \
                     '{clientId: $cid, clientSecret: $cs}')" \
@@ -159,7 +177,7 @@ jobs:
           [ -n "${ACCESS_TOKEN}" ] && [ "${ACCESS_TOKEN}" != "null" ] || {
             echo "::error::Failed to authenticate to Hanzo KMS"; exit 1; }
 
-          val="$(curl -fsS "${KMS_URL}/api/v3/secrets/raw/DIGITALOCEAN_ACCESS_TOKEN?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
+          val="$(retry curl -fsS "${KMS_URL}/api/v3/secrets/raw/DIGITALOCEAN_ACCESS_TOKEN?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
             -H "Authorization: Bearer ${ACCESS_TOKEN}" | jq -r '.secret.secretValue')"
           [ -n "$val" ] && [ "$val" != "null" ] || { echo "::error::Missing DO token"; exit 1; }
           echo "::add-mask::${val}"
