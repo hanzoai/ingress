@@ -48,30 +48,31 @@ jobs:
             local n=0
             until [ $n -ge 5 ]; do
               "$@" && return 0
-              n=$((n+1)); echo "::warning::Retry $n/5..."; sleep $((n*5))
+              n=$((n+1)); echo "::warning::Retry $n/5..." >&2; sleep $((n*5))
             done
             return 1
           }
 
-          ACCESS_TOKEN="$(
-            retry curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
+          kms_login() {
+            curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
               -H "Content-Type: application/json" \
               -d "$(jq -nc --arg cid "$KMS_CLIENT_ID" --arg cs "$KMS_CLIENT_SECRET" \
                     '{clientId: $cid, clientSecret: $cs}')" \
-            | jq -r '.accessToken'
-          )"
+            | jq -re '.accessToken'
+          }
 
+          ACCESS_TOKEN="$(retry kms_login)"
           [ -n "${ACCESS_TOKEN}" ] && [ "${ACCESS_TOKEN}" != "null" ] || {
             echo "::error::Failed to authenticate to Hanzo KMS"; exit 1; }
 
           fetch_secret() {
-            retry curl -fsS "${KMS_URL}/api/v3/secrets/raw/${1}?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
+            curl -fsS "${KMS_URL}/api/v3/secrets/raw/${1}?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
               -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-            | jq -r '.secret.secretValue'
+            | jq -re '.secret.secretValue'
           }
 
           for name in DOCKERHUB_USERNAME DOCKERHUB_TOKEN DIGITALOCEAN_ACCESS_TOKEN; do
-            val="$(fetch_secret "$name")"
+            val="$(retry fetch_secret "$name")"
             [ -n "$val" ] && [ "$val" != "null" ] || { echo "::error::Missing KMS secret $name"; exit 1; }
             echo "::add-mask::${val}"
             echo "${name}=${val}" >> "$GITHUB_OUTPUT"
@@ -161,24 +162,30 @@ jobs:
             local n=0
             until [ $n -ge 5 ]; do
               "$@" && return 0
-              n=$((n+1)); echo "::warning::Retry $n/5..."; sleep $((n*5))
+              n=$((n+1)); echo "::warning::Retry $n/5..." >&2; sleep $((n*5))
             done
             return 1
           }
 
-          ACCESS_TOKEN="$(
-            retry curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
+          kms_login() {
+            curl -fsS -X POST "${KMS_URL}/api/v1/auth/universal-auth/login" \
               -H "Content-Type: application/json" \
               -d "$(jq -nc --arg cid "$KMS_CLIENT_ID" --arg cs "$KMS_CLIENT_SECRET" \
                     '{clientId: $cid, clientSecret: $cs}')" \
-            | jq -r '.accessToken'
-          )"
+            | jq -re '.accessToken'
+          }
 
+          ACCESS_TOKEN="$(retry kms_login)"
           [ -n "${ACCESS_TOKEN}" ] && [ "${ACCESS_TOKEN}" != "null" ] || {
             echo "::error::Failed to authenticate to Hanzo KMS"; exit 1; }
 
-          val="$(retry curl -fsS "${KMS_URL}/api/v3/secrets/raw/DIGITALOCEAN_ACCESS_TOKEN?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
-            -H "Authorization: Bearer ${ACCESS_TOKEN}" | jq -r '.secret.secretValue')"
+          fetch_do_token() {
+            curl -fsS "${KMS_URL}/api/v3/secrets/raw/DIGITALOCEAN_ACCESS_TOKEN?workspaceSlug=gitops&environment=prod&secretPath=/ci&viewSecretValue=true&include_imports=true" \
+              -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+            | jq -re '.secret.secretValue'
+          }
+
+          val="$(retry fetch_do_token)"
           [ -n "$val" ] && [ "$val" != "null" ] || { echo "::error::Missing DO token"; exit 1; }
           echo "::add-mask::${val}"
           echo "DIGITALOCEAN_ACCESS_TOKEN=${val}" >> "$GITHUB_OUTPUT"
