@@ -55,10 +55,8 @@ spec:
         # Health + observability
         - "--ping=true"
         - "--ping.entryPoint=web"
-        - "--api=true"
-        - "--api.insecure=true"
         - "--api.dashboard=false"
-        - "--log.level=DEBUG"
+        - "--log.level=INFO"
         - "--accesslog=true"
         - "--accesslog.fields.defaultmode=keep"
         - "--accesslog.fields.headers.defaultmode=drop"
