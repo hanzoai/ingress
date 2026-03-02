@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.2
+# syntax=docker/dockerfile:1
 
 # ---- Stage 1: Build WebUI dashboard ----
 FROM --platform=$BUILDPLATFORM node:24-alpine3.22 AS webui
@@ -10,7 +10,7 @@ COPY webui/ ./
 RUN yarn build
 
 # ---- Stage 2: Build Go binary ----
-FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
 
 RUN apk add --no-cache git
 
@@ -29,7 +29,9 @@ COPY . .
 # Overlay built webui assets.
 COPY --from=webui /src/webui/static ./webui/static
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -ldflags="-w -s \
       -X github.com/hanzoai/ingress/v3/pkg/version.Version=${VERSION} \
       -X github.com/hanzoai/ingress/v3/pkg/version.Codename=hanzo \
