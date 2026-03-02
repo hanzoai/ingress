@@ -4,3 +4,15 @@ dist/
 site/
 vendor/
 .idea/
+.vscode/
+.git/
+.github/
+.DS_Store
+*.md
+!webui/*.md
+*.log
+cover.out
+plugins-storage/
+plugins-local/
+integration/
+docs/
