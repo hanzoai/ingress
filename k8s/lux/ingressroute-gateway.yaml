@@ -1,0 +1,33 @@
+apiVersion: hanzo.ai/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gateway-ingress
+  namespace: lux-gateway
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`api.lux.network`)
+      kind: Rule
+      services:
+        - name: gateway-mainnet
+          port: 80
+          passHostHeader: false
+    - match: Host(`api.testnet.lux.network`)
+      kind: Rule
+      services:
+        - name: gateway-testnet
+          port: 80
+          passHostHeader: false
+    - match: Host(`api.devnet.lux.network`)
+      kind: Rule
+      services:
+        - name: gateway-devnet
+          port: 80
+          passHostHeader: false
+  tls:
+    certResolver: letsencrypt
+    domains:
+      - main: api.lux.network
+      - main: api.testnet.lux.network
+      - main: api.devnet.lux.network
