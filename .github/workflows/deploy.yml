@@ -8,8 +8,10 @@ on:
       - 'cmd/**'
       - 'pkg/**'
       - 'internal/**'
+      - 'webui/**'
       - 'Dockerfile'
-      - 'Makefile'
+      - 'go.mod'
+      - 'go.sum'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -17,105 +19,21 @@ permissions:
   contents: read
   packages: write
 
-env:
-  CGO_ENABLED: 0
-
 jobs:
-  build-webui:
-    if: github.repository == 'hanzoai/ingress'
-    uses: ./.github/workflows/template-webui.yaml
-
-  build:
-    if: github.repository == 'hanzoai/ingress'
-    needs: build-webui
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: '.go-version'
-          check-latest: true
-
-      - name: Build binary
-        run: make generate binary
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GH_PAT }}
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        continue-on-error: true
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Image metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ghcr.io/hanzoai/ingress
-            hanzoai/ingress
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix=
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-
-      - name: Artifact webui
-        uses: actions/download-artifact@v4
-        with:
-          name: webui.tar.gz
-
-      - name: Untar webui
-        run: |
-          tar xvf webui.tar.gz
-          rm webui.tar.gz
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=ingress
-          cache-to: type=gha,mode=max,scope=ingress
+  docker:
+    uses: hanzoai/.github/.github/workflows/docker-build.yml@main
+    with:
+      image: ghcr.io/hanzoai/ingress
+      deploy: false
+    secrets: inherit
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: docker
+    runs-on: hanzo-k8s
+    environment: production
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Configure kubectl (hanzo-k8s)
-        run: doctl kubernetes cluster kubeconfig save hanzo-k8s
-
-      - name: Rolling update ingress
+      - name: Rolling restart ingress DaemonSet
         run: |
-          kubectl -n hanzo set image daemonset/hanzo-ingress \
-            hanzo-ingress=ghcr.io/hanzoai/ingress:${{ github.sha }}
-          kubectl -n hanzo rollout status daemonset/hanzo-ingress --timeout=120s
+          kubectl rollout restart daemonset/hanzo-ingress -n hanzo
+          kubectl rollout status daemonset/hanzo-ingress -n hanzo --timeout=120s
