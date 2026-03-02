@@ -1,0 +1,33 @@
+---
+# Default CORS headers middleware
+apiVersion: hanzo.ai/v1alpha1
+kind: Middleware
+metadata:
+  name: cors-allow-all
+  namespace: lux-system
+spec:
+  headers:
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    accessControlAllowHeaders:
+      - Content-Type
+      - Authorization
+      - X-Requested-With
+    accessControlAllowOriginList:
+      - "*"
+    accessControlMaxAge: 86400
+---
+# Large body uploads (50MB)
+apiVersion: hanzo.ai/v1alpha1
+kind: Middleware
+metadata:
+  name: body-size-50m
+  namespace: lux-system
+spec:
+  buffering:
+    maxRequestBodyBytes: 52428800
