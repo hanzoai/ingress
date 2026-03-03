@@ -5,7 +5,7 @@
   "homepage": ".",
   "scripts": {
     "build": "vite build",
-    "build:prod": "yarn test && yarn tsc && yarn lint && yarn build",
+    "build:prod": "pnpm test && pnpm tsc && pnpm lint && pnpm build",
     "dev": "vite",
     "format": "prettier './src/**/*.{ts,tsx}' --config .prettierrc.json --write",
     "lint": "eslint './src/**/*.{ts,tsx}'",
@@ -18,7 +18,7 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
-      "yarn format",
+      "pnpm format",
       "eslint --fix",
       "git add"
     ]
@@ -101,5 +101,5 @@
       "public"
     ]
   },
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "pnpm@9.15.0"
 }
