@@ -32,8 +32,10 @@ const (
 var DefaultTLSOptions = Options{
 	// ensure http2 enabled
 	ALPNProtocols: []string{"h2", "http/1.1", tlsalpn01.ACMETLS1Protocol},
-	MinVersion:    "VersionTLS12",
+	MinVersion:    "VersionTLS13",
 	CipherSuites:  getCipherSuites(),
+	// Post-quantum hybrid key exchange first, then classical fallbacks
+	CurvePreferences: []string{"X25519MLKEM768", "X25519", "CurveP256", "CurveP384"},
 }
 
 func getCipherSuites() []string {
