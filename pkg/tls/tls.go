@@ -60,6 +60,7 @@ func (o *Options) SetDefaults() {
 	// ensure http2 enabled
 	o.ALPNProtocols = DefaultTLSOptions.ALPNProtocols
 	o.CipherSuites = DefaultTLSOptions.CipherSuites
+	o.CurvePreferences = DefaultTLSOptions.CurvePreferences
 }
 
 // +k8s:deepcopy-gen=true
