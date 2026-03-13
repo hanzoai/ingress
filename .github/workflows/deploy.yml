@@ -30,7 +30,7 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: docker
-    runs-on: hanzo-k8s
+    runs-on: hanzo-deploy-linux-amd64
     environment: production
     steps:
       - name: Rolling restart ingress DaemonSet
