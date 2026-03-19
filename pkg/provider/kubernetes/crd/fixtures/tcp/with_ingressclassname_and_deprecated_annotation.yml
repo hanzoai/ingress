@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-lb
+  name: ingress-lb
 spec:
   controller: hanzo.ai/ingress-controller
 ---
@@ -11,13 +11,13 @@ metadata:
   name: test.route
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: traefik
+    kubernetes.io/ingress.class: ingress
 
 spec:
   entryPoints:
     - foo
 
-  ingressClassName: traefik-lb
+  ingressClassName: ingress-lb
 
   routes:
     - match: HostSNI(`foo.com`)

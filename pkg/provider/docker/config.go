@@ -393,7 +393,7 @@ func (p *DynConfBuilder) getIPAddress(ctx context.Context, container dockerData)
 			return ""
 		}
 
-		// Check connected container for traefik.docker.network,
+		// Check connected container for ingress.docker.network,
 		// falling back to the network specified on the current container.
 		containerParsed := parseContainer(containerInspected)
 		extraConf, err := p.extractLabels(containerParsed)

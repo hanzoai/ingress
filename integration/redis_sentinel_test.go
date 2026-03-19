@@ -133,7 +133,7 @@ func (s *RedisSentinelSuite) TestSentinelConfiguration() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
 		try.BodyContains(`"striper@redis":`, `"compressor@redis":`, `"srvcA@redis":`, `"srvcB@redis":`),
 	)

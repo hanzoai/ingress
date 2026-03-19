@@ -550,7 +550,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -619,12 +619,12 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 						"Test2": {
 							Service:     "Test2",
-							Rule:        "Host(`Test2.traefik.wtf`)",
+							Rule:        "Host(`Test2.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -709,7 +709,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -772,7 +772,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1157,7 +1157,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1231,7 +1231,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1291,7 +1291,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1354,7 +1354,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1435,7 +1435,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1519,7 +1519,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1611,7 +1611,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1997,7 +1997,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2058,7 +2058,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2118,7 +2118,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2179,7 +2179,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2321,7 +2321,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2355,10 +2355,10 @@ func Test_buildConfiguration(t *testing.T) {
 				instance(
 					name("Test"),
 					labels(map[string]string{
-						"ingress.http.routers.Test.rule":                          "Host(`Test.traefik.wtf`)",
+						"ingress.http.routers.Test.rule":                          "Host(`Test.ingress.test`)",
 						"ingress.http.routers.Test.service":                       "Service1",
 						"ingress.http.services.Service1.LoadBalancer.server.port": "4445",
-						"ingress.http.routers.Test2.rule":                         "Host(`Test.traefik.local`)",
+						"ingress.http.routers.Test2.rule":                         "Host(`Test.ingress.local`)",
 						"ingress.http.routers.Test2.service":                      "Service2",
 						"ingress.http.services.Service2.LoadBalancer.server.port": "4444",
 					}),
@@ -2387,11 +2387,11 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service: "Service1",
-							Rule:    "Host(`Test.traefik.wtf`)",
+							Rule:    "Host(`Test.ingress.test`)",
 						},
 						"Test2": {
 							Service: "Service2",
-							Rule:    "Host(`Test.traefik.local`)",
+							Rule:    "Host(`Test.ingress.local`)",
 						},
 					},
 					Middlewares: map[string]*dynamic.Middleware{},
@@ -2574,7 +2574,7 @@ func Test_buildConfiguration(t *testing.T) {
 			},
 		},
 		{
-			desc: "one container with traefik.enable false",
+			desc: "one container with ingress.enable false",
 			containers: []ecsInstance{
 				instance(
 					name("Test"),
@@ -2764,7 +2764,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2825,7 +2825,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							Middlewares: []string{"Middleware1"},
 							DefaultRule: true,
 						},
@@ -3267,7 +3267,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3431,7 +3431,7 @@ func Test_buildConfiguration(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3477,7 +3477,7 @@ func Test_buildConfiguration(t *testing.T) {
 
 			p := Provider{
 				ExposedByDefault: true,
-				DefaultRule:      "Host(`{{ normalize .Name }}.traefik.wtf`)",
+				DefaultRule:      "Host(`{{ normalize .Name }}.ingress.test`)",
 			}
 			p.Constraints = test.constraints
 

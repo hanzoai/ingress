@@ -42,7 +42,7 @@ func (s *RestSuite) TearDownSuite() {
 func (s *RestSuite) TestSimpleConfigurationInsecure() {
 	s.ingressCmd(withConfigFile("fixtures/rest/simple.toml"))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("rest@internal"))
 	require.NoError(s.T(), err)
 

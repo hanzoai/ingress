@@ -49,7 +49,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the file provider to provide configurations to traefik
+// Provide allows the file provider to provide configurations to ingress
 // using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	logger := log.With().Str(logs.ProviderName, providerName).Logger()

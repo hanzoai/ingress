@@ -54,7 +54,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -116,7 +116,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration_Passive() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -164,7 +164,7 @@ func (s *HealthCheckSuite) TestMultipleEntrypoints() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// Wait for traefik
+	// Wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -235,7 +235,7 @@ func (s *HealthCheckSuite) TestPortOverload() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -266,7 +266,7 @@ func (s *HealthCheckSuite) TestMultipleRoutersOnSameService() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -329,7 +329,7 @@ func (s *HealthCheckSuite) TestPropagate() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -576,7 +576,7 @@ func (s *HealthCheckSuite) TestPropagateNoHealthCheck() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`noop.localhost`)"), try.BodyNotContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -601,7 +601,7 @@ func (s *HealthCheckSuite) TestPropagateReload() {
 
 	s.ingressCmd(withConfigFile(withoutHealthCheck))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
@@ -622,7 +622,7 @@ func (s *HealthCheckSuite) TestPropagateReload() {
 	err = try.Request(rootReq, 500*time.Millisecond, try.StatusCodeIs(http.StatusServiceUnavailable))
 	require.NoError(s.T(), err)
 
-	// Enable the healthcheck on the root WSP (wsp-service1) and let Traefik reload the config
+	// Enable the healthcheck on the root WSP (wsp-service1) and let Ingress reload the config
 	fr1, err := os.OpenFile(withoutHealthCheck, os.O_APPEND|os.O_WRONLY, 0o644)
 	assert.NotNil(s.T(), fr1)
 	require.NoError(s.T(), err)

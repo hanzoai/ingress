@@ -46,7 +46,7 @@ var (
 	}
 )
 
-// Certificates defines traefik certificates type
+// Certificates defines ingress certificates type
 // Certs and Keys could be either a file path, or the file content itself.
 type Certificates []Certificate
 

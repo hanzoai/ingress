@@ -17,7 +17,7 @@ var _ provider.Provider = (*Provider)(nil)
 
 // Provider is a provider.Provider implementation that provides a Rest API.
 type Provider struct {
-	Insecure          bool `description:"Activate REST Provider directly on the entryPoint named traefik." json:"insecure,omitempty" toml:"insecure,omitempty" yaml:"insecure,omitempty" export:"true"`
+	Insecure          bool `description:"Activate REST Provider directly on the entryPoint named ingress." json:"insecure,omitempty" toml:"insecure,omitempty" yaml:"insecure,omitempty" export:"true"`
 	configurationChan chan<- dynamic.Message
 }
 
@@ -59,7 +59,7 @@ func (p *Provider) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// Provide allows the provider to provide configurations to traefik
+// Provide allows the provider to provide configurations to ingress
 // using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	p.configurationChan = configurationChan

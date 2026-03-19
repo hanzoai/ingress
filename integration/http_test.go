@@ -27,7 +27,7 @@ func (s *HTTPSuite) TestSimpleConfiguration() {
 	err := try.GetRequest("http://127.0.0.1:8000/", time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 
-	// Provide a configuration, fetched by Traefik provider.
+	// Provide a configuration, fetched by Ingress provider.
 	configuration := &dynamic.Configuration{
 		HTTP: &dynamic.HTTPConfiguration{
 			Routers: map[string]*dynamic.Router{

@@ -67,7 +67,7 @@ func (s *DockerSuite) TestDefaultDockerContainers() {
 
 	s.composeUp("simple")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
@@ -91,7 +91,7 @@ func (s *DockerSuite) TestDockerContainersWithTCPLabels() {
 
 	s.composeUp("withtcplabels")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
@@ -116,7 +116,7 @@ func (s *DockerSuite) TestDockerContainersWithLabels() {
 
 	s.composeUp("withlabels1", "withlabels2")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
@@ -147,7 +147,7 @@ func (s *DockerSuite) TestDockerContainersWithOneMissingLabels() {
 
 	s.composeUp("withonelabelmissing")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
@@ -172,14 +172,14 @@ func (s *DockerSuite) TestRestartDockerContainers() {
 
 	s.composeUp("powpow")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
 	require.NoError(s.T(), err)
 	req.Host = "my.super.host"
 
-	// TODO Need to wait than 500 milliseconds more (for swarm or traefik to boot up ?)
+	// TODO Need to wait than 500 milliseconds more (for swarm or ingress to boot up ?)
 	_, err = try.ResponseUntilStatusCode(req, 1500*time.Millisecond, http.StatusOK)
 	require.NoError(s.T(), err)
 
@@ -211,7 +211,7 @@ func (s *DockerSuite) TestDockerAllowNonRunning() {
 
 	s.composeUp("nonRunning")
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	// Verify the container is working when running
@@ -226,7 +226,7 @@ func (s *DockerSuite) TestDockerAllowNonRunning() {
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), string(body), "Hostname:")
 
-	// Verify the router exists in Traefik configuration
+	// Verify the router exists in Ingress configuration
 	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers", 1*time.Second, try.BodyContains("NonRunning"))
 	require.NoError(s.T(), err)
 

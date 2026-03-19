@@ -60,7 +60,7 @@ func (s *AccessLogSuite) TearDownTest() {
 func (s *AccessLogSuite) TestAccessLog() {
 	ensureWorkingDirectoryIsClean()
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	defer func() {
@@ -69,12 +69,12 @@ func (s *AccessLogSuite) TestAccessLog() {
 		log.Info().Msg(string(ingressLog))
 	}()
 
-	s.waitForTraefik("server1")
+	s.waitForIngress("server1")
 
 	s.checkStatsForLogFile()
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Make some requests
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -98,8 +98,8 @@ func (s *AccessLogSuite) TestAccessLog() {
 
 	assert.Equal(s.T(), 3, count)
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogAuthFrontend() {
@@ -129,15 +129,15 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontend() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("authFrontend")
+	s.waitForIngress("authFrontend")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test auth entrypoint
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8006/", nil)
@@ -162,8 +162,8 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontend() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogDigestAuthMiddleware() {
@@ -193,15 +193,15 @@ func (s *AccessLogSuite) TestAccessLogDigestAuthMiddleware() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("digestAuthMiddleware")
+	s.waitForIngress("digestAuthMiddleware")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test auth entrypoint
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8008/", nil)
@@ -235,8 +235,8 @@ func (s *AccessLogSuite) TestAccessLogDigestAuthMiddleware() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 // Thanks to mvndaai for digest authentication
@@ -302,15 +302,15 @@ func (s *AccessLogSuite) TestAccessLogFrontendRedirect() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("frontendRedirect")
+	s.waitForIngress("frontendRedirect")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test frontend redirect
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8005/test", nil)
@@ -325,8 +325,8 @@ func (s *AccessLogSuite) TestAccessLogFrontendRedirect() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogJSONFrontendRedirect() {
@@ -354,15 +354,15 @@ func (s *AccessLogSuite) TestAccessLogJSONFrontendRedirect() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log_json_config.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("frontendRedirect")
+	s.waitForIngress("frontendRedirect")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test frontend redirect
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8005/test", nil)
@@ -408,15 +408,15 @@ func (s *AccessLogSuite) TestAccessLogRateLimit() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("rateLimit")
+	s.waitForIngress("rateLimit")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test rate limit
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8007/", nil)
@@ -435,8 +435,8 @@ func (s *AccessLogSuite) TestAccessLogRateLimit() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogBackendNotFound() {
@@ -452,15 +452,15 @@ func (s *AccessLogSuite) TestAccessLogBackendNotFound() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
-	s.waitForTraefik("server1")
+	s.waitForIngress("server1")
 
 	s.checkStatsForLogFile()
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test rate limit
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -475,8 +475,8 @@ func (s *AccessLogSuite) TestAccessLogBackendNotFound() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogFrontendAllowlist() {
@@ -492,15 +492,15 @@ func (s *AccessLogSuite) TestAccessLogFrontendAllowlist() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("frontendAllowlist")
+	s.waitForIngress("frontendAllowlist")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test rate limit
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -515,8 +515,8 @@ func (s *AccessLogSuite) TestAccessLogFrontendAllowlist() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogAuthFrontendSuccess() {
@@ -532,15 +532,15 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontendSuccess() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("authFrontend")
+	s.waitForIngress("authFrontend")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test auth entrypoint
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8006/", nil)
@@ -556,8 +556,8 @@ func (s *AccessLogSuite) TestAccessLogAuthFrontendSuccess() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogPreflightHeadersMiddleware() {
@@ -573,15 +573,15 @@ func (s *AccessLogSuite) TestAccessLogPreflightHeadersMiddleware() {
 		},
 	}
 
-	// Start Traefik
+	// Start Ingress
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	s.checkStatsForLogFile()
 
-	s.waitForTraefik("preflightCORS")
+	s.waitForIngress("preflightCORS")
 
-	// Verify Traefik started OK
-	s.checkTraefikStarted()
+	// Verify Ingress started OK
+	s.checkIngressStarted()
 
 	// Test preflight response
 	req, err := http.NewRequest(http.MethodOptions, "http://127.0.0.1:8009/", nil)
@@ -598,14 +598,14 @@ func (s *AccessLogSuite) TestAccessLogPreflightHeadersMiddleware() {
 
 	assert.GreaterOrEqual(s.T(), count, len(expected))
 
-	// Verify no other Traefik problems
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems
+	s.checkNoOtherIngressProblems()
 }
 
 func (s *AccessLogSuite) TestAccessLogDisabledForInternals() {
 	ensureWorkingDirectoryIsClean()
 
-	// Start Traefik.
+	// Start Ingress.
 	s.ingressCmd(withConfigFile("fixtures/access_log/access_log_base.toml"))
 
 	defer func() {
@@ -614,14 +614,14 @@ func (s *AccessLogSuite) TestAccessLogDisabledForInternals() {
 		log.Info().Msg(string(ingressLog))
 	}()
 
-	// waitForTraefik makes at least one call to the rawdata api endpoint,
+	// waitForIngress makes at least one call to the rawdata api endpoint,
 	// but the logs for this endpoint are ignored in checkAccessLogOutput.
-	s.waitForTraefik("service3")
+	s.waitForIngress("service3")
 
 	s.checkStatsForLogFile()
 
-	// Verify Traefik started OK.
-	s.checkTraefikStarted()
+	// Verify Ingress started OK.
+	s.checkIngressStarted()
 
 	// Make some requests on the internal ping router.
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/ping", nil)
@@ -647,11 +647,11 @@ func (s *AccessLogSuite) TestAccessLogDisabledForInternals() {
 
 	require.Equal(s.T(), 0, count)
 
-	// Verify no other Traefik problems.
-	s.checkNoOtherTraefikProblems()
+	// Verify no other Ingress problems.
+	s.checkNoOtherIngressProblems()
 }
 
-func (s *AccessLogSuite) checkNoOtherTraefikProblems() {
+func (s *AccessLogSuite) checkNoOtherIngressProblems() {
 	ingressLog, err := os.ReadFile(ingressTestLogFile)
 	require.NoError(s.T(), err)
 	if len(ingressLog) > 0 {
@@ -726,7 +726,7 @@ func ensureWorkingDirectoryIsClean() {
 	os.Remove(ingressTestLogFile)
 }
 
-func (s *AccessLogSuite) checkTraefikStarted() []byte {
+func (s *AccessLogSuite) checkIngressStarted() []byte {
 	s.T().Helper()
 
 	ingressLog, err := os.ReadFile(ingressTestLogFile)

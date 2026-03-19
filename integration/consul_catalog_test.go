@@ -310,7 +310,7 @@ func (s *ConsulCatalogSuite) TestDefaultConsulService() {
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -351,7 +351,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithTCPLabels() {
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
@@ -404,7 +404,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithLabels() {
 	err = s.registerService(reg2, false)
 	require.NoError(s.T(), err)
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -466,7 +466,7 @@ func (s *ConsulCatalogSuite) TestSameServiceIDOnDifferentConsulAgent() {
 	err = s.registerService(reg2, true)
 	require.NoError(s.T(), err)
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)
@@ -515,14 +515,14 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithOneMissingLabels() {
 	err := s.registerService(reg, false)
 	require.NoError(s.T(), err)
 
-	// Start traefik
+	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/version", nil)
 	require.NoError(s.T(), err)
 	req.Host = "my.super.host"
 
-	// TODO Need to wait than 500 milliseconds more (for swarm or traefik to boot up ?)
+	// TODO Need to wait than 500 milliseconds more (for swarm or ingress to boot up ?)
 	// TODO validate : run on 80
 	// Expected a 404 as we did not configure anything
 	err = try.Request(req, 1500*time.Millisecond, try.StatusCodeIs(http.StatusNotFound))
@@ -593,7 +593,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithHealthCheck() {
 	require.NoError(s.T(), err)
 	req.Host = "whoami"
 
-	// TODO Need to wait for up to 10 seconds (for consul discovery or traefik to boot up ?)
+	// TODO Need to wait for up to 10 seconds (for consul discovery or ingress to boot up ?)
 	err = try.Request(req, 10*time.Second, try.StatusCodeIs(200), try.BodyContainsOr("Hostname: whoami2"))
 	require.NoError(s.T(), err)
 

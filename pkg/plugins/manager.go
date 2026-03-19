@@ -23,21 +23,21 @@ const (
 	archivesFolder = "archives"
 	stateFilename  = "state.json"
 	goPathSrc      = "src"
-	pluginManifest = ".traefik.yml"
+	pluginManifest = ".ingress.yml"
 )
 
-const pluginsURL = "https://plugins.traefik.io/public/"
+const pluginsURL = "https://plugins.ingress.io/public/"
 
 const (
 	hashHeader = "X-Plugin-Hash"
 )
 
-// ManagerOptions the options of a Traefik plugins manager.
+// ManagerOptions the options of a Ingress plugins manager.
 type ManagerOptions struct {
 	Output string
 }
 
-// Manager manages Traefik plugins lifecycle operations including storage, and manifest reading.
+// Manager manages Ingress plugins lifecycle operations including storage, and manifest reading.
 type Manager struct {
 	downloader PluginDownloader
 
@@ -48,7 +48,7 @@ type Manager struct {
 	goPath   string
 }
 
-// NewManager creates a new Traefik plugins manager.
+// NewManager creates a new Ingress plugins manager.
 func NewManager(downloader PluginDownloader, opts ManagerOptions) (*Manager, error) {
 	sourcesRootPath := filepath.Join(filepath.FromSlash(opts.Output), sourcesFolder)
 	err := resetDirectory(sourcesRootPath)

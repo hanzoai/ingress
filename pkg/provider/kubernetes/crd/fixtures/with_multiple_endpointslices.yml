@@ -11,7 +11,7 @@ spec:
     - name: web2
       port: 8080
   selector:
-    app: traefiklabs
+    app: hanzoai
     task: whoami
 
 ---

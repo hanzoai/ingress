@@ -170,7 +170,7 @@ func (s *GRPCSuite) TestGRPC() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
@@ -202,7 +202,7 @@ func (s *GRPCSuite) TestGRPCh2c() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
@@ -238,7 +238,7 @@ func (s *GRPCSuite) TestGRPCh2cTermination() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
@@ -274,7 +274,7 @@ func (s *GRPCSuite) TestGRPCInsecure() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
@@ -314,7 +314,7 @@ func (s *GRPCSuite) TestGRPCBuffer() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 	var client helloworld.Greeter_StreamExampleClient
@@ -366,7 +366,7 @@ func (s *GRPCSuite) TestGRPCBufferWithFlushInterval() {
 	})
 
 	s.ingressCmd(withConfigFile(file))
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
@@ -420,7 +420,7 @@ func (s *GRPCSuite) TestGRPCWithRetry() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 

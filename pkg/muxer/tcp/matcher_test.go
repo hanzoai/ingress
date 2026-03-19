@@ -210,7 +210,7 @@ func Test_HostSNIRegexp(t *testing.T) {
 			},
 		},
 		{
-			desc: "valid HostSNIRegexp matcher with Traefik v2 syntax",
+			desc: "valid HostSNIRegexp matcher with Ingress v2 syntax",
 			rule: "HostSNIRegexp(`example.{tld:(com|org)}`)",
 			expected: map[string]bool{
 				"example.com":  false,

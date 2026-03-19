@@ -9,7 +9,7 @@ spec:
     - name: web
       port: 8080
   selector:
-    app: traefiklabs
+    app: hanzoai
     task: whoami
 
 ---

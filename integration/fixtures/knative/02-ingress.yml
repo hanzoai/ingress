@@ -2,37 +2,37 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: traefik
+  name: ingress
 
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: traefik
-  namespace: traefik
+  name: ingress
+  namespace: ingress
 
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: traefik
-  namespace: traefik
+  name: ingress
+  namespace: ingress
   labels:
-    app: traefik
+    app: ingress
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: traefik
+      app: ingress
   template:
     metadata:
       labels:
-        app: traefik
+        app: ingress
     spec:
-      serviceAccountName: traefik
+      serviceAccountName: ingress
       containers:
-        - name: traefik
-          image: traefik/traefik:latest
+        - name: ingress
+          image: ghcr.io/hanzoai/ingress:latest
           imagePullPolicy: Never
           args:
             - --api.insecure
@@ -44,11 +44,11 @@ spec:
             - --entrypoints.ingress.address=:9000
             - --experimental.knative
             - --providers.knative.publicEntrypoints=pweb,pwebsecure
-            - --providers.knative.publicService.namespace=traefik
-            - --providers.knative.publicService.name=traefik
+            - --providers.knative.publicService.namespace=ingress
+            - --providers.knative.publicService.name=ingress
             - --providers.knative.privateEntrypoints=privweb,privwebsecure
-            - --providers.knative.privateService.namespace=traefik
-            - --providers.knative.privateService.name=privtraefik
+            - --providers.knative.privateService.namespace=ingress
+            - --providers.knative.privateService.name=privingress
             - --providers.knative.throttleduration=2s
 
           ports:
@@ -60,19 +60,19 @@ spec:
               containerPort: 8080
             - name: privwebsecure
               containerPort: 4443
-            - name: traefik
+            - name: ingress
               containerPort: 9000
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: traefik
-  namespace: traefik
+  name: ingress
+  namespace: ingress
 spec:
   type: LoadBalancer
   selector:
-    app: traefik
+    app: ingress
   ports:
     - port: 80
       name: web
@@ -81,18 +81,18 @@ spec:
       name: websecure
       targetPort: pwebsecure
     - port: 9000
-      name: traefik
-      targetPort: traefik
+      name: ingress
+      targetPort: ingress
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: privtraefik
-  namespace: traefik
+  name: privingress
+  namespace: ingress
 spec:
   selector:
-    app: traefik
+    app: ingress
   ports:
     - port: 80
       name: web

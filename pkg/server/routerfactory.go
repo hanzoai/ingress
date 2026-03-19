@@ -61,7 +61,7 @@ func NewRouterFactory(staticConfiguration static.Configuration, managerFactory *
 
 		protocol, err := ep.GetProtocol()
 		if err != nil {
-			// Should never happen because Traefik should not start if protocol is invalid.
+			// Should never happen because Ingress should not start if protocol is invalid.
 			log.Error().Err(err).Msg("Invalid protocol")
 		}
 

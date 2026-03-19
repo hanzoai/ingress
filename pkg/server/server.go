@@ -84,7 +84,7 @@ func (s *Server) Close() {
 		if errors.Is(ctx.Err(), context.Canceled) {
 			return
 		} else if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-			panic("Timeout while stopping traefik, killing instance ✝")
+			panic("Timeout while stopping ingress, killing instance ✝")
 		}
 	}(ctx)
 

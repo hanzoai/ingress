@@ -264,7 +264,7 @@ type configBuilder struct {
 	disableClusterScopeResources bool
 }
 
-// buildIngressService creates the configuration for the traefik service defined in tService,
+// buildIngressService creates the configuration for the ingress service defined in tService,
 // and adds it to the given conf map.
 func (c configBuilder) buildIngressService(ctx context.Context, tService *hanzoaiv1alpha1.IngressService, conf map[string]*dynamic.Service) error {
 	id := provider.Normalize(makeID(tService.Namespace, tService.Name))

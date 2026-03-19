@@ -583,7 +583,7 @@ func TestSpiffeMTLS(t *testing.T) {
 		rw.WriteHeader(http.StatusOK)
 	}))
 
-	trustDomain := spiffeid.RequireTrustDomainFromString("spiffe://traefik.test")
+	trustDomain := spiffeid.RequireTrustDomainFromString("spiffe://ingress.test")
 
 	pki, err := newFakeSpiffePKI(trustDomain)
 	require.NoError(t, err)
@@ -638,7 +638,7 @@ func TestSpiffeMTLS(t *testing.T) {
 		{
 			desc: "allows expected server SPIFFE ID",
 			config: dynamic.Spiffe{
-				IDs: []string{"spiffe://traefik.test/server"},
+				IDs: []string{"spiffe://ingress.test/server"},
 			},
 			clientSource:   &clientSource,
 			wantStatusCode: http.StatusOK,
@@ -646,7 +646,7 @@ func TestSpiffeMTLS(t *testing.T) {
 		{
 			desc: "blocks unexpected server SPIFFE ID",
 			config: dynamic.Spiffe{
-				IDs: []string{"spiffe://traefik.test/not-server"},
+				IDs: []string{"spiffe://ingress.test/not-server"},
 			},
 			clientSource: &clientSource,
 			wantError:    true,
@@ -654,7 +654,7 @@ func TestSpiffeMTLS(t *testing.T) {
 		{
 			desc: "allows expected server trust domain",
 			config: dynamic.Spiffe{
-				TrustDomain: "spiffe://traefik.test",
+				TrustDomain: "spiffe://ingress.test",
 			},
 			clientSource:   &clientSource,
 			wantStatusCode: http.StatusOK,
@@ -662,7 +662,7 @@ func TestSpiffeMTLS(t *testing.T) {
 		{
 			desc: "denies unexpected server trust domain",
 			config: dynamic.Spiffe{
-				TrustDomain: "spiffe://not-traefik.test",
+				TrustDomain: "spiffe://not-ingress.test",
 			},
 			clientSource: &clientSource,
 			wantError:    true,
@@ -670,8 +670,8 @@ func TestSpiffeMTLS(t *testing.T) {
 		{
 			desc: "spiffe IDs allowlist takes precedence",
 			config: dynamic.Spiffe{
-				IDs:         []string{"spiffe://traefik.test/not-server"},
-				TrustDomain: "spiffe://not-traefik.test",
+				IDs:         []string{"spiffe://ingress.test/not-server"},
+				TrustDomain: "spiffe://not-ingress.test",
 			},
 			clientSource: &clientSource,
 			wantError:    true,

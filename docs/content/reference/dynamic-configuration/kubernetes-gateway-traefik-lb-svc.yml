@@ -13,12 +13,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: traefik-lb
+      app: ingress-lb
 
   template:
     metadata:
       labels:
-        app: traefik-lb
+        app: ingress-lb
 
     spec:
       serviceAccountName: traefik-controller
@@ -47,7 +47,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: traefik-lb
+    app: ingress-lb
 
   ports:
     - protocol: TCP

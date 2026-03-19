@@ -8,8 +8,8 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:storageversion
 
-// TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection.
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#tls-options
+// TLSOption is the CRD implementation of a Ingress TLS Option, allowing to configure some parameters of the TLS connection.
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#tls-options
 type TLSOption struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
@@ -23,26 +23,26 @@ type TLSOption struct {
 
 // TLSOptionSpec defines the desired state of a TLSOption.
 type TLSOptionSpec struct {
-	// MinVersion defines the minimum TLS version that Traefik will accept.
+	// MinVersion defines the minimum TLS version that Ingress will accept.
 	// Possible values: VersionTLS10, VersionTLS11, VersionTLS12, VersionTLS13.
 	// Default: VersionTLS10.
 	MinVersion string `json:"minVersion,omitempty"`
-	// MaxVersion defines the maximum TLS version that Traefik will accept.
+	// MaxVersion defines the maximum TLS version that Ingress will accept.
 	// Possible values: VersionTLS10, VersionTLS11, VersionTLS12, VersionTLS13.
 	// Default: None.
 	MaxVersion string `json:"maxVersion,omitempty"`
 	// CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#cipher-suites
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#cipher-suites
 	CipherSuites []string `json:"cipherSuites,omitempty"`
 	// CurvePreferences defines the preferred elliptic curves.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#curve-preferences
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#curve-preferences
 	CurvePreferences []string `json:"curvePreferences,omitempty"`
 	// ClientAuth defines the server's policy for TLS Client Authentication.
 	ClientAuth ClientAuth `json:"clientAuth,omitempty"`
-	// SniStrict defines whether Traefik allows connections from clients connections that do not specify a server_name extension.
+	// SniStrict defines whether Ingress allows connections from clients connections that do not specify a server_name extension.
 	SniStrict bool `json:"sniStrict,omitempty"`
 	// ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#alpn-protocols
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#alpn-protocols
 	ALPNProtocols []string `json:"alpnProtocols,omitempty"`
 	// DisableSessionTickets disables TLS session resumption via session tickets.
 	DisableSessionTickets bool `json:"disableSessionTickets,omitempty"`

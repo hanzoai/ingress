@@ -36,15 +36,15 @@ import (
 )
 
 var (
-	showLog                      = flag.Bool("tlog", false, "always show Traefik logs")
+	showLog                      = flag.Bool("tlog", false, "always show Ingress logs")
 	gatewayAPIConformanceRunTest = flag.String("gatewayAPIConformanceRunTest", "", "runs a specific Gateway API conformance test")
-	ingressVersion               = flag.String("ingressVersion", "dev", "defines the Traefik version")
+	ingressVersion               = flag.String("ingressVersion", "dev", "defines the Ingress version")
 )
 
 const (
 	k3sImage                = "docker.io/rancher/k3s:v1.34.2-k3s1"
-	ingressImage            = "ingress/traefik:latest"
-	traefikDeployment       = "deployments/traefik"
+	ingressImage            = "hanzoai/ingress:latest"
+	ingressDeployment       = "deployments/ingress"
 	ingressNamespace        = "ingress"
 	tailscaleSecretFilePath = "tailscale.secret"
 )
@@ -80,7 +80,7 @@ type BaseSuite struct {
 func (s *BaseSuite) SetupSuite() {
 	if isDockerDesktop(s.T()) {
 		_, err := os.Stat(tailscaleSecretFilePath)
-		require.NoError(s.T(), err, "Tailscale need to be configured when running integration tests with Docker Desktop: (https://doc.traefik.io/traefik/v2.11/contributing/building-testing/#testing)")
+		require.NoError(s.T(), err, "Tailscale need to be configured when running integration tests with Docker Desktop: (https://hanzo.ai/docs/ingress/v2.11/contributing/building-testing/#testing)")
 	}
 
 	// configure default standard log.
@@ -89,7 +89,7 @@ func (s *BaseSuite) SetupSuite() {
 	// stdlog.SetOutput(log.Logger)
 
 	// Create docker network
-	// docker network create traefik-test-network --driver bridge --subnet 172.31.42.0/24
+	// docker network create ingress-test-network --driver bridge --subnet 172.31.42.0/24
 	var opts []network.NetworkCustomizer
 	opts = append(opts, network.WithDriver("bridge"))
 	opts = append(opts, network.WithIPAM(&dockernetwork.IPAM{
@@ -295,8 +295,8 @@ func (s *BaseSuite) cmdIngress(args ...string) (*exec.Cmd, *bytes.Buffer) {
 		binName += ".exe"
 	}
 
-	traefikBinPath := filepath.Join("..", "dist", runtime.GOOS, runtime.GOARCH, binName)
-	cmd := exec.Command(traefikBinPath, args...)
+	ingressBinPath := filepath.Join("..", "dist", runtime.GOOS, runtime.GOARCH, binName)
+	cmd := exec.Command(ingressBinPath, args...)
 
 	s.T().Cleanup(func() {
 		s.killCmd(cmd)
@@ -374,7 +374,7 @@ func (s *BaseSuite) displayLogCompose() {
 
 func (s *BaseSuite) displayIngressLog(output *bytes.Buffer) {
 	if output == nil || output.Len() == 0 {
-		log.Info().Msg("No Traefik logs.")
+		log.Info().Msg("No Ingress logs.")
 	} else {
 		for line := range strings.SplitSeq(output.String(), "\n") {
 			log.Info().Msg(line)
@@ -481,10 +481,10 @@ func (s *BaseSuite) composeExec(service string, args ...string) string {
 	return string(content)
 }
 
-func (s *BaseSuite) waitForTraefik(containerName string) {
+func (s *BaseSuite) waitForIngress(containerName string) {
 	time.Sleep(1 * time.Second)
 
-	// Wait for Traefik to turn ready.
+	// Wait for Ingress to turn ready.
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/api/rawdata", nil)
 	require.NoError(s.T(), err)
 
@@ -497,16 +497,16 @@ func (s *BaseSuite) displayIngressLogFile(path string) {
 		if _, err := os.Stat(path); !os.IsNotExist(err) {
 			content, errRead := os.ReadFile(path)
 			// TODO TestName
-			// fmt.Printf("%s: Traefik logs: \n", c.TestName())
-			fmt.Print("Traefik logs: \n")
+			// fmt.Printf("%s: Ingress logs: \n", c.TestName())
+			fmt.Print("Ingress logs: \n")
 			if errRead == nil {
 				fmt.Println(string(content))
 			} else {
 				fmt.Println(errRead)
 			}
 		} else {
-			// fmt.Printf("%s: No Traefik logs.\n", c.TestName())
-			fmt.Print("No Traefik logs.\n")
+			// fmt.Printf("%s: No Ingress logs.\n", c.TestName())
+			fmt.Print("No Ingress logs.\n")
 		}
 		errRemove := os.Remove(path)
 		if errRemove != nil {

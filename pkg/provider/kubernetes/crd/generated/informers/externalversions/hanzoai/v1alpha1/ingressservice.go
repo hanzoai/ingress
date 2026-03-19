@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 Containous SAS; 2020-2026 Traefik Labs
+Copyright (c) 2016-2020 Containous SAS; 2020-2026 Hanzo AI Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ type IngressServiceInformer interface {
 	Lister() hanzoaiv1alpha1.IngressServiceLister
 }
 
-type traefikServiceInformer struct {
+type ingressServiceInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
@@ -97,14 +97,14 @@ func NewFilteredIngressServiceInformer(client versioned.Interface, namespace str
 	)
 }
 
-func (f *traefikServiceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func (f *ingressServiceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 	return NewFilteredIngressServiceInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *traefikServiceInformer) Informer() cache.SharedIndexInformer {
+func (f *ingressServiceInformer) Informer() cache.SharedIndexInformer {
 	return f.factory.InformerFor(&crdhanzoaiv1alpha1.IngressService{}, f.defaultInformer)
 }
 
-func (f *traefikServiceInformer) Lister() hanzoaiv1alpha1.IngressServiceLister {
+func (f *ingressServiceInformer) Lister() hanzoaiv1alpha1.IngressServiceLister {
 	return hanzoaiv1alpha1.NewIngressServiceLister(f.Informer().GetIndexer())
 }
