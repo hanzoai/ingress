@@ -23,11 +23,9 @@ import { LAPTOP_BP } from '.'
 
 import IconButton from 'components/buttons/IconButton'
 import Logo from 'components/icons/Logo'
-import { PluginsIcon } from 'components/icons/PluginsIcon'
 import TooltipText from 'components/TooltipText'
 import { VersionContext } from 'contexts/version'
 import useTotals from 'hooks/use-overview-totals'
-import ApimDemoNavMenu from 'pages/hub-demo/HubDemoNav'
 import { Route, ROUTES } from 'routes'
 
 const NavigationDrawer = styled(Flex, {
@@ -269,26 +267,6 @@ export const SideNav = ({
             ))}
           </Flex>
         ))}
-        <Flex direction="column" css={{ borderTop: '1px solid $colors$tableRowBorder', borderRadius: 0, py: '$3' }}>
-          <NavigationLink
-            startAdornment={<PluginsIcon />}
-            css={{
-              mt: '$3',
-              whiteSpace: 'nowrap',
-            }}
-            href="https://plugins.traefik.io/"
-            target="_blank"
-          >
-            {!isSmallScreen || isExpanded ? 'Plugins' : ''}
-          </NavigationLink>
-        </Flex>
-
-        <ApimDemoNavMenu
-          isResponsive={isResponsive}
-          isSmallScreen={isSmallScreen}
-          isExpanded={isExpanded}
-          onSidePanelToggle={onSidePanelToggle}
-        />
       </Container>
     </NavigationDrawer>
   )

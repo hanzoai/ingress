@@ -37,14 +37,14 @@ const StatsCard = ({ children, ...props }: StatsCardType) => (
   </Card>
 )
 
-export type TraefikResourceStatsType = {
+export type ResourceStatsType = {
   title?: string
   errors: number
   total: number
   warnings: number
 }
 
-export type TraefikResourceStatsCardProps = TraefikResourceStatsType & {
+export type ResourceStatsCardProps = ResourceStatsType & {
   linkTo: string
 }
 
@@ -104,7 +104,7 @@ const CustomLegend = ({
   )
 }
 
-const TraefikResourceStatsCard = ({ title, errors, total, warnings, linkTo }: TraefikResourceStatsCardProps) => {
+const ResourceStatsCard = ({ title, errors, total, warnings, linkTo }: ResourceStatsCardProps) => {
   const navigate = useNavigate()
 
   const defaultData = {
@@ -213,4 +213,4 @@ export const StatsCardSkeleton = () => {
   )
 }
 
-export default TraefikResourceStatsCard
+export default ResourceStatsCard

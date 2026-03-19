@@ -94,7 +94,7 @@
       "maxResponseBodyBytes": 42,
       "memResponseBodyBytes": 42,
       "retryExpression": "IsNetworkError() && Attempts() < 2",
-      "oauthIntrospection > clientConfig > url": "https://keycloak.traefiklabs.tech/realms/keycloak-demo/protocol/openid-connect/token/introspect",
+      "oauthIntrospection > clientConfig > url": "https://keycloak.hanzo.ai/realms/keycloak-demo/protocol/openid-connect/token/introspect",
       "oauthIntrospection > clientConfig > headers > authorization": "Basic UZShXHjj2XcRSL8PZjuVDRqyqJ7ThjaZiSwJMoQeMJ2yHTgRyhAgLmfT4A1PvHGh"
     },
     "error": ["message 1", "message 2"],
