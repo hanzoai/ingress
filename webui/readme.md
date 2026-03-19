@@ -20,21 +20,17 @@ make clean-webui generate-webui # Generate static contents in `webui/static/` fo
 
 ## How to build (only for frontend developer)
 
-- prerequisite: [Node 22](https://nodejs.org) [Yarn](https://yarnpkg.com/)
+- prerequisite: [Node 24](https://nodejs.org) [pnpm](https://pnpm.io/)
 
 - Go to the `webui/` directory
 
-- As we use Yarn v4, you will need to enable corepack before installing dependencies:
+- To install dependencies:
 
-  - `corepack enable`
+  - `pnpm install`
 
-- To install dependencies, execute the following commands:
+- Build static Web UI:
 
-  - `yarn install`
-
-- Build static Web UI, execute the following command:
-
-  - `yarn build`
+  - `pnpm build`
 
 - Static contents are built in the `webui/static/` directory
 
@@ -56,19 +52,19 @@ The build allows to:
 - Edit files in `webui/src/`
 - Create and populate the `.env` file using the values inside `.env.sample` file.
 - Run in development mode :
-  - `yarn dev`
+  - `pnpm dev`
 - The application will be available at `http://localhost:3000/`. On development mode, the application will run with mocked data served by [Mock Service Worker](https://mswjs.io/).
 
 ## How to run tests
 
 - Execute the following commands:
-  - `yarn test`
-  - or `yarn test:watch` if you want them in watch mode
+  - `pnpm test`
+  - or `pnpm test:watch` if you want them in watch mode
 
 ## Libraries
 
 - [Node](https://nodejs.org)
-- [Yarn](https://yarnpkg.com/)
+- [pnpm](https://pnpm.io/)
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
 - [Vitest](https://vitest.dev/)
