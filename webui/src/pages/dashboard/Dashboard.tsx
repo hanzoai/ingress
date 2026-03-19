@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import ProviderIcon from 'components/icons/providers'
 import FeatureCard, { FeatureCardSkeleton } from 'components/resources/FeatureCard'
 import ResourceCard from 'components/resources/ResourceCard'
-import TraefikResourceStatsCard, { StatsCardSkeleton } from 'components/resources/TraefikResourceStatsCard'
+import ResourceStatsCard, { StatsCardSkeleton } from 'components/resources/ResourceStatsCard'
 import PageTitle from 'layout/PageTitle'
 import { capitalizeFirstLetter } from 'utils/string'
 
@@ -102,7 +102,7 @@ export const Dashboard = () => {
       >
         {overview?.http && hasResources.http ? (
           RESOURCES.map((i) => (
-            <TraefikResourceStatsCard
+            <ResourceStatsCard
               key={`http-${i}`}
               title={capitalizeFirstLetter(i)}
               data-testid={`section-http-${i}`}
@@ -121,7 +121,7 @@ export const Dashboard = () => {
       >
         {overview?.tcp && hasResources.tcp ? (
           RESOURCES.map((i) => (
-            <TraefikResourceStatsCard
+            <ResourceStatsCard
               key={`tcp-${i}`}
               title={capitalizeFirstLetter(i)}
               data-testid={`section-tcp-${i}`}
@@ -140,7 +140,7 @@ export const Dashboard = () => {
       >
         {overview?.udp && hasResources.udp ? (
           RESOURCES.map((i) => (
-            <TraefikResourceStatsCard
+            <ResourceStatsCard
               key={`udp-${i}`}
               title={capitalizeFirstLetter(i)}
               data-testid={`section-udp-${i}`}

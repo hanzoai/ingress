@@ -182,11 +182,11 @@
       "passHostHeader": true
     },
     "status": "enabled",
-    "usedBy": ["traefik_v2-example-beta1@docker"],
+    "usedBy": ["ingress-example-beta1@docker"],
     "serverStatus": {
       "http://10.0.1.10:80": "UP"
     },
-    "name": "traefik_v2-example-beta1@docker",
+    "name": "ingress-example-beta1@docker",
     "type": "loadbalancer",
     "provider": "docker"
   },

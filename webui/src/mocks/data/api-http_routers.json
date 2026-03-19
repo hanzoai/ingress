@@ -58,7 +58,7 @@
       "middleware19@docker",
       "middleware20@docker"
     ],
-    "using": ["web-secured", "web", "traefik", "web2", "web3"],
+    "using": ["web-secured", "web", "ingress", "web2", "web3"],
     "priority": 30,
     "provider": "file"
   },
@@ -112,10 +112,10 @@
     "provider": "docker"
   },
   {
-    "service": "traefik_v2-example-beta1",
-    "rule": "Host(`traefik-v2-example-beta1`)",
+    "service": "ingress-example-beta1",
+    "rule": "Host(`ingress-example-beta1`)",
     "status": "enabled",
-    "name": "traefik_v2-example-beta1@docker",
+    "name": "ingress-example-beta1@docker",
     "using": ["web-secured", "web"],
     "provider": "docker"
   },

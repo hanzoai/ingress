@@ -1,5 +1,5 @@
 import { globalCss, Box, darkTheme, FaencyProvider, lightTheme } from '@traefiklabs/faency'
-import { Suspense, useContext, useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import { HashRouter, Navigate, Route, Routes as RouterRoutes, useLocation } from 'react-router-dom'
 import { SWRConfig } from 'swr'
@@ -12,12 +12,10 @@ import { useIsDarkMode } from 'hooks/use-theme'
 import ErrorSuspenseWrapper from 'layout/ErrorSuspenseWrapper'
 import { Dashboard, HTTPPages, NotFound, TCPPages, UDPPages } from 'pages'
 import { DashboardSkeleton } from 'pages/dashboard/Dashboard'
-import { HubDemoContext, HubDemoProvider } from 'pages/hub-demo/demoNavContext'
 
 export const LIGHT_THEME = lightTheme('blue')
 export const DARK_THEME = darkTheme('blue')
 
-// TODO: Restore the loader.
 const PageLoader = () => (
   <Page>
     <Box css={{ position: 'absolute', top: 0, left: 0, right: 0 }}>{/*<Loading />*/}</Box>
@@ -34,8 +32,6 @@ const ScrollToTop = () => {
 }
 
 export const Routes = () => {
-  const { routes: hubDemoRoutes } = useContext(HubDemoContext)
-
   return (
     <Page>
       <Suspense fallback={<PageLoader />}>
@@ -68,9 +64,6 @@ export const Routes = () => {
           <Route path="/tcp" element={<Navigate to="/tcp/routers" replace />} />
           <Route path="/udp" element={<Navigate to="/udp/routers" replace />} />
 
-          {/* Hub Dashboard demo content */}
-          {hubDemoRoutes?.map((route, idx) => <Route key={`hub-${idx}`} path={route.path} element={route.element} />)}
-
           <Route path="*" element={<NotFound />} />
         </RouterRoutes>
       </Suspense>
@@ -81,8 +74,7 @@ export const Routes = () => {
 const isDev = import.meta.env.NODE_ENV === 'development'
 
 const customGlobalStyle = globalCss({
-  // target the AriaTd component, but exclude anything inside hub-ui-demo-app
-  'body:not(:has(hub-ui-demo-app)) span[role=cell]': {
+  'span[role=cell]': {
     p: '$2 $3',
   },
 })
@@ -111,11 +103,9 @@ const App = () => {
         >
           <VersionProvider>
             <HashRouter basename={import.meta.env.VITE_APP_BASE_URL || ''}>
-              <HubDemoProvider basePath={'/hub-dashboard'}>
-                {customGlobalStyle()}
-                <ScrollToTop />
-                <Routes />
-              </HubDemoProvider>
+              {customGlobalStyle()}
+              <ScrollToTop />
+              <Routes />
             </HashRouter>
           </VersionProvider>
         </SWRConfig>
