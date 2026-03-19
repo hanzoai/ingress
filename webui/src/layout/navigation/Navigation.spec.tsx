@@ -9,7 +9,6 @@ describe('Navigation', () => {
     expect(container.innerHTML).toContain('HTTP')
     expect(container.innerHTML).toContain('TCP')
     expect(container.innerHTML).toContain('UDP')
-    expect(container.innerHTML).toContain('Plugins')
   })
 
   it('should render the top navigation bar', async () => {

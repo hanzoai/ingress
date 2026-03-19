@@ -1,6 +1,6 @@
 {
-  "short_name": "Traefik Proxy",
-  "name": "Traefik Proxy",
+  "short_name": "Hanzo Ingress",
+  "name": "Hanzo Ingress",
   "icons": [
     {
       "src": "favicon-16x16.png",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#ddee6d",
+  "theme_color": "#1a1a2e",
   "background_color": "#091827"
 }
