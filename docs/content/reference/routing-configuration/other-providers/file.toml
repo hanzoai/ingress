@@ -390,11 +390,22 @@
         disableRetryOnNetworkError = true
         retryNonIdempotentMethod = true
     [http.middlewares.Middleware25]
-      [http.middlewares.Middleware25.stripPrefix]
+      [http.middlewares.Middleware25.staticFiles]
+        root = "foobar"
+        enableDirectoryListing = true
+        indexFiles = ["foobar", "foobar"]
+        spaMode = true
+        spaIndex = "foobar"
+        errorPage404 = "foobar"
+        [http.middlewares.Middleware25.staticFiles.cacheControl]
+          name0 = "foobar"
+          name1 = "foobar"
+    [http.middlewares.Middleware26]
+      [http.middlewares.Middleware26.stripPrefix]
         prefixes = ["foobar", "foobar"]
         forceSlash = true
-    [http.middlewares.Middleware26]
-      [http.middlewares.Middleware26.stripPrefixRegex]
+    [http.middlewares.Middleware27]
+      [http.middlewares.Middleware27.stripPrefixRegex]
         regex = ["foobar", "foobar"]
   [http.serversTransports]
     [http.serversTransports.ServersTransport0]
