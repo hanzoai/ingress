@@ -3,11 +3,13 @@
 # ---- Stage 1: Build WebUI dashboard ----
 FROM --platform=$BUILDPLATFORM node:24-alpine3.22 AS webui
 
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+
 WORKDIR /src/webui
-COPY webui/package.json webui/yarn.lock webui/.yarnrc.yml ./
-RUN corepack enable && yarn workspaces focus --all --production
+COPY webui/package.json webui/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY webui/ ./
-RUN yarn build
+RUN pnpm build
 
 # ---- Stage 2: Build Go binary ----
 FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
