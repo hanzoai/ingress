@@ -47,6 +47,7 @@ type Middleware struct {
 	Retry             *Retry             `json:"retry,omitempty" toml:"retry,omitempty" yaml:"retry,omitempty" export:"true"`
 	ContentType       *ContentType       `json:"contentType,omitempty" toml:"contentType,omitempty" yaml:"contentType,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 	GrpcWeb           *GrpcWeb           `json:"grpcWeb,omitempty" toml:"grpcWeb,omitempty" yaml:"grpcWeb,omitempty" export:"true"`
+	StaticFiles       *StaticFiles       `json:"staticFiles,omitempty" toml:"staticFiles,omitempty" yaml:"staticFiles,omitempty" export:"true"`
 
 	Plugin map[string]PluginConf `json:"plugin,omitempty" toml:"plugin,omitempty" yaml:"plugin,omitempty" export:"true"`
 
@@ -68,6 +69,27 @@ type GrpcWeb struct {
 	// AllowOrigins is a list of allowable origins.
 	// Can also be a wildcard origin "*".
 	AllowOrigins []string `json:"allowOrigins,omitempty" toml:"allowOrigins,omitempty" yaml:"allowOrigins,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// StaticFiles holds the static file server middleware configuration.
+// This middleware serves static files directly from the ingress layer.
+type StaticFiles struct {
+	// Root directory to serve files from.
+	Root string `json:"root,omitempty" toml:"root,omitempty" yaml:"root,omitempty" export:"true"`
+	// EnableDirectoryListing enables directory browsing.
+	EnableDirectoryListing bool `json:"enableDirectoryListing,omitempty" toml:"enableDirectoryListing,omitempty" yaml:"enableDirectoryListing,omitempty" export:"true"`
+	// IndexFiles is a list of filenames to try when a directory is requested.
+	IndexFiles []string `json:"indexFiles,omitempty" toml:"indexFiles,omitempty" yaml:"indexFiles,omitempty" export:"true"`
+	// SPAMode redirects all not-found requests to a single page.
+	SPAMode bool `json:"spaMode,omitempty" toml:"spaMode,omitempty" yaml:"spaMode,omitempty" export:"true"`
+	// SPAIndex is the file to serve in SPA mode.
+	SPAIndex string `json:"spaIndex,omitempty" toml:"spaIndex,omitempty" yaml:"spaIndex,omitempty" export:"true"`
+	// ErrorPage404 is the path to a custom 404 error page relative to root.
+	ErrorPage404 string `json:"errorPage404,omitempty" toml:"errorPage404,omitempty" yaml:"errorPage404,omitempty" export:"true"`
+	// CacheControl maps file extensions to Cache-Control header values.
+	CacheControl map[string]string `json:"cacheControl,omitempty" toml:"cacheControl,omitempty" yaml:"cacheControl,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true

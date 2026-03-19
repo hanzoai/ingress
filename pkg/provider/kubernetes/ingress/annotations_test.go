@@ -20,7 +20,6 @@ func Test_parseRouterConfig(t *testing.T) {
 			desc: "router annotations",
 			annotations: map[string]string{
 				"ingress.kubernetes.io/foo":                                     "bar",
-				"ingress.kubernetes.io/foo":                             "bar",
 				"ingress.kubernetes.io/router.pathmatcher":              "foobar",
 				"ingress.kubernetes.io/router.entrypoints":              "foobar,foobar",
 				"ingress.kubernetes.io/router.middlewares":              "foobar,foobar",
@@ -113,7 +112,6 @@ func Test_parseServiceConfig(t *testing.T) {
 			desc: "service annotations",
 			annotations: map[string]string{
 				"ingress.kubernetes.io/foo":                                    "bar",
-				"ingress.kubernetes.io/foo":                            "bar",
 				"ingress.kubernetes.io/service.serversscheme":          "protocol",
 				"ingress.kubernetes.io/service.serverstransport":       "foobar@file",
 				"ingress.kubernetes.io/service.passhostheader":         "true",
@@ -207,7 +205,6 @@ func Test_convertAnnotations(t *testing.T) {
 			desc: "router annotations",
 			annotations: map[string]string{
 				"ingress.kubernetes.io/foo":                                     "bar",
-				"ingress.kubernetes.io/foo":                             "bar",
 				"ingress.kubernetes.io/router.pathmatcher":              "foobar",
 				"ingress.kubernetes.io/router.entrypoints":              "foobar,foobar",
 				"ingress.kubernetes.io/router.middlewares":              "foobar,foobar",

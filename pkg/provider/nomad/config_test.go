@@ -2790,8 +2790,8 @@ func Test_buildConfig(t *testing.T) {
 							Rule:        "Host(`Test.traefik.test`)",
 							DefaultRule: true,
 						},
-						"Test-1234154071633021619": {
-							Service:     "Test-1234154071633021619",
+						"Test-9338427835602343996": {
+							Service:     "Test-9338427835602343996",
 							Rule:        "Host(`Test.traefik.test`)",
 							DefaultRule: true,
 						},
@@ -2812,7 +2812,7 @@ func Test_buildConfig(t *testing.T) {
 								},
 							},
 						},
-						"Test-1234154071633021619": {
+						"Test-9338427835602343996": {
 							LoadBalancer: &dynamic.ServersLoadBalancer{
 								Strategy: dynamic.BalancerStrategyWRR,
 								Servers: []dynamic.Server{
@@ -2876,7 +2876,7 @@ func Test_buildConfig(t *testing.T) {
 							Rule:    "HostSNI(`foobar`)",
 						},
 						"test-canary": {
-							Service: "Test-8769860286750522282",
+							Service: "Test-7040015959096825348",
 							Rule:    "HostSNI(`canary.foobar`)",
 						},
 					},
@@ -2889,7 +2889,7 @@ func Test_buildConfig(t *testing.T) {
 								},
 							},
 						},
-						"Test-8769860286750522282": {
+						"Test-7040015959096825348": {
 							LoadBalancer: &dynamic.TCPServersLoadBalancer{
 								Servers: []dynamic.TCPServer{
 									{Address: "127.0.0.2:80"},
@@ -2963,7 +2963,7 @@ func Test_buildConfig(t *testing.T) {
 						},
 						"test-canary": {
 							EntryPoints: []string{"udp"},
-							Service:     "Test-1611429260986126224",
+							Service:     "Test-1566496662581157618",
 						},
 					},
 					Services: map[string]*dynamic.UDPService{
@@ -2974,7 +2974,7 @@ func Test_buildConfig(t *testing.T) {
 								},
 							},
 						},
-						"Test-1611429260986126224": {
+						"Test-1566496662581157618": {
 							LoadBalancer: &dynamic.UDPServersLoadBalancer{
 								Servers: []dynamic.UDPServer{
 									{Address: "127.0.0.2:80"},
