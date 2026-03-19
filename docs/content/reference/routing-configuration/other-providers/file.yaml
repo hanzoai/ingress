@@ -448,12 +448,25 @@ http:
         disableRetryOnNetworkError: true
         retryNonIdempotentMethod: true
     Middleware25:
+      staticFiles:
+        root: foobar
+        enableDirectoryListing: true
+        indexFiles:
+          - foobar
+          - foobar
+        spaMode: true
+        spaIndex: foobar
+        errorPage404: foobar
+        cacheControl:
+          name0: foobar
+          name1: foobar
+    Middleware26:
       stripPrefix:
         prefixes:
           - foobar
           - foobar
         forceSlash: true
-    Middleware26:
+    Middleware27:
       stripPrefixRegex:
         regex:
           - foobar
