@@ -42,7 +42,7 @@ clean-webui:
 
 webui/static/index.html:
 	$(MAKE) build-webui-image
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn build:prod
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm build:prod
 	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui chown -R $(shell id -u):$(shell id -g) ./static
 	printf 'For more information see `webui/readme.md`' > webui/static/DONT-EDIT-FILES-IN-THIS-DIRECTORY.md
 
@@ -114,8 +114,8 @@ test-knative-conformance: build-image-dirty
 #? test-ui-unit: Run the unit tests for the webui
 test-ui-unit:
 	$(MAKE) build-webui-image
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn --cwd webui install
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui yarn --cwd webui test:unit:ci
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm install --frozen-lockfile
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm test:unit:ci
 
 .PHONY: pull-images
 #? pull-images: Pull all Docker images to avoid timeout during integration tests
