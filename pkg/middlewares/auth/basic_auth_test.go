@@ -71,7 +71,7 @@ func TestBasicAuthSuccess(t *testing.T) {
 	require.NoError(t, err)
 	defer res.Body.Close()
 
-	assert.Equal(t, "traefik\n", string(body), "they should be equal")
+	assert.Equal(t, "ingress\n", string(body), "they should be equal")
 }
 
 func TestBasicAuthUserHeader(t *testing.T) {
@@ -102,7 +102,7 @@ func TestBasicAuthUserHeader(t *testing.T) {
 	require.NoError(t, err)
 	defer res.Body.Close()
 
-	assert.Equal(t, "traefik\n", string(body))
+	assert.Equal(t, "ingress\n", string(body))
 }
 
 func TestBasicAuthHeaderRemoved(t *testing.T) {
@@ -134,7 +134,7 @@ func TestBasicAuthHeaderRemoved(t *testing.T) {
 	err = res.Body.Close()
 	require.NoError(t, err)
 
-	assert.Equal(t, "traefik\n", string(body))
+	assert.Equal(t, "ingress\n", string(body))
 }
 
 func TestBasicAuthHeaderPresent(t *testing.T) {
@@ -165,7 +165,7 @@ func TestBasicAuthHeaderPresent(t *testing.T) {
 	err = res.Body.Close()
 	require.NoError(t, err)
 
-	assert.Equal(t, "traefik\n", string(body))
+	assert.Equal(t, "ingress\n", string(body))
 }
 
 func TestBasicAuthConcurrentHashOnce(t *testing.T) {
@@ -298,7 +298,7 @@ func TestBasicAuthUsersFromFile(t *testing.T) {
 				err = res.Body.Close()
 				require.NoError(t, err)
 
-				require.Equal(t, "traefik\n", string(body))
+				require.Equal(t, "ingress\n", string(body))
 			}
 
 			// Checks that user foo doesn't work

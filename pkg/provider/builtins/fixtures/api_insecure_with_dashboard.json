@@ -3,7 +3,7 @@
     "routers": {
       "api": {
         "entryPoints": [
-          "traefik"
+          "ingress"
         ],
         "service": "api@internal",
         "rule": "PathPrefix(`/api`)",
@@ -12,7 +12,7 @@
       },
       "dashboard": {
         "entryPoints": [
-          "traefik"
+          "ingress"
         ],
         "middlewares": [
           "dashboard_redirect@internal",

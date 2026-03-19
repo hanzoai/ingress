@@ -35,6 +35,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/replacepath"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/replacepathregex"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/retry"
+	"github.com/hanzoai/ingress/v3/pkg/middlewares/staticfiles"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/stripprefix"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/stripprefixregex"
 	"github.com/hanzoai/ingress/v3/pkg/server/provider"
@@ -367,6 +368,16 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 		}
 		middleware = func(next http.Handler) (http.Handler, error) {
 			return stripprefixregex.New(ctx, next, *config.StripPrefixRegex, middlewareName)
+		}
+	}
+
+	// StaticFiles
+	if config.StaticFiles != nil {
+		if middleware != nil {
+			return nil, badConf
+		}
+		middleware = func(next http.Handler) (http.Handler, error) {
+			return staticfiles.New(ctx, next, *config.StaticFiles, middlewareName)
 		}
 	}
 

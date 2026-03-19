@@ -17,7 +17,7 @@ func TestGetName(t *testing.T) {
 			desc:               "with backend name, without cookie name",
 			cookieName:         "",
 			backendName:        "/my/BACKEND-v1.0~rc1",
-			expectedCookieName: "_5f7bc",
+			expectedCookieName: "_e1d76",
 		},
 		{
 			desc:               "without backend name, with cookie name",
@@ -76,6 +76,6 @@ func Test_sanitizeName(t *testing.T) {
 func TestGenerateName(t *testing.T) {
 	cookieName := GenerateName("backend")
 
-	assert.Len(t, "_76eb3", 6)
-	assert.Equal(t, "_76eb3", cookieName)
+	assert.Len(t, "_8032c", 6)
+	assert.Equal(t, "_8032c", cookieName)
 }

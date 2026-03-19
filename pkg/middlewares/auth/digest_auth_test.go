@@ -33,6 +33,7 @@ func TestDigestAuthFail(t *testing.T) {
 
 	auth := dynamic.DigestAuth{
 		Users: []string{"test:traefik:a2688e031edb4be6a3797f3882655c05"},
+		Realm: "traefik",
 	}
 	authMiddleware, err := NewDigest(t.Context(), next, auth, "authName")
 	require.NoError(t, err)
@@ -64,18 +65,21 @@ func TestDigestAuthUsersFromFile(t *testing.T) {
 			userFileContent: "test:traefik:a2688e031edb4be6a3797f3882655c05\ntest2:traefik:518845800f9e2bfb1f1f740ec24f074e\n",
 			givenUsers:      []string{},
 			expectedUsers:   map[string]string{"test": "test", "test2": "test2"},
+			realm:           "traefik",
 		},
 		{
 			desc:            "Merges given users with users from the file",
 			userFileContent: "test:traefik:a2688e031edb4be6a3797f3882655c05\n",
 			givenUsers:      []string{"test2:traefik:518845800f9e2bfb1f1f740ec24f074e", "test3:traefik:c8e9f57ce58ecb4424407f665a91646c"},
 			expectedUsers:   map[string]string{"test": "test", "test2": "test2", "test3": "test3"},
+			realm:           "traefik",
 		},
 		{
 			desc:            "Given users have priority over users in the file",
 			userFileContent: "test:traefik:a2688e031edb4be6a3797f3882655c05\ntest2:traefik:518845800f9e2bfb1f1f740ec24f074e\n",
 			givenUsers:      []string{"test2:traefik:8de60a1c52da68ccf41f0c0ffb7c51a0"},
 			expectedUsers:   map[string]string{"test": "test", "test2": "overridden"},
+			realm:           "traefik",
 		},
 		{
 			desc:            "Should authenticate the correct user based on the realm",
@@ -129,7 +133,7 @@ func TestDigestAuthUsersFromFile(t *testing.T) {
 				err = res.Body.Close()
 				require.NoError(t, err)
 
-				require.Equal(t, "traefik\n", string(body))
+				require.Equal(t, "ingress\n", string(body))
 			}
 
 			// Checks that user foo doesn't work
