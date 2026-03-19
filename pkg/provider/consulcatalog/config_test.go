@@ -3227,8 +3227,8 @@ func Test_buildConfiguration(t *testing.T) {
 							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
-						"Test-97077516270503695": {
-							Service:     "Test-97077516270503695",
+						"Test-17505574059540748513": {
+							Service:     "Test-17505574059540748513",
 							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
@@ -3250,7 +3250,7 @@ func Test_buildConfiguration(t *testing.T) {
 								ServersTransport: "tls-ns-dc1-Test",
 							},
 						},
-						"Test-97077516270503695": {
+						"Test-17505574059540748513": {
 							LoadBalancer: &dynamic.ServersLoadBalancer{
 								Strategy: dynamic.BalancerStrategyWRR,
 								Servers: []dynamic.Server{
@@ -3328,7 +3328,7 @@ func Test_buildConfiguration(t *testing.T) {
 							Rule:    "HostSNI(`foobar`)",
 						},
 						"test-canary": {
-							Service: "Test-17573747155436217342",
+							Service: "Test-11825122578070694220",
 							Rule:    "HostSNI(`canary.foobar`)",
 						},
 					},
@@ -3341,7 +3341,7 @@ func Test_buildConfiguration(t *testing.T) {
 								},
 							},
 						},
-						"Test-17573747155436217342": {
+						"Test-11825122578070694220": {
 							LoadBalancer: &dynamic.TCPServersLoadBalancer{
 								Servers: []dynamic.TCPServer{
 									{Address: "127.0.0.2:80"},
@@ -3413,7 +3413,7 @@ func Test_buildConfiguration(t *testing.T) {
 						},
 						"test-canary": {
 							EntryPoints: []string{"udp"},
-							Service:     "Test-12825244908842506376",
+							Service:     "Test-17930887568159336510",
 						},
 					},
 					Services: map[string]*dynamic.UDPService{
@@ -3424,7 +3424,7 @@ func Test_buildConfiguration(t *testing.T) {
 								},
 							},
 						},
-						"Test-12825244908842506376": {
+						"Test-17930887568159336510": {
 							LoadBalancer: &dynamic.UDPServersLoadBalancer{
 								Servers: []dynamic.UDPServer{
 									{Address: "127.0.0.2:80"},
