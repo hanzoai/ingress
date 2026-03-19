@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/traefik/paerser/types"
+	"github.com/hanzoai/ingress-parser/types"
 	ttypes "github.com/hanzoai/ingress/v3/pkg/types"
 	"github.com/hanzoai/ingress/v3/pkg/version"
 	"go.opentelemetry.io/otel/attribute"

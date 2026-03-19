@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/traefik/paerser/types"
+	"github.com/hanzoai/ingress-parser/types"
 	tTypes "github.com/hanzoai/ingress/v3/pkg/types"
 )
 

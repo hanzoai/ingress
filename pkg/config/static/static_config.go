@@ -10,7 +10,7 @@ import (
 	legolog "github.com/go-acme/lego/v4/log"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 	"github.com/hanzoai/ingress/v3/pkg/ping"

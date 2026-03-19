@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
 	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
