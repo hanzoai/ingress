@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/paerser/cli"
-	"github.com/traefik/paerser/env"
+	"github.com/hanzoai/ingress-parser/cli"
+	"github.com/hanzoai/ingress-parser/env"
 )
 
-// EnvLoader loads a configuration from all the environment variables prefixed with "TRAEFIK_".
+// EnvLoader loads a configuration from all the environment variables prefixed with "INGRESS_".
 type EnvLoader struct{}
 
 // Load loads the command's configuration from the environment variables.

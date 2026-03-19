@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
 	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
