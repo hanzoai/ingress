@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: traefik.tchouk
+  - host: ingress.tchouk
     http:
       paths:
       - path: /bar
@@ -31,7 +31,7 @@ spec:
       port: 8080
   clusterIP: 10.0.0.1
   type: ClusterIP
-  externalName: traefik.wtf
+  externalName: ingress.test
 
 ---
 kind: EndpointSlice

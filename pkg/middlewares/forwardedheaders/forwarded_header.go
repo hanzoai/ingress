@@ -222,7 +222,7 @@ func (x *XForwarded) removeConnectionHeaders(req *http.Request) {
 		for sf := range strings.SplitSeq(f, ",") {
 			if sf = textproto.TrimString(sf); sf != "" {
 				key := http.CanonicalHeaderKey(sf)
-				// Connection header cannot dictate to remove X- headers managed by Traefik,
+				// Connection header cannot dictate to remove X- headers managed by Ingress,
 				// as per rfc7230 https://datatracker.ietf.org/doc/html/rfc7230#section-6.1,
 				// A proxy or gateway MUST ... and then remove the Connection header field itself
 				// (or replace it with the intermediary's own connection options for the forwarded message).

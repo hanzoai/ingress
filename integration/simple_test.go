@@ -71,7 +71,7 @@ func (s *SimpleSuite) TestSimpleDefaultConfig() {
 func (s *SimpleSuite) TestSimpleFastProxy() {
 	var callCount int
 	srv1 := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		assert.Contains(s.T(), req.Header, "X-Traefik-Fast-Proxy")
+		assert.Contains(s.T(), req.Header, "X-Ingress-Fast-Proxy")
 		callCount++
 	}))
 	defer srv1.Close()
@@ -84,7 +84,7 @@ func (s *SimpleSuite) TestSimpleFastProxy() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -116,7 +116,7 @@ func (s *SimpleSuite) TestXForwardedForDisabled() {
 
 	s.ingressCmd(withConfigFile(staticConf))
 
-	// Wait for Traefik to start
+	// Wait for Ingress to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
@@ -135,7 +135,7 @@ func (s *SimpleSuite) TestXForwardedForDisabled() {
 	require.NoError(s.T(), err)
 
 	// The backend should receive the original X-Forwarded-For header unchanged
-	// (Traefik should NOT append RemoteAddr when appendXForwardedFor = false)
+	// (Ingress should NOT append RemoteAddr when appendXForwardedFor = false)
 	assert.Equal(s.T(), "1.2.3.4", string(body))
 }
 
@@ -162,7 +162,7 @@ func (s *SimpleSuite) TestXForwardedForEnabled() {
 
 	s.ingressCmd(withConfigFile(staticConf))
 
-	// Wait for Traefik to start
+	// Wait for Ingress to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
@@ -189,7 +189,7 @@ func (s *SimpleSuite) TestXForwardedForEnabled() {
 func (s *SimpleSuite) TestXForwardedForDisabledFastProxy() {
 	srv1 := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// Verify FastProxy is being used
-		assert.Contains(s.T(), req.Header, "X-Traefik-Fast-Proxy")
+		assert.Contains(s.T(), req.Header, "X-Ingress-Fast-Proxy")
 
 		// Echo back the X-Forwarded-For header
 		xff := req.Header.Get("X-Forwarded-For")
@@ -211,7 +211,7 @@ func (s *SimpleSuite) TestXForwardedForDisabledFastProxy() {
 
 	s.ingressCmd(withConfigFile(staticConf))
 
-	// Wait for Traefik to start
+	// Wait for Ingress to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
@@ -237,7 +237,7 @@ func (s *SimpleSuite) TestXForwardedForDisabledFastProxy() {
 func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 	srv1 := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// Verify FastProxy is being used
-		assert.Contains(s.T(), req.Header, "X-Traefik-Fast-Proxy")
+		assert.Contains(s.T(), req.Header, "X-Ingress-Fast-Proxy")
 
 		// Echo back the X-Forwarded-For header
 		xff := req.Header.Get("X-Forwarded-For")
@@ -260,7 +260,7 @@ func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 
 	s.ingressCmd(withConfigFile(staticConf))
 
-	// Wait for Traefik to start
+	// Wait for Ingress to start
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
@@ -326,7 +326,7 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 
 	cmd, _ := s.cmdIngress(withConfigFile(file))
 
-	// Wait for Traefik to turn ready.
+	// Wait for Ingress to turn ready.
 	err := try.GetRequest("http://127.0.0.1:8000/", 2*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 
@@ -338,13 +338,13 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 	err = try.GetRequest("http://127.0.0.1:8001/ping", 3*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 
-	// Send SIGTERM to Traefik.
+	// Send SIGTERM to Ingress.
 	proc, err := os.FindProcess(cmd.Process.Pid)
 	require.NoError(s.T(), err)
 	err = proc.Signal(syscall.SIGTERM)
 	require.NoError(s.T(), err)
 
-	// Give Traefik time to process the SIGTERM and send a request half-way
+	// Give Ingress time to process the SIGTERM and send a request half-way
 	// into the request accepting grace period, by which requests should
 	// still get served.
 	time.Sleep(5 * time.Second)
@@ -359,7 +359,7 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 	defer resp.Body.Close()
 	assert.Equal(s.T(), http.StatusServiceUnavailable, resp.StatusCode)
 
-	// Expect Traefik to shut down gracefully once the request accepting grace
+	// Expect Ingress to shut down gracefully once the request accepting grace
 	// period has elapsed.
 	waitErr := make(chan error)
 	go func() {
@@ -375,7 +375,7 @@ func (s *SimpleSuite) TestRequestAcceptGraceTimeout() {
 		// 10 seconds timeout = 15 seconds > 10 seconds grace period).
 		// Something must have gone wrong if we still haven't terminated at
 		// this point.
-		s.T().Fatal("Traefik did not terminate in time")
+		s.T().Fatal("Ingress did not terminate in time")
 	}
 }
 
@@ -383,7 +383,7 @@ func (s *SimpleSuite) TestCustomPingTerminationStatusCode() {
 	file := s.adaptFile("fixtures/custom_ping_termination_status_code.toml", struct{}{})
 	cmd, _ := s.cmdIngress(withConfigFile(file))
 
-	// Wait for Traefik to turn ready.
+	// Wait for Ingress to turn ready.
 	err := try.GetRequest("http://127.0.0.1:8001/", 2*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 
@@ -391,7 +391,7 @@ func (s *SimpleSuite) TestCustomPingTerminationStatusCode() {
 	err = try.GetRequest("http://127.0.0.1:8001/ping", 3*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 
-	// Send SIGTERM to Traefik.
+	// Send SIGTERM to Ingress.
 	proc, err := os.FindProcess(cmd.Process.Pid)
 	require.NoError(s.T(), err)
 	err = proc.Signal(syscall.SIGTERM)
@@ -1638,7 +1638,7 @@ func (s *SimpleSuite) TestContentTypeDisableAutoDetect() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -1812,8 +1812,8 @@ func (s *SimpleSuite) TestDebugLog() {
 	assert.Equal(s.T(), http.StatusOK, response.StatusCode)
 
 	if regexp.MustCompile("ThisIsABearerToken").MatchReader(output) {
-		log.Info().Msgf("Traefik Logs: %s", output.String())
-		log.Info().Msg("Found Authorization Header in Traefik DEBUG logs")
+		log.Info().Msgf("Ingress Logs: %s", output.String())
+		log.Info().Msg("Found Authorization Header in Ingress DEBUG logs")
 		s.T().Fail()
 	}
 }
@@ -1920,7 +1920,7 @@ func (s *SimpleSuite) TestMaxHeaderBytes() {
 	ts.Start()
 	defer ts.Close()
 
-	// The test server and traefik config file both specify a max request header size of 1.25 MB.
+	// The test server and ingress config file both specify a max request header size of 1.25 MB.
 	file := s.adaptFile("fixtures/simple_max_header_size.toml", struct {
 		TestServer string
 	}{ts.URL})
@@ -2377,7 +2377,7 @@ func (s *SimpleSuite) TestDDOS() {
 
 	defer func() {
 		if s.T().Failed() {
-			s.T().Log("---- Traefik Logs ----")
+			s.T().Log("---- Ingress Logs ----")
 			s.T().Log(output)
 		}
 	}()
@@ -2438,7 +2438,7 @@ func (s *SimpleSuite) TestFailoverService() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// Wait for Traefik to be ready
+	// Wait for Ingress to be ready
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("failover-service"))
 	require.NoError(s.T(), err)
 
@@ -2573,7 +2573,7 @@ func (s *SimpleSuite) TestFailoverServiceWithStatusCode() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// Wait for Traefik to be ready and verify the configuration is loaded
+	// Wait for Ingress to be ready and verify the configuration is loaded
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
@@ -2600,7 +2600,7 @@ func (s *SimpleSuite) TestServiceMiddleware() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// Wait for Traefik to be ready
+	// Wait for Ingress to be ready
 	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 

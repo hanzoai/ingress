@@ -57,7 +57,7 @@ func Test_ContentSecurityPolicy(t *testing.T) {
 			test.handler.ServeHTTP(rw, req)
 
 			assert.Equal(t, test.expected, rw.Code)
-			assert.Equal(t, "frame-src 'self' https://traefik.io https://*.traefik.io;", rw.Result().Header.Get("Content-Security-Policy"))
+			assert.Equal(t, "frame-src 'self' https://ingress.io https://*.ingress.io;", rw.Result().Header.Get("Content-Security-Policy"))
 		})
 	}
 }

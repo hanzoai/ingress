@@ -33,7 +33,7 @@ func (s *ThrottlingSuite) SetupSuite() {
 func (s *ThrottlingSuite) TestThrottleConfReload() {
 	s.ingressCmd(withConfigFile("fixtures/throttling/simple.toml"))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.BodyContains("rest@internal"))
 	require.NoError(s.T(), err)
 
@@ -81,7 +81,7 @@ func (s *ThrottlingSuite) TestThrottleConfReload() {
 		time.Sleep(200 * time.Millisecond)
 	}
 
-	reloadsRegexp := regexp.MustCompile(`traefik_config_reloads_total (\d*)\n`)
+	reloadsRegexp := regexp.MustCompile(`ingress_config_reloads_total (\d*)\n`)
 
 	resp, err := http.Get("http://127.0.0.1:8080/metrics")
 	require.NoError(s.T(), err)

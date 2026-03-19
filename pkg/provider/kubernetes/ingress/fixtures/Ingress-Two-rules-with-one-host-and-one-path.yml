@@ -6,7 +6,7 @@ metadata:
 
 spec:
   rules:
-  - host: traefik.tchouk
+  - host: ingress.tchouk
     http:
       paths:
       - path: /bar
@@ -16,7 +16,7 @@ spec:
             port:
               number: 80
         pathType: Prefix
-  - host: traefik.courgette
+  - host: ingress.courgette
     http:
       paths:
       - path: /carotte

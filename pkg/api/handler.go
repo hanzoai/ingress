@@ -52,7 +52,7 @@ type RunTimeRepresentation struct {
 	UDPServices    map[string]*runtime.UDPServiceInfo       `json:"udpServices,omitempty"`
 }
 
-// Handler serves the configuration and status of Traefik on API endpoints.
+// Handler serves the configuration and status of Ingress on API endpoints.
 type Handler struct {
 	staticConfig static.Configuration
 

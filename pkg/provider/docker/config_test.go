@@ -604,7 +604,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -683,12 +683,12 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 						"Test2": {
 							Service:     "Test2",
-							Rule:        "Host(`Test2.traefik.wtf`)",
+							Rule:        "Host(`Test2.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -783,7 +783,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -851,7 +851,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1271,7 +1271,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1360,7 +1360,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1430,7 +1430,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1498,7 +1498,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1589,7 +1589,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1683,7 +1683,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -1790,7 +1790,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2225,7 +2225,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2291,7 +2291,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2430,7 +2430,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2496,7 +2496,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -2698,7 +2698,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 			},
 		},
 		{
-			desc: "one container with traefik.enable false",
+			desc: "one container with ingress.enable false",
 			containers: []dockerData{
 				{
 					ServiceName: "Test",
@@ -2797,7 +2797,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3058,7 +3058,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3124,7 +3124,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							Middlewares: []string{"Middleware1"},
 							DefaultRule: true,
 						},
@@ -3606,7 +3606,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Service1",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3791,7 +3791,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3855,7 +3855,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					Routers: map[string]*dynamic.Router{
 						"Test": {
 							Service:     "Test",
-							Rule:        "Host(`Test.traefik.wtf`)",
+							Rule:        "Host(`Test.ingress.test`)",
 							DefaultRule: true,
 						},
 					},
@@ -3914,7 +3914,7 @@ func TestDynConfBuilder_build(t *testing.T) {
 					AllowEmptyServices: test.allowEmptyServices,
 					ExposedByDefault:   true,
 					UseBindPortIP:      test.useBindPortIP,
-					DefaultRule:        "Host(`{{ normalize .Name }}.traefik.wtf`)",
+					DefaultRule:        "Host(`{{ normalize .Name }}.ingress.test`)",
 				},
 			}
 			p.Constraints = test.constraints
@@ -4408,7 +4408,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 		expected   expected
 	}{
 		{
-			desc: "label traefik.port not set, no binding, falling back on the container's IP/Port",
+			desc: "label ingress.port not set, no binding, falling back on the container's IP/Port",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"8080/tcp": {},
@@ -4420,7 +4420,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port not set, single binding with port only, falling back on the container's IP/Port",
+			desc: "label ingress.port not set, single binding with port only, falling back on the container's IP/Port",
 			container: containerJSON(
 				withNetwork("testnet", ipv4("10.11.12.13")),
 				ports(nat.PortMap{
@@ -4437,7 +4437,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port not set, binding with ip:port should create a route to the bound ip:port",
+			desc: "label ingress.port not set, binding with ip:port should create a route to the bound ip:port",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"80/tcp": []nat.PortBinding{
@@ -4454,7 +4454,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc:       "label traefik.port set, no binding, falling back on the container's IP/traefik.port",
+			desc:       "label ingress.port set, no binding, falling back on the container's IP/ingress.port",
 			container:  containerJSON(withNetwork("testnet", ipv4("10.11.12.13"))),
 			serverPort: "80",
 			expected: expected{
@@ -4463,7 +4463,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port set, single binding with ip:port for the label, creates the route",
+			desc: "label ingress.port set, single binding with ip:port for the label, creates the route",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"443/tcp": []nat.PortBinding{
@@ -4481,7 +4481,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port set, no binding on the corresponding port, falling back on the container's IP/label.port",
+			desc: "label ingress.port set, no binding on the corresponding port, falling back on the container's IP/label.port",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"443/tcp": []nat.PortBinding{
@@ -4499,7 +4499,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port set, multiple bindings on different ports, uses the label to select the correct (first) binding",
+			desc: "label ingress.port set, multiple bindings on different ports, uses the label to select the correct (first) binding",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"80/tcp": []nat.PortBinding{
@@ -4523,7 +4523,7 @@ func TestDynConfBuilder_getIPPort_docker(t *testing.T) {
 			},
 		},
 		{
-			desc: "label traefik.port set, multiple bindings on different ports, uses the label to select the correct (second) binding",
+			desc: "label ingress.port set, multiple bindings on different ports, uses the label to select the correct (second) binding",
 			container: containerJSON(
 				ports(nat.PortMap{
 					"80/tcp": []nat.PortBinding{

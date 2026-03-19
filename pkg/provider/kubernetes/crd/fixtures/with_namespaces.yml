@@ -70,7 +70,7 @@ spec:
     - name: web
       port: 8080
   selector:
-    app: traefiklabs
+    app: hanzoai
     task: whoami6
 
 ---
@@ -85,7 +85,7 @@ spec:
     - name: web
       port: 8080
   selector:
-    app: traefiklabs
+    app: hanzoai
     task: whoami5
 
 ---
@@ -100,7 +100,7 @@ spec:
     - name: web
       port: 8080
   selector:
-    app: traefiklabs
+    app: hanzoai
     task: whoami4
 
 ---

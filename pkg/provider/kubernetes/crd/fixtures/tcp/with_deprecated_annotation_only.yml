@@ -4,7 +4,7 @@ metadata:
   name: test.route
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: traefik-lb
+    kubernetes.io/ingress.class: ingress-lb
 
 spec:
   entryPoints:

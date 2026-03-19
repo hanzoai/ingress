@@ -44,7 +44,7 @@ type subCases struct {
 
 type acmeTestCase struct {
 	template            templateModel
-	traefikConfFilePath string
+	ingressConfFilePath string
 	subCases            []subCases
 }
 
@@ -137,7 +137,7 @@ func (s *AcmeSuite) TearDownSuite() {
 
 func (s *AcmeSuite) TestHTTP01Domains() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_domains.toml",
+		ingressConfFilePath: "fixtures/acme/acme_domains.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -160,7 +160,7 @@ func (s *AcmeSuite) TestHTTP01Domains() {
 
 func (s *AcmeSuite) TestHTTP01StoreDomains() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_store_domains.toml",
+		ingressConfFilePath: "fixtures/acme/acme_store_domains.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -183,7 +183,7 @@ func (s *AcmeSuite) TestHTTP01StoreDomains() {
 
 func (s *AcmeSuite) TestHTTP01DomainsInSAN() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_domains.toml",
+		ingressConfFilePath: "fixtures/acme/acme_domains.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    "acme.wtf",
@@ -207,7 +207,7 @@ func (s *AcmeSuite) TestHTTP01DomainsInSAN() {
 
 func (s *AcmeSuite) TestHTTP01OnHostRule() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_base.toml",
+		ingressConfFilePath: "fixtures/acme/acme_base.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -227,7 +227,7 @@ func (s *AcmeSuite) TestHTTP01OnHostRule() {
 
 func (s *AcmeSuite) TestMultipleResolver() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_multiple_resolvers.toml",
+		ingressConfFilePath: "fixtures/acme/acme_multiple_resolvers.toml",
 		subCases: []subCases{
 			{
 				host:              acmeDomain,
@@ -258,7 +258,7 @@ func (s *AcmeSuite) TestMultipleResolver() {
 
 func (s *AcmeSuite) TestHTTP01OnHostRuleECDSA() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_base.toml",
+		ingressConfFilePath: "fixtures/acme/acme_base.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -279,7 +279,7 @@ func (s *AcmeSuite) TestHTTP01OnHostRuleECDSA() {
 
 func (s *AcmeSuite) TestHTTP01OnHostRuleInvalidAlgo() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_base.toml",
+		ingressConfFilePath: "fixtures/acme/acme_base.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -301,7 +301,7 @@ func (s *AcmeSuite) TestHTTP01OnHostRuleInvalidAlgo() {
 // TODO: check why this test do not use the ACME cert resolver.
 func (s *AcmeSuite) TestHTTP01OnHostRuleDefaultDynamicCertificatesWithWildcard() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_tls.toml",
+		ingressConfFilePath: "fixtures/acme/acme_tls.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    wildcardDomain,
@@ -322,7 +322,7 @@ func (s *AcmeSuite) TestHTTP01OnHostRuleDefaultDynamicCertificatesWithWildcard()
 // TODO: check why this test do not use the ACME cert resolver.
 func (s *AcmeSuite) TestHTTP01OnHostRuleDynamicCertificatesWithWildcard() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_tls_dynamic.toml",
+		ingressConfFilePath: "fixtures/acme/acme_tls_dynamic.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    wildcardDomain,
@@ -342,7 +342,7 @@ func (s *AcmeSuite) TestHTTP01OnHostRuleDynamicCertificatesWithWildcard() {
 
 func (s *AcmeSuite) TestTLSALPN01OnHostRuleTCP() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_tcp.toml",
+		ingressConfFilePath: "fixtures/acme/acme_tcp.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -362,7 +362,7 @@ func (s *AcmeSuite) TestTLSALPN01OnHostRuleTCP() {
 
 func (s *AcmeSuite) TestTLSALPN01OnHostRule() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_base.toml",
+		ingressConfFilePath: "fixtures/acme/acme_base.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -382,7 +382,7 @@ func (s *AcmeSuite) TestTLSALPN01OnHostRule() {
 
 func (s *AcmeSuite) TestTLSALPN01Domains() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_domains.toml",
+		ingressConfFilePath: "fixtures/acme/acme_domains.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    acmeDomain,
@@ -405,7 +405,7 @@ func (s *AcmeSuite) TestTLSALPN01Domains() {
 
 func (s *AcmeSuite) TestTLSALPN01DomainsInSAN() {
 	testCase := acmeTestCase{
-		traefikConfFilePath: "fixtures/acme/acme_domains.toml",
+		ingressConfFilePath: "fixtures/acme/acme_domains.toml",
 		subCases: []subCases{{
 			host:              acmeDomain,
 			expectedDomain:    "acme.wtf",
@@ -440,7 +440,7 @@ func (s *AcmeSuite) TestNoValidLetsEncryptServer() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// Expected traefik works
+	// Expected ingress works
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 }
@@ -461,7 +461,7 @@ func (s *AcmeSuite) retrieveAcmeCertificate(testCase acmeTestCase) {
 		}
 	}
 
-	file := s.adaptFile(testCase.traefikConfFilePath, testCase.template)
+	file := s.adaptFile(testCase.ingressConfFilePath, testCase.template)
 
 	s.ingressCmd(withConfigFile(file))
 
@@ -477,7 +477,7 @@ func (s *AcmeSuite) retrieveAcmeCertificate(testCase acmeTestCase) {
 		},
 	}
 
-	// wait for traefik (generating acme account take some seconds)
+	// wait for ingress (generating acme account take some seconds)
 	err := try.Do(60*time.Second, func() error {
 		_, errGet := client.Get("https://127.0.0.1:5001")
 		return errGet

@@ -9,10 +9,10 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:storageversion
 
-// TLSStore is the CRD implementation of a Traefik TLS Store.
+// TLSStore is the CRD implementation of a Ingress TLS Store.
 // For the time being, only the TLSStore named default is supported.
 // This means that you cannot have two stores that are named default in different Kubernetes namespaces.
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#certificates-stores
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#certificates-stores
 type TLSStore struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.

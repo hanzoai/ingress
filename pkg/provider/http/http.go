@@ -71,7 +71,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the provider to provide configurations to ingress using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	pool.GoCtx(func(routineCtx context.Context) {
 		logger := log.Ctx(routineCtx).With().Str(logs.ProviderName, "http").Logger()

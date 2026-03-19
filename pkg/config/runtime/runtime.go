@@ -22,7 +22,7 @@ const (
 	StatusDown = "DOWN"
 )
 
-// Configuration holds the information about the currently running traefik instance.
+// Configuration holds the information about the currently running ingress instance.
 type Configuration struct {
 	Routers        map[string]*RouterInfo        `json:"routers,omitempty"`
 	Middlewares    map[string]*MiddlewareInfo    `json:"middlewares,omitempty"`

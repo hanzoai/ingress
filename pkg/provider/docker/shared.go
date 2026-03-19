@@ -25,7 +25,7 @@ const DefaultTemplateRule = "Host(`{{ normalize .Name }}`)"
 
 type Shared struct {
 	ExposedByDefault   bool   `description:"Expose containers by default." json:"exposedByDefault,omitempty" toml:"exposedByDefault,omitempty" yaml:"exposedByDefault,omitempty" export:"true"`
-	Constraints        string `description:"Constraints is an expression that Traefik matches against the container's labels to determine whether to create any route for that container." json:"constraints,omitempty" toml:"constraints,omitempty" yaml:"constraints,omitempty" export:"true"`
+	Constraints        string `description:"Constraints is an expression that Ingress matches against the container's labels to determine whether to create any route for that container." json:"constraints,omitempty" toml:"constraints,omitempty" yaml:"constraints,omitempty" export:"true"`
 	AllowEmptyServices bool   `description:"Disregards the Docker containers health checks with respect to the creation or removal of the corresponding services." json:"allowEmptyServices,omitempty" toml:"allowEmptyServices,omitempty" yaml:"allowEmptyServices,omitempty" export:"true"`
 	Network            string `description:"Default Docker network used." json:"network,omitempty" toml:"network,omitempty" yaml:"network,omitempty" export:"true"`
 	UseBindPortIP      bool   `description:"Use the ip address from the bound port, rather than from the inner network." json:"useBindPortIP,omitempty" toml:"useBindPortIP,omitempty" yaml:"useBindPortIP,omitempty" export:"true"`
@@ -114,7 +114,7 @@ func createClient(ctx context.Context, cfg ClientConfig) (*client.Client, error)
 	}
 
 	httpHeaders := map[string]string{
-		"User-Agent": "Traefik " + version.Version,
+		"User-Agent": "Ingress " + version.Version,
 	}
 	if cfg.Username != "" && cfg.Password != "" {
 		httpHeaders["Authorization"] = "Basic " + base64.StdEncoding.EncodeToString([]byte(cfg.Username+":"+cfg.Password))

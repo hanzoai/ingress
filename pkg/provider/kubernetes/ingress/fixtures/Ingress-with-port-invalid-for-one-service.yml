@@ -6,7 +6,7 @@ metadata:
 
 spec:
   rules:
-    - host: traefik.port
+    - host: ingress.port
       http:
         paths:
           - path: /port
