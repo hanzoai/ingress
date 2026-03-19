@@ -1,8 +1,7 @@
 name: Build Web UI
 on:
   workflow_call: {}
-env:
-  SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 360  # 15 days
+
 jobs:
 
   build-webui:
@@ -15,27 +14,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Enable corepack
-        run: corepack enable
-
       - name: Setup node
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: webui/.nvmrc
-          cache: yarn
-          cache-dependency-path: webui/yarn.lock
 
-      - name: Setup safe-chain
-        working-directory: ./webui
-        run: |
-          npm i -g @aikidosec/safe-chain
-          safe-chain setup-ci
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.0 --activate
 
       - name: Build webui
         working-directory: ./webui
         run: |
-          yarn install
-          yarn build
+          pnpm install --frozen-lockfile
+          pnpm build
 
       - name: Package webui
         run: |
