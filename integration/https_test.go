@@ -32,12 +32,12 @@ func TestHTTPSSuite(t *testing.T) {
 
 // TestWithSNIConfigHandshake involves a client sending a SNI hostname of
 // "snitest.com", which happens to match the CN of 'snitest.com.crt'. The test
-// verifies that traefik presents the correct certificate.
+// verifies that ingress presents the correct certificate.
 func (s *HTTPSSuite) TestWithSNIConfigHandshake() {
 	file := s.adaptFile("fixtures/https/https_sni.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -63,12 +63,12 @@ func (s *HTTPSSuite) TestWithSNIConfigHandshake() {
 
 // TestWithSNIConfigRoute involves a client sending HTTPS requests with
 // SNI hostnames of "snitest.org" and "snitest.com". The test verifies
-// that traefik routes the requests to the expected backends.
+// that ingress routes the requests to the expected backends.
 func (s *HTTPSSuite) TestWithSNIConfigRoute() {
 	file := s.adaptFile("fixtures/https/https_sni.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -114,13 +114,13 @@ func (s *HTTPSSuite) TestWithSNIConfigRoute() {
 	require.NoError(s.T(), err)
 }
 
-// TestWithTLSOptions  verifies that traefik routes the requests with the associated tls options.
+// TestWithTLSOptions  verifies that ingress routes the requests with the associated tls options.
 
 func (s *HTTPSSuite) TestWithTLSOptions() {
 	file := s.adaptFile("fixtures/https/https_tls_options.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -202,7 +202,7 @@ func (s *HTTPSSuite) TestWithConflictingTLSOptions() {
 	file := s.adaptFile("fixtures/https/https_tls_options.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.net`)"))
 	require.NoError(s.T(), err)
 
@@ -261,13 +261,13 @@ func (s *HTTPSSuite) TestWithConflictingTLSOptions() {
 
 // TestWithSNIStrictNotMatchedRequest involves a client sending a SNI hostname of
 // "snitest.org", which does not match the CN of 'snitest.com.crt'. The test
-// verifies that traefik closes the connection.
+// verifies that ingress closes the connection.
 
 func (s *HTTPSSuite) TestWithSNIStrictNotMatchedRequest() {
 	file := s.adaptFile("fixtures/https/https_sni_strict.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -283,13 +283,13 @@ func (s *HTTPSSuite) TestWithSNIStrictNotMatchedRequest() {
 
 // TestWithDefaultCertificate involves a client sending a SNI hostname of
 // "snitest.org", which does not match the CN of 'snitest.com.crt'. The test
-// verifies that traefik returns the default certificate.
+// verifies that ingress returns the default certificate.
 
 func (s *HTTPSSuite) TestWithDefaultCertificate() {
 	file := s.adaptFile("fixtures/https/https_sni_default_cert.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -315,13 +315,13 @@ func (s *HTTPSSuite) TestWithDefaultCertificate() {
 
 // TestWithDefaultCertificateNoSNI involves a client sending a request with no ServerName
 // which does not match the CN of 'snitest.com.crt'. The test
-// verifies that traefik returns the default certificate.
+// verifies that ingress returns the default certificate.
 
 func (s *HTTPSSuite) TestWithDefaultCertificateNoSNI() {
 	file := s.adaptFile("fixtures/https/https_sni_default_cert.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -347,13 +347,13 @@ func (s *HTTPSSuite) TestWithDefaultCertificateNoSNI() {
 // TestWithOverlappingCertificate involves a client sending a SNI hostname of
 // "www.snitest.com", which matches the CN of two static certificates:
 // 'wildcard.snitest.com.crt', and `www.snitest.com.crt`. The test
-// verifies that traefik returns the non-wildcard certificate.
+// verifies that ingress returns the non-wildcard certificate.
 
 func (s *HTTPSSuite) TestWithOverlappingStaticCertificate() {
 	file := s.adaptFile("fixtures/https/https_sni_default_cert.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -380,13 +380,13 @@ func (s *HTTPSSuite) TestWithOverlappingStaticCertificate() {
 // TestWithOverlappingCertificate involves a client sending a SNI hostname of
 // "www.snitest.com", which matches the CN of two dynamic certificates:
 // 'wildcard.snitest.com.crt', and `www.snitest.com.crt`. The test
-// verifies that traefik returns the non-wildcard certificate.
+// verifies that ingress returns the non-wildcard certificate.
 
 func (s *HTTPSSuite) TestWithOverlappingDynamicCertificate() {
 	file := s.adaptFile("fixtures/https/dynamic_https_sni_default_cert.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -417,7 +417,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthentication() {
 	file := s.adaptFile("fixtures/https/clientca/https_1ca1config.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -485,7 +485,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthenticationMultipleCAs() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -577,7 +577,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthenticationMultipleCAsMultipleF
 	})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
@@ -656,7 +656,7 @@ func (s *HTTPSSuite) TestWithRootCAsContentForHTTPSOnBackend() {
 	file := s.adaptFile("fixtures/https/rootcas/https.toml", struct{ BackendHost string }{backend.URL})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains(backend.URL))
 	require.NoError(s.T(), err)
 
@@ -673,7 +673,7 @@ func (s *HTTPSSuite) TestWithRootCAsFileForHTTPSOnBackend() {
 	file := s.adaptFile("fixtures/https/rootcas/https_with_file.toml", struct{ BackendHost string }{backend.URL})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains(backend.URL))
 	require.NoError(s.T(), err)
 
@@ -703,7 +703,7 @@ func startTestServer(port string, statusCode int, textContent string) (ts *httpt
 
 // TestWithSNIDynamicConfigRouteWithNoChange involves a client sending HTTPS requests with
 // SNI hostnames of "snitest.org" and "snitest.com". The test verifies
-// that traefik routes the requests to the expected backends thanks to given certificate if possible
+// that ingress routes the requests to the expected backends thanks to given certificate if possible
 // otherwise thanks to the default one.
 func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithNoChange() {
 	dynamicConfFileName := s.adaptFile("fixtures/https/dynamic_https.toml", struct{}{})
@@ -728,7 +728,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithNoChange() {
 		},
 	}
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr1.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
@@ -765,7 +765,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithNoChange() {
 
 // TestWithSNIDynamicConfigRouteWithChange involves a client sending HTTPS requests with
 // SNI hostnames of "snitest.org" and "snitest.com". The test verifies
-// that traefik updates its configuration when the HTTPS configuration is modified and
+// that ingress updates its configuration when the HTTPS configuration is modified and
 // it routes the requests to the expected backends thanks to given certificate if possible
 // otherwise thanks to the default one.
 
@@ -792,7 +792,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithChange() {
 		},
 	}
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
@@ -830,7 +830,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithChange() {
 
 // TestWithSNIDynamicConfigRouteWithTlsConfigurationDeletion involves a client sending HTTPS requests with
 // SNI hostnames of "snitest.org" and "snitest.com". The test verifies
-// that traefik updates its configuration when the HTTPS configuration is modified, even if it totally deleted, and
+// that ingress updates its configuration when the HTTPS configuration is modified, even if it totally deleted, and
 // it routes the requests to the expected backends thanks to given certificate if possible
 // otherwise thanks to the default one.
 
@@ -850,7 +850,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithTlsConfigurationDeletion()
 		},
 	}
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
@@ -881,7 +881,7 @@ func (s *HTTPSSuite) TestEntryPointHttpsRedirectAndPathModification() {
 	file := s.adaptFile("fixtures/https/https_redirect.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.BodyContains("Host(`example.com`)"))
 	require.NoError(s.T(), err)
 
@@ -959,12 +959,12 @@ func (s *HTTPSSuite) TestEntryPointHttpsRedirectAndPathModification() {
 
 // TestWithSNIDynamicCaseInsensitive involves a client sending a SNI hostname of
 // "bar.www.snitest.com", which matches the DNS SAN of '*.WWW.SNITEST.COM'. The test
-// verifies that traefik presents the correct certificate.
+// verifies that ingress presents the correct certificate.
 func (s *HTTPSSuite) TestWithSNIDynamicCaseInsensitive() {
 	file := s.adaptFile("fixtures/https/https_sni_case_insensitive_dynamic.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("HostRegexp(`[a-z1-9-]+\\\\.www\\\\.snitest\\\\.com`)"))
 	require.NoError(s.T(), err)
 
@@ -1000,7 +1000,7 @@ func (s *HTTPSSuite) TestWithDomainFronting() {
 	file := s.adaptFile("fixtures/https/https_domain_fronting.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`site1.www.snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -1108,7 +1108,7 @@ func (s *HTTPSSuite) TestWithInvalidTLSOption() {
 	file := s.adaptFile("fixtures/https/https_invalid_tls_options.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for Traefik
+	// wait for Ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
@@ -1182,7 +1182,7 @@ func (s *SimpleSuite) TestMaxConcurrentStream() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
-	// Wait for traefik.
+	// Wait for ingress.
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("api@internal"))
 	require.NoError(s.T(), err)
 

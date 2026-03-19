@@ -114,7 +114,7 @@ func (s *EtcdSuite) TestSimpleConfiguration() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
 		try.BodyContains(`"striper@etcd":`, `"compressor@etcd":`, `"srvcA@etcd":`, `"srvcB@etcd":`),
 	)

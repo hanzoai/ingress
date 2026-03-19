@@ -30,7 +30,7 @@ const (
 	defaultTemplateRule = "Host(`{{ normalize .Name }}`)"
 
 	// defaultPrefix is the default prefix used in tag values indicating the service
-	// should be consumed and exposed via traefik.
+	// should be consumed and exposed via ingress.
 	defaultPrefix = "ingress"
 )
 
@@ -87,7 +87,7 @@ func (p *ProviderBuilder) BuildProviders() []*Provider {
 // Configuration represents the Nomad provider configuration.
 type Configuration struct {
 	DefaultRule        string          `description:"Default rule." json:"defaultRule,omitempty" toml:"defaultRule,omitempty" yaml:"defaultRule,omitempty"`
-	Constraints        string          `description:"Constraints is an expression that Traefik matches against the Nomad service's tags to determine whether to create route(s) for that service." json:"constraints,omitempty" toml:"constraints,omitempty" yaml:"constraints,omitempty" export:"true"`
+	Constraints        string          `description:"Constraints is an expression that Ingress matches against the Nomad service's tags to determine whether to create route(s) for that service." json:"constraints,omitempty" toml:"constraints,omitempty" yaml:"constraints,omitempty" export:"true"`
 	Endpoint           *EndpointConfig `description:"Nomad endpoint settings" json:"endpoint,omitempty" toml:"endpoint,omitempty" yaml:"endpoint,omitempty" export:"true"`
 	Prefix             string          `description:"Prefix for nomad service tags." json:"prefix,omitempty" toml:"prefix,omitempty" yaml:"prefix,omitempty" export:"true"`
 	Stale              bool            `description:"Use stale consistency for catalog reads." json:"stale,omitempty" toml:"stale,omitempty" yaml:"stale,omitempty" export:"true"`
@@ -98,7 +98,7 @@ type Configuration struct {
 	ThrottleDuration   ptypes.Duration `description:"Watch throttle duration." json:"throttleDuration,omitempty" toml:"throttleDuration,omitempty" yaml:"throttleDuration,omitempty" export:"true"`
 }
 
-// SetDefaults sets the default values for the Nomad Traefik Provider Configuration.
+// SetDefaults sets the default values for the Nomad Ingress Provider Configuration.
 func (c *Configuration) SetDefaults() {
 	defConfig := api.DefaultConfig()
 	c.Endpoint = &EndpointConfig{
@@ -146,12 +146,12 @@ type Provider struct {
 	lastConfiguration safe.Safe
 }
 
-// SetDefaults sets the default values for the Nomad Traefik Provider.
+// SetDefaults sets the default values for the Nomad Ingress Provider.
 func (p *Provider) SetDefaults() {
 	p.Configuration.SetDefaults()
 }
 
-// Init the Nomad Traefik Provider.
+// Init the Nomad Ingress Provider.
 func (p *Provider) Init() error {
 	if p.namespace == api.AllNamespacesNamespace {
 		return errors.New("wildcard namespace not supported")
@@ -175,7 +175,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the Nomad Traefik Provider to provide configurations to traefik
+// Provide allows the Nomad Ingress Provider to provide configurations to ingress
 // using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	var err error

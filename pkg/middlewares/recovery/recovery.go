@@ -13,7 +13,7 @@ import (
 
 const (
 	typeName       = "Recovery"
-	middlewareName = "traefik-internal-recovery"
+	middlewareName = "ingress-internal-recovery"
 )
 
 type recovery struct {

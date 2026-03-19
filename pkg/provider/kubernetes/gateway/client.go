@@ -514,7 +514,7 @@ func (c *clientWrapper) UpdateHTTPRouteStatus(ctx context.Context, route ktypes.
 		copy(parentStatuses, status.Parents)
 
 		// keep statuses added by other gateway controllers.
-		// TODO: we should also keep statuses for gateways managed by other Traefik instances.
+		// TODO: we should also keep statuses for gateways managed by other Ingress instances.
 		for _, parentStatus := range currentRoute.Status.Parents {
 			if parentStatus.ControllerName != controllerName {
 				parentStatuses = append(parentStatuses, parentStatus)
@@ -565,7 +565,7 @@ func (c *clientWrapper) UpdateGRPCRouteStatus(ctx context.Context, route ktypes.
 		copy(parentStatuses, status.Parents)
 
 		// keep statuses added by other gateway controllers.
-		// TODO: we should also keep statuses for gateways managed by other Traefik instances.
+		// TODO: we should also keep statuses for gateways managed by other Ingress instances.
 		for _, parentStatus := range currentRoute.Status.Parents {
 			if parentStatus.ControllerName != controllerName {
 				parentStatuses = append(parentStatuses, parentStatus)
@@ -616,7 +616,7 @@ func (c *clientWrapper) UpdateTCPRouteStatus(ctx context.Context, route ktypes.N
 		copy(parentStatuses, status.Parents)
 
 		// keep statuses added by other gateway controllers.
-		// TODO: we should also keep statuses for gateways managed by other Traefik instances.
+		// TODO: we should also keep statuses for gateways managed by other Ingress instances.
 		for _, parentStatus := range currentRoute.Status.Parents {
 			if parentStatus.ControllerName != controllerName {
 				parentStatuses = append(parentStatuses, parentStatus)
@@ -667,7 +667,7 @@ func (c *clientWrapper) UpdateTLSRouteStatus(ctx context.Context, route ktypes.N
 		copy(parentStatuses, status.Parents)
 
 		// keep statuses added by other gateway controllers.
-		// TODO: we should also keep statuses for gateways managed by other Traefik instances.
+		// TODO: we should also keep statuses for gateways managed by other Ingress instances.
 		for _, parentStatus := range currentRoute.Status.Parents {
 			if parentStatus.ControllerName != controllerName {
 				parentStatuses = append(parentStatuses, parentStatus)
@@ -718,7 +718,7 @@ func (c *clientWrapper) UpdateBackendTLSPolicyStatus(ctx context.Context, policy
 		copy(ancestorStatuses, status.Ancestors)
 
 		// keep statuses added by other gateway controllers,
-		// and statuses for Traefik gateway controller but not for the same Gateway as the one in parameter (AncestorRef).
+		// and statuses for Ingress gateway controller but not for the same Gateway as the one in parameter (AncestorRef).
 		for _, ancestorStatus := range currentPolicy.Status.Ancestors {
 			if ancestorStatus.ControllerName != controllerName {
 				ancestorStatuses = append(ancestorStatuses, ancestorStatus)

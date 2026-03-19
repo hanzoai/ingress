@@ -499,7 +499,7 @@ type HealthCheck struct{}
 
 // +k8s:deepcopy-gen=true
 
-// ServersTransport options to configure communication between Traefik and the servers.
+// ServersTransport options to configure communication between Ingress and the servers.
 type ServersTransport struct {
 	ServerName          string                  `description:"Defines the serverName used to contact the server." json:"serverName,omitempty" toml:"serverName,omitempty" yaml:"serverName,omitempty"`
 	InsecureSkipVerify  bool                    `description:"Disables SSL certificate verification." json:"insecureSkipVerify,omitempty" toml:"insecureSkipVerify,omitempty" yaml:"insecureSkipVerify,omitempty" export:"true"`

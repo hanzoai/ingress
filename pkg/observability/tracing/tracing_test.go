@@ -406,7 +406,7 @@ func TestTracing(t *testing.T) {
 }
 
 // TestTracerProvider ensures that Tracer returns a valid TracerProvider
-// when using the default Traefik Tracer and a custom one.
+// when using the default Ingress Tracer and a custom one.
 func TestTracerProvider(t *testing.T) {
 	t.Parallel()
 

@@ -231,7 +231,7 @@ func (p *Provider) ThrottleDuration() time.Duration {
 	return 0
 }
 
-// Provide allows the file provider to provide configurations to traefik
+// Provide allows the file provider to provide configurations to ingress
 // using the given Configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	logger := log.With().Str(logs.ProviderName, p.ResolverName+resolverSuffix).Str("acmeCA", p.Configuration.CAServer).
@@ -300,7 +300,7 @@ func (p *Provider) getClient() (*lego.Client, error) {
 	config := lego.NewConfig(account)
 	config.CADirURL = caServer
 	config.Certificate.KeyType = GetKeyType(ctx, p.KeyType)
-	config.UserAgent = fmt.Sprintf("containous-traefik/%s", version.Version)
+	config.UserAgent = fmt.Sprintf("hanzoai-ingress/%s", version.Version)
 	config.Certificate.DisableCommonName = p.DisableCommonName
 	config.Certificate.Timeout = time.Duration(p.CertificateTimeout)
 

@@ -159,7 +159,7 @@ func (p *ReverseProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	if p.debug {
-		outReq.Header.Set("X-Traefik-Fast-Proxy", "enabled")
+		outReq.Header.Set("X-Ingress-Fast-Proxy", "enabled")
 	}
 
 	reqUpType := upgradeType(req.Header)

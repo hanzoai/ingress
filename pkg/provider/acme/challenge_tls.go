@@ -60,7 +60,7 @@ func (c *ChallengeTLSALPN) Present(domain, _, keyAuth string) error {
 
 	c.configurationChan <- conf
 
-	// Present should return when its dynamic configuration has been received and applied by Traefik.
+	// Present should return when its dynamic configuration has been received and applied by Ingress.
 	// The timer exists in case the above does not happen, to ensure the challenge cleanup.
 	timer := time.NewTimer(time.Minute)
 	defer timer.Stop()
@@ -108,7 +108,7 @@ func (c *ChallengeTLSALPN) ThrottleDuration() time.Duration {
 	return 0
 }
 
-// Provide allows the provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the provider to provide configurations to ingress using the given configuration channel.
 func (c *ChallengeTLSALPN) Provide(configurationChan chan<- dynamic.Message, _ *safe.Pool) error {
 	c.configurationChan = configurationChan
 

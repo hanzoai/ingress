@@ -18,7 +18,7 @@ spec:
 kind: Node
 apiVersion: v1
 metadata:
-  name: traefik-node
+  name: ingress-node
 status:
   addresses:
     - type: InternalIP

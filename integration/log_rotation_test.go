@@ -55,14 +55,14 @@ func (s *LogRotationSuite) TearDownSuite() {
 }
 
 func (s *LogRotationSuite) TestAccessLogRotation() {
-	// Start Traefik
+	// Start Ingress
 	cmd, _ := s.cmdIngress(withConfigFile("fixtures/access_log/access_log_base.toml"))
 	defer s.displayIngressLogFile(ingressTestLogFile)
 
-	// Verify Traefik started ok
+	// Verify Ingress started ok
 	s.verifyEmptyErrorLog("ingress.log")
 
-	s.waitForTraefik("server1")
+	s.waitForIngress("server1")
 
 	// Make some requests
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/", nil)

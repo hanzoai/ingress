@@ -51,7 +51,7 @@ func authHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set headers that will be forwarded by Traefik
+	// Set headers that will be forwarded by Ingress
 	w.Header().Set("X-User-Role", role)
 	w.Header().Set("X-User-Name", username)
 	w.WriteHeader(http.StatusOK)

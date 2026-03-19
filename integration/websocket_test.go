@@ -56,7 +56,7 @@ func (s *WebsocketSuite) TestBase() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -100,7 +100,7 @@ func (s *WebsocketSuite) TestWrongOrigin() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -143,7 +143,7 @@ func (s *WebsocketSuite) TestOrigin() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -197,7 +197,7 @@ func (s *WebsocketSuite) TestWrongOriginIgnoredByServer() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -248,7 +248,7 @@ func (s *WebsocketSuite) TestSSLTermination() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -304,7 +304,7 @@ func (s *WebsocketSuite) TestBasicAuth() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -342,7 +342,7 @@ func (s *WebsocketSuite) TestSpecificResponseFromBackend() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -381,7 +381,7 @@ func (s *WebsocketSuite) TestURLWithURLEncodedChar() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -429,7 +429,7 @@ func (s *WebsocketSuite) TestSSLhttp2() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -461,7 +461,7 @@ func (s *WebsocketSuite) TestSettingEnableConnectProtocol() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
-	// Wait for traefik.
+	// Wait for ingress.
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
@@ -520,7 +520,7 @@ func (s *WebsocketSuite) TestHeaderAreForwarded() {
 
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 

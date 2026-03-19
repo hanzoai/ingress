@@ -238,7 +238,7 @@ func (t *Tracer) safeURL(originalURL *url.URL) *url.URL {
 	return &redactedURL
 }
 
-// Span is trace.Span wrapping the Traefik TracerProvider.
+// Span is trace.Span wrapping the Ingress TracerProvider.
 type Span struct {
 	trace.Span
 
@@ -250,7 +250,7 @@ func (s Span) TracerProvider() trace.TracerProvider {
 	return s.tracerProvider
 }
 
-// TracerProvider is trace.TracerProvider wrapping the Traefik Tracer implementation.
+// TracerProvider is trace.TracerProvider wrapping the Ingress Tracer implementation.
 type TracerProvider struct {
 	trace.TracerProvider
 
@@ -258,7 +258,7 @@ type TracerProvider struct {
 }
 
 // Tracer returns the trace.Tracer for the given options.
-// It returns specifically the Traefik Tracer when requested.
+// It returns specifically the Ingress Tracer when requested.
 func (t TracerProvider) Tracer(name string, options ...trace.TracerOption) trace.Tracer {
 	if name == "github.com/hanzoai/ingress" {
 		return t.tracer

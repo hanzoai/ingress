@@ -54,7 +54,7 @@ func (p *SwarmProvider) Init() error {
 	return nil
 }
 
-// Provide allows the docker provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the docker provider to provide configurations to ingress using the given configuration channel.
 func (p *SwarmProvider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	pool.GoCtx(func(routineCtx context.Context) {
 		logger := log.Ctx(routineCtx).With().Str(logs.ProviderName, swarmName).Logger()
@@ -236,7 +236,7 @@ func (p *SwarmProvider) parseService(ctx context.Context, service swarmtypes.Ser
 	}
 	if service.Spec.EndpointSpec.Mode == swarmtypes.ResolutionModeDNSRR {
 		if dData.ExtraConf.LBSwarm {
-			logger.Warn().Msgf("Ignored %s endpoint-mode not supported, service name: %s. Fallback to Traefik load balancing", swarmtypes.ResolutionModeDNSRR, service.Spec.Annotations.Name)
+			logger.Warn().Msgf("Ignored %s endpoint-mode not supported, service name: %s. Fallback to Ingress load balancing", swarmtypes.ResolutionModeDNSRR, service.Spec.Annotations.Name)
 		}
 	} else if service.Spec.EndpointSpec.Mode == swarmtypes.ResolutionModeVIP {
 		dData.NetworkSettings.Networks = make(map[string]*networkData)
