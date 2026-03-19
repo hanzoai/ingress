@@ -10,7 +10,7 @@ describe('<PageTitle />', () => {
     renderWithProviders(<PageTitle />)
 
     await waitFor(() => {
-      expect(document.title).toBe('Traefik Proxy')
+      expect(document.title).toBe('Hanzo Ingress')
     })
   })
 
@@ -18,31 +18,31 @@ describe('<PageTitle />', () => {
     renderWithProviders(<PageTitle title="Dashboard" />)
 
     await waitFor(() => {
-      expect(document.title).toBe('Dashboard - Traefik Proxy')
+      expect(document.title).toBe('Dashboard - Hanzo Ingress')
     })
   })
 
   it('should render with dashboard name', async () => {
     renderWithProviders(
-      <VersionContext.Provider value={{ showHubButton: false, version: '', dashboardName: 'MyDashboard' }}>
+      <VersionContext.Provider value={{ version: '', dashboardName: 'MyDashboard' }}>
         <PageTitle />
       </VersionContext.Provider>,
     )
 
     await waitFor(() => {
-      expect(document.title).toBe('Traefik Proxy [MyDashboard]')
+      expect(document.title).toBe('Hanzo Ingress [MyDashboard]')
     })
   })
 
   it('should render with page title and dashboard name', async () => {
     renderWithProviders(
-      <VersionContext.Provider value={{ showHubButton: false, version: '', dashboardName: 'MyDashboard' }}>
+      <VersionContext.Provider value={{ version: '', dashboardName: 'MyDashboard' }}>
         <PageTitle title="Dashboard" />
       </VersionContext.Provider>,
     )
 
     await waitFor(() => {
-      expect(document.title).toBe('Dashboard - Traefik Proxy [MyDashboard]')
+      expect(document.title).toBe('Dashboard - Hanzo Ingress [MyDashboard]')
     })
   })
 })

@@ -7,7 +7,7 @@ const PageTitle = ({ title }: { title?: string }) => {
   const { dashboardName } = useContext(VersionContext)
 
   const pageTitle = useMemo(
-    () => `${title ? `${title} - ` : ''}Traefik Proxy${dashboardName ? ` [${dashboardName}]` : ''}`,
+    () => `${title ? `${title} - ` : ''}Hanzo Ingress${dashboardName ? ` [${dashboardName}]` : ''}`,
     [dashboardName, title],
   )
 

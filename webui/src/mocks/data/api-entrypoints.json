@@ -10,7 +10,7 @@
       }
     },
     "forwardedHeaders": {},
-    "name": "traefik"
+    "name": "ingress"
   },
   {
     "address": ":8000",
