@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/ip"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )

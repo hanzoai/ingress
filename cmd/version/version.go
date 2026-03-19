@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"text/template"
 
-	"github.com/traefik/paerser/cli"
+	"github.com/hanzoai/ingress-parser/cli"
 	"github.com/hanzoai/ingress/v3/pkg/version"
 )
 

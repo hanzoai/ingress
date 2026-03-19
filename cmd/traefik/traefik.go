@@ -21,7 +21,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/sirupsen/logrus"
 	"github.com/spiffe/go-spiffe/v2/workloadapi"
-	"github.com/traefik/paerser/cli"
+	"github.com/hanzoai/ingress-parser/cli"
 	"github.com/hanzoai/ingress/v3/cmd"
 	"github.com/hanzoai/ingress/v3/cmd/healthcheck"
 	cmdVersion "github.com/hanzoai/ingress/v3/cmd/version"

@@ -24,7 +24,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"

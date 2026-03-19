@@ -250,7 +250,7 @@ func TestBasicAuthUsersFromFile(t *testing.T) {
 			userFileContent: "#Comment\ntest:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/\ntest2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0\n",
 			givenUsers:      []string{},
 			expectedUsers:   map[string]string{"test": "test", "test2": "test2"},
-			realm:           "traefiker",
+			realm:           "ingresser",
 		},
 	}
 

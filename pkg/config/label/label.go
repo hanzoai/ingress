@@ -2,7 +2,7 @@
 package label
 
 import (
-	"github.com/traefik/paerser/parser"
+	"github.com/hanzoai/ingress-parser/parser"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 )
 

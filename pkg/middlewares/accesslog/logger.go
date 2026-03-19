@@ -18,7 +18,7 @@ import (
 	"github.com/containous/alice"
 	"github.com/rs/zerolog/log"
 	"github.com/sirupsen/logrus"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
 	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"

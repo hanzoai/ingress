@@ -17,7 +17,7 @@ import (
 	"github.com/Masterminds/sprig/v3"
 	"github.com/fsnotify/fsnotify"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/paerser/file"
+	"github.com/hanzoai/ingress-parser/file"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 	"github.com/hanzoai/ingress/v3/pkg/provider"

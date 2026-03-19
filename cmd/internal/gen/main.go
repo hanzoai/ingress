@@ -14,7 +14,7 @@ import (
 const rootPkg = "github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 
 const (
-	destModuleName = "github.com/traefik/genconf"
+	destModuleName = "github.com/hanzoai/genconf"
 	destPkg        = "dynamic"
 )
 
@@ -95,7 +95,7 @@ func cleanType(typ types.Type, base string) string {
 		return "[]string"
 	}
 
-	if typ.String() == "github.com/traefik/paerser/types.Duration" {
+	if typ.String() == "github.com/hanzoai/ingress-parser/types.Duration" {
 		return "string"
 	}
 
@@ -112,7 +112,7 @@ func cleanType(typ types.Type, base string) string {
 
 func cleanPackage(src string) string {
 	switch src {
-	case "github.com/traefik/paerser/types":
+	case "github.com/hanzoai/ingress-parser/types":
 		return ""
 	case "github.com/hanzoai/ingress/v3/pkg/tls":
 		return path.Join(destModuleName, destPkg, "tls")

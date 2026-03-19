@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/kvtools/valkeyrie/store"
-	"github.com/traefik/paerser/parser"
+	"github.com/hanzoai/ingress-parser/parser"
 )
 
 // DecodeToNode converts the labels to a tree of nodes.

@@ -10,11 +10,11 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/paerser/cli"
-	"github.com/traefik/paerser/env"
-	"github.com/traefik/paerser/file"
-	"github.com/traefik/paerser/flag"
-	"github.com/traefik/paerser/parser"
+	"github.com/hanzoai/ingress-parser/cli"
+	"github.com/hanzoai/ingress-parser/env"
+	"github.com/hanzoai/ingress-parser/file"
+	"github.com/hanzoai/ingress-parser/flag"
+	"github.com/hanzoai/ingress-parser/parser"
 )
 
 type DeprecationLoader struct{}
@@ -69,9 +69,9 @@ func logDeprecations(arguments []string) (bool, error) {
 		Extensions: []string{"toml", "yaml", "yml"},
 	}
 
-	configFile, ok := argsLabels["traefik.configfile"]
+	configFile, ok := argsLabels["ingress.configfile"]
 	if !ok {
-		configFile = argsLabels["traefik.configFile"]
+		configFile = argsLabels["ingress.configFile"]
 	}
 
 	filePath, err := finder.Find(configFile)
@@ -129,7 +129,7 @@ func logDeprecations(arguments []string) (bool, error) {
 }
 
 // flattenToLabels recursively flattens a nested map into label key-value pairs.
-// Example: {"experimental": {"http3": true}} -> {"traefik.experimental.http3": "true"}.
+// Example: {"experimental": {"http3": true}} -> {"ingress.experimental.http3": "true"}.
 func flattenToLabels(config any, currKey string, labels map[string]string) {
 	switch v := config.(type) {
 	case map[string]any:
@@ -147,7 +147,7 @@ func flattenToLabels(config any, currKey string, labels map[string]string) {
 		}
 	default:
 		// Convert value to string and create label with ingress prefix.
-		labels["traefik."+currKey] = fmt.Sprintf("%v", v)
+		labels["ingress."+currKey] = fmt.Sprintf("%v", v)
 	}
 }
 
@@ -161,7 +161,7 @@ func parseDeprecatedConfig(labels map[string]string) (*configuration, error) {
 	}
 
 	// Convert labels to node tree.
-	node, err := parser.DecodeToNode(labels, "traefik")
+	node, err := parser.DecodeToNode(labels, "ingress")
 	if err != nil {
 		return nil, fmt.Errorf("decoding to node: %w", err)
 	}

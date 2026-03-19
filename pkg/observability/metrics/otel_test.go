@@ -14,7 +14,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 	"github.com/hanzoai/ingress/v3/pkg/version"
 	"go.opentelemetry.io/collector/pdata/pmetric/pmetricotlp"

@@ -30,7 +30,7 @@ THE SOFTWARE.
 package dynamic
 
 import (
-	paersertypes "github.com/traefik/paerser/types"
+	paersertypes "github.com/hanzoai/ingress-parser/types"
 	tls "github.com/hanzoai/ingress/v3/pkg/tls"
 	types "github.com/hanzoai/ingress/v3/pkg/types"
 )

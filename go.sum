@@ -653,6 +653,8 @@ github.com/grpc-ecosystem/grpc-gateway v1.9.0/go.mod h1:vNeuVxBJEsws4ogUvrchl83t
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 h1:8Tjv8EJ+pM1xP8mK6egEbD1OgnVTyacbefKhmbLhIhU=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2/go.mod h1:pkJQ2tZHJ0aFOVEEot6oZmaVEZcRme73eIFmhiVuRWs=
+github.com/hanzoai/ingress-parser v0.2.3 h1:q8tmR95HUnsOxNceqjEkaiaaxjrVgfT8cIWBqrJhMAw=
+github.com/hanzoai/ingress-parser v0.2.3/go.mod h1:bqV04MSCLynOayWZj/Fxa6nDPUcyZYK8VELpS1vuuNI=
 github.com/hashicorp/consul/api v1.1.0/go.mod h1:VmuI/Lkw1nC05EYQWNKwWGbkg+FbDBtguAZLlVdkD9Q=
 github.com/hashicorp/consul/api v1.10.1/go.mod h1:XjsvQN+RJGWI2TWy1/kqaE16HrR2J/FWgkYjdZQsX9M=
 github.com/hashicorp/consul/api v1.26.1 h1:5oSXOO5fboPZeW5SN+TdGFP/BILDgBm19OrPZ/pICIM=
@@ -1286,8 +1288,6 @@ github.com/traefik/grpc-web v0.16.0 h1:eeUWZaFg6ZU0I9dWOYE2D5qkNzRBmXzzuRlxdltas
 github.com/traefik/grpc-web v0.16.0/go.mod h1:2ttniSv7pTgBWIU2HZLokxRfFX3SA60c/DTmQQgVml4=
 github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf h1:qOjmGqgXvycy0+tda6rWhTPulgQxnImwRrM1AROIvJ4=
 github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf/go.mod h1:as06A23Znc9S/ilJpKqJ/UhO3Zu5JztlxVwQuKl+iZs=
-github.com/traefik/paerser v0.2.2 h1:cpzW/ZrQrBh3mdwD/jnp6aXASiUFKOVr6ldP+keJTcQ=
-github.com/traefik/paerser v0.2.2/go.mod h1:7BBDd4FANoVgaTZG+yh26jI6CA2nds7D/4VTEdIsh24=
 github.com/traefik/yaegi v0.16.1 h1:f1De3DVJqIDKmnasUF6MwmWv1dSEEat0wcpXhD2On3E=
 github.com/traefik/yaegi v0.16.1/go.mod h1:4eVhbPb3LnD2VigQjhYbEJ69vDRFdT2HQNrXx8eEwUY=
 github.com/transip/gotransip/v6 v6.26.1 h1:MeqIjkTBBsZwWAK6giZyMkqLmKMclVHEuTNmoBdx4MA=

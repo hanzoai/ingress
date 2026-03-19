@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/paerser/types"
+	"github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
 	"k8s.io/apimachinery/pkg/runtime"
