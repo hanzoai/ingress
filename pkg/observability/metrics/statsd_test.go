@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/stvp/go-udp-testing"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 )
 

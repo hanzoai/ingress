@@ -11,8 +11,8 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/paerser/flag"
-	"github.com/traefik/paerser/generator"
+	"github.com/hanzoai/ingress-parser/flag"
+	"github.com/hanzoai/ingress-parser/generator"
 	"github.com/hanzoai/ingress/v3/cmd"
 	"github.com/hanzoai/ingress/v3/pkg/collector/hydratation"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/traefik/paerser/types"
+	"github.com/hanzoai/ingress-parser/types"
 )
 
 const (

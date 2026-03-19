@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 	"k8s.io/utils/ptr"

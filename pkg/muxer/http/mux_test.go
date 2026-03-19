@@ -463,7 +463,7 @@ func TestParseDomains(t *testing.T) {
 }
 
 // TestEmptyHost is a non regression test for
-// https://github.com/traefik/traefik/pull/9131
+// https://github.com/hanzoai/ingress/issues/9131
 func TestEmptyHost(t *testing.T) {
 	testCases := []struct {
 		desc     string
