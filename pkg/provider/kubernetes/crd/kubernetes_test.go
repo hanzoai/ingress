@@ -13,7 +13,7 @@ import (
 	ptypes "github.com/traefik/paerser/types"
 	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
-	traefikcrdfake "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake"
+	ingresscrdfake "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake"
 	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/gateway"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
@@ -1303,7 +1303,7 @@ func TestLoadIngressRouteTCPs(t *testing.T) {
 		{
 			desc:         "Simple TCP Ingress Route, with ingressClassName",
 			paths:        []string{"tcp/services.yml", "tcp/with_ingressclassname.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				TLS: &dynamic.TLSConfiguration{},
 				UDP: &dynamic.UDPConfiguration{
@@ -1346,7 +1346,7 @@ func TestLoadIngressRouteTCPs(t *testing.T) {
 		{
 			desc:         "Simple TCP Ingress Route, with ingressClassName and deprecated annotation",
 			paths:        []string{"tcp/services.yml", "tcp/with_ingressclassname_and_deprecated_annotation.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				TLS: &dynamic.TLSConfiguration{},
 				UDP: &dynamic.UDPConfiguration{
@@ -1389,7 +1389,7 @@ func TestLoadIngressRouteTCPs(t *testing.T) {
 		{
 			desc:         "Simple TCP Ingress Route, with deprecated annotation only",
 			paths:        []string{"tcp/services.yml", "tcp/with_deprecated_annotation_only.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				TLS: &dynamic.TLSConfiguration{},
 				UDP: &dynamic.UDPConfiguration{
@@ -1784,7 +1784,7 @@ func TestLoadIngressRouteTCPs(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -2373,7 +2373,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 			},
 		},
 		{
-			desc:  "traefik service without ingress route",
+			desc:  "ingress service without ingress route",
 			paths: []string{"with_services_only.yml"},
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
@@ -3281,7 +3281,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 		},
 		{
 			desc:  "IngressService with service middleware",
-			paths: []string{"services.yml", "with_traefik_service_middleware.yml"},
+			paths: []string{"services.yml", "with_ingress_service_middleware.yml"},
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers:  map[string]*dynamic.UDPRouter{},
@@ -4328,7 +4328,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 		{
 			desc:         "Simple Ingress Route, with ingressClassName",
 			paths:        []string{"services.yml", "with_ingressclassname.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers:  map[string]*dynamic.UDPRouter{},
@@ -4377,7 +4377,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 		{
 			desc:         "Simple Ingress Route, with ingressClassName and deprecated annotation",
 			paths:        []string{"services.yml", "with_ingressclassname_and_deprecated_annotation.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers:  map[string]*dynamic.UDPRouter{},
@@ -4426,7 +4426,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 		{
 			desc:         "Simple Ingress Route, with deprecated annotation only",
 			paths:        []string{"services.yml", "with_deprecated_annotation_only.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers:  map[string]*dynamic.UDPRouter{},
@@ -5542,10 +5542,10 @@ func TestLoadIngressRoutes(t *testing.T) {
 							Service:     "default-test2-route-840425136fbd5d85a4ad",
 							Rule:        "Host(`k8s-service`)",
 						},
-						"default-test2-route-4f06607bbc69f34a4db5": {
+						"default-test2-route-cd347116af72ec44c2d4": {
 							EntryPoints: []string{"web"},
-							Service:     "default-test2-route-4f06607bbc69f34a4db5",
-							Rule:        "Host(`traefik-service`)",
+							Service:     "default-test2-route-cd347116af72ec44c2d4",
+							Rule:        "Host(`ingress-service`)",
 						},
 					},
 					Middlewares: map[string]*dynamic.Middleware{},
@@ -5564,7 +5564,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 								},
 							},
 						},
-						"default-test2-route-4f06607bbc69f34a4db5": {
+						"default-test2-route-cd347116af72ec44c2d4": {
 							Weighted: &dynamic.WeightedRoundRobin{
 								Services: []dynamic.WRRService{
 									{
@@ -6072,7 +6072,7 @@ func TestLoadIngressRoutes(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -6154,7 +6154,7 @@ func TestLoadIngressRoutes_multipleEndpointAddresses(t *testing.T) {
 	k8sObjects, crdObjects := readResources(t, []string{"services.yml", "with_multiple_endpointslices.yml"})
 
 	kubeClient := kubefake.NewClientset(k8sObjects...)
-	crdClient := traefikcrdfake.NewClientset(crdObjects...)
+	crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 	client := newClientImpl(kubeClient, crdClient)
 
@@ -6255,7 +6255,7 @@ func TestLoadIngressRouteUDPs(t *testing.T) {
 		{
 			desc:         "Simple UDP Ingress Route, with ingressClassName",
 			paths:        []string{"udp/services.yml", "udp/with_ingressclassname.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers: map[string]*dynamic.UDPRouter{
@@ -6297,7 +6297,7 @@ func TestLoadIngressRouteUDPs(t *testing.T) {
 		{
 			desc:         "Simple UDP Ingress Route, with ingressClassName and deprecated annotation",
 			paths:        []string{"udp/services.yml", "udp/with_ingressclassname_and_deprecated_annotation.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers: map[string]*dynamic.UDPRouter{
@@ -6339,7 +6339,7 @@ func TestLoadIngressRouteUDPs(t *testing.T) {
 		{
 			desc:         "Simple UDP Ingress Route, with deprecated annotation only",
 			paths:        []string{"udp/services.yml", "udp/with_deprecated_annotation_only.yml"},
-			ingressClass: "traefik-lb",
+			ingressClass: "ingress-lb",
 			expected: &dynamic.Configuration{
 				UDP: &dynamic.UDPConfiguration{
 					Routers: map[string]*dynamic.UDPRouter{
@@ -6789,7 +6789,7 @@ func TestLoadIngressRouteUDPs(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -8292,7 +8292,7 @@ func TestCrossNamespace(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -8562,7 +8562,7 @@ func TestExternalNameService(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -8744,7 +8744,7 @@ func TestNativeLB(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -9010,7 +9010,7 @@ func TestNodePortLB(t *testing.T) {
 			k8sObjects, crdObjects := readResources(t, test.paths)
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 
@@ -9051,7 +9051,7 @@ func TestCreateBasicAuthCredentials(t *testing.T) {
 	}
 
 	kubeClient := kubefake.NewClientset(k8sObjects...)
-	crdClient := traefikcrdfake.NewClientset()
+	crdClient := ingresscrdfake.NewClientset()
 
 	client := newClientImpl(kubeClient, crdClient)
 
@@ -9656,7 +9656,7 @@ func TestGlobalNativeLB(t *testing.T) {
 			}
 
 			kubeClient := kubefake.NewClientset(k8sObjects...)
-			crdClient := traefikcrdfake.NewClientset(crdObjects...)
+			crdClient := ingresscrdfake.NewClientset(crdObjects...)
 
 			client := newClientImpl(kubeClient, crdClient)
 

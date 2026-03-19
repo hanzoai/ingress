@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 Containous SAS; 2020-2026 Traefik Labs
+Copyright (c) 2016-2020 Containous SAS; 2020-2026 Hanzo AI Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -46,26 +46,26 @@ type IngressServicesGetter interface {
 
 // IngressServiceInterface has methods to work with IngressService resources.
 type IngressServiceInterface interface {
-	Create(ctx context.Context, traefikService *hanzoaiv1alpha1.IngressService, opts v1.CreateOptions) (*hanzoaiv1alpha1.IngressService, error)
-	Update(ctx context.Context, traefikService *hanzoaiv1alpha1.IngressService, opts v1.UpdateOptions) (*hanzoaiv1alpha1.IngressService, error)
+	Create(ctx context.Context, ingressService *hanzoaiv1alpha1.IngressService, opts v1.CreateOptions) (*hanzoaiv1alpha1.IngressService, error)
+	Update(ctx context.Context, ingressService *hanzoaiv1alpha1.IngressService, opts v1.UpdateOptions) (*hanzoaiv1alpha1.IngressService, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*hanzoaiv1alpha1.IngressService, error)
 	List(ctx context.Context, opts v1.ListOptions) (*hanzoaiv1alpha1.IngressServiceList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *hanzoaiv1alpha1.IngressService, err error)
-	Apply(ctx context.Context, traefikService *applyconfigurationhanzoaiv1alpha1.IngressServiceApplyConfiguration, opts v1.ApplyOptions) (result *hanzoaiv1alpha1.IngressService, err error)
+	Apply(ctx context.Context, ingressService *applyconfigurationhanzoaiv1alpha1.IngressServiceApplyConfiguration, opts v1.ApplyOptions) (result *hanzoaiv1alpha1.IngressService, err error)
 	IngressServiceExpansion
 }
 
-// traefikServices implements IngressServiceInterface
-type traefikServices struct {
+// ingressServices implements IngressServiceInterface
+type ingressServices struct {
 	*gentype.ClientWithListAndApply[*hanzoaiv1alpha1.IngressService, *hanzoaiv1alpha1.IngressServiceList, *applyconfigurationhanzoaiv1alpha1.IngressServiceApplyConfiguration]
 }
 
 // newIngressServices returns a IngressServices
-func newIngressServices(c *HanzoV1alpha1Client, namespace string) *traefikServices {
-	return &traefikServices{
+func newIngressServices(c *HanzoV1alpha1Client, namespace string) *ingressServices {
+	return &ingressServices{
 		gentype.NewClientWithListAndApply[*hanzoaiv1alpha1.IngressService, *hanzoaiv1alpha1.IngressServiceList, *applyconfigurationhanzoaiv1alpha1.IngressServiceApplyConfiguration](
 			"ingressservices",
 			c.RESTClient(),

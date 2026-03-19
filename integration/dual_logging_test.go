@@ -116,7 +116,7 @@ func (s *DualLoggingSuite) TestOTLPAndStdoutLogging() {
 	cmd, display := s.cmdIngress(withConfigFile(file))
 	defer s.displayIngressLogFile(ingressTestLogFile)
 
-	s.waitForTraefik("dashboard")
+	s.waitForIngress("dashboard")
 
 	time.Sleep(3 * time.Second)
 

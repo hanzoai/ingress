@@ -77,7 +77,7 @@ func TestGatewayClassLabelSelector(t *testing.T) {
 	client := newClientImpl(kubeClient, gwClient)
 
 	// This is initialized by the Provider init method but this cannot be called in a unit test.
-	client.labelSelector = "name=traefik-internal"
+	client.labelSelector = "name=ingress-internal"
 
 	eventCh, err := client.WatchAll(nil, make(chan struct{}))
 	require.NoError(t, err)
@@ -95,12 +95,12 @@ func TestGatewayClassLabelSelector(t *testing.T) {
 
 	_ = p.loadConfigurationFromGateways(t.Context())
 
-	gw, err := gwClient.GatewayV1().Gateways("default").Get(t.Context(), "traefik-external", metav1.GetOptions{})
+	gw, err := gwClient.GatewayV1().Gateways("default").Get(t.Context(), "ingress-external", metav1.GetOptions{})
 	require.NoError(t, err)
 
 	assert.Empty(t, gw.Status.Addresses)
 
-	gw, err = gwClient.GatewayV1().Gateways("default").Get(t.Context(), "traefik-internal", metav1.GetOptions{})
+	gw, err = gwClient.GatewayV1().Gateways("default").Get(t.Context(), "ingress-internal", metav1.GetOptions{})
 	require.NoError(t, err)
 	require.Len(t, gw.Status.Addresses, 1)
 	require.NotNil(t, gw.Status.Addresses[0].Type)

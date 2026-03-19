@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-keep
+  name: ingress-keep
 spec:
   controller: hanzo.ai/ingress-controller
 
@@ -11,7 +11,7 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: "whoami-keep-route"
 spec:
-  ingressClassName: "traefik-keep"
+  ingressClassName: "ingress-keep"
   rules:
   - host: "whoami.test.keep"
     http:
@@ -28,7 +28,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-drop
+  name: ingress-drop
 spec:
   controller: hanzo.ai/ingress-controller
 
@@ -38,7 +38,7 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: "whoami-drop-route"
 spec:
-  ingressClassName: "traefik-drop"
+  ingressClassName: "ingress-drop"
   rules:
   - host: "whoami.test.drop"
     http:
@@ -55,7 +55,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-not-ingress-controller
+  name: ingress-not-controller
 spec:
   controller: not.tr43phic.io/ingress-controller
 
@@ -65,7 +65,7 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: "whoami-drop-ingress"
 spec:
-  ingressClassName: "traefik-not-ingress-controller"
+  ingressClassName: "ingress-not-controller"
   rules:
   - host: "whoami.test.not.ingress"
     http:

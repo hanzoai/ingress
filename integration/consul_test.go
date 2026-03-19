@@ -124,7 +124,7 @@ func (s *ConsulSuite) TestSimpleConfiguration() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
 		try.BodyContains(`"striper@consul":`, `"compressor@consul":`, `"srvcA@consul":`, `"srvcB@consul":`),
 	)
@@ -191,7 +191,7 @@ func (s *ConsulSuite) TestDeleteRootKey() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
 		try.BodyContains(`"Router0@consul":`, `"Router1@consul":`, `"simplesvc0@consul":`, `"simplesvc1@consul":`),
 	)

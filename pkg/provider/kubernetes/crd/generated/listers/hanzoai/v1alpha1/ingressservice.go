@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 Containous SAS; 2020-2026 Traefik Labs
+Copyright (c) 2016-2020 Containous SAS; 2020-2026 Hanzo AI Inc
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -44,19 +44,19 @@ type IngressServiceLister interface {
 	IngressServiceListerExpansion
 }
 
-// traefikServiceLister implements the IngressServiceLister interface.
-type traefikServiceLister struct {
+// ingressServiceLister implements the IngressServiceLister interface.
+type ingressServiceLister struct {
 	listers.ResourceIndexer[*hanzoaiv1alpha1.IngressService]
 }
 
 // NewIngressServiceLister returns a new IngressServiceLister.
 func NewIngressServiceLister(indexer cache.Indexer) IngressServiceLister {
-	return &traefikServiceLister{listers.New[*hanzoaiv1alpha1.IngressService](indexer, hanzoaiv1alpha1.Resource("ingressservice"))}
+	return &ingressServiceLister{listers.New[*hanzoaiv1alpha1.IngressService](indexer, hanzoaiv1alpha1.Resource("ingressservice"))}
 }
 
 // IngressServices returns an object that can list and get IngressServices.
-func (s *traefikServiceLister) IngressServices(namespace string) IngressServiceNamespaceLister {
-	return traefikServiceNamespaceLister{listers.NewNamespaced[*hanzoaiv1alpha1.IngressService](s.ResourceIndexer, namespace)}
+func (s *ingressServiceLister) IngressServices(namespace string) IngressServiceNamespaceLister {
+	return ingressServiceNamespaceLister{listers.NewNamespaced[*hanzoaiv1alpha1.IngressService](s.ResourceIndexer, namespace)}
 }
 
 // IngressServiceNamespaceLister helps list and get IngressServices.
@@ -71,8 +71,8 @@ type IngressServiceNamespaceLister interface {
 	IngressServiceNamespaceListerExpansion
 }
 
-// traefikServiceNamespaceLister implements the IngressServiceNamespaceLister
+// ingressServiceNamespaceLister implements the IngressServiceNamespaceLister
 // interface.
-type traefikServiceNamespaceLister struct {
+type ingressServiceNamespaceLister struct {
 	listers.ResourceIndexer[*hanzoaiv1alpha1.IngressService]
 }

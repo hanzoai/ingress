@@ -159,7 +159,7 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 			case object := <-s.saveDataChan:
 				select {
 				case <-ctx.Done():
-					// Stop handling events because Traefik is shutting down.
+					// Stop handling events because Ingress is shutting down.
 					return
 				default:
 				}

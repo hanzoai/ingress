@@ -29,15 +29,15 @@ func (f *FileLoader) Load(args []string, cmd *cli.Command) (bool, error) {
 		return false, err
 	}
 
-	configFileFlag := "ingress.configfile"
-	if _, ok := ref["ingress.configFile"]; ok {
-		configFileFlag = "ingress.configFile"
+	configFileFlag := "traefik.configfile"
+	if _, ok := ref["traefik.configFile"]; ok {
+		configFileFlag = "traefik.configFile"
 	}
 
 	if f.ConfigFileFlag != "" {
-		configFileFlag = "ingress." + f.ConfigFileFlag
+		configFileFlag = "traefik." + f.ConfigFileFlag
 		if _, ok := ref[strings.ToLower(configFileFlag)]; ok {
-			configFileFlag = "ingress." + strings.ToLower(f.ConfigFileFlag)
+			configFileFlag = "traefik." + strings.ToLower(f.ConfigFileFlag)
 		}
 	}
 

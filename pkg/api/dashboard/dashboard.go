@@ -30,9 +30,9 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		assets = webui.FS
 	}
 
-	// Allow iframes from traefik domains only.
+	// Allow iframes from ingress domains only.
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src
-	w.Header().Set("Content-Security-Policy", "frame-src 'self' https://traefik.io https://*.traefik.io;")
+	w.Header().Set("Content-Security-Policy", "frame-src 'self' https://ingress.io https://*.ingress.io;")
 
 	if r.RequestURI == "/" {
 		indexTemplate, err := template.ParseFS(assets, "index.html")
@@ -97,7 +97,7 @@ func Append(router *mux.Router, basePath string, customAssets fs.FS) error {
 		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// Allow iframes from our domains only.
 			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src
-			w.Header().Set("Content-Security-Policy", "frame-src 'self' https://traefik.io https://*.traefik.io;")
+			w.Header().Set("Content-Security-Policy", "frame-src 'self' https://ingress.io https://*.ingress.io;")
 
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -112,9 +112,9 @@ func Append(router *mux.Router, basePath string, customAssets fs.FS) error {
 	router.Methods(http.MethodGet).
 		PathPrefix(dashboardPath).
 		HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Allow iframes from traefik domains only.
+			// Allow iframes from ingress domains only.
 			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src
-			w.Header().Set("Content-Security-Policy", "frame-src 'self' https://traefik.io https://*.traefik.io;")
+			w.Header().Set("Content-Security-Policy", "frame-src 'self' https://ingress.io https://*.ingress.io;")
 
 			// The content type must be guessed by the file server.
 			// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options

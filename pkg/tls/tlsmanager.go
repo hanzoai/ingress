@@ -324,7 +324,7 @@ func (m *Manager) GetServerCertificates() []*x509.Certificate {
 			return certificates
 		}
 
-		// Excluding the generated Traefik default certificate.
+		// Excluding the generated Ingress default certificate.
 		if x509Cert.Subject.CommonName == generate.DefaultDomain {
 			return certificates
 		}

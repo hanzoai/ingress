@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	traefikclientset "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
-	traefikinformers "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions"
+	ingressclientset "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
+	ingressinformers "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions"
 	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
 	"github.com/hanzoai/ingress/v3/pkg/types"
@@ -55,13 +55,13 @@ type Client interface {
 
 // TODO: add tests for the clientWrapper (and its methods) itself.
 type clientWrapper struct {
-	csCrd  traefikclientset.Interface
+	csCrd  ingressclientset.Interface
 	csKube kclientset.Interface
 
 	clusterScopeFactory         kinformers.SharedInformerFactory
 	disableClusterScopeInformer bool
 
-	factoriesCrd    map[string]traefikinformers.SharedInformerFactory
+	factoriesCrd    map[string]ingressinformers.SharedInformerFactory
 	factoriesKube   map[string]kinformers.SharedInformerFactory
 	factoriesSecret map[string]kinformers.SharedInformerFactory
 
@@ -80,7 +80,7 @@ func createClientFromConfig(c *rest.Config) (*clientWrapper, error) {
 		runtime.GOARCH,
 	)
 
-	csCrd, err := traefikclientset.NewForConfig(c)
+	csCrd, err := ingressclientset.NewForConfig(c)
 	if err != nil {
 		return nil, err
 	}
@@ -93,11 +93,11 @@ func createClientFromConfig(c *rest.Config) (*clientWrapper, error) {
 	return newClientImpl(csKube, csCrd), nil
 }
 
-func newClientImpl(csKube kclientset.Interface, csCrd traefikclientset.Interface) *clientWrapper {
+func newClientImpl(csKube kclientset.Interface, csCrd ingressclientset.Interface) *clientWrapper {
 	return &clientWrapper{
 		csCrd:           csCrd,
 		csKube:          csKube,
-		factoriesCrd:    make(map[string]traefikinformers.SharedInformerFactory),
+		factoriesCrd:    make(map[string]ingressinformers.SharedInformerFactory),
 		factoriesKube:   make(map[string]kinformers.SharedInformerFactory),
 		factoriesSecret: make(map[string]kinformers.SharedInformerFactory),
 	}
@@ -177,7 +177,7 @@ func (c *clientWrapper) WatchAll(namespaces []string, stopCh <-chan struct{}) (<
 	}
 
 	for _, ns := range namespaces {
-		factoryCrd := traefikinformers.NewSharedInformerFactoryWithOptions(c.csCrd, resyncPeriod, traefikinformers.WithNamespace(ns), traefikinformers.WithTweakListOptions(matchesLabelSelector))
+		factoryCrd := ingressinformers.NewSharedInformerFactoryWithOptions(c.csCrd, resyncPeriod, ingressinformers.WithNamespace(ns), ingressinformers.WithTweakListOptions(matchesLabelSelector))
 		_, err := factoryCrd.Hanzo().V1alpha1().IngressRoutes().Informer().AddEventHandler(eventHandler)
 		if err != nil {
 			return nil, err
@@ -375,11 +375,11 @@ func (c *clientWrapper) GetIngressServices() []*hanzoaiv1alpha1.IngressService {
 	var result []*hanzoaiv1alpha1.IngressService
 
 	for ns, factory := range c.factoriesCrd {
-		traefikServices, err := factory.Hanzo().V1alpha1().IngressServices().Lister().List(labels.Everything())
+		ingressServices, err := factory.Hanzo().V1alpha1().IngressServices().Lister().List(labels.Everything())
 		if err != nil {
-			log.Error().Err(err).Msgf("Failed to list Traefik services in namespace %s", ns)
+			log.Error().Err(err).Msgf("Failed to list Ingress services in namespace %s", ns)
 		}
-		result = append(result, traefikServices...)
+		result = append(result, ingressServices...)
 	}
 
 	return result

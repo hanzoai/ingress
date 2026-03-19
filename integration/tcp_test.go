@@ -54,17 +54,17 @@ func (s *TCPSuite) TestMixed() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("Path(`/test`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik passes through, termination handled by whoami-a
+	// Ingress passes through, termination handled by whoami-a
 	out, err := guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-a.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-a")
 
-	// Traefik passes through, termination handled by whoami-b
+	// Ingress passes through, termination handled by whoami-b
 	out, err = guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-b.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-b")
 
-	// Termination handled by traefik
+	// Termination handled by ingress
 	out, err = guessWho("127.0.0.1:8093", "whoami-c.test", true)
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-no-cert")
@@ -143,17 +143,17 @@ func (s *TCPSuite) TestNonTLSFallback() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik passes through, termination handled by whoami-a
+	// Ingress passes through, termination handled by whoami-a
 	out, err := guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-a.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-a")
 
-	// Traefik passes through, termination handled by whoami-b
+	// Ingress passes through, termination handled by whoami-b
 	out, err = guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-b.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-b")
 
-	// Termination handled by traefik
+	// Termination handled by ingress
 	out, err = guessWho("127.0.0.1:8093", "whoami-c.test", true)
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-no-cert")
@@ -175,7 +175,7 @@ func (s *TCPSuite) TestNonTlsTcp() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik will forward every requests on the given port to whoami-no-tls
+	// Ingress will forward every requests on the given port to whoami-no-tls
 	out, err := guessWho("127.0.0.1:8093", "", false)
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-no-tls")
@@ -193,7 +193,7 @@ func (s *TCPSuite) TestCatchAllNoTLS() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik will forward every requests on the given port to whoami-no-tls
+	// Ingress will forward every requests on the given port to whoami-no-tls
 	out, err := welcome("127.0.0.1:8093")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "Welcome")
@@ -238,11 +238,11 @@ func (s *TCPSuite) TestMiddlewareAllowList() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik not passes through, ipAllowList closes connection
+	// Ingress not passes through, ipAllowList closes connection
 	_, err = guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-a.test")
 	assert.ErrorIs(s.T(), err, io.EOF)
 
-	// Traefik passes through, termination handled by whoami-b
+	// Ingress passes through, termination handled by whoami-b
 	out, err := guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-b.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-b")
@@ -262,11 +262,11 @@ func (s *TCPSuite) TestMiddlewareWhiteList() {
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
 
-	// Traefik not passes through, ipWhiteList closes connection
+	// Ingress not passes through, ipWhiteList closes connection
 	_, err = guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-a.test")
 	assert.ErrorIs(s.T(), err, io.EOF)
 
-	// Traefik passes through, termination handled by whoami-b
+	// Ingress passes through, termination handled by whoami-b
 	out, err := guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-b.test")
 	require.NoError(s.T(), err)
 	assert.Contains(s.T(), out, "whoami-b")
@@ -288,7 +288,7 @@ func (s *TCPSuite) TestWRR() {
 
 	call := map[string]int{}
 	for range 4 {
-		// Traefik passes through, termination handled by whoami-b or whoami-bb
+		// Ingress passes through, termination handled by whoami-b or whoami-bb
 		out, err := guessWhoTLSPassthrough("127.0.0.1:8093", "whoami-b.test")
 		require.NoError(s.T(), err)
 		switch {

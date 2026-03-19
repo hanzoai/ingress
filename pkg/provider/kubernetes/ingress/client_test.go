@@ -88,10 +88,10 @@ func TestIsLoadBalancerIngressEquals(t *testing.T) {
 			desc: "same unordered content",
 			aSlice: []netv1.IngressLoadBalancerIngress{
 				{IP: "192.168.1.1", Hostname: "ingress"},
-				{IP: "192.168.1.2", Hostname: "traefik2"},
+				{IP: "192.168.1.2", Hostname: "ingress2"},
 			},
 			bSlice: []netv1.IngressLoadBalancerIngress{
-				{IP: "192.168.1.2", Hostname: "traefik2"},
+				{IP: "192.168.1.2", Hostname: "ingress2"},
 				{IP: "192.168.1.1", Hostname: "ingress"},
 			},
 			expectedEqual: true,
@@ -100,7 +100,7 @@ func TestIsLoadBalancerIngressEquals(t *testing.T) {
 			desc: "different ordered content",
 			aSlice: []netv1.IngressLoadBalancerIngress{
 				{IP: "192.168.1.1", Hostname: "ingress"},
-				{IP: "192.168.1.2", Hostname: "traefik2"},
+				{IP: "192.168.1.2", Hostname: "ingress2"},
 			},
 			bSlice: []netv1.IngressLoadBalancerIngress{
 				{IP: "192.168.1.1", Hostname: "ingress"},
@@ -112,10 +112,10 @@ func TestIsLoadBalancerIngressEquals(t *testing.T) {
 			desc: "different unordered content",
 			aSlice: []netv1.IngressLoadBalancerIngress{
 				{IP: "192.168.1.1", Hostname: "ingress"},
-				{IP: "192.168.1.2", Hostname: "traefik2"},
+				{IP: "192.168.1.2", Hostname: "ingress2"},
 			},
 			bSlice: []netv1.IngressLoadBalancerIngress{
-				{IP: "192.168.1.2", Hostname: "traefik3"},
+				{IP: "192.168.1.2", Hostname: "ingress3"},
 				{IP: "192.168.1.1", Hostname: "ingress"},
 			},
 			expectedEqual: false,

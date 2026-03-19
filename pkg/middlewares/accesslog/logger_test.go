@@ -38,7 +38,7 @@ import (
 const delta float64 = 1e-10
 
 var (
-	logFileNameSuffix       = "/traefik/logger/test.log"
+	logFileNameSuffix       = "/ingress/logger/test.log"
 	testContent             = "Hello, World"
 	testServiceName         = "http://127.0.0.1/testService"
 	testRouterName          = "testRouter"
@@ -74,7 +74,7 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 			bodyCheckFn: func(t *testing.T, log string) {
 				t.Helper()
 
-				// For common format, verify the body contains the Traefik common log formatted string
+				// For common format, verify the body contains the Ingress common log formatted string
 				assert.Regexp(t, `"body":{"stringValue":".*- /health -.*200.*[0-9]+ms.*"}`, log)
 			},
 			outLoggerCheckFn: func(t *testing.T, l *logrus.Logger) {
@@ -125,7 +125,7 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 			bodyCheckFn: func(t *testing.T, log string) {
 				t.Helper()
 
-				// For common format, verify the body contains the Traefik common log formatted string
+				// For common format, verify the body contains the Ingress common log formatted string
 				assert.Regexp(t, `"body":{"stringValue":".*- /health -.*200.*[0-9]+ms.*"}`, log)
 			},
 			outLoggerCheckFn: func(t *testing.T, l *logrus.Logger) {
@@ -142,7 +142,7 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 			bodyCheckFn: func(t *testing.T, log string) {
 				t.Helper()
 
-				// For common format, verify the body contains the Traefik common log formatted string
+				// For common format, verify the body contains the Ingress common log formatted string
 				assert.Regexp(t, `"body":{"stringValue":".*- /health -.*200.*[0-9]+ms.*"}`, log)
 			},
 			outLoggerCheckFn: func(t *testing.T, l *logrus.Logger) {

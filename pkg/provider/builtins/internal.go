@@ -36,7 +36,7 @@ func (i *Provider) ThrottleDuration() time.Duration {
 	return 0
 }
 
-// Provide allows the provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the provider to provide configurations to ingress using the given configuration channel.
 func (i *Provider) Provide(configurationChan chan<- dynamic.Message, _ *safe.Pool) error {
 	ctx := log.With().Str(logs.ProviderName, "internal").Logger().WithContext(context.Background())
 
@@ -118,7 +118,7 @@ func (i *Provider) acme(cfg *dynamic.Configuration) {
 	if len(eps) > 0 {
 		rt := &dynamic.Router{
 			Rule: "PathPrefix(`/.well-known/acme-challenge/`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax:  "default",
 			EntryPoints: eps,
 			Service:     "acme-http@internal",
@@ -166,7 +166,7 @@ func (i *Provider) redirection(ctx context.Context, cfg *dynamic.Configuration) 
 
 		rt := &dynamic.Router{
 			Rule: "HostRegexp(`^.+$`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax:  "default",
 			EntryPoints: []string{name},
 			Middlewares: []string{mdName},
@@ -284,7 +284,7 @@ func (i *Provider) apiConfiguration(cfg *dynamic.Configuration) {
 			Service:     "api@internal",
 			Priority:    math.MaxInt - 1,
 			Rule:        "PathPrefix(`/api`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
 
@@ -294,7 +294,7 @@ func (i *Provider) apiConfiguration(cfg *dynamic.Configuration) {
 				Service:     "dashboard@internal",
 				Priority:    math.MaxInt - 2,
 				Rule:        "PathPrefix(`/`)",
-				// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+				// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 				RuleSyntax:  "default",
 				Middlewares: []string{"dashboard_redirect@internal", "dashboard_stripprefix@internal"},
 			}
@@ -317,7 +317,7 @@ func (i *Provider) apiConfiguration(cfg *dynamic.Configuration) {
 				Service:     "api@internal",
 				Priority:    math.MaxInt - 1,
 				Rule:        "PathPrefix(`/debug`)",
-				// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+				// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 				RuleSyntax: "default",
 			}
 		}
@@ -341,7 +341,7 @@ func (i *Provider) pingConfiguration(cfg *dynamic.Configuration) {
 			Service:     "ping@internal",
 			Priority:    math.MaxInt,
 			Rule:        "PathPrefix(`/ping`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
 	}
@@ -360,7 +360,7 @@ func (i *Provider) restConfiguration(cfg *dynamic.Configuration) {
 			Service:     "rest@internal",
 			Priority:    math.MaxInt,
 			Rule:        "PathPrefix(`/api/providers`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
 	}
@@ -379,7 +379,7 @@ func (i *Provider) prometheusConfiguration(cfg *dynamic.Configuration) {
 			Service:     "prometheus@internal",
 			Priority:    math.MaxInt,
 			Rule:        "PathPrefix(`/metrics`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
 	}

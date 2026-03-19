@@ -2,9 +2,9 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: traefik-internal
+  name: ingress-internal
   labels:
-    name: traefik-internal
+    name: ingress-internal
 spec:
   controllerName: hanzo.ai/gateway-controller
 
@@ -12,10 +12,10 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: traefik-internal
+  name: ingress-internal
   namespace: default
 spec:
-  gatewayClassName: traefik-internal
+  gatewayClassName: ingress-internal
   listeners:
     - name: http
       protocol: HTTP
@@ -28,9 +28,9 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: traefik-external
+  name: ingress-external
   labels:
-    name: traefik-external
+    name: ingress-external
 spec:
   controllerName: hanzo.ai/gateway-controller
 
@@ -38,10 +38,10 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: traefik-external
+  name: ingress-external
   namespace: default
 spec:
-  gatewayClassName: traefik-external
+  gatewayClassName: ingress-external
   listeners:
     - name: http
       protocol: HTTP

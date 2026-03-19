@@ -366,7 +366,7 @@ func TestLoad(t *testing.T) {
 				"TRAEFIK_LOG_LEVEL":                "DEBUG",
 				"TRAEFIK_ENTRYPOINT_TEST_HTTP_TLS": "true",
 				"TRAEFIK_PROVIDERS_MARATHON":       "true",
-				"INGRESS_PILOT_TOKEN":              "xxx",
+				"TRAEFIK_PILOT_TOKEN":              "xxx",
 			},
 			wantDeprecated: true,
 		},
@@ -383,21 +383,21 @@ func TestLoad(t *testing.T) {
 		{
 			desc: "[FILE] providers.marathon is deprecated",
 			args: []string{
-				"--configfile=./fixtures/traefik_deprecated.toml",
+				"--configfile=./fixtures/ingress_deprecated.toml",
 			},
 			wantDeprecated: true,
 		},
 		{
 			desc: "[FILE] multiple deprecated",
 			args: []string{
-				"--configfile=./fixtures/traefik_multiple_deprecated.toml",
+				"--configfile=./fixtures/ingress_multiple_deprecated.toml",
 			},
 			wantDeprecated: true,
 		},
 		{
 			desc: "[FILE] no deprecated",
 			args: []string{
-				"--configfile=./fixtures/traefik_no_deprecated.toml",
+				"--configfile=./fixtures/ingress_no_deprecated.toml",
 			},
 			wantDeprecated: false,
 		},

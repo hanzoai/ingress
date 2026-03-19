@@ -4,10 +4,10 @@ gatewayAPIChannel: experimental
 gatewayAPIVersion: v1.4.0
 implementation:
   contact:
-  - '@traefik/maintainers'
-  organization: traefik
-  project: traefik
-  url: https://traefik.io/
+  - '@hanzoai/maintainers'
+  organization: hanzoai
+  project: ingress
+  url: https://hanzo.ai/
   version: v3.7
 kind: ConformanceReport
 mode: default

@@ -153,7 +153,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the k8s provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the k8s provider to provide configurations to ingress using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	logger := log.With().Str(logs.ProviderName, providerName).Logger()
 	ctxLog := logger.WithContext(context.Background())
@@ -270,7 +270,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 		// Add the default backend service router to the configuration.
 		conf.HTTP.Routers[defaultBackendName] = &dynamic.Router{
 			Rule: "PathPrefix(`/`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 			Priority:   math.MinInt32,
 			Service:    defaultBackendName,
@@ -278,7 +278,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 		conf.HTTP.Routers[defaultBackendTLSName] = &dynamic.Router{
 			Rule: "PathPrefix(`/`)",
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 			Priority:   math.MinInt32,
 			Service:    defaultBackendName,
@@ -374,7 +374,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 		if defaultBackendService != nil && len(ingress.Spec.Rules) == 0 {
 			rt := &dynamic.Router{
 				Rule: "PathPrefix(`/`)",
-				// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+				// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 				RuleSyntax: "default",
 				Priority:   math.MinInt32,
 				Service:    defaultBackendName,
@@ -388,7 +388,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 			rtTLS := &dynamic.Router{
 				Rule: "PathPrefix(`/`)",
-				// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+				// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 				RuleSyntax: "default",
 				Priority:   math.MinInt32,
 				Service:    defaultBackendName,
@@ -454,7 +454,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 				conf.TCP.Routers[routerKey] = &dynamic.TCPRouter{
 					Rule: fmt.Sprintf("HostSNI(`%s`)", rule.Host),
-					// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+					// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 					RuleSyntax: "default",
 					Service:    serviceName,
 					TLS: &dynamic.RouterTCPTLSConfig{
@@ -470,7 +470,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 				rt := &dynamic.Router{
 					Rule: buildHostRule(rule.Host),
-					// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+					// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 					RuleSyntax: "default",
 					Service:    key,
 				}
@@ -483,7 +483,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 				rtTLS := &dynamic.Router{
 					Rule: buildHostRule(rule.Host),
-					// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+					// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 					RuleSyntax: "default",
 					Service:    key,
 					TLS:        &dynamic.RouterTLSConfig{},
@@ -539,7 +539,7 @@ func (p *Provider) loadConfiguration(ctx context.Context) *dynamic.Configuration
 
 				rt := &dynamic.Router{
 					Rule: buildRule(rule.Host, pa, ingressConfig),
-					// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+					// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 					RuleSyntax: "default",
 					Service:    serviceName,
 				}
@@ -1056,7 +1056,7 @@ func applyFromToWwwRedirect(hosts map[string]bool, ruleHost, routerName string, 
 		Rule:        newRule,
 		EntryPoints: rt.EntryPoints,
 		Priority:    rt.Priority,
-		// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+		// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 		RuleSyntax:  "default",
 		Middlewares: []string{fromToWwwRedirectMiddlewareName},
 		Service:     rt.Service,
@@ -1317,13 +1317,13 @@ func (p *Provider) applySSLRedirectConfiguration(routerName string, ingressConfi
 	sslRedirect := ptr.Deref(ingressConfig.SSLRedirect, hasTLS)
 
 	if hasTLS {
-		// An Ingress with TLS configuration creates only a Traefik router with a TLS configuration,
+		// An Ingress with TLS configuration creates only a Ingress router with a TLS configuration,
 		// so no Non-TLS router exists to handle HTTP traffic, and we should create it.
 		httpRouter := &dynamic.Router{
 			// Only attach to entryPoint which do not activate TLS.
 			EntryPoints: p.NonTLSEntryPoints,
 			Rule:        rt.Rule,
-			// "default" stands for the default rule syntax in Traefik v3, i.e. the v3 syntax.
+			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax:  "default",
 			Middlewares: rt.Middlewares,
 			Service:     rt.Service,

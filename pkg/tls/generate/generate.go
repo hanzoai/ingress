@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// DefaultDomain Traefik domain for the default certificate.
+// DefaultDomain Ingress domain for the default certificate.
 const DefaultDomain = "INGRESS DEFAULT CERT"
 
 // DefaultCertificate generates random TLS certificates.
@@ -26,7 +26,7 @@ func DefaultCertificate() (*tls.Certificate, error) {
 	}
 	zBytes := sha256.Sum256(randomBytes)
 	z := hex.EncodeToString(zBytes[:sha256.Size])
-	domain := fmt.Sprintf("%s.%s.traefik.default", z[:32], z[32:])
+	domain := fmt.Sprintf("%s.%s.ingress.default", z[:32], z[32:])
 
 	certPEM, keyPEM, err := KeyPair(domain, time.Time{})
 	if err != nil {

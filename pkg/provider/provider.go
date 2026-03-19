@@ -7,7 +7,7 @@ import (
 
 // Provider defines methods of a provider.
 type Provider interface {
-	// Provide allows the provider to provide configurations to traefik
+	// Provide allows the provider to provide configurations to ingress
 	// using the given configuration channel.
 	Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error
 	Init() error

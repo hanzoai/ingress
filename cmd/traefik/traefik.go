@@ -52,7 +52,7 @@ import (
 )
 
 func main() {
-	// traefik config inits
+	// ingress config inits
 	tConfig := cmd.NewIngressConfiguration()
 
 	loaders := []cli.ResourceLoader{&tcli.DeprecationLoader{}, &tcli.FileLoader{}, &tcli.FlagLoader{}, &tcli.EnvLoader{}}
@@ -60,7 +60,7 @@ func main() {
 	cmdIngress := &cli.Command{
 		Name: "hanzo-ingress",
 		Description: `Hanzo Ingress is a cloud-native reverse proxy and load balancer for Hanzo infrastructure.
-Based on Traefik. Documentation: https://doc.traefik.io/traefik/`,
+Based on Ingress. Documentation: https://hanzo.ai/docs/ingress/`,
 		Configuration: tConfig,
 		Resources:     loaders,
 		Run: func(_ []string) error {
@@ -97,10 +97,10 @@ func runCmd(staticConfiguration *static.Configuration) error {
 		return fmt.Errorf("setting up logger: %w", err)
 	}
 
-	log.Warn().Msg("Traefik can reject some encoded characters in the request path." +
+	log.Warn().Msg("Ingress can reject some encoded characters in the request path." +
 		"When your backend is not fully compliant with [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986)," +
 		"it is recommended to set these options to `false` to avoid split-view situation." +
-		"Refer to the documentation for more details: https://doc.traefik.io/traefik/v3.6/migrate/v3/#encoded-characters-configuration-default-values")
+		"Refer to the documentation for more details: https://hanzo.ai/docs/ingress/v3.6/migrate/v3/#encoded-characters-configuration-default-values")
 
 	http.DefaultTransport.(*http.Transport).Proxy = http.ProxyFromEnvironment
 
@@ -427,7 +427,7 @@ func getDefaultsEntrypoints(staticConfiguration *static.Configuration) []string 
 
 		protocol, err := cfg.GetProtocol()
 		if err != nil {
-			// Should never happen because Traefik should not start if protocol is invalid.
+			// Should never happen because Ingress should not start if protocol is invalid.
 			log.Error().Err(err).Msg("Invalid protocol")
 		}
 
@@ -623,9 +623,9 @@ func checkNewVersion(staticConfiguration *static.Configuration) {
 
 	if staticConfiguration.Global.CheckNewVersion {
 		logger.Info().Msg(`Version check is enabled.`)
-		logger.Info().Msg(`Traefik checks for new releases to notify you if your version is out of date.`)
+		logger.Info().Msg(`Ingress checks for new releases to notify you if your version is out of date.`)
 		logger.Info().Msg(`It also collects usage data during this process.`)
-		logger.Info().Msg(`Check the documentation to get more info: https://doc.traefik.io/traefik/contributing/data-collection/`)
+		logger.Info().Msg(`Check the documentation to get more info: https://hanzo.ai/docs/ingress/contributing/data-collection/`)
 
 		ticker := time.Tick(24 * time.Hour)
 		safe.Go(func() {
@@ -637,7 +637,7 @@ func checkNewVersion(staticConfiguration *static.Configuration) {
 		logger.Info().Msg(`
 Version check is disabled.
 You will not be notified if a new version is available.
-More details: https://doc.traefik.io/traefik/contributing/data-collection/
+More details: https://hanzo.ai/docs/ingress/contributing/data-collection/
 `)
 	}
 }
@@ -647,15 +647,15 @@ func stats(staticConfiguration *static.Configuration) {
 
 	if staticConfiguration.Global.SendAnonymousUsage {
 		logger.Info().Msg(`Stats collection is enabled.`)
-		logger.Info().Msg(`Many thanks for contributing to Traefik's improvement by allowing us to receive anonymous information from your configuration.`)
-		logger.Info().Msg(`Help us improve Traefik by leaving this feature on :)`)
-		logger.Info().Msg(`More details on: https://doc.traefik.io/traefik/contributing/data-collection/`)
+		logger.Info().Msg(`Many thanks for contributing to Ingress improvement by allowing us to receive anonymous information from your configuration.`)
+		logger.Info().Msg(`Help us improve Ingress by leaving this feature on :)`)
+		logger.Info().Msg(`More details on: https://hanzo.ai/docs/ingress/contributing/data-collection/`)
 		collect(staticConfiguration)
 	} else {
 		logger.Info().Msg(`
 Stats collection is disabled.
-Help us improve Traefik by turning this feature on :)
-More details on: https://doc.traefik.io/traefik/contributing/data-collection/
+Help us improve Ingress by turning this feature on :)
+More details on: https://hanzo.ai/docs/ingress/contributing/data-collection/
 `)
 	}
 }

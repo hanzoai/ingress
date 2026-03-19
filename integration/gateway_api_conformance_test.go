@@ -75,14 +75,14 @@ func (s *GatewayAPIConformanceSuite) SetupSuite() {
 	if !slices.ContainsFunc(images, func(img testcontainers.ImageInfo) bool {
 		return img.Name == ingressImage
 	}) {
-		s.T().Fatal("Traefik image is not present")
+		s.T().Fatal("Ingress image is not present")
 	}
 
 	s.k3sContainer, err = k3s.Run(ctx,
 		k3sImage,
 		k3s.WithManifest("./fixtures/gateway-api-conformance/00-experimental-v1.4.0.yml"),
 		k3s.WithManifest("./fixtures/gateway-api-conformance/01-rbac.yml"),
-		k3s.WithManifest("./fixtures/gateway-api-conformance/02-traefik.yml"),
+		k3s.WithManifest("./fixtures/gateway-api-conformance/02-ingress.yml"),
 		network.WithNetwork(nil, s.network),
 	)
 	if err != nil {
@@ -93,9 +93,9 @@ func (s *GatewayAPIConformanceSuite) SetupSuite() {
 		s.T().Fatal(err)
 	}
 
-	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", ingressNamespace, traefikDeployment, "--for=condition=Available", "--timeout=30s"})
+	exitCode, _, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "wait", "-n", ingressNamespace, ingressDeployment, "--for=condition=Available", "--timeout=30s"})
 	if err != nil || exitCode > 0 {
-		s.T().Fatalf("Traefik pod is not ready: %v", err)
+		s.T().Fatalf("Ingress pod is not ready: %v", err)
 	}
 
 	kubeConfigYaml, err := s.k3sContainer.GetKubeConfig(ctx)
@@ -146,7 +146,7 @@ func (s *GatewayAPIConformanceSuite) TearDownSuite() {
 			}
 		}
 
-		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", ingressNamespace, traefikDeployment})
+		exitCode, result, err := s.k3sContainer.Exec(ctx, []string{"kubectl", "logs", "-n", ingressNamespace, ingressDeployment})
 		if err == nil || exitCode == 0 {
 			if res, err := io.ReadAll(result); err == nil {
 				s.T().Log(string(res))
@@ -162,7 +162,7 @@ func (s *GatewayAPIConformanceSuite) TearDownSuite() {
 }
 
 func (s *GatewayAPIConformanceSuite) TestK8sGatewayAPIConformance() {
-	// Wait for traefik to start
+	// Wait for ingress to start
 	k3sContainerIP, err := s.k3sContainer.ContainerIP(s.T().Context())
 	require.NoError(s.T(), err)
 
@@ -183,9 +183,9 @@ func (s *GatewayAPIConformanceSuite) TestK8sGatewayAPIConformance() {
 		Implementation: v1.Implementation{
 			Organization: "ingress",
 			Project:      "ingress",
-			URL:          "https://traefik.io/",
+			URL:          "https://hanzo.ai/",
 			Version:      *ingressVersion,
-			Contact:      []string{"@traefik/maintainers"},
+			Contact:      []string{"@hanzoai/maintainers"},
 		},
 		ConformanceProfiles: sets.New(
 			ksuite.GatewayHTTPConformanceProfileName,

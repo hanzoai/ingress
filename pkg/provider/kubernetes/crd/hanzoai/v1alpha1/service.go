@@ -9,11 +9,11 @@ import (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:storageversion
 
-// IngressService is the CRD implementation of a Traefik Service.
+// IngressService is the CRD implementation of a Ingress Service.
 // IngressService object allows to:
 // - Apply weight to Services on load-balancing
 // - Mirror traffic on services
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/
 type IngressService struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
@@ -51,7 +51,7 @@ type IngressServiceSpec struct {
 // +k8s:deepcopy-gen=true
 
 // Mirroring holds the mirroring service configuration.
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#mirroring
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#mirroring
 type Mirroring struct {
 	LoadBalancerSpec `json:",inline"`
 
@@ -62,7 +62,7 @@ type Mirroring struct {
 	// If the body is larger, the request is not mirrored.
 	// Default value is -1, which means unlimited size.
 	MaxBodySize *int64 `json:"maxBodySize,omitempty"`
-	// Mirrors defines the list of mirrors where Traefik will duplicate the traffic.
+	// Mirrors defines the list of mirrors where Ingress will duplicate the traffic.
 	Mirrors []MirrorService `json:"mirrors,omitempty"`
 }
 
@@ -80,19 +80,19 @@ type MirrorService struct {
 // +k8s:deepcopy-gen=true
 
 // WeightedRoundRobin holds the weighted round-robin configuration.
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#weighted-round-robin-wrr
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#weighted-round-robin-wrr
 type WeightedRoundRobin struct {
 	// Services defines the list of Kubernetes Service and/or IngressService to load-balance, with weight.
 	Services []Service `json:"services,omitempty"`
 	// Sticky defines whether sticky sessions are enabled.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/#stickiness-and-load-balancing
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/#stickiness-and-load-balancing
 	Sticky *dynamic.Sticky `json:"sticky,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
 
 // HighestRandomWeight holds the highest random weight configuration.
-// More info: https://doc.traefik.io/traefik/v3.6/routing/services/#highest-random-configuration
+// More info: https://hanzo.ai/docs/ingress/v3.6/routing/services/#highest-random-configuration
 type HighestRandomWeight struct {
 	// Services defines the list of Kubernetes Service and/or IngressService to load-balance, with weight.
 	Services []Service `json:"services,omitempty"`

@@ -6,7 +6,7 @@ import (
 
 // +k8s:deepcopy-gen=true
 
-// Message holds configuration information exchanged between parts of traefik.
+// Message holds configuration information exchanged between parts of ingress.
 type Message struct {
 	ProviderName  string
 	Configuration *Configuration

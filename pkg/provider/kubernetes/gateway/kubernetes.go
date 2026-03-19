@@ -178,7 +178,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the k8s provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the k8s provider to provide configurations to ingress using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	logger := log.With().Str(logs.ProviderName, providerName).Logger()
 	ctxLog := logger.WithContext(context.Background())
@@ -346,7 +346,7 @@ func (p *Provider) loadConfigurationFromGateways(ctx context.Context) *dynamic.C
 				Status:             metav1.ConditionTrue,
 				ObservedGeneration: gatewayClass.Generation,
 				Reason:             "Handled",
-				Message:            "Handled by Traefik controller",
+				Message:            "Handled by Ingress controller",
 				LastTransitionTime: metav1.Now(),
 			}),
 			SupportedFeatures: supportedFeatures,
