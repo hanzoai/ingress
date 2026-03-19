@@ -15,7 +15,7 @@ import (
 func NewCmd(ingressConfiguration *static.Configuration, loaders []cli.ResourceLoader) *cli.Command {
 	return &cli.Command{
 		Name:          "healthcheck",
-		Description:   `Calls Traefik /ping endpoint (disabled by default) to check the health of Traefik.`,
+		Description:   `Calls Ingress /ping endpoint (disabled by default) to check the health of Ingress.`,
 		Configuration: ingressConfiguration,
 		Run:           runCmd(ingressConfiguration),
 		Resources:     loaders,

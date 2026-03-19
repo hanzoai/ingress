@@ -62,9 +62,9 @@ func TestSmartBuilder_Build(t *testing.T) {
 			handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				callCount++
 				if test.wantFastProxy {
-					assert.Contains(t, r.Header, "X-Traefik-Fast-Proxy")
+					assert.Contains(t, r.Header, "X-Ingress-Fast-Proxy")
 				} else {
-					assert.NotContains(t, r.Header, "X-Traefik-Fast-Proxy")
+					assert.NotContains(t, r.Header, "X-Ingress-Fast-Proxy")
 				}
 			})
 

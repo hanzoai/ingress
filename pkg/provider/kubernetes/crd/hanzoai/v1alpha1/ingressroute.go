@@ -13,24 +13,24 @@ type IngressRouteSpec struct {
 	IngressClassName *string `json:"ingressClassName,omitempty"`
 	// EntryPoints defines the list of entry point names to bind to.
 	// Entry points have to be configured in the static configuration.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/install-configuration/entrypoints/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/entrypoints/
 	// Default: all.
 	EntryPoints []string `json:"entryPoints,omitempty"`
 	// Routes defines the list of routes.
 	Routes []Route `json:"routes"`
 	// TLS defines the TLS configuration.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/routing/router/#tls
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/router/#tls
 	TLS *TLS `json:"tls,omitempty"`
 	// ParentRefs defines references to parent IngressRoute resources for multi-layer routing.
 	// When set, this IngressRoute's routers will be children of the referenced parent IngressRoute's routers.
-	// More info: https://doc.traefik.io/traefik/v3.6/routing/routers/#parentrefs
+	// More info: https://hanzo.ai/docs/ingress/v3.6/routing/routers/#parentrefs
 	ParentRefs []IngressRouteRef `json:"parentRefs,omitempty"`
 }
 
 // Route holds the HTTP route configuration.
 type Route struct {
 	// Match defines the router's rule.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/
 	Match string `json:"match"`
 	// Kind defines the kind of the route.
 	// Rule is the only supported kind.
@@ -38,11 +38,11 @@ type Route struct {
 	// +kubebuilder:validation:Enum=Rule
 	Kind string `json:"kind,omitempty"`
 	// Priority defines the router's priority.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#priority
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#priority
 	// +kubebuilder:validation:Maximum=9223372036854774807
 	Priority int `json:"priority,omitempty"`
 	// Syntax defines the router's rule syntax.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#rulesyntax
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#rulesyntax
 	//
 	// Deprecated: Please do not use this field and rewrite the router rules to use the v3 syntax.
 	Syntax string `json:"syntax,omitempty"`
@@ -50,57 +50,57 @@ type Route struct {
 	// It can contain any combination of IngressService and/or reference to a Kubernetes Service.
 	Services []Service `json:"services,omitempty"`
 	// Middlewares defines the list of references to Middleware resources.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/middleware/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/middleware/
 	Middlewares []MiddlewareRef `json:"middlewares,omitempty"`
 	// Observability defines the observability configuration for a router.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/routing/observability/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/observability/
 	Observability *dynamic.RouterObservabilityConfig `json:"observability,omitempty"`
 }
 
 // TLS holds the TLS configuration.
-// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/overview/
+// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/overview/
 type TLS struct {
 	// SecretName is the name of the referenced Kubernetes Secret to specify the certificate details.
 	SecretName string `json:"secretName,omitempty"`
 	// Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection.
 	// If not defined, the `default` TLSOption is used.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-options/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-options/
 	Options *TLSOptionRef `json:"options,omitempty"`
 	// Store defines the reference to the TLSStore, that will be used to store certificates.
 	// Please note that only `default` TLSStore can be used.
 	Store *TLSStoreRef `json:"store,omitempty"`
 	// CertResolver defines the name of the certificate resolver to use.
 	// Cert resolvers have to be configured in the static configuration.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
 	CertResolver string `json:"certResolver,omitempty"`
 	// Domains defines the list of domains that will be used to issue certificates.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#domains
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#domains
 	Domains []types.Domain `json:"domains,omitempty"`
 }
 
 // TLSOptionRef is a reference to a TLSOption resource.
 type TLSOptionRef struct {
 	// Name defines the name of the referenced TLSOption.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
 	Name string `json:"name"`
 	// Namespace defines the namespace of the referenced TLSOption.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
 	Namespace string `json:"namespace,omitempty"`
 }
 
 // TLSStoreRef is a reference to a TLSStore resource.
 type TLSStoreRef struct {
 	// Name defines the name of the referenced TLSStore.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
 	Name string `json:"name"`
 	// Namespace defines the namespace of the referenced TLSStore.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
 	Namespace string `json:"namespace,omitempty"`
 }
 
 // LoadBalancerSpec defines the desired state of LoadBalancer.
 // It can reference either a Kubernetes Service object (a load-balancer of servers),
-// or a IngressService object (a load-balancer of Traefik services).
+// or a IngressService object (a load-balancer of Ingress services).
 type LoadBalancerSpec struct {
 	// Name defines the name of the referenced Kubernetes Service or IngressService.
 	// The differentiation between the two is specified in the Kind field.
@@ -113,7 +113,7 @@ type LoadBalancerSpec struct {
 	// Middlewares defines the list of references to Middleware resources to apply to the service.
 	Middlewares []MiddlewareRef `json:"middlewares,omitempty"`
 	// Sticky defines the sticky sessions configuration.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
 	Sticky *dynamic.Sticky `json:"sticky,omitempty"`
 	// Port defines the port of a Kubernetes Service.
 	// This can be a reference to a named port.
@@ -131,10 +131,10 @@ type LoadBalancerSpec struct {
 	// PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
 	// By default, passHostHeader is true.
 	PassHostHeader *bool `json:"passHostHeader,omitempty"`
-	// ResponseForwarding defines how Traefik forwards the response from the upstream Kubernetes Service to the client.
+	// ResponseForwarding defines how Ingress forwards the response from the upstream Kubernetes Service to the client.
 	ResponseForwarding *ResponseForwarding `json:"responseForwarding,omitempty"`
 	// ServersTransport defines the name of ServersTransport resource to use.
-	// It allows to configure the transport between Traefik and your servers.
+	// It allows to configure the transport between Ingress and your servers.
 	// Can only be used on a Kubernetes Service.
 	ServersTransport string `json:"serversTransport,omitempty"`
 	// Weight defines the weight and should only be specified when Name references a IngressService object
@@ -148,7 +148,7 @@ type LoadBalancerSpec struct {
 	NativeLB *bool `json:"nativeLB,omitempty"`
 	// NodePortLB controls, when creating the load-balancer,
 	// whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-	// It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+	// It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
 	// By default, NodePortLB is false.
 	NodePortLB bool `json:"nodePortLB,omitempty"`
 	// Healthcheck defines health checks for ExternalName services.
@@ -188,7 +188,7 @@ type ServerHealthCheck struct {
 	// When UnhealthyInterval is not defined, it defaults to the Interval value.
 	// Default: 30s
 	UnhealthyInterval *intstr.IntOrString `json:"unhealthyInterval,omitempty"`
-	// Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
+	// Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
 	// Default: 5s
 	Timeout *intstr.IntOrString `json:"timeout,omitempty"`
 	// Hostname defines the value of hostname in the Host header of the health check request.
@@ -232,7 +232,7 @@ type IngressRouteRef struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:storageversion
 
-// IngressRoute is the CRD implementation of a Traefik HTTP Router.
+// IngressRoute is the CRD implementation of a Ingress HTTP Router.
 type IngressRoute struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.

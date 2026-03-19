@@ -138,7 +138,7 @@ func (b *wasmMiddlewareBuilder) buildMiddleware(ctx context.Context, next http.H
 
 	h := mw.NewHandler(ctx, next)
 
-	// Traefik does not Close the middleware when creating a new instance on a configuration change.
+	// Ingress does not Close the middleware when creating a new instance on a configuration change.
 	// When the middleware is marked to be GC, we need to close it so the wasm instance is properly closed.
 	// Reference: https://github.com/traefik/traefik/issues/11119
 	runtime.SetFinalizer(h, func(_ http.Handler) {

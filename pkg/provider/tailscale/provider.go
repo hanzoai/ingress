@@ -21,14 +21,14 @@ import (
 )
 
 // Provider is the Tailscale certificates provider implementation. It receives
-// configuration updates (e.g. new router, with new domain) from Traefik core,
+// configuration updates (e.g. new router, with new domain) from Ingress core,
 // fetches the corresponding TLS certificates from the Tailscale daemon, and
-// sends back to Traefik core a configuration updated with the certificates.
+// sends back to Ingress core a configuration updated with the certificates.
 type Provider struct {
 	ResolverName string
 
-	dynConfigs  chan dynamic.Configuration // updates from Traefik core
-	dynMessages chan<- dynamic.Message     // update to Traefik core
+	dynConfigs  chan dynamic.Configuration // updates from Ingress core
+	dynMessages chan<- dynamic.Message     // update to Ingress core
 
 	certByDomainMu sync.RWMutex
 	certByDomain   map[string]ingresstls.Certificate
@@ -268,7 +268,7 @@ func (p *Provider) sendDynamicConfig() {
 	p.certByDomainMu.RLock()
 	defer p.certByDomainMu.RUnlock()
 
-	// TODO: we always send back to traefik core the set of certificates
+	// TODO: we always send back to ingress core the set of certificates
 	// sorted, to make sure that two identical sets, that would be sorted
 	// differently, do not trigger another configuration update because of the
 	// mismatch. But in reality we should not end up sending a certificates

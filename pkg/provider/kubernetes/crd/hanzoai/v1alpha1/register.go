@@ -6,7 +6,7 @@ import (
 	kschema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-// GroupName is the group name for Traefik.
+// GroupName is the group name for Ingress.
 const GroupName = "hanzo.ai"
 
 var (

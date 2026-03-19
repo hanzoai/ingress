@@ -2,5 +2,5 @@
 
 // Package v1alpha1 is the v1alpha1 version of the API.
 // +groupName=hanzo.ai
-// +groupGoName=Traefik
+// +groupGoName=Ingress
 package v1alpha1

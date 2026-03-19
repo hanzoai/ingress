@@ -88,7 +88,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_router_minimalVerbosity() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -137,7 +137,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_entrypoint_minimalVerbosity()
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -186,7 +186,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -254,7 +254,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_gRPC() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -310,7 +310,7 @@ func (s *TracingSuite) TestOpenTelemetryRateLimit() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -431,7 +431,7 @@ func (s *TracingSuite) TestOpenTelemetryRetry() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -554,7 +554,7 @@ func (s *TracingSuite) TestOpenTelemetryAuth() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -607,7 +607,7 @@ func (s *TracingSuite) TestOpenTelemetryAuthWithRetry() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -664,7 +664,7 @@ func (s *TracingSuite) TestOpenTelemetrySafeURL() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
@@ -733,7 +733,7 @@ func (s *TracingSuite) TestNoInternals() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	// wait for traefik
+	// wait for ingress
 	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 

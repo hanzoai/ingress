@@ -11,7 +11,7 @@ type IngressRouteUDPSpec struct {
 	IngressClassName *string `json:"ingressClassName,omitempty"`
 	// EntryPoints defines the list of entry point names to bind to.
 	// Entry points have to be configured in the static configuration.
-	// More info: https://doc.traefik.io/traefik/v3.6/reference/install-configuration/entrypoints/
+	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/entrypoints/
 	// Default: all.
 	EntryPoints []string `json:"entryPoints,omitempty"`
 	// Routes defines the list of routes.
@@ -44,7 +44,7 @@ type ServiceUDP struct {
 	NativeLB *bool `json:"nativeLB,omitempty"`
 	// NodePortLB controls, when creating the load-balancer,
 	// whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-	// It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+	// It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
 	// By default, NodePortLB is false.
 	NodePortLB bool `json:"nodePortLB,omitempty"`
 }
@@ -53,7 +53,7 @@ type ServiceUDP struct {
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:storageversion
 
-// IngressRouteUDP is a CRD implementation of a Traefik UDP Router.
+// IngressRouteUDP is a CRD implementation of a Ingress UDP Router.
 type IngressRouteUDP struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.

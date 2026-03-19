@@ -11,7 +11,7 @@ import (
 	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
 )
 
-const xTraefikRouter = "X-Traefik-Router"
+const xIngressRouter = "X-Ingress-Router"
 
 type DenyRouterRecursion struct {
 	routerName     string
@@ -42,7 +42,7 @@ func New(routerName string, next http.Handler) (*DenyRouterRecursion, error) {
 
 // ServeHTTP implements http.Handler.
 func (l *DenyRouterRecursion) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if req.Header.Get(xTraefikRouter) == l.routerNameHash {
+	if req.Header.Get(xIngressRouter) == l.routerNameHash {
 		logger := log.With().Str(logs.MiddlewareType, "DenyRouterRecursion").Logger()
 		logger.Debug().Msgf("Rejecting request in provenance of the same router (%q) to stop potential infinite loop.", l.routerName)
 
@@ -51,7 +51,7 @@ func (l *DenyRouterRecursion) ServeHTTP(rw http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	req.Header.Set(xTraefikRouter, l.routerNameHash)
+	req.Header.Set(xIngressRouter, l.routerNameHash)
 
 	l.next.ServeHTTP(rw, req)
 }

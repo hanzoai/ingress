@@ -49,7 +49,7 @@ spec:
     - web
 
   routes:
-    - match: Host(`traefik-service`)
+    - match: Host(`ingress-service`)
       kind: Rule
       services:
         - name: sticky

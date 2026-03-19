@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-lb2
+  name: ingress-lb2
 spec:
   controller: hanzo.ai/ingress-controller
 
@@ -9,7 +9,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: traefik-lb
+  name: ingress-lb
 spec:
   controller: hanzo.ai/ingress-controller
 
@@ -20,7 +20,7 @@ metadata:
   name: ""
   namespace: testing
 spec:
-  ingressClassName: traefik-lb
+  ingressClassName: ingress-lb
   rules:
     - http:
         paths:
@@ -39,7 +39,7 @@ metadata:
   name: ""
   namespace: testing
 spec:
-  ingressClassName: traefik-lb2
+  ingressClassName: ingress-lb2
   rules:
     - http:
         paths:

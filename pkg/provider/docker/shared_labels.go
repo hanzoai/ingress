@@ -78,7 +78,7 @@ func (p *Shared) extractSwarmLabels(container dockerData) (configuration, error)
 	}
 
 	if labelConf.Docker != nil {
-		log.Warn().Msg("Labels traefik.docker.* for Swarm provider are deprecated. Please use traefik.swarm.* labels instead")
+		log.Warn().Msg("Labels ingress.docker.* for Swarm provider are deprecated. Please use ingress.swarm.* labels instead")
 
 		conf.LBSwarm = labelConf.Docker.LBSwarm
 

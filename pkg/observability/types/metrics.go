@@ -9,7 +9,7 @@ import (
 	tTypes "github.com/hanzoai/ingress/v3/pkg/types"
 )
 
-// Metrics provides options to expose and send Traefik metrics to different third party monitoring systems.
+// Metrics provides options to expose and send Ingress metrics to different third party monitoring systems.
 type Metrics struct {
 	AddInternals bool `description:"Enables metrics for internal services (ping, dashboard, etc...)." json:"addInternals,omitempty" toml:"addInternals,omitempty" yaml:"addInternals,omitempty" export:"true"`
 

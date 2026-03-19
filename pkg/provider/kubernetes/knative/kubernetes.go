@@ -73,7 +73,7 @@ func (p *Provider) Init() error {
 	return nil
 }
 
-// Provide allows the knative provider to provide configurations to traefik using the given configuration channel.
+// Provide allows the knative provider to provide configurations to ingress using the given configuration channel.
 func (p *Provider) Provide(configurationChan chan<- dynamic.Message, pool *safe.Pool) error {
 	logger := log.With().Str(logs.ProviderName, providerName).Logger()
 	ctxLog := logger.WithContext(context.Background())

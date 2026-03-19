@@ -68,7 +68,7 @@ func (s *K8sSuite) TearDownSuite() {
 		"./fixtures/k8s/config.skip/k3s.log",
 		"./fixtures/k8s/coredns.yaml",
 		"./fixtures/k8s/rolebindings.yaml",
-		"./fixtures/k8s/traefik.yaml",
+		"./fixtures/k8s/ingress.yaml",
 		"./fixtures/k8s/ccm.yaml",
 	}
 

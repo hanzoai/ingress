@@ -162,7 +162,7 @@ type TCPServer struct {
 // +k8s:deepcopy-gen=true
 
 // ProxyProtocol holds the PROXY Protocol configuration.
-// More info: https://doc.traefik.io/traefik/v3.6/routing/services/#proxy-protocol
+// More info: https://hanzo.ai/docs/ingress/v3.6/routing/services/#proxy-protocol
 type ProxyProtocol struct {
 	// Version defines the PROXY Protocol version to use.
 	// +kubebuilder:validation:Minimum=1
@@ -177,7 +177,7 @@ func (p *ProxyProtocol) SetDefaults() {
 
 // +k8s:deepcopy-gen=true
 
-// TCPServersTransport options to configure communication between Traefik and the servers.
+// TCPServersTransport options to configure communication between Ingress and the servers.
 type TCPServersTransport struct {
 	DialKeepAlive ptypes.Duration `description:"Defines the interval between keep-alive probes for an active network connection. If zero, keep-alive probes are sent with a default value (currently 15 seconds), if supported by the protocol and operating system. Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled" json:"dialKeepAlive,omitempty" toml:"dialKeepAlive,omitempty" yaml:"dialKeepAlive,omitempty" export:"true"`
 	DialTimeout   ptypes.Duration `description:"Defines the amount of time to wait until a connection to a backend server can be established. If zero, no timeout exists." json:"dialTimeout,omitempty" toml:"dialTimeout,omitempty" yaml:"dialTimeout,omitempty" export:"true"`
@@ -201,7 +201,7 @@ func (t *TCPServersTransport) SetDefaults() {
 
 // +k8s:deepcopy-gen=true
 
-// TLSClientConfig options to configure TLS communication between Traefik and the servers.
+// TLSClientConfig options to configure TLS communication between Ingress and the servers.
 type TLSClientConfig struct {
 	ServerName         string                  `description:"Defines the serverName used to contact the server." json:"serverName,omitempty" toml:"serverName,omitempty" yaml:"serverName,omitempty"`
 	InsecureSkipVerify bool                    `description:"Disables SSL certificate verification." json:"insecureSkipVerify,omitempty" toml:"insecureSkipVerify,omitempty" yaml:"insecureSkipVerify,omitempty" export:"true"`

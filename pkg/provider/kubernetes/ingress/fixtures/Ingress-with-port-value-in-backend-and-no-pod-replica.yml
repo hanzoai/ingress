@@ -6,7 +6,7 @@ metadata:
 
 spec:
   rules:
-  - host: traefik.tchouk
+  - host: ingress.tchouk
     http:
       paths:
       - path: /bar
