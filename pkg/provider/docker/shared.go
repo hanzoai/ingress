@@ -14,7 +14,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	"github.com/docker/go-connections/sockets"
 	"github.com/rs/zerolog/log"
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/v3/pkg/provider"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 	"github.com/hanzoai/ingress/v3/pkg/version"

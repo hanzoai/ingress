@@ -140,7 +140,7 @@ func (b *wasmMiddlewareBuilder) buildMiddleware(ctx context.Context, next http.H
 
 	// Ingress does not Close the middleware when creating a new instance on a configuration change.
 	// When the middleware is marked to be GC, we need to close it so the wasm instance is properly closed.
-	// Reference: https://github.com/traefik/traefik/issues/11119
+	// Reference: https://github.com/hanzoai/ingress/issues/11119
 	runtime.SetFinalizer(h, func(_ http.Handler) {
 		if err := mw.Close(ctx); err != nil {
 			logger.Err(err).Msg("[wasm] middleware Close failed")

@@ -165,7 +165,7 @@ func (r *retry) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		defer closableBody.Close()
 
 		// if we might make multiple attempts, swap the body for an io.NopCloser
-		// cf https://github.com/traefik/traefik/issues/1008
+		// cf https://github.com/hanzoai/ingress/issues/1008
 		req.Body = io.NopCloser(closableBody)
 	}
 

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"time"
 
-	ptypes "github.com/traefik/paerser/types"
+	ptypes "github.com/hanzoai/ingress-parser/types"
 	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
 	"github.com/hanzoai/ingress/v3/pkg/types"
 )

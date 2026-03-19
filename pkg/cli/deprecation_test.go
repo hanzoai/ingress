@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/paerser/cli"
+	"github.com/hanzoai/ingress-parser/cli"
 	"github.com/hanzoai/ingress/v3/cmd"
 )
 
@@ -352,30 +352,30 @@ func TestLoad(t *testing.T) {
 		{
 			desc: "[ENV] providers.marathon is deprecated",
 			env: map[string]string{
-				"TRAEFIK_ACCESS_LOG":               "",
-				"TRAEFIK_LOG_LEVEL":                "DEBUG",
-				"TRAEFIK_ENTRYPOINT_TEST_HTTP_TLS": "true",
-				"TRAEFIK_PROVIDERS_MARATHON":       "true",
+				"INGRESS_ACCESS_LOG":               "",
+				"INGRESS_LOG_LEVEL":                "DEBUG",
+				"INGRESS_ENTRYPOINT_TEST_HTTP_TLS": "true",
+				"INGRESS_PROVIDERS_MARATHON":       "true",
 			},
 			wantDeprecated: true,
 		},
 		{
 			desc: "[ENV] multiple deprecated",
 			env: map[string]string{
-				"TRAEFIK_ACCESS_LOG":               "true",
-				"TRAEFIK_LOG_LEVEL":                "DEBUG",
-				"TRAEFIK_ENTRYPOINT_TEST_HTTP_TLS": "true",
-				"TRAEFIK_PROVIDERS_MARATHON":       "true",
-				"TRAEFIK_PILOT_TOKEN":              "xxx",
+				"INGRESS_ACCESS_LOG":               "true",
+				"INGRESS_LOG_LEVEL":                "DEBUG",
+				"INGRESS_ENTRYPOINT_TEST_HTTP_TLS": "true",
+				"INGRESS_PROVIDERS_MARATHON":       "true",
+				"INGRESS_PILOT_TOKEN":              "xxx",
 			},
 			wantDeprecated: true,
 		},
 		{
 			desc: "[ENV] no deprecated",
 			env: map[string]string{
-				"TRAEFIK_ACCESS_LOG":               "true",
-				"TRAEFIK_LOG_LEVEL":                "DEBUG",
-				"TRAEFIK_ENTRYPOINT_TEST_HTTP_TLS": "true",
+				"INGRESS_ACCESS_LOG":               "true",
+				"INGRESS_LOG_LEVEL":                "DEBUG",
+				"INGRESS_ENTRYPOINT_TEST_HTTP_TLS": "true",
 			},
 
 			wantDeprecated: false,

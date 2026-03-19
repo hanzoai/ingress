@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/traefik/paerser/cli"
-	"github.com/traefik/paerser/file"
-	"github.com/traefik/paerser/flag"
+	"github.com/hanzoai/ingress-parser/cli"
+	"github.com/hanzoai/ingress-parser/file"
+	"github.com/hanzoai/ingress-parser/flag"
 )
 
 // FileLoader loads a configuration from a file.
@@ -21,7 +21,7 @@ func (f *FileLoader) GetFilename() string {
 	return f.filename
 }
 
-// Load loads the command's configuration from a file either specified with the -traefik.configfile flag, or from default locations.
+// Load loads the command's configuration from a file either specified with the -ingress.configfile flag, or from default locations.
 func (f *FileLoader) Load(args []string, cmd *cli.Command) (bool, error) {
 	ref, err := flag.Parse(args, cmd.Configuration)
 	if err != nil {
@@ -29,15 +29,15 @@ func (f *FileLoader) Load(args []string, cmd *cli.Command) (bool, error) {
 		return false, err
 	}
 
-	configFileFlag := "traefik.configfile"
-	if _, ok := ref["traefik.configFile"]; ok {
-		configFileFlag = "traefik.configFile"
+	configFileFlag := "ingress.configfile"
+	if _, ok := ref["ingress.configFile"]; ok {
+		configFileFlag = "ingress.configFile"
 	}
 
 	if f.ConfigFileFlag != "" {
-		configFileFlag = "traefik." + f.ConfigFileFlag
+		configFileFlag = "ingress." + f.ConfigFileFlag
 		if _, ok := ref[strings.ToLower(configFileFlag)]; ok {
-			configFileFlag = "traefik." + strings.ToLower(f.ConfigFileFlag)
+			configFileFlag = "ingress." + strings.ToLower(f.ConfigFileFlag)
 		}
 	}
 
