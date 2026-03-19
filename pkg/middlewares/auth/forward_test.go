@@ -113,7 +113,7 @@ func TestForwardAuthSuccess(t *testing.T) {
 	require.NoError(t, err)
 	err = res.Body.Close()
 	require.NoError(t, err)
-	assert.Equal(t, "traefik\n", string(body))
+	assert.Equal(t, "ingress\n", string(body))
 }
 
 func TestForwardAuthForwardBody(t *testing.T) {
@@ -967,7 +967,7 @@ func Test_ForwardAuthMaxResponseBodySize(t *testing.T) {
 			status:              http.StatusOK,
 			body:                "ok",
 			expectedStatus:      http.StatusOK,
-			expectedBody:        "traefik\n",
+			expectedBody:        "ingress\n",
 		},
 		{
 			name:                "auth success body exceeds limit",

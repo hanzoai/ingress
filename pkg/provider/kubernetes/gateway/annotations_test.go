@@ -18,8 +18,8 @@ func Test_parseServiceConfig(t *testing.T) {
 			desc: "service annotations",
 			annotations: map[string]string{
 				"ingress.kubernetes.io/foo":   "bar",
-				"ingress.io/foo":              "bar",
-				"ingress.io/service.nativelb": "true",
+				"hanzo.ai/foo":              "bar",
+				"hanzo.ai/service.nativelb": "true",
 			},
 			expected: ServiceConfig{
 				Service: Service{
@@ -60,7 +60,7 @@ func Test_convertAnnotations(t *testing.T) {
 		{
 			desc: "service annotations",
 			annotations: map[string]string{
-				"ingress.io/service.nativelb": "true",
+				"hanzo.ai/service.nativelb": "true",
 			},
 			expected: map[string]string{
 				"ingress.service.nativelb": "true",
