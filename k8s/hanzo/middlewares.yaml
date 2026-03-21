@@ -1,4 +1,31 @@
 ---
+# Security headers — applied globally to all services via entrypoint default
+apiVersion: hanzo.ai/v1alpha1
+kind: Middleware
+metadata:
+  name: security-headers
+  namespace: hanzo
+spec:
+  headers:
+    # HSTS (2 years, preload-ready)
+    stsSeconds: 63072000
+    stsIncludeSubdomains: true
+    stsPreload: true
+    forceSTSHeader: true
+    # Clickjacking
+    frameDeny: true
+    # MIME sniffing
+    contentTypeNosniff: true
+    # XSS filter
+    browserXssFilter: true
+    # Referrer
+    referrerPolicy: "strict-origin-when-cross-origin"
+    # Permissions
+    permissionsPolicy: "camera=(), microphone=(), geolocation=()"
+    # Hide server version
+    customResponseHeaders:
+      Server: ""
+---
 # Default CORS headers middleware
 apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
