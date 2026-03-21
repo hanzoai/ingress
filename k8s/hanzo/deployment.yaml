@@ -6,7 +6,7 @@ metadata:
   labels:
     app: hanzo-ingress
     app.kubernetes.io/name: hanzo-ingress
-    app.kubernetes.io/part-of: hanzo-universe
+    app.kubernetes.io/part-of: hanzo-platform
 spec:
   selector:
     matchLabels:
@@ -22,17 +22,16 @@ spec:
     spec:
       serviceAccountName: hanzo-ingress
       imagePullSecrets:
-      - name: ghcr-secret
+      - name: ghcr-pull-secret
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-      nodeSelector:
-        doks.digitalocean.com/node-pool: worker-pool
+      # No cloud-specific nodeSelector — runs on any K8s cluster
       containers:
       - name: ingress
         image: ghcr.io/hanzoai/ingress:latest
         imagePullPolicy: Always
         args:
-        # Providers
+        # Providers — watches Ingress resources with class "ingress"
         - "--providers.kubernetesingress=true"
         - "--providers.kubernetesingress.ingressclass=ingress"
         - "--providers.kubernetesingress.allowemptyservices=true"
@@ -41,7 +40,6 @@ spec:
         - "--providers.kubernetescrd.allowcrossnamespace=true"
         - "--providers.kubernetescrd.allowexternalnameservices=true"
         - "--providers.kubernetescrd.allowemptyservices=true"
-        - "--providers.file.directory=/etc/traefik/dynamic"
         # Entrypoints
         - "--entrypoints.web.address=:80"
         - "--entrypoints.web.http.redirections.entrypoint.to=:443"
@@ -50,6 +48,8 @@ spec:
         - "--entrypoints.websecure.address=:443"
         - "--entrypoints.websecure.http.tls=true"
         - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+        # Default security headers on all HTTPS routes
+        - "--entrypoints.websecure.http.middlewares=security-headers@kubernetescrd"
         # ACME / Let's Encrypt via Cloudflare DNS-01
         - "--certificatesresolvers.letsencrypt.acme.email=dev@hanzo.ai"
         - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
@@ -70,11 +70,13 @@ spec:
             secretKeyRef:
               name: cloudflare-api-credentials
               key: EMAIL
+              optional: true
         - name: CF_API_KEY
           valueFrom:
             secretKeyRef:
               name: cloudflare-api-credentials
               key: APIKEY
+              optional: true
         ports:
         - name: web
           containerPort: 80
@@ -83,22 +85,8 @@ spec:
           containerPort: 443
           hostPort: 443
         volumeMounts:
-        - name: dynamic-config
-          mountPath: /etc/traefik/dynamic
         - name: data
           mountPath: /data
-        - name: mpc-lux-tls
-          mountPath: /etc/ssl/mpc-lux-network
-          readOnly: true
-        - name: cf-origin-hanzo-ai
-          mountPath: /certs/hanzo-ai
-          readOnly: true
-        - name: cf-origin-lux-network
-          mountPath: /certs/lux-network
-          readOnly: true
-        - name: cf-origin-hanzo-bot
-          mountPath: /certs/hanzo-bot
-          readOnly: true
         livenessProbe:
           httpGet:
             path: /ping
@@ -125,22 +113,7 @@ spec:
             add: ["NET_BIND_SERVICE"]
             drop: ["ALL"]
       volumes:
-      - name: dynamic-config
-        configMap:
-          name: ingress-routes
       - name: data
         hostPath:
           path: /var/lib/hanzo-ingress
           type: DirectoryOrCreate
-      - name: mpc-lux-tls
-        secret:
-          secretName: mpc-lux-network-tls
-      - name: cf-origin-hanzo-ai
-        secret:
-          secretName: cf-origin-hanzo-ai
-      - name: cf-origin-lux-network
-        secret:
-          secretName: cf-origin-lux-network
-      - name: cf-origin-hanzo-bot
-        secret:
-          secretName: cf-origin-hanzo-bot
