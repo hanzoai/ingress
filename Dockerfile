@@ -49,9 +49,13 @@ LABEL org.opencontainers.image.source="https://github.com/hanzoai/ingress"
 LABEL org.opencontainers.image.title="Hanzo Ingress"
 LABEL org.opencontainers.image.description="Cloud-native reverse proxy and load balancer for Hanzo infrastructure"
 
+RUN addgroup -g 1000 ingress && adduser -u 1000 -G ingress -s /sbin/nologin -D ingress
+
 COPY --from=builder /hanzo-ingress /hanzo-ingress
 
-EXPOSE 80
+# Bind to unprivileged ports; K8s Service/DaemonSet maps 80->8080, 443->8443
+EXPOSE 8080 8443
 VOLUME ["/tmp"]
 
+USER ingress
 ENTRYPOINT ["/hanzo-ingress"]
