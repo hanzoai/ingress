@@ -344,6 +344,13 @@ func (i *Provider) pingConfiguration(cfg *dynamic.Configuration) {
 			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
+		cfg.HTTP.Routers["healthz"] = &dynamic.Router{
+			EntryPoints: []string{i.staticCfg.Ping.EntryPoint},
+			Service:     "ping@internal",
+			Priority:    math.MaxInt,
+			Rule:        "Path(`/healthz`)",
+			RuleSyntax:  "default",
+		}
 	}
 
 	cfg.HTTP.Services["ping"] = &dynamic.Service{}
