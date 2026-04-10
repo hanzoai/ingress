@@ -31,7 +31,7 @@ func TestHandler_TCP(t *testing.T) {
 	}{
 		{
 			desc: "all TCP routers, but no config",
-			path: "/api/tcp/routers",
+			path: "/v1/ingress/tcp/routers",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -41,7 +41,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all TCP routers",
-			path: "/api/tcp/routers",
+			path: "/v1/ingress/tcp/routers",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"test@myprovider": {
@@ -81,7 +81,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all TCP routers, pagination, 1 res per page, want page 2",
-			path: "/api/tcp/routers?page=2&per_page=1",
+			path: "/v1/ingress/tcp/routers?page=2&per_page=1",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"bar@myprovider": {
@@ -115,7 +115,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "TCP routers filtered by status",
-			path: "/api/tcp/routers?status=enabled",
+			path: "/v1/ingress/tcp/routers?status=enabled",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"test@myprovider": {
@@ -155,7 +155,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "TCP routers filtered by search",
-			path: "/api/tcp/routers?search=bar@my",
+			path: "/v1/ingress/tcp/routers?search=bar@my",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"test@myprovider": {
@@ -195,7 +195,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "TCP routers filtered by service",
-			path: "/api/tcp/routers?serviceName=foo-service@myprovider",
+			path: "/v1/ingress/tcp/routers?serviceName=foo-service@myprovider",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"test@myprovider": {
@@ -235,7 +235,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "TCP routers filtered by middleware",
-			path: "/api/tcp/routers?middlewareName=auth",
+			path: "/v1/ingress/tcp/routers?middlewareName=auth",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"test@myprovider": {
@@ -278,7 +278,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one TCP router by id",
-			path: "/api/tcp/routers/bar@myprovider",
+			path: "/v1/ingress/tcp/routers/bar@myprovider",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"bar@myprovider": {
@@ -297,7 +297,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one TCP router by id containing slash",
-			path: "/api/tcp/routers/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/tcp/routers/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"foo / bar@myprovider": {
@@ -316,7 +316,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one TCP router by id, that does not exist",
-			path: "/api/tcp/routers/foo@myprovider",
+			path: "/v1/ingress/tcp/routers/foo@myprovider",
 			conf: runtime.Configuration{
 				TCPRouters: map[string]*runtime.TCPRouterInfo{
 					"bar@myprovider": {
@@ -334,7 +334,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one TCP router by id, but no config",
-			path: "/api/tcp/routers/bar@myprovider",
+			path: "/v1/ingress/tcp/routers/bar@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,
@@ -342,7 +342,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all tcp services, but no config",
-			path: "/api/tcp/services",
+			path: "/v1/ingress/tcp/services",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -352,7 +352,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all tcp services",
-			path: "/api/tcp/services",
+			path: "/v1/ingress/tcp/services",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -416,7 +416,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "tcp services filtered by status",
-			path: "/api/tcp/services?status=enabled",
+			path: "/v1/ingress/tcp/services?status=enabled",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -480,7 +480,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "tcp services filtered by search",
-			path: "/api/tcp/services?search=baz@my",
+			path: "/v1/ingress/tcp/services?search=baz@my",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -544,7 +544,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all tcp services, 1 res per page, want page 2",
-			path: "/api/tcp/services?page=2&per_page=1",
+			path: "/v1/ingress/tcp/services?page=2&per_page=1",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -604,7 +604,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one tcp service by id",
-			path: "/api/tcp/services/bar@myprovider",
+			path: "/v1/ingress/tcp/services/bar@myprovider",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -632,7 +632,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one tcp service by id containing slash",
-			path: "/api/tcp/services/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/tcp/services/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"foo / bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -660,7 +660,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one tcp service by id, that does not exist",
-			path: "/api/tcp/services/nono@myprovider",
+			path: "/v1/ingress/tcp/services/nono@myprovider",
 			conf: runtime.Configuration{
 				TCPServices: map[string]*runtime.TCPServiceInfo{
 					"bar@myprovider": func() *runtime.TCPServiceInfo {
@@ -687,7 +687,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one tcp service by id, but no config",
-			path: "/api/tcp/services/foo@myprovider",
+			path: "/v1/ingress/tcp/services/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,
@@ -695,7 +695,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all middlewares",
-			path: "/api/tcp/middlewares",
+			path: "/v1/ingress/tcp/middlewares",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"ipallowlist1@myprovider": {
@@ -732,7 +732,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "middlewares filtered by status",
-			path: "/api/tcp/middlewares?status=enabled",
+			path: "/v1/ingress/tcp/middlewares?status=enabled",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"ipallowlist@myprovider": {
@@ -772,7 +772,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "middlewares filtered by search",
-			path: "/api/tcp/middlewares?search=ipallowlist",
+			path: "/v1/ingress/tcp/middlewares?search=ipallowlist",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"bad@myprovider": {
@@ -812,7 +812,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "all middlewares, 1 res per page, want page 2",
-			path: "/api/tcp/middlewares?page=2&per_page=1",
+			path: "/v1/ingress/tcp/middlewares?page=2&per_page=1",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"ipallowlist@myprovider": {
@@ -849,7 +849,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id",
-			path: "/api/tcp/middlewares/ipallowlist@myprovider",
+			path: "/v1/ingress/tcp/middlewares/ipallowlist@myprovider",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"ipallowlist@myprovider": {
@@ -885,7 +885,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id containing slash",
-			path: "/api/tcp/middlewares/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/tcp/middlewares/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"foo / bar@myprovider": {
@@ -905,7 +905,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id, that does not exist",
-			path: "/api/tcp/middlewares/foo@myprovider",
+			path: "/v1/ingress/tcp/middlewares/foo@myprovider",
 			conf: runtime.Configuration{
 				TCPMiddlewares: map[string]*runtime.TCPMiddlewareInfo{
 					"ipallowlist@myprovider": {
@@ -924,7 +924,7 @@ func TestHandler_TCP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id, but no config",
-			path: "/api/tcp/middlewares/foo@myprovider",
+			path: "/v1/ingress/tcp/middlewares/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,

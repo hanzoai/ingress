@@ -122,7 +122,7 @@ func (s *K8sSuite) TestDisableIngressclassLookup() {
 }
 
 func (s *K8sSuite) testConfiguration(path, apiPort string) {
-	err := try.GetRequest("http://127.0.0.1:"+apiPort+"/api/entrypoints", 20*time.Second, try.BodyContains(`"name":"web"`))
+	err := try.GetRequest("http://127.0.0.1:"+apiPort+"/v1/ingress/entrypoints", 20*time.Second, try.BodyContains(`"name":"web"`))
 	require.NoError(s.T(), err)
 
 	expectedJSON := filepath.FromSlash(path)
@@ -135,7 +135,7 @@ func (s *K8sSuite) testConfiguration(path, apiPort string) {
 	}
 
 	var buf bytes.Buffer
-	err = try.GetRequest("http://127.0.0.1:"+apiPort+"/api/rawdata", 1*time.Minute, try.StatusCodeIs(http.StatusOK), matchesConfig(expectedJSON, &buf))
+	err = try.GetRequest("http://127.0.0.1:"+apiPort+"/v1/ingress/rawdata", 1*time.Minute, try.StatusCodeIs(http.StatusOK), matchesConfig(expectedJSON, &buf))
 
 	if !*updateExpected {
 		require.NoError(s.T(), err)

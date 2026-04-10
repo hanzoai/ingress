@@ -35,7 +35,7 @@ func TestHandler_HTTP(t *testing.T) {
 	}{
 		{
 			desc: "all routers, but no config",
-			path: "/api/http/routers",
+			path: "/v1/ingress/http/routers",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -45,7 +45,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all routers",
-			path: "/api/http/routers",
+			path: "/v1/ingress/http/routers",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"test@myprovider": {
@@ -74,7 +74,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all routers, pagination, 1 res per page, want page 2",
-			path: "/api/http/routers?page=2&per_page=1",
+			path: "/v1/ingress/http/routers?page=2&per_page=1",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"bar@myprovider": {
@@ -110,7 +110,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all routers, pagination, 19 results overall, 7 res per page, want page 3",
-			path: "/api/http/routers?page=3&per_page=7",
+			path: "/v1/ingress/http/routers?page=3&per_page=7",
 			conf: runtime.Configuration{
 				Routers: generateHTTPRouters(19),
 			},
@@ -122,7 +122,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all routers, pagination, 5 results overall, 10 res per page, want page 2",
-			path: "/api/http/routers?page=2&per_page=10",
+			path: "/v1/ingress/http/routers?page=2&per_page=10",
 			conf: runtime.Configuration{
 				Routers: generateHTTPRouters(5),
 			},
@@ -132,7 +132,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all routers, pagination, 10 results overall, 10 res per page, want page 2",
-			path: "/api/http/routers?page=2&per_page=10",
+			path: "/v1/ingress/http/routers?page=2&per_page=10",
 			conf: runtime.Configuration{
 				Routers: generateHTTPRouters(10),
 			},
@@ -142,7 +142,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "routers filtered by status",
-			path: "/api/http/routers?status=enabled",
+			path: "/v1/ingress/http/routers?status=enabled",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"test@myprovider": {
@@ -173,7 +173,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "routers filtered by search",
-			path: "/api/http/routers?search=fii",
+			path: "/v1/ingress/http/routers?search=fii",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"test@myprovider": {
@@ -204,7 +204,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "routers filtered by service",
-			path: "/api/http/routers?serviceName=fii-service@myprovider",
+			path: "/v1/ingress/http/routers?serviceName=fii-service@myprovider",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"test@myprovider": {
@@ -243,7 +243,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "routers filtered by middleware",
-			path: "/api/http/routers?middlewareName=auth",
+			path: "/v1/ingress/http/routers?middlewareName=auth",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"test@myprovider": {
@@ -282,7 +282,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id",
-			path: "/api/http/routers/bar@myprovider",
+			path: "/v1/ingress/http/routers/bar@myprovider",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"bar@myprovider": {
@@ -303,7 +303,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id containing slash",
-			path: "/api/http/routers/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/http/routers/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"foo / bar@myprovider": {
@@ -324,7 +324,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id, implicitly using default TLS options",
-			path: "/api/http/routers/baz@myprovider",
+			path: "/v1/ingress/http/routers/baz@myprovider",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"baz@myprovider": {
@@ -346,7 +346,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id, using specific TLS options",
-			path: "/api/http/routers/baz@myprovider",
+			path: "/v1/ingress/http/routers/baz@myprovider",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"baz@myprovider": {
@@ -370,7 +370,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id, that does not exist",
-			path: "/api/http/routers/foo@myprovider",
+			path: "/v1/ingress/http/routers/foo@myprovider",
 			conf: runtime.Configuration{
 				Routers: map[string]*runtime.RouterInfo{
 					"bar@myprovider": {
@@ -389,7 +389,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one router by id, but no config",
-			path: "/api/http/routers/foo@myprovider",
+			path: "/v1/ingress/http/routers/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,
@@ -397,7 +397,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all services, but no config",
-			path: "/api/http/services",
+			path: "/v1/ingress/http/services",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -407,7 +407,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all services",
-			path: "/api/http/services",
+			path: "/v1/ingress/http/services",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -493,7 +493,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all services, 1 res per page, want page 2",
-			path: "/api/http/services?page=2&per_page=1",
+			path: "/v1/ingress/http/services?page=2&per_page=1",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -557,7 +557,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "services filtered by status",
-			path: "/api/http/services?status=enabled",
+			path: "/v1/ingress/http/services?status=enabled",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -606,7 +606,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "services filtered by search",
-			path: "/api/http/services?search=baz",
+			path: "/v1/ingress/http/services?search=baz",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -655,7 +655,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one service by id",
-			path: "/api/http/services/bar@myprovider",
+			path: "/v1/ingress/http/services/bar@myprovider",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -684,7 +684,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one service by id containing slash",
-			path: "/api/http/services/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/http/services/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"foo / bar@myprovider": func() *runtime.ServiceInfo {
@@ -713,7 +713,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one service by id, that does not exist",
-			path: "/api/http/services/nono@myprovider",
+			path: "/v1/ingress/http/services/nono@myprovider",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"bar@myprovider": func() *runtime.ServiceInfo {
@@ -741,7 +741,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one service by id, but no config",
-			path: "/api/http/services/foo@myprovider",
+			path: "/v1/ingress/http/services/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,
@@ -749,7 +749,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all middlewares, but no config",
-			path: "/api/http/middlewares",
+			path: "/v1/ingress/http/middlewares",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -759,7 +759,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all middlewares",
-			path: "/api/http/middlewares",
+			path: "/v1/ingress/http/middlewares",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -796,7 +796,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "middlewares filtered by status",
-			path: "/api/http/middlewares?status=enabled",
+			path: "/v1/ingress/http/middlewares?status=enabled",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -836,7 +836,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "middlewares filtered by search",
-			path: "/api/http/middlewares?search=addprefixtest",
+			path: "/v1/ingress/http/middlewares?search=addprefixtest",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -876,7 +876,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "all middlewares, 1 res per page, want page 2",
-			path: "/api/http/middlewares?page=2&per_page=1",
+			path: "/v1/ingress/http/middlewares?page=2&per_page=1",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -913,7 +913,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id",
-			path: "/api/http/middlewares/auth@myprovider",
+			path: "/v1/ingress/http/middlewares/auth@myprovider",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -949,7 +949,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id containing slash",
-			path: "/api/http/middlewares/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/http/middlewares/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"foo / bar@myprovider": {
@@ -969,7 +969,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id, that does not exist",
-			path: "/api/http/middlewares/foo@myprovider",
+			path: "/v1/ingress/http/middlewares/foo@myprovider",
 			conf: runtime.Configuration{
 				Middlewares: map[string]*runtime.MiddlewareInfo{
 					"auth@myprovider": {
@@ -988,7 +988,7 @@ func TestHandler_HTTP(t *testing.T) {
 		},
 		{
 			desc: "one middleware by id, but no config",
-			path: "/api/http/middlewares/foo@myprovider",
+			path: "/v1/ingress/http/middlewares/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,

@@ -38,7 +38,7 @@ func (s *HTTPSSuite) TestWithSNIConfigHandshake() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -69,7 +69,7 @@ func (s *HTTPSSuite) TestWithSNIConfigRoute() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	backend1 := startTestServer("9010", http.StatusNoContent, "")
@@ -121,7 +121,7 @@ func (s *HTTPSSuite) TestWithTLSOptions() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	backend1 := startTestServer("9010", http.StatusNoContent, "")
@@ -192,7 +192,7 @@ func (s *HTTPSSuite) TestWithTLSOptions() {
 	assert.Contains(s.T(), err.Error(), "tls: no supported versions satisfy MinVersion and MaxVersion")
 
 	//	with unknown tls option
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("unknown TLS options: unknown@file"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("unknown TLS options: unknown@file"))
 	require.NoError(s.T(), err)
 }
 
@@ -203,7 +203,7 @@ func (s *HTTPSSuite) TestWithConflictingTLSOptions() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.net`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.net`)"))
 	require.NoError(s.T(), err)
 
 	backend1 := startTestServer("9010", http.StatusNoContent, "")
@@ -255,7 +255,7 @@ func (s *HTTPSSuite) TestWithConflictingTLSOptions() {
 	assert.ErrorContains(s.T(), err, "tls: no supported versions satisfy MinVersion and MaxVersion")
 
 	// with unknown tls option
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains(fmt.Sprintf("found different TLS options for routers on the same host %v, so using the default TLS options instead", tr4.TLSClientConfig.ServerName)))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains(fmt.Sprintf("found different TLS options for routers on the same host %v, so using the default TLS options instead", tr4.TLSClientConfig.ServerName)))
 	require.NoError(s.T(), err)
 }
 
@@ -268,7 +268,7 @@ func (s *HTTPSSuite) TestWithSNIStrictNotMatchedRequest() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -290,7 +290,7 @@ func (s *HTTPSSuite) TestWithDefaultCertificate() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -322,7 +322,7 @@ func (s *HTTPSSuite) TestWithDefaultCertificateNoSNI() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -354,7 +354,7 @@ func (s *HTTPSSuite) TestWithOverlappingStaticCertificate() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -387,7 +387,7 @@ func (s *HTTPSSuite) TestWithOverlappingDynamicCertificate() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -418,7 +418,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthentication() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -486,7 +486,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthenticationMultipleCAs() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	req, err := http.NewRequest(http.MethodGet, "https://127.0.0.1:4443", nil)
@@ -578,7 +578,7 @@ func (s *HTTPSSuite) TestWithClientCertificateAuthenticationMultipleCAsMultipleF
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`snitest.org`)"))
 	require.NoError(s.T(), err)
 
 	req, err := http.NewRequest(http.MethodGet, "https://127.0.0.1:4443", nil)
@@ -657,7 +657,7 @@ func (s *HTTPSSuite) TestWithRootCAsContentForHTTPSOnBackend() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains(backend.URL))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains(backend.URL))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8081/ping", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -674,7 +674,7 @@ func (s *HTTPSSuite) TestWithRootCAsFileForHTTPSOnBackend() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains(backend.URL))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains(backend.URL))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8081/ping", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -729,7 +729,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithNoChange() {
 	}
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr1.TLSClientConfig.ServerName+"`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr1.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
 	backend1 := startTestServer("9010", http.StatusNoContent, "")
@@ -793,7 +793,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithChange() {
 	}
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
 	backend1 := startTestServer("9010", http.StatusNoContent, "")
@@ -851,7 +851,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicConfigRouteWithTlsConfigurationDeletion()
 	}
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`"+tr2.TLSClientConfig.ServerName+"`)"))
 	require.NoError(s.T(), err)
 
 	backend2 := startTestServer("9020", http.StatusResetContent, "")
@@ -882,7 +882,7 @@ func (s *HTTPSSuite) TestEntryPointHttpsRedirectAndPathModification() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.BodyContains("Host(`example.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.BodyContains("Host(`example.com`)"))
 	require.NoError(s.T(), err)
 
 	client := &http.Client{
@@ -965,7 +965,7 @@ func (s *HTTPSSuite) TestWithSNIDynamicCaseInsensitive() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("HostRegexp(`[a-z1-9-]+\\\\.www\\\\.snitest\\\\.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("HostRegexp(`[a-z1-9-]+\\\\.www\\\\.snitest\\\\.com`)"))
 	require.NoError(s.T(), err)
 
 	tlsConfig := &tls.Config{
@@ -1001,7 +1001,7 @@ func (s *HTTPSSuite) TestWithDomainFronting() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`site1.www.snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`site1.www.snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -1109,7 +1109,7 @@ func (s *HTTPSSuite) TestWithInvalidTLSOption() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.BodyContains("Host(`snitest.com`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -1183,7 +1183,7 @@ func (s *SimpleSuite) TestMaxConcurrentStream() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
 	// Wait for ingress.
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("api@internal"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("api@internal"))
 	require.NoError(s.T(), err)
 
 	// Add client self-signed cert.

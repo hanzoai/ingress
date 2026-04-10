@@ -91,34 +91,34 @@ func (h Handler) createRouter() *mux.Router {
 		DebugHandler{}.Append(apiRouter)
 	}
 
-	apiRouter.Methods(http.MethodGet).Path("/api/rawdata").HandlerFunc(h.getRuntimeConfiguration)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/rawdata").HandlerFunc(h.getRuntimeConfiguration)
 
 	// Experimental endpoint
-	apiRouter.Methods(http.MethodGet).Path("/api/overview").HandlerFunc(h.getOverview)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/overview").HandlerFunc(h.getOverview)
 
-	apiRouter.Methods(http.MethodGet).Path("/api/support-dump").HandlerFunc(h.getSupportDump)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/support-dump").HandlerFunc(h.getSupportDump)
 
-	apiRouter.Methods(http.MethodGet).Path("/api/entrypoints").HandlerFunc(h.getEntryPoints)
-	apiRouter.Methods(http.MethodGet).Path("/api/entrypoints/{entryPointID}").HandlerFunc(h.getEntryPoint)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/entrypoints").HandlerFunc(h.getEntryPoints)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/entrypoints/{entryPointID}").HandlerFunc(h.getEntryPoint)
 
-	apiRouter.Methods(http.MethodGet).Path("/api/http/routers").HandlerFunc(h.getRouters)
-	apiRouter.Methods(http.MethodGet).Path("/api/http/routers/{routerID}").HandlerFunc(h.getRouter)
-	apiRouter.Methods(http.MethodGet).Path("/api/http/services").HandlerFunc(h.getServices)
-	apiRouter.Methods(http.MethodGet).Path("/api/http/services/{serviceID}").HandlerFunc(h.getService)
-	apiRouter.Methods(http.MethodGet).Path("/api/http/middlewares").HandlerFunc(h.getMiddlewares)
-	apiRouter.Methods(http.MethodGet).Path("/api/http/middlewares/{middlewareID}").HandlerFunc(h.getMiddleware)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/routers").HandlerFunc(h.getRouters)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/routers/{routerID}").HandlerFunc(h.getRouter)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/services").HandlerFunc(h.getServices)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/services/{serviceID}").HandlerFunc(h.getService)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/middlewares").HandlerFunc(h.getMiddlewares)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/http/middlewares/{middlewareID}").HandlerFunc(h.getMiddleware)
 
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/routers").HandlerFunc(h.getTCPRouters)
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/routers/{routerID}").HandlerFunc(h.getTCPRouter)
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/services").HandlerFunc(h.getTCPServices)
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/services/{serviceID}").HandlerFunc(h.getTCPService)
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/middlewares").HandlerFunc(h.getTCPMiddlewares)
-	apiRouter.Methods(http.MethodGet).Path("/api/tcp/middlewares/{middlewareID}").HandlerFunc(h.getTCPMiddleware)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/routers").HandlerFunc(h.getTCPRouters)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/routers/{routerID}").HandlerFunc(h.getTCPRouter)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/services").HandlerFunc(h.getTCPServices)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/services/{serviceID}").HandlerFunc(h.getTCPService)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/middlewares").HandlerFunc(h.getTCPMiddlewares)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/tcp/middlewares/{middlewareID}").HandlerFunc(h.getTCPMiddleware)
 
-	apiRouter.Methods(http.MethodGet).Path("/api/udp/routers").HandlerFunc(h.getUDPRouters)
-	apiRouter.Methods(http.MethodGet).Path("/api/udp/routers/{routerID}").HandlerFunc(h.getUDPRouter)
-	apiRouter.Methods(http.MethodGet).Path("/api/udp/services").HandlerFunc(h.getUDPServices)
-	apiRouter.Methods(http.MethodGet).Path("/api/udp/services/{serviceID}").HandlerFunc(h.getUDPService)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/udp/routers").HandlerFunc(h.getUDPRouters)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/udp/routers/{routerID}").HandlerFunc(h.getUDPRouter)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/udp/services").HandlerFunc(h.getUDPServices)
+	apiRouter.Methods(http.MethodGet).Path("/v1/ingress/udp/services/{serviceID}").HandlerFunc(h.getUDPService)
 
 	version.Handler{}.Append(apiRouter)
 

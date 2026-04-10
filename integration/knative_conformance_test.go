@@ -147,7 +147,7 @@ func (s *KnativeConformanceSuite) TestKnativeConformance() {
 	k3sContainerIP, err := s.k3sContainer.ContainerIP(s.T().Context())
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://"+k3sContainerIP+":9000/api/entrypoints", 10*time.Second, try.BodyContains(`"name":"pweb"`))
+	err = try.GetRequest("http://"+k3sContainerIP+":9000/v1/ingress/entrypoints", 10*time.Second, try.BodyContains(`"name":"pweb"`))
 	require.NoError(s.T(), err)
 
 	kubeconfig, err := s.k3sContainer.GetKubeConfig(s.T().Context())

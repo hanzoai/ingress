@@ -41,7 +41,7 @@ func (s *RetrySuite) TestRetry() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
 	require.NoError(s.T(), err)
 
 	response, err := http.Get("http://127.0.0.1:8000/")
@@ -56,7 +56,7 @@ func (s *RetrySuite) TestRetryBackoff() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
 	require.NoError(s.T(), err)
 
 	response, err := http.Get("http://127.0.0.1:8000/")
@@ -71,7 +71,7 @@ func (s *RetrySuite) TestRetryWebsocket() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
 	require.NoError(s.T(), err)
 
 	// The test only verifies that the retry middleware makes sure that the working service is eventually reached.
@@ -90,7 +90,7 @@ func (s *RetrySuite) TestRetryWithStripPrefix() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("PathPrefix(`/`)"))
 	require.NoError(s.T(), err)
 
 	response, err := http.Get("http://127.0.0.1:8000/test")

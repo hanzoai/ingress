@@ -36,7 +36,7 @@ func TestHandler_Overview(t *testing.T) {
 	}{
 		{
 			desc:       "without data in the dynamic configuration",
-			path:       "/api/overview",
+			path:       "/v1/ingress/overview",
 			confStatic: static.Configuration{API: &static.API{}, Global: &static.Global{}},
 			confDyn:    runtime.Configuration{},
 			expected: expected{
@@ -46,7 +46,7 @@ func TestHandler_Overview(t *testing.T) {
 		},
 		{
 			desc:       "with data in the dynamic configuration",
-			path:       "/api/overview",
+			path:       "/v1/ingress/overview",
 			confStatic: static.Configuration{API: &static.API{}, Global: &static.Global{}},
 			confDyn: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
@@ -227,7 +227,7 @@ func TestHandler_Overview(t *testing.T) {
 		},
 		{
 			desc: "with providers",
-			path: "/api/overview",
+			path: "/v1/ingress/overview",
 			confStatic: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -251,7 +251,7 @@ func TestHandler_Overview(t *testing.T) {
 		},
 		{
 			desc: "with features",
-			path: "/api/overview",
+			path: "/v1/ingress/overview",
 			confStatic: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
