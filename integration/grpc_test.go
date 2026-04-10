@@ -171,7 +171,7 @@ func (s *GRPCSuite) TestGRPC() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var response string
@@ -203,7 +203,7 @@ func (s *GRPCSuite) TestGRPCh2c() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var response string
@@ -239,7 +239,7 @@ func (s *GRPCSuite) TestGRPCh2cTermination() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var response string
@@ -275,7 +275,7 @@ func (s *GRPCSuite) TestGRPCInsecure() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var response string
@@ -315,7 +315,7 @@ func (s *GRPCSuite) TestGRPCBuffer() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 	var client helloworld.Greeter_StreamExampleClient
 	client, closer, err := callStreamExampleClientGRPC(s.T())
@@ -367,7 +367,7 @@ func (s *GRPCSuite) TestGRPCBufferWithFlushInterval() {
 
 	s.ingressCmd(withConfigFile(file))
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var client helloworld.Greeter_StreamExampleClient
@@ -421,7 +421,7 @@ func (s *GRPCSuite) TestGRPCWithRetry() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for Ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`127.0.0.1`)"))
 	assert.NoError(s.T(), err)
 
 	var response string

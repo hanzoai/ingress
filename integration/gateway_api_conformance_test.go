@@ -166,7 +166,7 @@ func (s *GatewayAPIConformanceSuite) TestK8sGatewayAPIConformance() {
 	k3sContainerIP, err := s.k3sContainer.ContainerIP(s.T().Context())
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://"+k3sContainerIP+":9000/api/entrypoints", 10*time.Second, try.BodyContains(`"name":"web"`))
+	err = try.GetRequest("http://"+k3sContainerIP+":9000/v1/ingress/entrypoints", 10*time.Second, try.BodyContains(`"name":"web"`))
 	require.NoError(s.T(), err)
 
 	cSuite, err := ksuite.NewConformanceTestSuite(ksuite.ConformanceOptions{

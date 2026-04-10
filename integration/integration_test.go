@@ -485,7 +485,7 @@ func (s *BaseSuite) waitForIngress(containerName string) {
 	time.Sleep(1 * time.Second)
 
 	// Wait for Ingress to turn ready.
-	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/api/rawdata", nil)
+	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/v1/ingress/rawdata", nil)
 	require.NoError(s.T(), err)
 
 	err = try.Request(req, 2*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains(containerName))

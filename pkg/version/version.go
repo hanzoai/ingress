@@ -33,7 +33,7 @@ var templatesRenderer = render.New(render.Options{
 
 // Append adds version routes on a router.
 func (v Handler) Append(router *mux.Router) {
-	router.Methods(http.MethodGet).Path("/api/version").
+	router.Methods(http.MethodGet).Path("/v1/ingress/version").
 		HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
 			v := struct {
 				Version            string

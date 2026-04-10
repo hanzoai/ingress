@@ -89,7 +89,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_router_minimalVerbosity() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/basic-minimal", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -138,7 +138,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP_entrypoint_minimalVerbosity()
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8001/basic", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -187,7 +187,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_HTTP() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/basic", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -255,7 +255,7 @@ func (s *TracingSuite) TestOpenTelemetryBasic_gRPC() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/basic", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -311,7 +311,7 @@ func (s *TracingSuite) TestOpenTelemetryRateLimit() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/ratelimit", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -432,7 +432,7 @@ func (s *TracingSuite) TestOpenTelemetryRetry() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/retry", 500*time.Millisecond, try.StatusCodeIs(http.StatusBadGateway))
@@ -555,7 +555,7 @@ func (s *TracingSuite) TestOpenTelemetryAuth() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/auth", 500*time.Millisecond, try.StatusCodeIs(http.StatusUnauthorized))
@@ -608,7 +608,7 @@ func (s *TracingSuite) TestOpenTelemetryAuthWithRetry() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/retry-auth", 500*time.Millisecond, try.StatusCodeIs(http.StatusUnauthorized))
@@ -665,7 +665,7 @@ func (s *TracingSuite) TestOpenTelemetrySafeURL() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://test:test@127.0.0.1:8000/auth?api_key=powpow", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -734,7 +734,7 @@ func (s *TracingSuite) TestNoInternals() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("basic-auth"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/ratelimit", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK))

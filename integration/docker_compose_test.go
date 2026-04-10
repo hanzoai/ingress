@@ -52,7 +52,7 @@ func (s *DockerComposeSuite) TestComposeScale() {
 	_, err := try.ResponseUntilStatusCode(req, 5*time.Second, http.StatusOK)
 	require.NoError(s.T(), err)
 
-	resp, err := http.Get("http://127.0.0.1:8080/api/rawdata")
+	resp, err := http.Get("http://127.0.0.1:8080/v1/ingress/rawdata")
 	require.NoError(s.T(), err)
 	defer resp.Body.Close()
 

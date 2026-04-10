@@ -441,7 +441,7 @@ func (s *AcmeSuite) TestNoValidLetsEncryptServer() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Expected ingress works
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.StatusCodeIs(http.StatusOK))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 }
 

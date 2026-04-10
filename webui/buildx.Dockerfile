@@ -8,7 +8,7 @@ RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 COPY package.json pnpm-lock.yaml $WEBUI_DIR/
 
 ENV VITE_APP_BASE_URL=""
-ENV VITE_APP_BASE_API_URL="/api"
+ENV VITE_APP_BASE_API_URL="/v1/ingress"
 
 WORKDIR $WEBUI_DIR
 

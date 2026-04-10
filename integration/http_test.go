@@ -60,7 +60,7 @@ func (s *HTTPSuite) TestSimpleConfiguration() {
 	defer server.Close()
 
 	// Expect configuration to be applied.
-	err = try.GetRequest("http://127.0.0.1:9090/api/rawdata", 3*time.Second, try.BodyContains("routerHTTP@http", "serviceHTTP@http", "http://bacon:80"))
+	err = try.GetRequest("http://127.0.0.1:9090/v1/ingress/rawdata", 3*time.Second, try.BodyContains("routerHTTP@http", "serviceHTTP@http", "http://bacon:80"))
 	require.NoError(s.T(), err)
 }
 

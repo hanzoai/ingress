@@ -51,7 +51,7 @@ func (s *TCPSuite) TestMixed() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("Path(`/test`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("Path(`/test`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress passes through, termination handled by whoami-a
@@ -99,7 +99,7 @@ func (s *TCPSuite) TestTLSOptions() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-c.test`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-c.test`)"))
 	require.NoError(s.T(), err)
 
 	// Check that we can use a client tls version <= 1.2 with hostSNI 'whoami-c.test'
@@ -140,7 +140,7 @@ func (s *TCPSuite) TestNonTLSFallback() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress passes through, termination handled by whoami-a
@@ -172,7 +172,7 @@ func (s *TCPSuite) TestNonTlsTcp() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress will forward every requests on the given port to whoami-no-tls
@@ -190,7 +190,7 @@ func (s *TCPSuite) TestCatchAllNoTLS() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress will forward every requests on the given port to whoami-no-tls
@@ -210,7 +210,7 @@ func (s *TCPSuite) TestCatchAllNoTLSWithHTTPS() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	req := httptest.NewRequest(http.MethodGet, "https://127.0.0.1:8093/test", nil)
@@ -235,7 +235,7 @@ func (s *TCPSuite) TestMiddlewareAllowList() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress not passes through, ipAllowList closes connection
@@ -259,7 +259,7 @@ func (s *TCPSuite) TestMiddlewareWhiteList() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-a.test`)"))
 	require.NoError(s.T(), err)
 
 	// Ingress not passes through, ipWhiteList closes connection
@@ -283,7 +283,7 @@ func (s *TCPSuite) TestWRR() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-b.test`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`whoami-b.test`)"))
 	require.NoError(s.T(), err)
 
 	call := map[string]int{}

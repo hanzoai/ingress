@@ -117,12 +117,12 @@ func (s *ZookeeperSuite) TestSimpleConfiguration() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second,
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second,
 		try.BodyContains(`"striper@zookeeper":`, `"compressor@zookeeper":`, `"srvcA@zookeeper":`, `"srvcB@zookeeper":`),
 	)
 	require.NoError(s.T(), err)
 
-	resp, err := http.Get("http://127.0.0.1:8080/api/rawdata")
+	resp, err := http.Get("http://127.0.0.1:8080/v1/ingress/rawdata")
 	require.NoError(s.T(), err)
 
 	var obtained api.RunTimeRepresentation

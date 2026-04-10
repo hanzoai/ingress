@@ -702,7 +702,7 @@ func (s *AccessLogSuite) extractLines() []string {
 
 	var clean []string
 	for _, line := range lines {
-		if !strings.Contains(line, "/api/rawdata") {
+		if !strings.Contains(line, "/v1/ingress/rawdata") {
 			clean = append(clean, line)
 		}
 	}

@@ -32,7 +32,7 @@ func TestHandler_RawData(t *testing.T) {
 	}{
 		{
 			desc: "Get rawdata",
-			path: "/api/rawdata",
+			path: "/v1/ingress/rawdata",
 			conf: runtime.Configuration{
 				Services: map[string]*runtime.ServiceInfo{
 					"foo-service@myprovider": {
@@ -257,7 +257,7 @@ func TestHandler_GetMiddleware(t *testing.T) {
 			handler := New(static.Configuration{API: &static.API{}, Global: &static.Global{}}, &test.conf)
 			server := httptest.NewServer(handler.createRouter())
 
-			resp, err := http.DefaultClient.Get(server.URL + "/api/http/middlewares/" + test.middlewareName)
+			resp, err := http.DefaultClient.Get(server.URL + "/v1/ingress/http/middlewares/" + test.middlewareName)
 			require.NoError(t, err)
 
 			assert.Equal(t, test.expectedStatus, resp.StatusCode)

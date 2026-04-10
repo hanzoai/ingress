@@ -44,7 +44,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		apiPath := strings.TrimSuffix(h.BasePath, "/") + "/api/"
+		apiPath := strings.TrimSuffix(h.BasePath, "/") + "/v1/ingress/"
 		if err = indexTemplate.Execute(w, indexTemplateData{APIUrl: apiPath}); err != nil {
 			log.Error().Err(err).Msg("Unable to render index template")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -101,7 +101,7 @@ func Append(router *mux.Router, basePath string, customAssets fs.FS) error {
 
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-			apiPath := strings.TrimSuffix(basePath, "/") + "/api/"
+			apiPath := strings.TrimSuffix(basePath, "/") + "/v1/ingress/"
 			if err = indexTemplate.Execute(w, indexTemplateData{APIUrl: apiPath}); err != nil {
 				log.Error().Err(err).Msg("Unable to render index template")
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

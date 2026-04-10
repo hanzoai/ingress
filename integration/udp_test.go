@@ -73,7 +73,7 @@ func (s *UDPSuite) TestWRR() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("whoami-a"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("whoami-a"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8093/who", 5*time.Second, try.StatusCodeIs(http.StatusOK))

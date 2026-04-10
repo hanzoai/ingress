@@ -106,7 +106,7 @@ func (s *RoutingSuite) TestMultiLayerRoutingWithAuth() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("parent-router"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("parent-router"))
 	require.NoError(s.T(), err)
 
 	// Test 1: bob (admin role) routes to admin-service

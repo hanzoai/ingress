@@ -104,7 +104,7 @@ func (s *ConsulCatalogSuite) TestWithNotExposedByDefaultAndDefaultsSettings() {
 		try.BodyContainsOr("Hostname: whoami1", "Hostname: whoami2", "Hostname: whoami3"))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second,
 		try.StatusCodeIs(200),
 		try.BodyContains(
 			fmt.Sprintf(`"http://%s:80":"UP"`, reg1.Address),
@@ -280,7 +280,7 @@ func (s *ConsulCatalogSuite) TestRegisterServiceWithoutIP() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/api/http/services", nil)
+	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/v1/ingress/http/services", nil)
 	require.NoError(s.T(), err)
 
 	err = try.Request(req, 2*time.Second, try.StatusCodeIs(200), try.BodyContainsOr("whoami@consulcatalog", "\"http://127.0.0.1:80\": \"UP\""))
@@ -354,7 +354,7 @@ func (s *ConsulCatalogSuite) TestConsulServiceWithTCPLabels() {
 	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
 	require.NoError(s.T(), err)
 
 	who, err := guessWho("127.0.0.1:8000", "my.super.host", true)
@@ -476,7 +476,7 @@ func (s *ConsulCatalogSuite) TestSameServiceIDOnDifferentConsulAgent() {
 	err = try.Request(req, 2*time.Second, try.StatusCodeIs(200), try.BodyContainsOr("Hostname: whoami1", "Hostname: whoami2"))
 	require.NoError(s.T(), err)
 
-	req, err = http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/api/rawdata", nil)
+	req, err = http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/v1/ingress/rawdata", nil)
 	require.NoError(s.T(), err)
 
 	err = try.Request(req, 2*time.Second, try.StatusCodeIs(200),

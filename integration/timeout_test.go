@@ -36,7 +36,7 @@ func (s *TimeoutSuite) TestForwardingTimeouts() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Path(`/dialTimeout`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Path(`/dialTimeout`)"))
 	require.NoError(s.T(), err)
 
 	// This simulates a DialTimeout when connecting to the backend server.
