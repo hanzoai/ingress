@@ -97,7 +97,7 @@ func (s *KeepAliveSuite) TestShouldRespectConfiguredBackendHttpKeepAliveTime() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Duration(1)*time.Second, try.StatusCodeIs(200), try.BodyContains("PathPrefix(`/keepalive`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Duration(1)*time.Second, try.StatusCodeIs(200), try.BodyContains("PathPrefix(`/keepalive`)"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/keepalive", time.Duration(1)*time.Second, try.StatusCodeIs(200))

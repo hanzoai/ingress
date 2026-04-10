@@ -56,7 +56,7 @@ func (s *TLSClientHeadersSuite) TestTLSClientHeaders() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("PathPrefix(`/foo`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("PathPrefix(`/foo`)"))
 	require.NoError(s.T(), err)
 
 	request, err := http.NewRequest(http.MethodGet, "https://127.0.0.1:8443/foo", nil)

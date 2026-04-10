@@ -232,7 +232,7 @@ func (s *HeadersSuite) TestSecureHeadersResponses() {
 		err = try.Request(req, 500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.HasHeaderStruct(test.expected))
 		require.NoError(s.T(), err)
 
-		req, err = http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/api/rawdata", nil)
+		req, err = http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/v1/ingress/rawdata", nil)
 		require.NoError(s.T(), err)
 		req.Host = test.internalReqHost
 

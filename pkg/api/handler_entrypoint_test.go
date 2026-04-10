@@ -32,7 +32,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 	}{
 		{
 			desc: "all entry points, but no config",
-			path: "/api/entrypoints",
+			path: "/v1/ingress/entrypoints",
 			conf: static.Configuration{API: &static.API{}, Global: &static.Global{}},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -42,7 +42,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "all entry points",
-			path: "/api/entrypoints",
+			path: "/v1/ingress/entrypoints",
 			conf: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -101,7 +101,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "all entry points, pagination, 1 res per page, want page 2",
-			path: "/api/entrypoints?page=2&per_page=1",
+			path: "/v1/ingress/entrypoints?page=2&per_page=1",
 			conf: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -119,7 +119,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "all entry points, pagination, 19 results overall, 7 res per page, want page 3",
-			path: "/api/entrypoints?page=3&per_page=7",
+			path: "/v1/ingress/entrypoints?page=3&per_page=7",
 			conf: static.Configuration{
 				Global:      &static.Global{},
 				API:         &static.API{},
@@ -133,7 +133,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "all entry points, pagination, 5 results overall, 10 res per page, want page 2",
-			path: "/api/entrypoints?page=2&per_page=10",
+			path: "/v1/ingress/entrypoints?page=2&per_page=10",
 			conf: static.Configuration{
 				Global:      &static.Global{},
 				API:         &static.API{},
@@ -145,7 +145,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "all entry points, pagination, 10 results overall, 10 res per page, want page 2",
-			path: "/api/entrypoints?page=2&per_page=10",
+			path: "/v1/ingress/entrypoints?page=2&per_page=10",
 			conf: static.Configuration{
 				Global:      &static.Global{},
 				API:         &static.API{},
@@ -157,7 +157,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "one entry point by id",
-			path: "/api/entrypoints/bar",
+			path: "/v1/ingress/entrypoints/bar",
 			conf: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -172,7 +172,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "one entry point by id containing slash",
-			path: "/api/entrypoints/" + url.PathEscape("foo / bar"),
+			path: "/v1/ingress/entrypoints/" + url.PathEscape("foo / bar"),
 			conf: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -187,7 +187,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "one entry point by id, that does not exist",
-			path: "/api/entrypoints/foo",
+			path: "/v1/ingress/entrypoints/foo",
 			conf: static.Configuration{
 				Global: &static.Global{},
 				API:    &static.API{},
@@ -201,7 +201,7 @@ func TestHandler_EntryPoints(t *testing.T) {
 		},
 		{
 			desc: "one entry point by id, but no config",
-			path: "/api/entrypoints/foo",
+			path: "/v1/ingress/entrypoints/foo",
 			conf: static.Configuration{API: &static.API{}, Global: &static.Global{}},
 			expected: expected{
 				statusCode: http.StatusNotFound,

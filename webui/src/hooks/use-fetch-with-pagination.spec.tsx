@@ -27,7 +27,7 @@ const wrapper = ({ children }) => (
 describe('useFetchWithPagination Hook', () => {
   it('should fetch 1st page per default', async () => {
     server.use(
-      http.get('/api/http/routers', () => {
+      http.get('/v1/ingress/http/routers', () => {
         return HttpResponse.json([{ id: 1 }], { status: 200 })
       }),
     )
@@ -45,7 +45,7 @@ describe('useFetchWithPagination Hook', () => {
     let perPage
 
     server.use(
-      http.get('/api/http/routers', ({ request }) => {
+      http.get('/v1/ingress/http/routers', ({ request }) => {
         const url = new URL(request.url)
         perPage = url.searchParams.get('per_page')
         return HttpResponse.json([{ id: 1 }], { status: 200 })
@@ -65,7 +65,7 @@ describe('useFetchWithPagination Hook', () => {
 
   it('should work as expected requesting page 2', async () => {
     server.use(
-      http.get('/api/http/routers', ({ request }) => {
+      http.get('/v1/ingress/http/routers', ({ request }) => {
         const url = new URL(request.url)
         const page = url.searchParams.get('page')
         if (page === '2') {
@@ -127,7 +127,7 @@ describe('useFetchWithPagination Hook', () => {
 
   it('should work as expected requesting an empty page', async () => {
     server.use(
-      http.get('/api/http/routers', ({ request }) => {
+      http.get('/v1/ingress/http/routers', ({ request }) => {
         const url = new URL(request.url)
         const page = url.searchParams.get('page')
         if (page === '2') {

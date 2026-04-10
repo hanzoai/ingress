@@ -94,7 +94,7 @@ func (s *DockerSuite) TestDockerContainersWithTCPLabels() {
 	// Start ingress
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 500*time.Millisecond, try.StatusCodeIs(http.StatusOK), try.BodyContains("HostSNI(`my.super.host`)"))
 	require.NoError(s.T(), err)
 
 	who, err := guessWho("127.0.0.1:8000", "my.super.host", true)
@@ -183,18 +183,18 @@ func (s *DockerSuite) TestRestartDockerContainers() {
 	_, err = try.ResponseUntilStatusCode(req, 1500*time.Millisecond, http.StatusOK)
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("powpow"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("powpow"))
 	require.NoError(s.T(), err)
 
 	s.composeStop("powpow")
 
 	time.Sleep(5 * time.Second)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("powpow"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("powpow"))
 	assert.Error(s.T(), err)
 
 	s.composeUp("powpow")
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("powpow"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("powpow"))
 	require.NoError(s.T(), err)
 }
 
@@ -227,7 +227,7 @@ func (s *DockerSuite) TestDockerAllowNonRunning() {
 	assert.Contains(s.T(), string(body), "Hostname:")
 
 	// Verify the router exists in Ingress configuration
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers", 1*time.Second, try.BodyContains("NonRunning"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers", 1*time.Second, try.BodyContains("NonRunning"))
 	require.NoError(s.T(), err)
 
 	// Stop the container
@@ -238,11 +238,11 @@ func (s *DockerSuite) TestDockerAllowNonRunning() {
 
 	// Verify the router still exists in configuration even though container is stopped
 	// This is the key test - the router should persist due to allowNonRunning=true
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers", 10*time.Second, try.BodyContains("NonRunning"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers", 10*time.Second, try.BodyContains("NonRunning"))
 	require.NoError(s.T(), err)
 
 	// Verify the service still exists in configuration
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/services", 1*time.Second, try.BodyContains("nonRunning"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1*time.Second, try.BodyContains("nonRunning"))
 	require.NoError(s.T(), err)
 
 	// HTTP requests should fail (502 Bad Gateway) since container is stopped but router exists
