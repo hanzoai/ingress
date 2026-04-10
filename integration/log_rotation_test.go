@@ -134,7 +134,7 @@ func (s *LogRotationSuite) verifyLogLines(fileName string, countInit int, access
 		line := rotatedLog.Text()
 		if accessLog {
 			if len(line) > 0 {
-				if !strings.Contains(line, "/api/rawdata") {
+				if !strings.Contains(line, "/v1/ingress/rawdata") {
 					s.CheckAccessLogFormat(line, count)
 					count++
 				}

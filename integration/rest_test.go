@@ -43,7 +43,7 @@ func (s *RestSuite) TestSimpleConfigurationInsecure() {
 	s.ingressCmd(withConfigFile("fixtures/rest/simple.toml"))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("rest@internal"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1000*time.Millisecond, try.BodyContains("rest@internal"))
 	require.NoError(s.T(), err)
 
 	// Expected a 404 as we did not configure anything.
@@ -114,14 +114,14 @@ func (s *RestSuite) TestSimpleConfigurationInsecure() {
 		data, err := json.Marshal(test.config)
 		require.NoError(s.T(), err)
 
-		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/api/providers/rest", bytes.NewReader(data))
+		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/v1/ingress/providers/rest", bytes.NewReader(data))
 		require.NoError(s.T(), err)
 
 		response, err := http.DefaultClient.Do(request)
 		require.NoError(s.T(), err)
 		assert.Equal(s.T(), http.StatusOK, response.StatusCode)
 
-		err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 3*time.Second, try.BodyContains(test.ruleMatch))
+		err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 3*time.Second, try.BodyContains(test.ruleMatch))
 		require.NoError(s.T(), err)
 
 		err = try.GetRequest("http://127.0.0.1:8000/", 1000*time.Millisecond, try.StatusCodeIs(http.StatusOK))
@@ -138,10 +138,10 @@ func (s *RestSuite) TestSimpleConfiguration() {
 	err := try.GetRequest("http://127.0.0.1:8000/", 1000*time.Millisecond, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2000*time.Millisecond, try.BodyContains("PathPrefix(`/secure`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2000*time.Millisecond, try.BodyContains("PathPrefix(`/secure`)"))
 	require.NoError(s.T(), err)
 
-	request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/api/providers/rest", strings.NewReader("{}"))
+	request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/v1/ingress/providers/rest", strings.NewReader("{}"))
 	require.NoError(s.T(), err)
 
 	response, err := http.DefaultClient.Do(request)
@@ -212,14 +212,14 @@ func (s *RestSuite) TestSimpleConfiguration() {
 		data, err := json.Marshal(test.config)
 		require.NoError(s.T(), err)
 
-		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8000/secure/api/providers/rest", bytes.NewReader(data))
+		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8000/secure/v1/ingress/providers/rest", bytes.NewReader(data))
 		require.NoError(s.T(), err)
 
 		response, err := http.DefaultClient.Do(request)
 		require.NoError(s.T(), err)
 		assert.Equal(s.T(), http.StatusOK, response.StatusCode)
 
-		err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", time.Second, try.BodyContains(test.ruleMatch))
+		err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", time.Second, try.BodyContains(test.ruleMatch))
 		require.NoError(s.T(), err)
 
 		err = try.GetRequest("http://127.0.0.1:8000/", time.Second, try.StatusCodeIs(http.StatusOK))

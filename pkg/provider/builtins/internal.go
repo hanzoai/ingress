@@ -283,7 +283,7 @@ func (i *Provider) apiConfiguration(cfg *dynamic.Configuration) {
 			EntryPoints: []string{defaultInternalEntryPointName},
 			Service:     "api@internal",
 			Priority:    math.MaxInt - 1,
-			Rule:        "PathPrefix(`/api`)",
+			Rule:        "PathPrefix(`/v1/ingress`)",
 			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}
@@ -359,7 +359,7 @@ func (i *Provider) restConfiguration(cfg *dynamic.Configuration) {
 			EntryPoints: []string{defaultInternalEntryPointName},
 			Service:     "rest@internal",
 			Priority:    math.MaxInt,
-			Rule:        "PathPrefix(`/api/providers`)",
+			Rule:        "PathPrefix(`/v1/ingress/providers`)",
 			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
 			RuleSyntax: "default",
 		}

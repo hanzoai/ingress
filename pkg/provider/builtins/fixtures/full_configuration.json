@@ -6,7 +6,7 @@
           "ingress"
         ],
         "service": "api@internal",
-        "rule": "PathPrefix(`/api`)",
+        "rule": "PathPrefix(`/v1/ingress`)",
         "ruleSyntax": "default",
         "priority": 9223372036854775806
       },
@@ -55,7 +55,7 @@
           "ingress"
         ],
         "service": "rest@internal",
-        "rule": "PathPrefix(`/api/providers`)",
+        "rule": "PathPrefix(`/v1/ingress/providers`)",
         "ruleSyntax": "default",
         "priority": 9223372036854775807
       }

@@ -47,7 +47,7 @@ func (s *TCPHealthCheckSuite) TestSimpleConfiguration() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Ingress.
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	// Test that we can consistently reach servers through load balancing.
