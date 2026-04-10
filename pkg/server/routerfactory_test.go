@@ -238,7 +238,7 @@ func TestInternalServices(t *testing.T) {
 
 	// Test that the /ok path returns a status 200.
 	responseRecorderOk := &httptest.ResponseRecorder{}
-	requestOk := httptest.NewRequest(http.MethodGet, testServer.URL+"/api/rawdata", nil)
+	requestOk := httptest.NewRequest(http.MethodGet, testServer.URL+"/v1/ingress/rawdata", nil)
 	entryPointsHandlers["web"].GetHTTPHandler().ServeHTTP(responseRecorderOk, requestOk)
 
 	assert.Equal(t, http.StatusOK, responseRecorderOk.Result().StatusCode, "status code")

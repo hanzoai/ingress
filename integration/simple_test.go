@@ -85,7 +85,7 @@ func (s *SimpleSuite) TestSimpleFastProxy() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/", time.Second)
@@ -117,7 +117,7 @@ func (s *SimpleSuite) TestXForwardedForDisabled() {
 	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Ingress to start
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Test with appendXForwardedFor = false
@@ -163,7 +163,7 @@ func (s *SimpleSuite) TestXForwardedForEnabled() {
 	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Ingress to start
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Test with default appendXForwardedFor = true
@@ -212,7 +212,7 @@ func (s *SimpleSuite) TestXForwardedForDisabledFastProxy() {
 	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Ingress to start
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Test with appendXForwardedFor = false
@@ -261,7 +261,7 @@ func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 	s.ingressCmd(withConfigFile(staticConf))
 
 	// Wait for Ingress to start
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Test with default appendXForwardedFor = true
@@ -288,7 +288,7 @@ func (s *SimpleSuite) TestXForwardedForEnabledFastProxy() {
 func (s *SimpleSuite) TestWithWebConfig() {
 	s.cmdIngress(withConfigFile("fixtures/simple_web.toml"))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 }
 
@@ -421,7 +421,7 @@ func (s *SimpleSuite) TestStatsWithMultipleEntryPoint() {
 	err := try.GetRequest("http://127.0.0.1:8080/api", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -445,7 +445,7 @@ func (s *SimpleSuite) TestNoAuthOnPing() {
 	file := s.adaptFile("./fixtures/simple_auth.toml", struct{}{})
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8001/api/rawdata", 2*time.Second, try.StatusCodeIs(http.StatusUnauthorized))
+	err := try.GetRequest("http://127.0.0.1:8001/v1/ingress/rawdata", 2*time.Second, try.StatusCodeIs(http.StatusUnauthorized))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8001/ping", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -460,7 +460,7 @@ func (s *SimpleSuite) TestDefaultEntryPointHTTP() {
 
 	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -475,7 +475,7 @@ func (s *SimpleSuite) TestWithNonExistingEntryPoint() {
 
 	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -490,7 +490,7 @@ func (s *SimpleSuite) TestMetricsPrometheusDefaultEntryPoint() {
 
 	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -521,7 +521,7 @@ func (s *SimpleSuite) TestMetricsPrometheusTwoRoutersOneService() {
 
 	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addentrypointslabels=false", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -571,7 +571,7 @@ func (s *SimpleSuite) TestMetricsWithBufferingMiddleware() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/without`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/without`)"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8001/without", 1*time.Second, try.StatusCodeIs(http.StatusOK))
@@ -634,7 +634,7 @@ func (s *SimpleSuite) TestMultipleProviderSameBackendName() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.BodyContains(whoami1IP))
@@ -652,10 +652,10 @@ func (s *SimpleSuite) TestIPStrategyAllowlist() {
 
 	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override"))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.allowlist.docker.local"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.allowlist.docker.local"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -715,10 +715,10 @@ func (s *SimpleSuite) TestIPStrategyWhitelist() {
 
 	s.ingressCmd(withConfigFile("fixtures/simple_whitelist.toml"))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override"))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.whitelist.docker.local"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.whitelist.docker.local"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -778,7 +778,7 @@ func (s *SimpleSuite) TestXForwardedHeaders() {
 
 	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 2*time.Second,
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second,
 		try.BodyContains("override.remoteaddr.allowlist.docker.local"))
 	require.NoError(s.T(), err)
 
@@ -807,7 +807,7 @@ func (s *SimpleSuite) TestMultiProvider() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("service"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1000*time.Millisecond, try.BodyContains("service"))
 	require.NoError(s.T(), err)
 
 	config := dynamic.Configuration{
@@ -826,14 +826,14 @@ func (s *SimpleSuite) TestMultiProvider() {
 	jsonContent, err := json.Marshal(config)
 	require.NoError(s.T(), err)
 
-	request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/api/providers/rest", bytes.NewReader(jsonContent))
+	request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/v1/ingress/providers/rest", bytes.NewReader(jsonContent))
 	require.NoError(s.T(), err)
 
 	response, err := http.DefaultClient.Do(request)
 	require.NoError(s.T(), err)
 	assert.Equal(s.T(), http.StatusOK, response.StatusCode)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1000*time.Millisecond, try.BodyContains("PathPrefix(`/`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1000*time.Millisecond, try.BodyContains("PathPrefix(`/`)"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/", 1*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("CustomValue"))
@@ -888,11 +888,11 @@ func (s *SimpleSuite) TestWithDefaultRuleSyntax() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	// router1 has no error
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router1@file", 1*time.Second, try.BodyContains(`"status":"enabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router1@file", 1*time.Second, try.BodyContains(`"status":"enabled"`))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/notfound", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
@@ -905,11 +905,11 @@ func (s *SimpleSuite) TestWithDefaultRuleSyntax() {
 	require.NoError(s.T(), err)
 
 	// router2 has an error because it uses the wrong rule syntax (v3 instead of v2)
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router2@file", 1*time.Second, try.BodyContains("parsing rule QueryRegexp(`foo`, `bar`): unsupported function: QueryRegexp"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router2@file", 1*time.Second, try.BodyContains("parsing rule QueryRegexp(`foo`, `bar`): unsupported function: QueryRegexp"))
 	require.NoError(s.T(), err)
 
 	// router3 has an error because it uses the wrong rule syntax (v2 instead of v3)
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router3@file", 1*time.Second, try.BodyContains("adding rule PathPrefix: unexpected number of parameters; got 2, expected one of [1]"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router3@file", 1*time.Second, try.BodyContains("adding rule PathPrefix: unexpected number of parameters; got 2, expected one of [1]"))
 	require.NoError(s.T(), err)
 }
 
@@ -918,11 +918,11 @@ func (s *SimpleSuite) TestWithoutDefaultRuleSyntax() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	// router1 has no error
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router1@file", 1*time.Second, try.BodyContains(`"status":"enabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router1@file", 1*time.Second, try.BodyContains(`"status":"enabled"`))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/notfound", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
@@ -935,11 +935,11 @@ func (s *SimpleSuite) TestWithoutDefaultRuleSyntax() {
 	require.NoError(s.T(), err)
 
 	// router2 has an error because it uses the wrong rule syntax (v3 instead of v2)
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router2@file", 1*time.Second, try.BodyContains("adding rule PathPrefix: unexpected number of parameters; got 2, expected one of [1]"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router2@file", 1*time.Second, try.BodyContains("adding rule PathPrefix: unexpected number of parameters; got 2, expected one of [1]"))
 	require.NoError(s.T(), err)
 
 	// router2 has an error because it uses the wrong rule syntax (v2 instead of v3)
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router3@file", 1*time.Second, try.BodyContains("parsing rule QueryRegexp(`foo`, `bar`): unsupported function: QueryRegexp"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router3@file", 1*time.Second, try.BodyContains("parsing rule QueryRegexp(`foo`, `bar`): unsupported function: QueryRegexp"))
 	require.NoError(s.T(), err)
 }
 
@@ -949,19 +949,19 @@ func (s *SimpleSuite) TestRouterConfigErrors() {
 	s.ingressCmd(withConfigFile(file))
 
 	// All errors
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/routers", 1000*time.Millisecond, try.BodyContains(`["middleware \"unknown@file\" does not exist","found different TLS options for routers on the same host snitest.net, so using the default TLS options instead"]`))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers", 1000*time.Millisecond, try.BodyContains(`["middleware \"unknown@file\" does not exist","found different TLS options for routers on the same host snitest.net, so using the default TLS options instead"]`))
 	require.NoError(s.T(), err)
 
 	// router3 has an error because it uses an unknown entrypoint
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
 	require.NoError(s.T(), err)
 
 	// router4 is enabled, but in warning state because its tls options conf was messed up
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router4@file", 1000*time.Millisecond, try.BodyContains(`"status":"warning"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router4@file", 1000*time.Millisecond, try.BodyContains(`"status":"warning"`))
 	require.NoError(s.T(), err)
 
 	// router5 is disabled because its middleware conf is broken
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/routers/router5@file", 1000*time.Millisecond, try.BodyContains())
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/routers/router5@file", 1000*time.Millisecond, try.BodyContains())
 	require.NoError(s.T(), err)
 }
 
@@ -970,13 +970,13 @@ func (s *SimpleSuite) TestServiceConfigErrors() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
 	require.NoError(s.T(), err)
 }
 
@@ -986,11 +986,11 @@ func (s *SimpleSuite) TestTCPRouterConfigErrors() {
 	s.ingressCmd(withConfigFile(file))
 
 	// router3 has an error because it uses an unknown entrypoint
-	err := try.GetRequest("http://127.0.0.1:8080/api/tcp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/tcp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
 	require.NoError(s.T(), err)
 
 	// router4 has an unsupported Rule
-	err = try.GetRequest("http://127.0.0.1:8080/api/tcp/routers/router4@file", 1000*time.Millisecond, try.BodyContains("invalid rule: \\\"Host(`mydomain.com`)\\\""))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/tcp/routers/router4@file", 1000*time.Millisecond, try.BodyContains("invalid rule: \\\"Host(`mydomain.com`)\\\""))
 	require.NoError(s.T(), err)
 }
 
@@ -999,13 +999,13 @@ func (s *SimpleSuite) TestTCPServiceConfigErrors() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/tcp/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/tcp/services", 1000*time.Millisecond, try.BodyContains(`["the service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/tcp/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/tcp/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/tcp/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/tcp/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
 	require.NoError(s.T(), err)
 }
 
@@ -1014,7 +1014,7 @@ func (s *SimpleSuite) TestUDPRouterConfigErrors() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/udp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/udp/routers/router3@file", 1000*time.Millisecond, try.BodyContains(`entryPoint \"unknown-entrypoint\" doesn't exist`, "no valid entryPoint for this router"))
 	require.NoError(s.T(), err)
 }
 
@@ -1023,13 +1023,13 @@ func (s *SimpleSuite) TestUDPServiceConfigErrors() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/udp/services", 1000*time.Millisecond, try.BodyContains(`["the UDP service \"service1@file\" does not have any type defined"]`))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/udp/services", 1000*time.Millisecond, try.BodyContains(`["the UDP service \"service1@file\" does not have any type defined"]`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/udp/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/udp/services/service1@file", 1000*time.Millisecond, try.BodyContains(`"status":"disabled"`))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/udp/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/udp/services/service2@file", 1000*time.Millisecond, try.BodyContains(`"status":"enabled"`))
 	require.NoError(s.T(), err)
 }
 
@@ -1049,7 +1049,7 @@ func (s *SimpleSuite) TestWRRServer() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	repartition := map[string]int{}
@@ -1092,11 +1092,11 @@ func (s *SimpleSuite) TestLeastTimeServer() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Verify leasttime strategy is configured
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("leasttime"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("leasttime"))
 	require.NoError(s.T(), err)
 
 	// Make requests and verify both servers respond
@@ -1152,7 +1152,7 @@ func (s *SimpleSuite) TestLeastTimeHeterogeneousPerformance() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Make 20 requests to build up response time statistics
@@ -1195,7 +1195,7 @@ func (s *SimpleSuite) TestWRR() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
 	require.NoError(s.T(), err)
 
 	repartition := map[string]int{}
@@ -1238,7 +1238,7 @@ func (s *SimpleSuite) TestWRRSticky() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("service1", "service2"))
 	require.NoError(s.T(), err)
 
 	repartition := map[string]int{}
@@ -1296,7 +1296,7 @@ func (s *SimpleSuite) TestMirror() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/whoami", nil)
@@ -1376,7 +1376,7 @@ func (s *SimpleSuite) TestMirrorWithBody() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
 
 	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/whoami", bytes.NewBuffer(body20))
@@ -1489,7 +1489,7 @@ func (s *SimpleSuite) TestMirrorCanceled() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 1000*time.Millisecond, try.BodyContains("mirror1", "mirror2", "service1"))
 	require.NoError(s.T(), err)
 
 	for range 5 {
@@ -1541,7 +1541,7 @@ func (s *SimpleSuite) TestHighestRandomWeight() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 3*time.Second, try.BodyContains("service1", "service2", "service3", "hrw"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 3*time.Second, try.BodyContains("service1", "service2", "service3", "hrw"))
 	require.NoError(s.T(), err)
 
 	// Make 10 requests from the same client (127.0.0.1) - should all go to the same service
@@ -1589,13 +1589,13 @@ func (s *SimpleSuite) TestSecureAPI() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8000/secure/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
+	err := try.GetRequest("http://127.0.0.1:8000/secure/v1/ingress/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusOK))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8000/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
+	err = try.GetRequest("http://127.0.0.1:8000/v1/ingress/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.StatusCodeIs(http.StatusNotFound))
 	require.NoError(s.T(), err)
 }
 
@@ -1639,7 +1639,7 @@ func (s *SimpleSuite) TestContentTypeDisableAutoDetect() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	err = try.GetRequest("http://127.0.0.1:8000/css/ct", time.Second, try.HasHeaderValue("Content-Type", "text/css", false))
@@ -1691,7 +1691,7 @@ func (s *SimpleSuite) TestMuxer() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("!Host"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("!Host"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -1800,7 +1800,7 @@ func (s *SimpleSuite) TestDebugLog() {
 
 	_, output := s.cmdIngress(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
 	require.NoError(s.T(), err)
 
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:8000/whoami", http.NoBody)
@@ -1832,7 +1832,7 @@ func (s *SimpleSuite) TestEncodeSemicolons() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`other.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`other.localhost`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -1888,7 +1888,7 @@ func (s *SimpleSuite) TestDenyFragment() {
 
 	s.ingressCmd(withConfigFile(s.adaptFile("fixtures/simple_deny.toml", struct{}{})))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`deny.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`deny.localhost`)"))
 	require.NoError(s.T(), err)
 
 	conn, err := net.Dial("tcp", "127.0.0.1:8000")
@@ -2103,7 +2103,7 @@ func (s *SimpleSuite) TestSanitizePath() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -2201,7 +2201,7 @@ func (s *SimpleSuite) TestSanitizePathSyntaxV2() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/with`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -2301,7 +2301,7 @@ func (s *SimpleSuite) TestEncodedCharactersDifferentEntryPoints() {
 
 	s.ingressCmd(withConfigFile(file))
 
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	testCases := []struct {
@@ -2381,7 +2381,7 @@ func (s *SimpleSuite) TestDDOS() {
 			s.T().Log(output)
 		}
 	}()
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 1*time.Second, try.BodyContains("HostSNI(`*`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("HostSNI(`*`)"))
 	require.NoError(s.T(), err)
 
 	// Try with an http router.
@@ -2439,7 +2439,7 @@ func (s *SimpleSuite) TestFailoverService() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Ingress to be ready
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("failover-service"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 2*time.Second, try.BodyContains("failover-service"))
 	require.NoError(s.T(), err)
 
 	// Test 1: When main service is healthy, traffic should go to main
@@ -2574,7 +2574,7 @@ func (s *SimpleSuite) TestFailoverServiceWithStatusCode() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Ingress to be ready and verify the configuration is loaded
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("PathPrefix"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("PathPrefix"))
 	require.NoError(s.T(), err)
 
 	// Make a request - should failover to fallback because main returns 503
@@ -2601,7 +2601,7 @@ func (s *SimpleSuite) TestServiceMiddleware() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for Ingress to be ready
-	err := try.GetRequest("http://127.0.0.1:8080/api/http/services", 2*time.Second, try.BodyContains("service1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/http/services", 2*time.Second, try.BodyContains("service1"))
 	require.NoError(s.T(), err)
 
 	// Make a request and verify the middleware added the custom header

@@ -34,7 +34,7 @@ func (s *ThrottlingSuite) TestThrottleConfReload() {
 	s.ingressCmd(withConfigFile("fixtures/throttling/simple.toml"))
 
 	// wait for Ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 5*time.Second, try.BodyContains("rest@internal"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 5*time.Second, try.BodyContains("rest@internal"))
 	require.NoError(s.T(), err)
 
 	// Expected a 404 as we did not configure anything.
@@ -72,7 +72,7 @@ func (s *ThrottlingSuite) TestThrottleConfReload() {
 		data, err := json.Marshal(config)
 		require.NoError(s.T(), err)
 
-		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/api/providers/rest", bytes.NewReader(data))
+		request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/v1/ingress/providers/rest", bytes.NewReader(data))
 		require.NoError(s.T(), err)
 
 		response, err := http.DefaultClient.Do(request)

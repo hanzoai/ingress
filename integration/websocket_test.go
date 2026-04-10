@@ -57,7 +57,7 @@ func (s *WebsocketSuite) TestBase() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	conn, _, err := gorillawebsocket.DefaultDialer.Dial("ws://127.0.0.1:8000/ws", nil)
@@ -101,7 +101,7 @@ func (s *WebsocketSuite) TestWrongOrigin() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	config, err := websocket.NewConfig("ws://127.0.0.1:8000/ws", "ws://127.0.0.1:800")
@@ -144,7 +144,7 @@ func (s *WebsocketSuite) TestOrigin() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	config, err := websocket.NewConfig("ws://127.0.0.1:8000/ws", "ws://127.0.0.1:8000")
@@ -198,7 +198,7 @@ func (s *WebsocketSuite) TestWrongOriginIgnoredByServer() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	config, err := websocket.NewConfig("ws://127.0.0.1:8000/ws", "ws://127.0.0.1:80")
@@ -249,7 +249,7 @@ func (s *WebsocketSuite) TestSSLTermination() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	// Add client self-signed cert
@@ -305,7 +305,7 @@ func (s *WebsocketSuite) TestBasicAuth() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	config, err := websocket.NewConfig("ws://127.0.0.1:8000/ws", "ws://127.0.0.1:8000")
@@ -343,7 +343,7 @@ func (s *WebsocketSuite) TestSpecificResponseFromBackend() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	_, resp, err := gorillawebsocket.DefaultDialer.Dial("ws://127.0.0.1:8000/ws", nil)
@@ -382,7 +382,7 @@ func (s *WebsocketSuite) TestURLWithURLEncodedChar() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	conn, _, err := gorillawebsocket.DefaultDialer.Dial("ws://127.0.0.1:8000/ws/http%3A%2F%2Ftest", nil)
@@ -430,7 +430,7 @@ func (s *WebsocketSuite) TestSSLhttp2() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	// Add client self-signed cert
@@ -462,7 +462,7 @@ func (s *WebsocketSuite) TestSettingEnableConnectProtocol() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG", "--accesslog")
 
 	// Wait for ingress.
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	// Add client self-signed cert.
@@ -521,7 +521,7 @@ func (s *WebsocketSuite) TestHeaderAreForwarded() {
 	s.ingressCmd(withConfigFile(file), "--log.level=DEBUG")
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("127.0.0.1"))
 	require.NoError(s.T(), err)
 
 	headers := http.Header{}

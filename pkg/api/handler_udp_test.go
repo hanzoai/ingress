@@ -31,7 +31,7 @@ func TestHandler_UDP(t *testing.T) {
 	}{
 		{
 			desc: "all UDP routers, but no config",
-			path: "/api/udp/routers",
+			path: "/v1/ingress/udp/routers",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -41,7 +41,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "all UDP routers",
-			path: "/api/udp/routers",
+			path: "/v1/ingress/udp/routers",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"test@myprovider": {
@@ -75,7 +75,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "all UDP routers, pagination, 1 res per page, want page 2",
-			path: "/api/udp/routers?page=2&per_page=1",
+			path: "/v1/ingress/udp/routers?page=2&per_page=1",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"bar@myprovider": {
@@ -106,7 +106,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "UDP routers filtered by status",
-			path: "/api/udp/routers?status=enabled",
+			path: "/v1/ingress/udp/routers?status=enabled",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"test@myprovider": {
@@ -140,7 +140,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "UDP routers filtered by search",
-			path: "/api/udp/routers?search=bar@my",
+			path: "/v1/ingress/udp/routers?search=bar@my",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"test@myprovider": {
@@ -174,7 +174,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "UDP routers filtered by service",
-			path: "/api/udp/routers?serviceName=foo-service@myprovider",
+			path: "/v1/ingress/udp/routers?serviceName=foo-service@myprovider",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"test@myprovider": {
@@ -208,7 +208,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one UDP router by id",
-			path: "/api/udp/routers/bar@myprovider",
+			path: "/v1/ingress/udp/routers/bar@myprovider",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"bar@myprovider": {
@@ -226,7 +226,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one UDP router by id containing slash",
-			path: "/api/udp/routers/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/udp/routers/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"foo / bar@myprovider": {
@@ -244,7 +244,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one UDP router by id, that does not exist",
-			path: "/api/udp/routers/foo@myprovider",
+			path: "/v1/ingress/udp/routers/foo@myprovider",
 			conf: runtime.Configuration{
 				UDPRouters: map[string]*runtime.UDPRouterInfo{
 					"bar@myprovider": {
@@ -261,7 +261,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one UDP router by id, but no config",
-			path: "/api/udp/routers/bar@myprovider",
+			path: "/v1/ingress/udp/routers/bar@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,
@@ -269,7 +269,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "all udp services, but no config",
-			path: "/api/udp/services",
+			path: "/v1/ingress/udp/services",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusOK,
@@ -279,7 +279,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "all udp services",
-			path: "/api/udp/services",
+			path: "/v1/ingress/udp/services",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -331,7 +331,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "udp services filtered by status",
-			path: "/api/udp/services?status=enabled",
+			path: "/v1/ingress/udp/services?status=enabled",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -383,7 +383,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "udp services filtered by search",
-			path: "/api/udp/services?search=baz@my",
+			path: "/v1/ingress/udp/services?search=baz@my",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -435,7 +435,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "all udp services, 1 res per page, want page 2",
-			path: "/api/udp/services?page=2&per_page=1",
+			path: "/v1/ingress/udp/services?page=2&per_page=1",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -483,7 +483,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one udp service by id",
-			path: "/api/udp/services/bar@myprovider",
+			path: "/v1/ingress/udp/services/bar@myprovider",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -507,7 +507,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one udp service by id containing slash",
-			path: "/api/udp/services/" + url.PathEscape("foo / bar@myprovider"),
+			path: "/v1/ingress/udp/services/" + url.PathEscape("foo / bar@myprovider"),
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"foo / bar@myprovider": {
@@ -531,7 +531,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one udp service by id, that does not exist",
-			path: "/api/udp/services/nono@myprovider",
+			path: "/v1/ingress/udp/services/nono@myprovider",
 			conf: runtime.Configuration{
 				UDPServices: map[string]*runtime.UDPServiceInfo{
 					"bar@myprovider": {
@@ -554,7 +554,7 @@ func TestHandler_UDP(t *testing.T) {
 		},
 		{
 			desc: "one udp service by id, but no config",
-			path: "/api/udp/services/foo@myprovider",
+			path: "/v1/ingress/udp/services/foo@myprovider",
 			conf: runtime.Configuration{},
 			expected: expected{
 				statusCode: http.StatusNotFound,

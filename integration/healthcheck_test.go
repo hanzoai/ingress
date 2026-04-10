@@ -55,7 +55,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	frontendHealthReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/health", nil)
@@ -117,7 +117,7 @@ func (s *HealthCheckSuite) TestSimpleConfiguration_Passive() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	frontendHealthReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/health", nil)
@@ -165,7 +165,7 @@ func (s *HealthCheckSuite) TestMultipleEntrypoints() {
 	s.ingressCmd(withConfigFile(file))
 
 	// Wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	// Check entrypoint http1
@@ -236,7 +236,7 @@ func (s *HealthCheckSuite) TestPortOverload() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err = try.GetRequest("http://127.0.0.1:8080/api/rawdata", 10*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 10*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	frontendHealthReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000/health", nil)
@@ -267,7 +267,7 @@ func (s *HealthCheckSuite) TestMultipleRoutersOnSameService() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`test.localhost`)"))
 	require.NoError(s.T(), err)
 
 	// Set whoami health to 200 to be sure to start with the wanted status
@@ -330,7 +330,7 @@ func (s *HealthCheckSuite) TestPropagate() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
 	rootReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000", nil)
@@ -577,7 +577,7 @@ func (s *HealthCheckSuite) TestPropagateNoHealthCheck() {
 	s.ingressCmd(withConfigFile(file))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`noop.localhost`)"), try.BodyNotContains("Host(`root.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`noop.localhost`)"), try.BodyNotContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
 	rootReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000", nil)
@@ -602,7 +602,7 @@ func (s *HealthCheckSuite) TestPropagateReload() {
 	s.ingressCmd(withConfigFile(withoutHealthCheck))
 
 	// wait for ingress
-	err := try.GetRequest("http://127.0.0.1:8080/api/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
+	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 60*time.Second, try.BodyContains("Host(`root.localhost`)"))
 	require.NoError(s.T(), err)
 
 	// Allow one of the underlying services on it to fail all servers HC (whoami2)

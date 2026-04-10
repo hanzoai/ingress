@@ -26,7 +26,7 @@ func TestHandler_SupportDump(t *testing.T) {
 	}{
 		{
 			desc:       "empty configurations",
-			path:       "/api/support-dump",
+			path:       "/v1/ingress/support-dump",
 			confStatic: static.Configuration{API: &static.API{}, Global: &static.Global{}},
 			confDyn:    runtime.Configuration{},
 			validate: func(t *testing.T, files map[string][]byte) {
@@ -45,7 +45,7 @@ func TestHandler_SupportDump(t *testing.T) {
 		},
 		{
 			desc: "with configuration data",
-			path: "/api/support-dump",
+			path: "/v1/ingress/support-dump",
 			confStatic: static.Configuration{
 				API:    &static.API{},
 				Global: &static.Global{},

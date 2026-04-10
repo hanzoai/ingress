@@ -34,7 +34,7 @@ func (p *Provider) Init() error {
 // CreateRouter creates a router for the Rest API.
 func (p *Provider) CreateRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.Methods(http.MethodPut).Path("/api/providers/{provider}").Handler(p)
+	router.Methods(http.MethodPut).Path("/v1/ingress/providers/{provider}").Handler(p)
 	return router
 }
 
