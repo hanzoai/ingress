@@ -297,8 +297,8 @@ All domains below resolve through Cloudflare to this ingress instance:
 |--------|-----------------|
 | `hanzo.ai` | hanzo-app |
 | `api.hanzo.ai`, `llm.hanzo.ai` | Hanzo Gateway |
-| `hanzo.id`, `lux.id`, `zoo.id` | IAM (Casdoor) |
-| `kms.hanzo.ai` | KMS (Infisical) |
+| `hanzo.id` | IAM |
+| `kms.hanzo.ai` | KMS |
 | `platform.hanzo.ai` | Platform (Dokploy) |
 | `console.hanzo.ai` | Console |
 | `cloud.hanzo.ai` | Cloud |
