@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
 	oxybuffer "github.com/vulcand/oxy/v2/buffer"
 )
 

@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
+	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/middlewares/observability"
 )
 
 const (

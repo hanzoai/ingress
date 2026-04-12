@@ -32,7 +32,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/middlewares"
 )
 
 type key string

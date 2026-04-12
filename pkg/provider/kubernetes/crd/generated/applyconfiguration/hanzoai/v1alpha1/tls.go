@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	types "github.com/hanzoai/ingress/v3/pkg/types"
+	types "github.com/hanzoai/ingress/pkg/types"
 )
 
 // TLSApplyConfiguration represents a declarative configuration of the TLS type for use

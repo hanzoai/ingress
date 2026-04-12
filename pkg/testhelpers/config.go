@@ -1,8 +1,8 @@
 package testhelpers
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 )
 
 // BuildConfiguration is a helper to create a configuration.

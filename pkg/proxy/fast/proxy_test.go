@@ -17,10 +17,10 @@ import (
 	"github.com/armon/go-socks5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	proxyhttputil "github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
-	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	proxyhttputil "github.com/hanzoai/ingress/pkg/proxy/httputil"
+	"github.com/hanzoai/ingress/pkg/testhelpers"
 )
 
 const (

@@ -13,9 +13,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/hanzoai/ingress-parser/flag"
 	"github.com/hanzoai/ingress-parser/generator"
-	"github.com/hanzoai/ingress/v3/cmd"
-	"github.com/hanzoai/ingress/v3/pkg/collector/hydratation"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/cmd"
+	"github.com/hanzoai/ingress/pkg/collector/hydratation"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	"gopkg.in/yaml.v3"
 )
 

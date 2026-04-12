@@ -7,11 +7,11 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/proxy/fast"
-	"github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
-	"github.com/hanzoai/ingress/v3/pkg/server/service"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/proxy/fast"
+	"github.com/hanzoai/ingress/pkg/proxy/httputil"
+	"github.com/hanzoai/ingress/pkg/server/service"
 )
 
 // TransportManager manages transport used for backend communications.

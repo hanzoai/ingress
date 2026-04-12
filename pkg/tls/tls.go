@@ -1,6 +1,6 @@
 package tls
 
-import "github.com/hanzoai/ingress/v3/pkg/types"
+import "github.com/hanzoai/ingress/pkg/types"
 
 const certificateHeader = "-----BEGIN CERTIFICATE-----\n"
 

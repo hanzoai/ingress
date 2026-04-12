@@ -3,7 +3,7 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 // HTTPHandlerSwitcher allows hot switching of http.ServeMux.

@@ -7,8 +7,8 @@ import (
 	"slices"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
 )
 
 // GetUDPRoutersByEntryPoints returns all the UDP routers by entry points name and routers name.

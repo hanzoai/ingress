@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/kvtools/etcdv3"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	"github.com/hanzoai/ingress/v3/pkg/provider/kv"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/provider"
+	"github.com/hanzoai/ingress/pkg/provider/kv"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 var _ provider.Provider = (*Provider)(nil)
