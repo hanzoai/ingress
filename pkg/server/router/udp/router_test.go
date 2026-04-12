@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/server/service/udp"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/server/service/udp"
 )
 
 func TestRuntimeConfiguration(t *testing.T) {

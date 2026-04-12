@@ -1,6 +1,6 @@
 package types
 
-import "github.com/hanzoai/ingress/v3/pkg/types"
+import "github.com/hanzoai/ingress/pkg/types"
 
 // OTelGRPC provides configuration settings for the gRPC open-telemetry.
 type OTelGRPC struct {

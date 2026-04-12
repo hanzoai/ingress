@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/tls"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

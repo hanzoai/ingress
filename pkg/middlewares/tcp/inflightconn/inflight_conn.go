@@ -6,9 +6,9 @@ import (
 	"net"
 	"sync"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/tcp"
 )
 
 const typeName = "InFlightConnTCP"

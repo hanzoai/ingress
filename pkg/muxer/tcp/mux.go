@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/rules"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/rules"
+	"github.com/hanzoai/ingress/pkg/tcp"
+	"github.com/hanzoai/ingress/pkg/types"
 	"github.com/vulcand/predicate"
 )
 

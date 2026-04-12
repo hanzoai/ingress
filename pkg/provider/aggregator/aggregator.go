@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	"github.com/hanzoai/ingress/v3/pkg/provider/file"
-	"github.com/hanzoai/ingress/v3/pkg/provider/builtins"
-	"github.com/hanzoai/ingress/v3/pkg/redactor"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/provider"
+	"github.com/hanzoai/ingress/pkg/provider/file"
+	"github.com/hanzoai/ingress/pkg/provider/builtins"
+	"github.com/hanzoai/ingress/pkg/redactor"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 // throttled defines what kind of config refresh throttling the aggregator should

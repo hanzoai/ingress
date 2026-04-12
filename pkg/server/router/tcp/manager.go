@@ -10,15 +10,15 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/snicheck"
-	httpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/http"
-	tcpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/tcp"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/server/provider"
-	tcpservice "github.com/hanzoai/ingress/v3/pkg/server/service/tcp"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/middlewares/snicheck"
+	httpmuxer "github.com/hanzoai/ingress/pkg/muxer/http"
+	tcpmuxer "github.com/hanzoai/ingress/pkg/muxer/tcp"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/server/provider"
+	tcpservice "github.com/hanzoai/ingress/pkg/server/service/tcp"
+	"github.com/hanzoai/ingress/pkg/tcp"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 )
 
 const maxUserPriority = math.MaxInt - 1000

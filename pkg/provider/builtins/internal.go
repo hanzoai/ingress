@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/provider"
+	"github.com/hanzoai/ingress/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/tls"
 )
 
 const defaultInternalEntryPointName = "ingress"

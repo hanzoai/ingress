@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/containous/alice"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 const (

@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/udp"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/udp"
 )
 
 func TestShutdownUDPConn(t *testing.T) {

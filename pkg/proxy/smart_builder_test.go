@@ -9,12 +9,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/proxy/httputil"
-	"github.com/hanzoai/ingress/v3/pkg/server/service"
-	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/proxy/httputil"
+	"github.com/hanzoai/ingress/pkg/server/service"
+	"github.com/hanzoai/ingress/pkg/testhelpers"
+	"github.com/hanzoai/ingress/pkg/types"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )

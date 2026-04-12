@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/k8s"
-	"github.com/hanzoai/ingress/v3/pkg/types"
-	ingressversion "github.com/hanzoai/ingress/v3/pkg/version"
+	"github.com/hanzoai/ingress/pkg/provider/kubernetes/k8s"
+	"github.com/hanzoai/ingress/pkg/types"
+	ingressversion "github.com/hanzoai/ingress/pkg/version"
 	corev1 "k8s.io/api/core/v1"
 	discoveryv1 "k8s.io/api/discovery/v1"
 	netv1 "k8s.io/api/networking/v1"

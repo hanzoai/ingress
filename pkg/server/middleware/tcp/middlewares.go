@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/inflightconn"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/ipallowlist"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/tcp/ipwhitelist"
-	"github.com/hanzoai/ingress/v3/pkg/server/provider"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/middlewares/tcp/inflightconn"
+	"github.com/hanzoai/ingress/pkg/middlewares/tcp/ipallowlist"
+	"github.com/hanzoai/ingress/pkg/middlewares/tcp/ipwhitelist"
+	"github.com/hanzoai/ingress/pkg/server/provider"
+	"github.com/hanzoai/ingress/pkg/tcp"
 )
 
 type middlewareStackType int

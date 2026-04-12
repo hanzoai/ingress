@@ -5,8 +5,8 @@ import (
 	"time"
 
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 // +k8s:deepcopy-gen=true

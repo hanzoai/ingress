@@ -10,7 +10,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 func TestGetBestCertificate(t *testing.T) {

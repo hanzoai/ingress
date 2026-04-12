@@ -1,7 +1,7 @@
 package tcp
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 // HandlerSwitcher is a TCP handler switcher.

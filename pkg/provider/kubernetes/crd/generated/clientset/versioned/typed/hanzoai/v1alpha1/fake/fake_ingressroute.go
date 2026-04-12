@@ -27,9 +27,9 @@ THE SOFTWARE.
 package fake
 
 import (
-	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/applyconfiguration/hanzoai/v1alpha1"
-	typedhanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
-	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/applyconfiguration/hanzoai/v1alpha1"
+	typedhanzoaiv1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
+	v1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	gentype "k8s.io/client-go/gentype"
 )
 

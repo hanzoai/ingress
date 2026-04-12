@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 )
 
 func TestInfluxDB2(t *testing.T) {

@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 // Provider defines methods of a provider.

@@ -8,7 +8,7 @@ import (
 
 	"github.com/stvp/go-udp-testing"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 )
 
 func TestStatsD(t *testing.T) {

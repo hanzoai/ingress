@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/hanzoai/ingress-parser/cli"
-	"github.com/hanzoai/ingress/v3/cmd"
+	"github.com/hanzoai/ingress/cmd"
 )
 
 func ptr[T any](t T) *T {

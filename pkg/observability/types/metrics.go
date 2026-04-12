@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/hanzoai/ingress-parser/types"
-	tTypes "github.com/hanzoai/ingress/v3/pkg/types"
+	tTypes "github.com/hanzoai/ingress/pkg/types"
 )
 
 // Metrics provides options to expose and send Ingress metrics to different third party monitoring systems.

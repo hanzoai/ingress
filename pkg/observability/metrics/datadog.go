@@ -10,9 +10,9 @@ import (
 	"github.com/go-kit/kit/util/conn"
 	gokitlog "github.com/go-kit/log"
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 const (

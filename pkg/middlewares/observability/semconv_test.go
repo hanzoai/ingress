@@ -8,9 +8,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
-	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/middlewares/capture"
+	"github.com/hanzoai/ingress/pkg/observability/metrics"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"go.opentelemetry.io/otel/attribute"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"

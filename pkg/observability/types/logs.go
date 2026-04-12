@@ -7,8 +7,8 @@ import (
 	"net/url"
 
 	"github.com/hanzoai/ingress-parser/types"
-	ttypes "github.com/hanzoai/ingress/v3/pkg/types"
-	"github.com/hanzoai/ingress/v3/pkg/version"
+	ttypes "github.com/hanzoai/ingress/pkg/types"
+	"github.com/hanzoai/ingress/pkg/version"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"

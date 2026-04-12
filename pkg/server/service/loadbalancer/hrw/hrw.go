@@ -9,8 +9,8 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/ip"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/ip"
 )
 
 var errNoAvailableServer = errors.New("no available server")

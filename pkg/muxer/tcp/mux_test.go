@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
+	"github.com/hanzoai/ingress/pkg/tcp"
 )
 
 func Test_addTCPRoute(t *testing.T) {

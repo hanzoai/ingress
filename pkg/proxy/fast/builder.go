@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/static"
 )
 
 // TransportManager manages transport used for backend communications.

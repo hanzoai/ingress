@@ -6,8 +6,8 @@ import (
 	"reflect"
 
 	"github.com/mitchellh/copystructure"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/types"
 	"mvdan.cc/xurls/v2"
 )
 

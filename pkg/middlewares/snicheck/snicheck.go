@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/requestdecorator"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/middlewares/requestdecorator"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 )
 
 // SNICheck is an HTTP handler that checks whether the TLS configuration for the server name is the same as for the host header.

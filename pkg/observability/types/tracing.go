@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	ttypes "github.com/hanzoai/ingress/v3/pkg/types"
-	"github.com/hanzoai/ingress/v3/pkg/version"
+	ttypes "github.com/hanzoai/ingress/pkg/types"
+	"github.com/hanzoai/ingress/pkg/version"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"

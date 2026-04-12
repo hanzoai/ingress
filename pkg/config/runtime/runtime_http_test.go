@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
 )
 
 func TestGetRoutersByEntryPoints(t *testing.T) {

@@ -5,13 +5,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/api"
-	"github.com/hanzoai/ingress/v3/pkg/api/dashboard"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
-	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
+	"github.com/hanzoai/ingress/pkg/api"
+	"github.com/hanzoai/ingress/pkg/api/dashboard"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/observability/metrics"
+	"github.com/hanzoai/ingress/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/server/middleware"
 )
 
 // ManagerFactory a factory of service manager.
