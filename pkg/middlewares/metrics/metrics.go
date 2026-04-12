@@ -12,12 +12,12 @@ import (
 	"github.com/containous/alice"
 	gokitmetrics "github.com/go-kit/kit/metrics"
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/capture"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/retry"
-	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/middlewares/capture"
+	"github.com/hanzoai/ingress/pkg/middlewares/observability"
+	"github.com/hanzoai/ingress/pkg/middlewares/retry"
+	"github.com/hanzoai/ingress/pkg/observability/metrics"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 	"google.golang.org/grpc/codes"
 )
 

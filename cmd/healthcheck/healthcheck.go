@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/hanzoai/ingress-parser/cli"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/config/static"
 )
 
 // NewCmd builds a new HealthCheck command.

@@ -9,12 +9,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	tcpmiddleware "github.com/hanzoai/ingress/v3/pkg/server/middleware/tcp"
-	"github.com/hanzoai/ingress/v3/pkg/server/service/tcp"
-	tcp2 "github.com/hanzoai/ingress/v3/pkg/tcp"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	tcpmiddleware "github.com/hanzoai/ingress/pkg/server/middleware/tcp"
+	"github.com/hanzoai/ingress/pkg/server/service/tcp"
+	tcp2 "github.com/hanzoai/ingress/pkg/tcp"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 )
 
 func TestRuntimeConfiguration(t *testing.T) {

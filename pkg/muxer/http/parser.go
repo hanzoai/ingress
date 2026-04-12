@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/hanzoai/ingress/v3/pkg/rules"
+	"github.com/hanzoai/ingress/pkg/rules"
 	"github.com/vulcand/predicate"
 )
 

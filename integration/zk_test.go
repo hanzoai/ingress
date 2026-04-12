@@ -17,8 +17,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/hanzoai/ingress/v3/integration/try"
-	"github.com/hanzoai/ingress/v3/pkg/api"
+	"github.com/hanzoai/ingress/integration/try"
+	"github.com/hanzoai/ingress/pkg/api"
 )
 
 // Zk test suites.

@@ -9,11 +9,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	"github.com/hanzoai/ingress/v3/pkg/ping"
-	"github.com/hanzoai/ingress/v3/pkg/provider/rest"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/ping"
+	"github.com/hanzoai/ingress/pkg/provider/rest"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 var updateExpected = flag.Bool("update_expected", false, "Update expected files in fixtures")

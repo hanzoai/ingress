@@ -15,9 +15,9 @@ import (
 	"github.com/docker/go-connections/sockets"
 	"github.com/rs/zerolog/log"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	"github.com/hanzoai/ingress/v3/pkg/types"
-	"github.com/hanzoai/ingress/v3/pkg/version"
+	"github.com/hanzoai/ingress/pkg/provider"
+	"github.com/hanzoai/ingress/pkg/types"
+	"github.com/hanzoai/ingress/pkg/version"
 )
 
 // DefaultTemplateRule The default template for the default rule.

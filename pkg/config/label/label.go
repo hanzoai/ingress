@@ -3,7 +3,7 @@ package label
 
 import (
 	"github.com/hanzoai/ingress-parser/parser"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
 )
 
 // RootName is the root name used as prefix for labels and configuration keys.

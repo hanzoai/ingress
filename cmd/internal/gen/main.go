@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const rootPkg = "github.com/hanzoai/ingress/v3/pkg/config/dynamic"
+const rootPkg = "github.com/hanzoai/ingress/pkg/config/dynamic"
 
 const (
 	destModuleName = "github.com/hanzoai/genconf"
@@ -57,8 +57,8 @@ func run(dest string) error {
 	}
 
 	centrifuge.IncludedImports = []string{
-		"github.com/hanzoai/ingress/v3/pkg/tls",
-		"github.com/hanzoai/ingress/v3/pkg/types",
+		"github.com/hanzoai/ingress/pkg/tls",
+		"github.com/hanzoai/ingress/pkg/types",
 	}
 
 	centrifuge.ExcludedTypes = []string{
@@ -71,8 +71,8 @@ func run(dest string) error {
 	}
 
 	centrifuge.ExcludedFiles = []string{
-		"github.com/hanzoai/ingress/v3/pkg/types/logs.go",
-		"github.com/hanzoai/ingress/v3/pkg/types/metrics.go",
+		"github.com/hanzoai/ingress/pkg/types/logs.go",
+		"github.com/hanzoai/ingress/pkg/types/metrics.go",
 	}
 
 	centrifuge.TypeCleaner = cleanType
@@ -87,11 +87,11 @@ func run(dest string) error {
 }
 
 func cleanType(typ types.Type, base string) string {
-	if typ.String() == "github.com/hanzoai/ingress/v3/pkg/types.FileOrContent" {
+	if typ.String() == "github.com/hanzoai/ingress/pkg/types.FileOrContent" {
 		return "string"
 	}
 
-	if typ.String() == "[]github.com/hanzoai/ingress/v3/pkg/types.FileOrContent" {
+	if typ.String() == "[]github.com/hanzoai/ingress/pkg/types.FileOrContent" {
 		return "[]string"
 	}
 
@@ -103,8 +103,8 @@ func cleanType(typ types.Type, base string) string {
 		return strings.ReplaceAll(typ.String(), base+".", "")
 	}
 
-	if strings.Contains(typ.String(), "github.com/hanzoai/ingress/v3/pkg/") {
-		return strings.ReplaceAll(typ.String(), "github.com/hanzoai/ingress/v3/pkg/", "")
+	if strings.Contains(typ.String(), "github.com/hanzoai/ingress/pkg/") {
+		return strings.ReplaceAll(typ.String(), "github.com/hanzoai/ingress/pkg/", "")
 	}
 
 	return typ.String()
@@ -114,9 +114,9 @@ func cleanPackage(src string) string {
 	switch src {
 	case "github.com/hanzoai/ingress-parser/types":
 		return ""
-	case "github.com/hanzoai/ingress/v3/pkg/tls":
+	case "github.com/hanzoai/ingress/pkg/tls":
 		return path.Join(destModuleName, destPkg, "tls")
-	case "github.com/hanzoai/ingress/v3/pkg/types":
+	case "github.com/hanzoai/ingress/pkg/types":
 		return path.Join(destModuleName, destPkg, "types")
 	default:
 		return src

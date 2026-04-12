@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 type responseWriter struct {

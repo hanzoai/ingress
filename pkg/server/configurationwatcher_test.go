@@ -9,11 +9,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/provider/aggregator"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
-	th "github.com/hanzoai/ingress/v3/pkg/testhelpers"
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/provider/aggregator"
+	"github.com/hanzoai/ingress/pkg/safe"
+	th "github.com/hanzoai/ingress/pkg/testhelpers"
+	"github.com/hanzoai/ingress/pkg/tls"
 )
 
 type mockProvider struct {

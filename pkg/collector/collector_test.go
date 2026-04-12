@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/collector/hydratation"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/collector/hydratation"
+	"github.com/hanzoai/ingress/pkg/config/static"
 )
 
 func Test_createBody(t *testing.T) {

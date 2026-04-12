@@ -16,14 +16,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/requestdecorator"
-	httpmuxer "github.com/hanzoai/ingress/v3/pkg/muxer/http"
-	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
-	"github.com/hanzoai/ingress/v3/pkg/server/service"
-	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/middlewares/requestdecorator"
+	httpmuxer "github.com/hanzoai/ingress/pkg/muxer/http"
+	"github.com/hanzoai/ingress/pkg/server/middleware"
+	"github.com/hanzoai/ingress/pkg/server/service"
+	"github.com/hanzoai/ingress/pkg/testhelpers"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 )
 
 func TestRouterManager_Get(t *testing.T) {

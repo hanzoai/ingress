@@ -14,8 +14,8 @@ import (
 	"github.com/http-wasm/http-wasm-host-go/handler"
 	wasm "github.com/http-wasm/http-wasm-host-go/handler/nethttp"
 	"github.com/tetratelabs/wazero"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
 )
 
 type wasmMiddlewareBuilder struct {

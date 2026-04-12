@@ -12,10 +12,10 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/healthcheck"
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/accesslog"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/healthcheck"
+	"github.com/hanzoai/ingress/pkg/middlewares/accesslog"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 // Mirroring is an http.Handler that can mirror requests.

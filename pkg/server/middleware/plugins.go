@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/plugins"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/plugins"
 )
 
 const typeName = "Plugin"

@@ -1,4 +1,4 @@
-module github.com/hanzoai/ingress/v3
+module github.com/hanzoai/ingress
 
 go 1.26.1
 
