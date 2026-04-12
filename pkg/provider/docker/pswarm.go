@@ -15,11 +15,11 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/rs/zerolog/log"
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/job"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/job"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/provider"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 const swarmName = "swarm"

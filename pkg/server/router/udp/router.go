@@ -6,11 +6,11 @@ import (
 	"sort"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/server/provider"
-	udpservice "github.com/hanzoai/ingress/v3/pkg/server/service/udp"
-	"github.com/hanzoai/ingress/v3/pkg/udp"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/server/provider"
+	udpservice "github.com/hanzoai/ingress/pkg/server/service/udp"
+	"github.com/hanzoai/ingress/pkg/udp"
 )
 
 // Manager is a route/router manager.

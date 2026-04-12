@@ -10,8 +10,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/tls"
 )
 
 type routerRepresentation struct {

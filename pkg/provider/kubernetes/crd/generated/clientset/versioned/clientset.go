@@ -30,7 +30,7 @@ import (
 	fmt "fmt"
 	http "net/http"
 
-	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

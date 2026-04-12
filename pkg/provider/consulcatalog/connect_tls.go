@@ -3,9 +3,9 @@ package consulcatalog
 import (
 	"fmt"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 // connectCert holds our certificates as a client of the Consul Connect protocol.

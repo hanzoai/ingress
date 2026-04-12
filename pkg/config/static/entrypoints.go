@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/types"
 	"k8s.io/utils/ptr"
 )
 

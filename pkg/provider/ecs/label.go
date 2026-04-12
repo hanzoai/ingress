@@ -1,7 +1,7 @@
 package ecs
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/config/label"
+	"github.com/hanzoai/ingress/pkg/config/label"
 )
 
 // configuration Contains information from the labels that are globals (not related to the dynamic configuration) or specific to the provider.

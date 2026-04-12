@@ -10,8 +10,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 type ProvideTestCase struct {

@@ -9,14 +9,14 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
-	"github.com/hanzoai/ingress/v3/pkg/server/service"
-	"github.com/hanzoai/ingress/v3/pkg/tcp"
-	th "github.com/hanzoai/ingress/v3/pkg/testhelpers"
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/server/middleware"
+	"github.com/hanzoai/ingress/pkg/server/service"
+	"github.com/hanzoai/ingress/pkg/tcp"
+	th "github.com/hanzoai/ingress/pkg/testhelpers"
+	"github.com/hanzoai/ingress/pkg/tls"
 )
 
 func TestReuseService(t *testing.T) {

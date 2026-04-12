@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 func TestProvider_findDomains(t *testing.T) {

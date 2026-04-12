@@ -6,8 +6,8 @@ import (
 	"time"
 
 	ptypes "github.com/hanzoai/ingress-parser/types"
-	"github.com/hanzoai/ingress/v3/pkg/ip"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/ip"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 const (

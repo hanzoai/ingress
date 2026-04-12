@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/safe"
 )
 
 const defaultMaxBodySize int64 = -1

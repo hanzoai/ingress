@@ -7,7 +7,7 @@ import (
 	"net"
 	"syscall"
 
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/config/static"
 	"golang.org/x/sys/unix"
 )
 

@@ -27,7 +27,7 @@ THE SOFTWARE.
 package v1alpha1
 
 import (
-	tls "github.com/hanzoai/ingress/v3/pkg/tls"
+	tls "github.com/hanzoai/ingress/pkg/tls"
 )
 
 // TLSStoreSpecApplyConfiguration represents a declarative configuration of the TLSStoreSpec type for use

@@ -24,9 +24,9 @@ import (
 	"github.com/spiffe/go-spiffe/v2/svid/x509svid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 // LocalhostCert is a PEM-encoded TLS cert

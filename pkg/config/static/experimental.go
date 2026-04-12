@@ -1,6 +1,6 @@
 package static
 
-import "github.com/hanzoai/ingress/v3/pkg/plugins"
+import "github.com/hanzoai/ingress/pkg/plugins"
 
 // Experimental experimental Ingress features.
 type Experimental struct {

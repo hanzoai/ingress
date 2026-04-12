@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 func Test_parseRouterConfig(t *testing.T) {

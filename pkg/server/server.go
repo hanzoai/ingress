@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
-	"github.com/hanzoai/ingress/v3/pkg/server/middleware"
+	"github.com/hanzoai/ingress/pkg/observability/metrics"
+	"github.com/hanzoai/ingress/pkg/safe"
+	"github.com/hanzoai/ingress/pkg/server/middleware"
 )
 
 // Server is the reverse-proxy/load-balancer engine.

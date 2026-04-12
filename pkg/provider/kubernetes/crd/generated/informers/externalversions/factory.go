@@ -31,9 +31,9 @@ import (
 	sync "sync"
 	time "time"
 
-	versioned "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned"
-	internalinterfaces "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/internalinterfaces"
-	hanzoai "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/hanzoai"
+	versioned "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned"
+	internalinterfaces "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/informers/externalversions/internalinterfaces"
+	hanzoai "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/informers/externalversions/hanzoai"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

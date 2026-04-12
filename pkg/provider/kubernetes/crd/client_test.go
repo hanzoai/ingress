@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	ingresscrdfake "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake"
+	ingresscrdfake "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned/fake"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubefake "k8s.io/client-go/kubernetes/fake"

@@ -27,8 +27,8 @@ THE SOFTWARE.
 package hanzoai
 
 import (
-	internalinterfaces "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/informers/externalversions/hanzoai/v1alpha1"
+	internalinterfaces "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/informers/externalversions/hanzoai/v1alpha1"
 )
 
 // Interface provides access to each of this group's versions.

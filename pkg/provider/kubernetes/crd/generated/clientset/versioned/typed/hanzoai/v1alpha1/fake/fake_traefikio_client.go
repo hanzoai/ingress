@@ -27,7 +27,7 @@ THE SOFTWARE.
 package fake
 
 import (
-	v1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
+	v1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned/typed/hanzoai/v1alpha1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

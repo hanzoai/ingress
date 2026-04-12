@@ -1,8 +1,8 @@
 package v1alpha1
 
 import (
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
