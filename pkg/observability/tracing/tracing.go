@@ -12,9 +12,9 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
-	"github.com/hanzoai/ingress/v3/pkg/observability"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/observability"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"go.opentelemetry.io/contrib/propagators/autoprop"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"

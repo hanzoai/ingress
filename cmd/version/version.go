@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/hanzoai/ingress-parser/cli"
-	"github.com/hanzoai/ingress/v3/pkg/version"
+	"github.com/hanzoai/ingress/pkg/version"
 )
 
 var versionTemplate = `Version:      {{.Version}}

@@ -8,9 +8,9 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/server/service/loadbalancer/mirror"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/server/service/loadbalancer/mirror"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 // Failover is an http.Handler that can forward requests to the fallback handler

@@ -9,7 +9,7 @@ import (
 	"github.com/go-kit/kit/metrics"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/config/static"
 )
 
 // FooCert is a PEM-encoded TLS cert.

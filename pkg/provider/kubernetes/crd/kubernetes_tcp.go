@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/provider"
-	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
-	"github.com/hanzoai/ingress/v3/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/provider"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
+	"github.com/hanzoai/ingress/pkg/tls"
 	corev1 "k8s.io/api/core/v1"
 )
 

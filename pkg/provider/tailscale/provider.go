@@ -11,13 +11,13 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/tailscale/tscert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/muxer/http"
-	"github.com/hanzoai/ingress/v3/pkg/muxer/tcp"
-	"github.com/hanzoai/ingress/v3/pkg/observability/logs"
-	"github.com/hanzoai/ingress/v3/pkg/safe"
-	ingresstls "github.com/hanzoai/ingress/v3/pkg/tls"
-	"github.com/hanzoai/ingress/v3/pkg/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/muxer/http"
+	"github.com/hanzoai/ingress/pkg/muxer/tcp"
+	"github.com/hanzoai/ingress/pkg/observability/logs"
+	"github.com/hanzoai/ingress/pkg/safe"
+	ingresstls "github.com/hanzoai/ingress/pkg/tls"
+	"github.com/hanzoai/ingress/pkg/types"
 )
 
 // Provider is the Tailscale certificates provider implementation. It receives

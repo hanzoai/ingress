@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"runtime"
 
-	"github.com/hanzoai/ingress/v3/pkg/middlewares"
+	"github.com/hanzoai/ingress/pkg/middlewares"
 )
 
 const (

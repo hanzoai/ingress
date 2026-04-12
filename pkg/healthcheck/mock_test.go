@@ -12,8 +12,8 @@ import (
 
 	gokitmetrics "github.com/go-kit/kit/metrics"
 	"github.com/stretchr/testify/assert"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	"github.com/hanzoai/ingress/v3/pkg/testhelpers"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/testhelpers"
 	"google.golang.org/grpc"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )

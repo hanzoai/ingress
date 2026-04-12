@@ -12,8 +12,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog/log"
-	"github.com/hanzoai/ingress/v3/pkg/config/dynamic"
-	otypes "github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 )
 
 const (

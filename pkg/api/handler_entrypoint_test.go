@@ -13,8 +13,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/hanzoai/ingress/v3/pkg/config/runtime"
-	"github.com/hanzoai/ingress/v3/pkg/config/static"
+	"github.com/hanzoai/ingress/pkg/config/runtime"
+	"github.com/hanzoai/ingress/pkg/config/static"
 )
 
 func TestHandler_EntryPoints(t *testing.T) {

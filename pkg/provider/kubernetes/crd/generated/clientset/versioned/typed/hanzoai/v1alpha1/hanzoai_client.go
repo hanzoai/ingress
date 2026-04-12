@@ -29,8 +29,8 @@ package v1alpha1
 import (
 	http "net/http"
 
-	scheme "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme"
-	hanzoaiv1alpha1 "github.com/hanzoai/ingress/v3/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
+	scheme "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/generated/clientset/versioned/scheme"
+	hanzoaiv1alpha1 "github.com/hanzoai/ingress/pkg/provider/kubernetes/crd/hanzoai/v1alpha1"
 	rest "k8s.io/client-go/rest"
 )
 

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hanzoai/ingress/v3/pkg/middlewares/observability"
-	"github.com/hanzoai/ingress/v3/pkg/observability/metrics"
-	"github.com/hanzoai/ingress/v3/pkg/observability/tracing"
+	"github.com/hanzoai/ingress/pkg/middlewares/observability"
+	"github.com/hanzoai/ingress/pkg/observability/metrics"
+	"github.com/hanzoai/ingress/pkg/observability/tracing"
 	"go.opentelemetry.io/otel/attribute"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.opentelemetry.io/otel/semconv/v1.37.0/httpconv"

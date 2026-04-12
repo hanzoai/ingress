@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/hanzoai/ingress/v3/pkg/observability"
-	"github.com/hanzoai/ingress/v3/pkg/observability/types"
+	"github.com/hanzoai/ingress/pkg/observability"
+	"github.com/hanzoai/ingress/pkg/observability/types"
 	otellog "go.opentelemetry.io/otel/log"
 )
 
