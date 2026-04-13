@@ -60,3 +60,29 @@ ingress/
 ### Pre-existing test failures (not caused by rebrand)
 - `pkg/muxer/http/Test_addRoute/Host_IPv6`: Go 1.26 broke IPv6 URL parsing
 - `pkg/middlewares/ratelimiter`: Timing-sensitive tests, flaky
+
+## Header Passthrough Behavior (2026-04-13)
+
+The ingress controller correctly passes through ALL backend response headers.
+Both the `httputil.ReverseProxy` path and the fast proxy path copy response
+headers verbatim via `VisitAll` / `Header().Add()`.
+
+The `security-headers` Middleware CRD (k8s/hanzo/middlewares.yaml) uses
+`unrolled/secure` to ADD secure headers (HSTS, X-Frame-Options, etc.) via
+`ModifyResponseHeaders`. It uses `res.Header.Set()`, which overwrites same-named
+backend headers. This is intentional -- ingress-level security headers override
+backend headers.
+
+The `contenttype.DisableAutoDetection` wrapper on the entrypoint sets
+`Content-Type` to nil in the header map before handler execution. This prevents
+Go's default content-type sniffing but does not strip any other headers.
+
+No code in the ingress adds `Content-Disposition`. If you see
+`Content-Disposition: inline; filename="index.html"` in responses, it comes from
+the backend (Go's `http.ServeContent` or `http.ServeFile`).
+
+### Annotation prefix
+
+The K8s Ingress provider uses annotation prefix `ingress.kubernetes.io/`, NOT
+`traefik.ingress.kubernetes.io/`. Annotations with the old Traefik prefix are
+silently ignored.
