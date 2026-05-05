@@ -25,4 +25,16 @@ jobs:
     uses: hanzoai/.github/.github/workflows/docker-build.yml@main
     with:
       image: ghcr.io/hanzoai/ingress
+      platforms: "linux/amd64"
     secrets: inherit
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: docker
+    runs-on: hanzo-deploy-linux-amd64
+    environment: production
+    steps:
+      - name: Rolling restart ingress DaemonSet
+        run: |
+          kubectl rollout restart daemonset/hanzo-ingress -n hanzo
+          kubectl rollout status daemonset/hanzo-ingress -n hanzo --timeout=120s
