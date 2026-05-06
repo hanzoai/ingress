@@ -42,7 +42,11 @@ clean-webui:
 
 webui/static/index.html:
 	$(MAKE) build-webui-image
-	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm build:prod
+	# Run only the production build, NOT `build:prod` (which chains
+	# test+tsc+lint). Tests live in .github/workflows/test-unit.yaml;
+	# coupling them to the image build means every npm flake takes
+	# the image build with it. Decoupled per upstream Traefik practice.
+	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm build
 	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui chown -R $(shell id -u):$(shell id -g) ./static
 	printf 'For more information see `webui/readme.md`' > webui/static/DONT-EDIT-FILES-IN-THIS-DIRECTORY.md
 
