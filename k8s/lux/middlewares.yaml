@@ -1,6 +1,6 @@
 ---
 # Default CORS headers middleware
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: Middleware
 metadata:
   name: cors-allow-all
@@ -23,7 +23,7 @@ spec:
     accessControlMaxAge: 86400
 ---
 # Large body uploads (50MB)
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: Middleware
 metadata:
   name: body-size-50m
