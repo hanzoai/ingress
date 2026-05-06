@@ -14,6 +14,17 @@ jobs:
     runs-on: hanzo-build-linux-amd64
     steps:
       - uses: actions/checkout@v4
+      # webui/embed.go uses //go:embed static — webui/static is built
+      # by Vite, not committed. Build it before any go test/build.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: webui/.nvmrc
+      - run: corepack enable && corepack prepare pnpm@9.15.0 --activate
+      - name: Build webui static
+        working-directory: ./webui
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
