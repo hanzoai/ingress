@@ -34,7 +34,7 @@ spec:
     task: whoami5
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressService
 metadata:
   name: wrr1

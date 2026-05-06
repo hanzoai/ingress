@@ -3,7 +3,7 @@ kind: IngressClass
 metadata:
   name: ingress-lb
 spec:
-  controller: hanzo.ai/ingress-controller
+  controller: ingress.k8s.io/ingress-controller
 
 ---
 kind: Ingress

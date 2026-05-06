@@ -21,10 +21,10 @@ rules:
 - apiGroups: ["networking.k8s.io"]
   resources: ["ingresses/status"]
   verbs: ["update"]
-- apiGroups: ["traefik.io"]
+- apiGroups: ["ingress.k8s.io"]
   resources: ["*"]
   verbs: ["get", "list", "watch"]
-- apiGroups: ["hanzo.ai"]
+- apiGroups: ["ingress.k8s.io"]
   resources: ["*"]
   verbs: ["get", "list", "watch"]
 ---
