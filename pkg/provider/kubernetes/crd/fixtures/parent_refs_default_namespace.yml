@@ -1,5 +1,5 @@
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: parent-default
@@ -11,7 +11,7 @@ spec:
     - match: Host(`default.example.com`)
       kind: Rule
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: child-same
