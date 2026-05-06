@@ -366,7 +366,7 @@ func (c *clientWrapper) GetIngressClasses() ([]*netv1.IngressClass, error) {
 	}
 
 	for _, ic := range ingressClasses {
-		if ic.Spec.Controller == defaultIngressClassController {
+		if ic.Spec.Controller == IngressClassController {
 			ics = append(ics, ic)
 		}
 	}
