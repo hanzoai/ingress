@@ -1,4 +1,4 @@
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: Middleware
 metadata:
   name: stripprefix
@@ -10,7 +10,7 @@ spec:
       - /tobestripped
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: Middleware
 metadata:
   name: addprefix
@@ -21,7 +21,7 @@ spec:
     prefix: /tobeadded
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: test2.route

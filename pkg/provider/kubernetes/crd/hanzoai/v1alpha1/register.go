@@ -7,7 +7,7 @@ import (
 )
 
 // GroupName is the group name for Ingress.
-const GroupName = "hanzo.ai"
+const GroupName = "ingress.k8s.io"
 
 var (
 	// SchemeBuilder collects the scheme builder functions.
