@@ -19,7 +19,7 @@ endpoints:
       ready: true
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressService
 metadata:
   name: wrr2
@@ -48,7 +48,7 @@ spec:
     task: whoami5
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressService
 metadata:
   name: wrr1
@@ -65,7 +65,7 @@ spec:
       port: 8080
 
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route
