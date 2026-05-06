@@ -34,11 +34,26 @@ import (
 )
 
 const (
-	annotationKubernetesIngressClass     = "kubernetes.io/ingress.class"
-	defaultIngressClass           = "ingress"
-	defaultIngressClassController = "hanzo.ai/ingress-controller"
-	defaultPathMatcher                   = "PathPrefix"
+	annotationKubernetesIngressClass = "kubernetes.io/ingress.class"
+	defaultIngressClass              = "ingress"
+	defaultPathMatcher               = "PathPrefix"
 )
+
+// IngressClassController is the controller string the controller-manager
+// matches against IngressClass.spec.controller. It is set at process start
+// from the INGRESS_CONTROLLER_NAME env var, with a sensible fallback. White-
+// label deployments override this per tenant (e.g. /ingress-controller,
+// onyxplus.app/ingress-controller, equitytable.io/ingress-controller).
+//
+// Default is intentionally generic — `ingress.k8s.io/ingress-controller` —
+// so the controller works out-of-the-box without baking a tenant identity
+// into a binary anyone can deploy.
+var IngressClassController = func() string {
+	if v := os.Getenv("INGRESS_CONTROLLER_NAME"); v != "" {
+		return v
+	}
+	return "ingress.k8s.io/ingress-controller"
+}()
 
 // Provider holds configurations of the provider.
 type Provider struct {
