@@ -79,7 +79,7 @@ func (t *TransportManager) Update(newConfigs map[string]*dynamic.ServersTranspor
 		t.roundTrippers[configName], err = t.createRoundTripper(newConfig, tlsConfig)
 		if err != nil {
 			log.Error().Err(err).Msgf("Could not configure HTTP Transport %s, fallback on default transport", configName)
-			t.roundTrippers[configName] = http.DefaultTransport
+			t.roundTrippers[configName] = newZapBackendRoundTripper(http.DefaultTransport)
 		}
 	}
 
@@ -99,7 +99,7 @@ func (t *TransportManager) Update(newConfigs map[string]*dynamic.ServersTranspor
 		t.roundTrippers[newConfigName], err = t.createRoundTripper(newConfig, tlsConfig)
 		if err != nil {
 			log.Error().Err(err).Msgf("Could not configure HTTP Transport %s, fallback on default transport", newConfigName)
-			t.roundTrippers[newConfigName] = http.DefaultTransport
+			t.roundTrippers[newConfigName] = newZapBackendRoundTripper(http.DefaultTransport)
 		}
 	}
 
@@ -325,24 +325,24 @@ func (t *TransportManager) createRoundTripper(cfg *dynamic.ServersTransport, tls
 
 	// Return directly HTTP/1.1 transport when HTTP/2 is disabled
 	if cfg.DisableHTTP2 {
-		return &kerberosRoundTripper{
+		return newZapBackendRoundTripper(&kerberosRoundTripper{
 			OriginalRoundTripper: transport,
 			new: func() http.RoundTripper {
 				return transport.Clone()
 			},
-		}, nil
+		}), nil
 	}
 
 	rt, err := newSmartRoundTripper(transport, cfg.ForwardingTimeouts)
 	if err != nil {
 		return nil, err
 	}
-	return &kerberosRoundTripper{
+	return newZapBackendRoundTripper(&kerberosRoundTripper{
 		OriginalRoundTripper: rt,
 		new: func() http.RoundTripper {
 			return rt.Clone()
 		},
-	}, nil
+	}), nil
 }
 
 type stickyRoundTripper struct {

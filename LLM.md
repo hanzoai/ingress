@@ -86,3 +86,21 @@ the backend (Go's `http.ServeContent` or `http.ServeFile`).
 The K8s Ingress provider uses annotation prefix `ingress.kubernetes.io/`, NOT
 `traefik.ingress.kubernetes.io/`. Annotations with the old Traefik prefix are
 silently ignored.
+
+## ZAP-HTTP Backend Transport
+
+`pkg/server/service/zap_backend.go` wraps every backend `RoundTripper`
+returned by `TransportManager.createRoundTripper`. When the request's
+upstream `host:port` (i.e. `req.URL.Host` at transport time) matches the
+allowlist from env `INGRESS_ZAP_BACKENDS` (comma-separated), the request
+is dialed via `github.com/zap-proto/http` instead of `net/http`. All
+other backends fall through unchanged. Empty / unset env keeps the
+wrapped transport untouched (no allocation, no overhead).
+
+`zaphttp.NewTransport` pins to one peer (it ignores `req.URL.Host`
+internally), so we keep one `*zaphttp.Transport` per backend address in
+a `sync.Map`.
+
+External (client-facing) TLS termination is untouched. CRD schema is
+untouched. Reference doc:
+`docs/content/reference/dynamic-configuration/zap-backend.md`.
