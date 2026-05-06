@@ -75,8 +75,13 @@ jobs:
           tar xvf webui.tar.gz
           rm webui.tar.gz
 
-      - name: Build docker experimental image
+      - name: Build docker image
         env:
           DOCKER_BUILDX_ARGS: "--push --provenance=false --sbom=false"
         run: |
-          make multi-arch-image-experimental-${GITHUB_REF##*/}
+          # Drop the legacy `experimental-` prefix on tags. The
+          # workflow only fires on `main` and `v*` branches; pushing
+          # `ghcr.io/hanzoai/ingress:<branch>` matches the simpler
+          # convention every consumer (KMS, gateway, papers site)
+          # already uses.
+          make multi-arch-image-${GITHUB_REF##*/}
