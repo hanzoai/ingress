@@ -1,3 +1,15 @@
+// Match the production API mount point. `BASE_PATH` (from
+// src/libs/utils.ts) reads window.APIUrl on first import; without
+// this, fetches resolve to '/http/routers/<x>' instead of
+// '/v1/ingress/http/routers/<x>' and miss every msw handler.
+//
+// Must run BEFORE the imports below — Vitest's setupFiles are
+// processed in source order and the mock server captures BASE_PATH
+// at module load.
+;(globalThis as unknown as { window: { APIUrl: string } }).window =
+  (globalThis as unknown as { window?: { APIUrl?: string } }).window || ({} as { APIUrl: string })
+;(globalThis as unknown as { window: { APIUrl: string } }).window.APIUrl = '/v1/ingress'
+
 import '@testing-library/jest-dom'
 import 'vitest-canvas-mock'
 import '@vitest/web-worker'
