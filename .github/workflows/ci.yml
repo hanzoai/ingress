@@ -29,7 +29,10 @@ jobs:
         with:
           go-version-file: go.mod
       - run: go mod download
-      - run: go test ./...
+      # ./integration runs docker-based e2e tests (require Docker daemon and a
+      # built ingress binary); they live behind `make test-integration`. CI runs
+      # only unit-test packages, mirroring the Makefile `test-unit` target.
+      - run: go test ./pkg/... ./cmd/...
 
   docker:
     needs: test
