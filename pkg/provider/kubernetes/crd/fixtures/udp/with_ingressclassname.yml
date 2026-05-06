@@ -3,9 +3,9 @@ kind: IngressClass
 metadata:
   name: ingress-lb
 spec:
-  controller: hanzo.ai/ingress-controller
+  controller: ingress.k8s.io/ingress-controller
 ---
-apiVersion: hanzo.ai/v1alpha1
+apiVersion: ingress.k8s.io/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: test.route
