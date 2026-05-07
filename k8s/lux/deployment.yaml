@@ -33,8 +33,8 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: ingress
-          image: ghcr.io/hanzoai/ingress:latest
-          imagePullPolicy: Always
+          image: ghcr.io/hanzoai/ingress:1.7.41
+          imagePullPolicy: IfNotPresent
           args:
             # Providers
             - --providers.kubernetesingress=true
