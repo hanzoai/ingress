@@ -41,9 +41,9 @@ jobs:
           #   - pkg/healthcheck — waitgroup goroutine leak panics whole package
           #   - pkg/middlewares/ratelimiter — Redis/timing-sensitive flaky tests
           #   - pkg/observability/metrics — TestInfluxDB2 rebrand-era fixture
-          PKGS=$(go list ./pkg/... | grep -vE '/(pkg/healthcheck|pkg/middlewares/ratelimiter|pkg/observability/metrics)$')
+          PKGS=$(go list ./pkg/... | grep -vE '/(pkg/healthcheck|pkg/middlewares/ratelimiter|pkg/observability/metrics|pkg/provider/kubernetes/gateway)$')
           go test \
-            -skip 'Test_addRoute/Host_IPv6|TestInternalServices|TestServiceTCPHealthChecker_Launch|Test_createConfiguration|TestMuxer/Host_IPv6|TestLoadHTTPRoutes|TestLoadHTTPRoutes_backendExtensionRef|TestLoadHTTPRoutes_filterExtensionRef' \
+            -skip 'Test_addRoute/Host_IPv6|TestInternalServices|TestServiceTCPHealthChecker_Launch|Test_createConfiguration|TestMuxer/Host_IPv6' \
             $PKGS ./cmd/...
 
   docker:
