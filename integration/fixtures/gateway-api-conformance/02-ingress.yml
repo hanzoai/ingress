@@ -41,7 +41,7 @@ spec:
       serviceAccountName: ingress
       containers:
         - name: ingress
-          image: ghcr.io/hanzoai/ingress:latest
+          image: ghcr.io/hanzoai/ingress:1.7.41
           imagePullPolicy: Never
           args:
             - --log.level=DEBUG
