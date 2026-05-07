@@ -28,8 +28,8 @@ spec:
       # No cloud-specific nodeSelector — runs on any K8s cluster
       containers:
       - name: ingress
-        image: ghcr.io/hanzoai/ingress:latest
-        imagePullPolicy: Always
+        image: ghcr.io/hanzoai/ingress:1.7.41
+        imagePullPolicy: IfNotPresent
         args:
         # Providers — watches Ingress resources with class "ingress"
         - "--providers.kubernetesingress=true"
