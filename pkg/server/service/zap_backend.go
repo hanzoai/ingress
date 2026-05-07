@@ -22,6 +22,8 @@ import (
 	"sync"
 
 	zaphttp "github.com/zap-proto/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // zapBackendEnv is the env var that lists ZAP-HTTP backend host:port
@@ -88,10 +90,14 @@ func parseZapBackendList(raw string) []string {
 func (z *zapBackendRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	addr := backendAddr(req)
 	if _, ok := z.allowlist[addr]; ok {
+		log.Info().Str("addr", addr).Str("path", req.URL.Path).
+			Msg("[ZAP-BACKEND] dialing via zap-http (exact match)")
 		t := z.transportFor(addr)
 		return t.RoundTrip(req)
 	}
 	if z.matchPort(addr) {
+		log.Info().Str("addr", addr).Str("path", req.URL.Path).
+			Msg("[ZAP-BACKEND] dialing via zap-http (port match)")
 		t := z.transportFor(addr)
 		return t.RoundTrip(req)
 	}
