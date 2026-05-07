@@ -71,13 +71,59 @@ func parseZapBackendList(raw string) []string {
 
 // RoundTrip dispatches to ZAP-HTTP if the destination is in the
 // allowlist, otherwise to the wrapped transport.
+//
+// Match strategy:
+//
+//  1. Exact host:port match against allowlist entries. Works when
+//     IngressRoute backends point at a stable in-cluster address that
+//     Traefik does NOT resolve before dialing.
+//  2. Port-only fallback: if any allowlist entry's port matches the
+//     request's port, route through ZAP-HTTP regardless of host.
+//     Traefik resolves Service DNS to a Pod IP before invoking the
+//     transport (req.URL.Host becomes 10.x.x.x:port at this layer);
+//     pinning the dial to (resolved-IP, port) lets the ZAP transport
+//     reach the same pod the regular transport would have. Operators
+//     who want stricter routing should use a per-port port number that
+//     no non-ZAP backend uses (we already do — :9999 isn't shared).
 func (z *zapBackendRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	addr := backendAddr(req)
-	if _, ok := z.allowlist[addr]; !ok {
-		return z.next.RoundTrip(req)
+	if _, ok := z.allowlist[addr]; ok {
+		t := z.transportFor(addr)
+		return t.RoundTrip(req)
 	}
-	t := z.transportFor(addr)
-	return t.RoundTrip(req)
+	if z.matchPort(addr) {
+		t := z.transportFor(addr)
+		return t.RoundTrip(req)
+	}
+	return z.next.RoundTrip(req)
+}
+
+// matchPort returns true when the request's port matches the port of
+// any allowlist entry. This is the resolved-pod-IP fallback described
+// in RoundTrip.
+func (z *zapBackendRoundTripper) matchPort(addr string) bool {
+	_, port, ok := splitHostPort(addr)
+	if !ok {
+		return false
+	}
+	for entry := range z.allowlist {
+		_, p, ok := splitHostPort(entry)
+		if ok && p == port {
+			return true
+		}
+	}
+	return false
+}
+
+// splitHostPort is strings.LastIndex over ":" — host:port carriers
+// here never have brackets or schemes, so a hand-rolled split is fine
+// and avoids net.SplitHostPort's empty-port behaviour.
+func splitHostPort(addr string) (host, port string, ok bool) {
+	i := strings.LastIndex(addr, ":")
+	if i < 0 {
+		return addr, "", false
+	}
+	return addr[:i], addr[i+1:], true
 }
 
 // transportFor returns a per-addr ZAP transport, lazily created.
