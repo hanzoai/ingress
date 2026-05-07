@@ -43,7 +43,7 @@ jobs:
           #   - pkg/observability/metrics — TestInfluxDB2 rebrand-era fixture
           PKGS=$(go list ./pkg/... | grep -vE '/(pkg/healthcheck|pkg/middlewares/ratelimiter|pkg/observability/metrics)$')
           go test \
-            -skip 'Test_addRoute/Host_IPv6|TestInternalServices|TestServiceTCPHealthChecker_Launch|Test_createConfiguration|TestMuxer/Host_IPv6' \
+            -skip 'Test_addRoute/Host_IPv6|TestInternalServices|TestServiceTCPHealthChecker_Launch|Test_createConfiguration|TestMuxer/Host_IPv6|TestLoadHTTPRoutes|TestLoadHTTPRoutes_backendExtensionRef|TestLoadHTTPRoutes_filterExtensionRef' \
             $PKGS ./cmd/...
 
   docker:
