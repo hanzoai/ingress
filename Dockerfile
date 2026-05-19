@@ -31,9 +31,12 @@ COPY . .
 # Overlay built webui assets.
 COPY --from=webui /src/webui/static ./webui/static
 
+# GOEXPERIMENT=jsonv2 routes JSON paths exposed by the in-process
+# ingress mount (the HIP-0106 cloud-binary surface in mount.go) through
+# stdlib encoding/json/v2. Same source, ~10% faster on the edge.
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
+    GOEXPERIMENT=jsonv2 CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -ldflags="-w -s \
       -X github.com/hanzoai/ingress/v3/pkg/version.Version=${VERSION} \
       -X github.com/hanzoai/ingress/v3/pkg/version.Codename=hanzo \
