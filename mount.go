@@ -74,6 +74,7 @@ func Mount(app *zip.App, deps cloud.Deps) error {
 		"entrypoints", strings.Join(cfg.Entrypoints, ","),
 		"providers", strings.Join(cfg.Providers, ","),
 		"acme_enabled", cfg.ACMEEnabled,
+		"json_variant", zip.JSONVariant,
 	)
 	return nil
 }
