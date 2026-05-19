@@ -33,7 +33,7 @@ COPY --from=webui /src/webui/static ./webui/static
 
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
+    GOEXPERIMENT=jsonv2 CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build \
     -ldflags="-w -s \
       -X github.com/hanzoai/ingress/v3/pkg/version.Version=${VERSION} \
       -X github.com/hanzoai/ingress/v3/pkg/version.Codename=hanzo \
