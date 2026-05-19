@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hanzoai/cloud/pkg/cloud"
+	"github.com/hanzoai/cloud"
 	luxlog "github.com/luxfi/log"
 
 	"github.com/hanzoai/zip"
