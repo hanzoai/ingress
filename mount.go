@@ -1,8 +1,5 @@
 // Copyright © 2026 Hanzo AI. MIT License.
 
-//go:build cloud
-// +build cloud
-
 // Package ingress exposes the HIP-0106 unified-binary mount surface for
 // Hanzo Ingress.
 //
