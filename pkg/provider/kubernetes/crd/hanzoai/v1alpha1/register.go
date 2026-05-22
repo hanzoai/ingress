@@ -6,8 +6,28 @@ import (
 	kschema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-// GroupName is the group name for Ingress.
-const GroupName = "ingress.k8s.io"
+// GroupName is the group name for the hanzoai Traefik-fork CRDs
+// (Middleware, IngressRoute, TLSOption, ServersTransport, etc.).
+//
+// Was "ingress.k8s.io" — but every cluster installs the CRDs under
+// `hanzo.ai` (see baseapps.hanzo.ai, ingressroutes.hanzo.ai,
+// middlewares.hanzo.ai, etc.). With the previous string, the
+// controller's informer watched a group that doesn't exist on cluster:
+//
+//	"failed to list *v1alpha1.Middleware: middlewares.ingress.k8s.io is
+//	 forbidden: User 'system:serviceaccount:liquidity:ingress' cannot
+//	 list resource 'middlewares' in API group 'ingress.k8s.io'"
+//
+// Result: every rewrite/headers/redirect Middleware referenced by a
+// standard K8s Ingress via the
+// `traefik.ingress.kubernetes.io/router.middlewares` annotation was
+// silently ignored — the route still landed at the backend but no
+// rewrite ever ran. Latent for any deployment using middleware-based
+// path rewrites.
+//
+// Aligning to "hanzo.ai" matches the cluster CRDs + kubectl resource
+// discovery + the operator's naming convention.
+const GroupName = "hanzo.ai"
 
 var (
 	// SchemeBuilder collects the scheme builder functions.
