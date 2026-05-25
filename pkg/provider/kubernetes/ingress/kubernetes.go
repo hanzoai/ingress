@@ -42,7 +42,7 @@ const (
 // IngressClassController is the controller string the controller-manager
 // matches against IngressClass.spec.controller. It is set at process start
 // from the INGRESS_CONTROLLER_NAME env var, with a sensible fallback. White-
-// label deployments override this per tenant (e.g. partner/ingress-controller,
+// label deployments override this per tenant (e.g. <tenant>.io/ingress-controller,
 // onyxplus.app/ingress-controller, equitytable.io/ingress-controller).
 //
 // Default is intentionally generic — `ingress.k8s.io/ingress-controller` —
