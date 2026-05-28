@@ -40,7 +40,6 @@ import (
 	"strings"
 
 	"github.com/oschwald/maxminddb-golang"
-	"github.com/rs/zerolog/log"
 
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/pkg/ip"
