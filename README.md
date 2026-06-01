@@ -7,6 +7,26 @@
 
 Cloud-native L7 reverse proxy and load balancer for Hanzo AI infrastructure. Kubernetes-native with automatic TLS, dynamic configuration, and zero-downtime reloads.
 
+## Build dependency: `GOEXPERIMENT=jsonv2`
+
+The HIP-0106 in-process ingress mount runs on the `hanzoai/zip` web
+framework, which routes every JSON path through stdlib
+`encoding/json/v2` when the binary is compiled with
+`GOEXPERIMENT=jsonv2`. The shipped Dockerfile and CI workflow set the
+flag; manual builds should do the same:
+
+```bash
+GOEXPERIMENT=jsonv2 CGO_ENABLED=0 go build ./cmd/traefik
+```
+
+Without the experiment the binary still compiles and runs — zip falls
+back to `encoding/json` v1. v2 is preferred for production: ~10%
+faster on the edge, ~25% fewer allocations per request. The startup
+log line `json_variant=encoding/json/v2` confirms it's active.
+
+No third-party JSON library is allowed in the Hanzo Go stack — stdlib
+only (HIP-0106 canonical Hanzo Go stack).
+
 ## Overview
 
 Hanzo Ingress is the front door for all Hanzo production traffic. It watches Kubernetes Ingress resources, automatically provisions TLS certificates via Let's Encrypt, and routes traffic to internal services -- including [Hanzo Gateway](https://github.com/hanzoai/gateway) for API endpoints and direct service routing for web applications.
