@@ -30,6 +30,7 @@ type Middleware struct {
 	// Deprecated: please use IPAllowList instead.
 	IPWhiteList       *IPWhiteList       `json:"ipWhiteList,omitempty" toml:"ipWhiteList,omitempty" yaml:"ipWhiteList,omitempty" export:"true"`
 	IPAllowList       *IPAllowList       `json:"ipAllowList,omitempty" toml:"ipAllowList,omitempty" yaml:"ipAllowList,omitempty" export:"true"`
+	GeoBlock          *GeoBlock          `json:"geoBlock,omitempty" toml:"geoBlock,omitempty" yaml:"geoBlock,omitempty" export:"true"`
 	Headers           *Headers           `json:"headers,omitempty" toml:"headers,omitempty" yaml:"headers,omitempty" export:"true"`
 	EncodedCharacters *EncodedCharacters `json:"encodedCharacters,omitempty" toml:"encodedCharacters,omitempty" yaml:"encodedCharacters,omitempty" export:"true"`
 	Errors            *ErrorPage         `json:"errors,omitempty" toml:"errors,omitempty" yaml:"errors,omitempty" export:"true"`
@@ -562,6 +563,49 @@ type IPAllowList struct {
 	IPStrategy  *IPStrategy `json:"ipStrategy,omitempty" toml:"ipStrategy,omitempty" yaml:"ipStrategy,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 	// RejectStatusCode defines the HTTP status code used for refused requests.
 	// If not set, the default is 403 (Forbidden).
+	RejectStatusCode int `json:"rejectStatusCode,omitempty" toml:"rejectStatusCode,omitempty" yaml:"rejectStatusCode,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// GeoBlock holds the GeoIP-based country block + header-injection middleware
+// configuration. It resolves the request's client IP to an ISO 3166-1
+// alpha-2 country code via an embedded MaxMind GeoLite2-Country database,
+// injects `X-Geo-Country` (and `X-Geo-Country-Reason` on block) upstream,
+// and optionally short-circuits the request with 451 Unavailable For Legal
+// Reasons when the resolved country matches BlockCountries.
+//
+// One middleware, one place — used by every Liquidity / Lux / Hanzo / Zoo
+// app behind the ingress. The default block list is the OFAC comprehensive
+// sanctions set (CU, IR, KP, SY). Per-tenant overrides set BlockCountries
+// explicitly when stricter or looser policy is needed.
+type GeoBlock struct {
+	// IPStrategy defines how the client IP is extracted from the request
+	// (X-Forwarded-For, X-Real-IP, depth, excludedIPs, etc.) — same shape
+	// as IPAllowList so we honour the same proxy-trust posture.
+	IPStrategy *IPStrategy `json:"ipStrategy,omitempty" toml:"ipStrategy,omitempty" yaml:"ipStrategy,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
+	// HeaderName is the upstream header injected with the resolved country
+	// code (ISO 3166-1 alpha-2, uppercase). Empty disables injection.
+	// Default: "X-Geo-Country".
+	HeaderName string `json:"headerName,omitempty" toml:"headerName,omitempty" yaml:"headerName,omitempty" export:"true"`
+	// BlockCountries is the explicit deny list (ISO 3166-1 alpha-2 codes).
+	// Requests resolving to any listed country are short-circuited with
+	// RejectStatusCode. Empty disables the block (header-only mode).
+	// Per CLAUDE.md the canonical Liquidity default is the OFAC
+	// comprehensive sanctions set: CU, IR, KP, SY.
+	BlockCountries []string `json:"blockCountries,omitempty" toml:"blockCountries,omitempty" yaml:"blockCountries,omitempty" export:"true"`
+	// AllowCountries, if non-empty, switches to allowlist mode: only the
+	// listed countries are permitted, everything else is blocked.
+	// BlockCountries is ignored when AllowCountries is set.
+	AllowCountries []string `json:"allowCountries,omitempty" toml:"allowCountries,omitempty" yaml:"allowCountries,omitempty" export:"true"`
+	// DatabasePath is the on-disk path to a MaxMind GeoLite2-Country.mmdb
+	// (or GeoLite2-City.mmdb). When empty, the ingress falls back to the
+	// embedded copy shipped with the binary so the middleware works
+	// out-of-the-box without filesystem setup.
+	DatabasePath string `json:"databasePath,omitempty" toml:"databasePath,omitempty" yaml:"databasePath,omitempty" export:"true"`
+	// RejectStatusCode is the HTTP status returned when a request is
+	// blocked. Default 451 (Unavailable For Legal Reasons — RFC 7725),
+	// which is the correct semantic for sanctions-based blocking.
 	RejectStatusCode int `json:"rejectStatusCode,omitempty" toml:"rejectStatusCode,omitempty" yaml:"rejectStatusCode,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 }
 
