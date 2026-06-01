@@ -22,6 +22,7 @@ import (
 	"github.com/hanzoai/ingress/pkg/middlewares/gatewayapi/headermodifier"
 	gapiredirect "github.com/hanzoai/ingress/pkg/middlewares/gatewayapi/redirect"
 	"github.com/hanzoai/ingress/pkg/middlewares/gatewayapi/urlrewrite"
+	"github.com/hanzoai/ingress/pkg/middlewares/geoblock"
 	"github.com/hanzoai/ingress/pkg/middlewares/grpcweb"
 	"github.com/hanzoai/ingress/pkg/middlewares/headers"
 	"github.com/hanzoai/ingress/pkg/middlewares/inflightreq"
@@ -257,6 +258,20 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 		}
 		middleware = func(next http.Handler) (http.Handler, error) {
 			return ipallowlist.New(ctx, next, *config.IPAllowList, middlewareName)
+		}
+	}
+
+	// GeoBlock — country-level header injection + access control.
+	// Single source of truth across all brands (Liquidity / Lux / Hanzo /
+	// Zoo). See pkg/middlewares/geoblock for the resolver chain
+	// (Cloudflare/X-Forwarded-Country upstream → MaxMind MMDB fallback)
+	// and rejection semantics (RFC 7725 451 by default).
+	if config.GeoBlock != nil {
+		if middleware != nil {
+			return nil, badConf
+		}
+		middleware = func(next http.Handler) (http.Handler, error) {
+			return geoblock.New(ctx, next, *config.GeoBlock, middlewareName)
 		}
 	}
 
