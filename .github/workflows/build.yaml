@@ -19,6 +19,9 @@ on:
 
 env:
   CGO_ENABLED: 0
+  # Route stdlib JSON through encoding/json/v2 in the in-process
+  # ingress mount (HIP-0106). Same source compiles either way.
+  GOEXPERIMENT: jsonv2
 
 jobs:
 
