@@ -575,8 +575,8 @@ type IPAllowList struct {
 // and optionally short-circuits the request with 451 Unavailable For Legal
 // Reasons when the resolved country matches BlockCountries.
 //
-// One middleware, one place — used by every Liquidity / Lux / Hanzo / Zoo
-// app behind the ingress. The default block list is the OFAC comprehensive
+// One middleware, one place — used by every Hanzo / Lux / Zoo app
+// behind the ingress. The default block list is the OFAC comprehensive
 // sanctions set (CU, IR, KP, SY). Per-tenant overrides set BlockCountries
 // explicitly when stricter or looser policy is needed.
 type GeoBlock struct {
@@ -591,8 +591,7 @@ type GeoBlock struct {
 	// BlockCountries is the explicit deny list (ISO 3166-1 alpha-2 codes).
 	// Requests resolving to any listed country are short-circuited with
 	// RejectStatusCode. Empty disables the block (header-only mode).
-	// Per CLAUDE.md the canonical Liquidity default is the OFAC
-	// comprehensive sanctions set: CU, IR, KP, SY.
+	// Canonical default is the OFAC comprehensive sanctions set: CU, IR, KP, SY.
 	BlockCountries []string `json:"blockCountries,omitempty" toml:"blockCountries,omitempty" yaml:"blockCountries,omitempty" export:"true"`
 	// AllowCountries, if non-empty, switches to allowlist mode: only the
 	// listed countries are permitted, everything else is blocked.
