@@ -262,8 +262,8 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 	}
 
 	// GeoBlock — country-level header injection + access control.
-	// Single source of truth across all brands (Liquidity / Lux / Hanzo /
-	// Zoo). See pkg/middlewares/geoblock for the resolver chain
+	// Single source of truth across all brands (Hanzo / Lux / Zoo).
+	// See pkg/middlewares/geoblock for the resolver chain
 	// (Cloudflare/X-Forwarded-Country upstream → MaxMind MMDB fallback)
 	// and rejection semantics (RFC 7725 451 by default).
 	if config.GeoBlock != nil {

@@ -2,9 +2,8 @@
 // injection middleware.
 //
 // One source of truth for "what country is this request from" across the
-// entire Hanzo ingress stack — used by Liquidity, Lux, Hanzo, Zoo and
-// every other brand behind the ingress. Two behaviours, both optional
-// and composable:
+// entire Hanzo ingress stack — used by Hanzo, Lux, Zoo, and every other
+// brand behind the ingress. Two behaviours, both optional and composable:
 //
 //  1. Country-code header injection. Resolves the client IP to ISO 3166-1
 //     alpha-2 and sets `X-Geo-Country: US` (default header name) on the
