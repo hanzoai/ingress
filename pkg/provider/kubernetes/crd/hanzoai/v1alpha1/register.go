@@ -15,7 +15,7 @@ import (
 // controller's informer watched a group that doesn't exist on cluster:
 //
 //	"failed to list *v1alpha1.Middleware: middlewares.ingress.k8s.io is
-//	 forbidden: User 'system:serviceaccount:liquidity:ingress' cannot
+//	 forbidden: User 'system:serviceaccount:hanzo:ingress' cannot
 //	 list resource 'middlewares' in API group 'ingress.k8s.io'"
 //
 // Result: every rewrite/headers/redirect Middleware referenced by a
