@@ -11,7 +11,7 @@ permissions:
   id-token: write
 jobs:
   test:
-    runs-on: hanzo-build-linux-amd64
+    runs-on: [self-hosted, linux, amd64]
     steps:
       - uses: actions/checkout@v4
       # webui/embed.go uses //go:embed static — webui/static is built
@@ -58,7 +58,7 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: docker
-    runs-on: hanzo-deploy-linux-amd64
+    runs-on: [self-hosted, linux, amd64]
     environment: production
     steps:
       - name: Rolling restart ingress DaemonSet
