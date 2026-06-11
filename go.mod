@@ -3,7 +3,7 @@ module github.com/hanzoai/ingress
 go 1.26.4
 
 require (
-	github.com/hanzoai/cloud v0.1.1-0.20260519183759-098489930d01
+	github.com/hanzoai/cloud v0.1.1
 	github.com/hanzoai/zip v0.2.0
 )
 
@@ -127,7 +127,14 @@ require (
 
 require (
 	github.com/luxfi/log v1.4.3
-	github.com/zap-proto/http v0.0.0-20260506200741-fd6047874433
+	github.com/prometheus/client_golang v1.23.2
+	github.com/zap-proto/http v0.0.0-20260507033350-ccd81fd7275d
+)
+
+require (
+	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/prometheus/common v0.67.5 // indirect
+	github.com/prometheus/procfs v0.20.1 // indirect
 )
 
 require (
@@ -184,7 +191,6 @@ require (
 	github.com/aziontech/azionapi-go-sdk v0.144.0 // indirect
 	github.com/baidubce/bce-sdk-go v0.9.260 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
-	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
@@ -293,7 +299,6 @@ require (
 	github.com/liquidweb/liquidweb-cli v0.6.9 // indirect
 	github.com/liquidweb/liquidweb-go v1.6.4 // indirect
 	github.com/lufia/plan9stats v0.0.0-20251013123823-9fd1530e3ec3 // indirect
-	github.com/luxfi/metric v1.5.8
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailgun/minheap v0.0.0-20170619185613-3dbe6c6bf55f // indirect
 	github.com/mailgun/multibuf v0.1.2 // indirect
@@ -338,7 +343,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/openzipkin/zipkin-go v0.4.3 // indirect
-	github.com/oschwald/maxminddb-golang v1.13.1 // indirect
+	github.com/oschwald/maxminddb-golang v1.13.1
 	github.com/ovh/go-ovh v1.9.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.3.0 // indirect
 	github.com/peterhellberg/link v1.2.0 // indirect
@@ -347,8 +352,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/pquerna/otp v1.5.0 // indirect
-	github.com/prometheus/common v0.67.5 // indirect
-	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/regfish/regfish-dnsapi-go v0.1.1 // indirect
 	github.com/rs/cors v1.11.1 // indirect

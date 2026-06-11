@@ -694,8 +694,8 @@ github.com/grpc-ecosystem/grpc-gateway v1.9.0/go.mod h1:vNeuVxBJEsws4ogUvrchl83t
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0 h1:HWRh5R2+9EifMyIHV7ZV+MIZqgz+PMpZ14Jynv3O2Zs=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0/go.mod h1:JfhWUomR1baixubs02l85lZYYOm7LV6om4ceouMv45c=
-github.com/hanzoai/cloud v0.1.1-0.20260519183759-098489930d01 h1:AWIk1ieMiuzoSoEmEciRxNYz/+616u4tkYQ2dg51Qp4=
-github.com/hanzoai/cloud v0.1.1-0.20260519183759-098489930d01/go.mod h1:A+v/YkYFtBNKDs0x6HxRIhvQT0I4XRAtRtGEnf/T1i0=
+github.com/hanzoai/cloud v0.1.1 h1:yVXuxz7o7sNnSA2+nuq+c0RnEA0Ic734S/r8/WTlLHk=
+github.com/hanzoai/cloud v0.1.1/go.mod h1:4V7Uk80+9SI1uZTpCEMwub2STABVd9hD16mLQ4DY2uo=
 github.com/hanzoai/ingress-parser v0.2.3 h1:q8tmR95HUnsOxNceqjEkaiaaxjrVgfT8cIWBqrJhMAw=
 github.com/hanzoai/ingress-parser v0.2.3/go.mod h1:bqV04MSCLynOayWZj/Fxa6nDPUcyZYK8VELpS1vuuNI=
 github.com/hanzoai/zip v0.2.0 h1:2GI1OoUv4QdCxmfiwoiyYsSHpiPAxrp0v+Gu4BLtTVI=
@@ -1410,8 +1410,8 @@ github.com/yuin/gopher-lua v1.1.1 h1:kYKnWBjvbNP4XLT3+bPEwAXJx262OhaHDWDVOPjL46M
 github.com/yuin/gopher-lua v1.1.1/go.mod h1:GBR0iDaNXjAgGg9zfCvksxSRnQx76gclCIb7kdAd1Pw=
 github.com/yusufpapurcu/wmi v1.2.4 h1:zFUKzehAFReQwLys1b/iSMl+JQGSCSjtVqQn9bBrPo0=
 github.com/yusufpapurcu/wmi v1.2.4/go.mod h1:SBZ9tNy3G9/m5Oi98Zks0QjeHVDvuK0qfxQmPyzfmi0=
-github.com/zap-proto/http v0.0.0-20260506200741-fd6047874433 h1:7WsCr/pZvWozimdYNffL3B9K6gLr8w0Z7WAi1+eZWtc=
-github.com/zap-proto/http v0.0.0-20260506200741-fd6047874433/go.mod h1:xySyVTIwjknmVE+p+6rukkX86rFZtXeAu/QY7KXMYqw=
+github.com/zap-proto/http v0.0.0-20260507033350-ccd81fd7275d h1:CI5bkhixkBbYWgbn0sqn1ugZei36sHwMkZpKP8f7eGw=
+github.com/zap-proto/http v0.0.0-20260507033350-ccd81fd7275d/go.mod h1:xySyVTIwjknmVE+p+6rukkX86rFZtXeAu/QY7KXMYqw=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQcPvs=
 go.etcd.io/etcd/api/v3 v3.6.4 h1:7F6N7toCKcV72QmoUKa23yYLiiljMrT4xCeBL9BmXdo=
