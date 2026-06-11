@@ -28,7 +28,6 @@ func newSecure(next http.Handler, cfg dynamic.Headers, contextKey string) *secur
 		ContentSecurityPolicyReportOnly: cfg.ContentSecurityPolicyReportOnly,
 		CustomBrowserXssValue:           cfg.CustomBrowserXSSValue,
 		CustomFrameOptionsValue:         cfg.CustomFrameOptionsValue,
-		PublicKey:                       cfg.PublicKey,
 		ReferrerPolicy:                  cfg.ReferrerPolicy,
 		AllowedHosts:                    cfg.AllowedHosts,
 		HostsProxyHeaders:               cfg.HostsProxyHeaders,
