@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/metrics"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/collectors"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rs/zerolog/log"
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	metric "github.com/luxfi/metric"
+	"github.com/prometheus/client_golang/prometheus/collectors"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -75,7 +74,7 @@ var promRegistry = stdprometheus.NewRegistry()
 
 // PrometheusHandler exposes Prometheus routes.
 func PrometheusHandler() http.Handler {
-	return promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{})
+	return metric.NewHTTPHandler(promRegistry, metric.HandlerOpts{})
 }
 
 // RegisterPrometheus registers all Prometheus metrics.
@@ -375,7 +374,7 @@ func (ps *prometheusState) SetDynamicConfig(dynamicConfig *dynamicConfig) {
 	ps.dynamicConfig = dynamicConfig
 }
 
-// Describe implements prometheus.Collector and simply calls
+// Describe implements metric.Collector and simply calls
 // the registered describer functions.
 func (ps *prometheusState) Describe(ch chan<- *stdprometheus.Desc) {
 	for _, v := range ps.vectors {
@@ -383,7 +382,7 @@ func (ps *prometheusState) Describe(ch chan<- *stdprometheus.Desc) {
 	}
 }
 
-// Collect implements prometheus.Collector. It calls the Collect
+// Collect implements metric.Collector. It calls the Collect
 // method of all metrics it received on the collectors channel.
 // It's also responsible to remove metrics that belong to an outdated configuration.
 // The removal happens only after their Collect method was called to ensure that
@@ -662,7 +661,7 @@ func (lvs labelNamesValues) With(labelValues ...string) labelNamesValues {
 }
 
 // ToLabels is a convenience method to convert a labelNamesValues
-// to the native prometheus.Labels.
+// to the native metric.Labels.
 func (lvs labelNamesValues) ToLabels() stdprometheus.Labels {
 	labels := make(map[string]string, len(lvs)/2)
 	for i := 0; i < len(lvs); i += 2 {
