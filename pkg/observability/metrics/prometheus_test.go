@@ -10,7 +10,7 @@ import (
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	th "github.com/hanzoai/ingress/pkg/testhelpers"
-	metric "github.com/luxfi/metric"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"
 )
@@ -87,7 +87,7 @@ func TestRegisterPromState(t *testing.T) {
 
 func TestPrometheus(t *testing.T) {
 	promState = newPrometheusState()
-	promRegistry = metric.NewRegistry()
+	promRegistry = stdprometheus.NewRegistry()
 	t.Cleanup(promState.reset)
 
 	prometheusRegistry := RegisterPrometheus(t.Context(), &otypes.Prometheus{
@@ -401,7 +401,7 @@ func TestPrometheus(t *testing.T) {
 
 func TestPrometheusMetricRemoval(t *testing.T) {
 	promState = newPrometheusState()
-	promRegistry = metric.NewRegistry()
+	promRegistry = stdprometheus.NewRegistry()
 	t.Cleanup(promState.reset)
 
 	prometheusRegistry := RegisterPrometheus(t.Context(), &otypes.Prometheus{AddEntryPointsLabels: true, AddServicesLabels: true, AddRoutersLabels: true})
@@ -492,7 +492,7 @@ func TestPrometheusMetricRemoval(t *testing.T) {
 
 func TestPrometheusMetricRemoveEndpointForRecoveredService(t *testing.T) {
 	promState = newPrometheusState()
-	promRegistry = metric.NewRegistry()
+	promRegistry = stdprometheus.NewRegistry()
 	t.Cleanup(promState.reset)
 
 	prometheusRegistry := RegisterPrometheus(t.Context(), &otypes.Prometheus{AddServicesLabels: true})
