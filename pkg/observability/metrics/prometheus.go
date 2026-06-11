@@ -11,7 +11,6 @@ import (
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	metric "github.com/luxfi/metric"
-	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/rs/zerolog/log"
 )
 
@@ -82,14 +81,14 @@ func PrometheusHandler() http.Handler {
 func RegisterPrometheus(ctx context.Context, config *otypes.Prometheus) Registry {
 	standardRegistry := initStandardRegistry(config)
 
-	if err := promRegistry.Register(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{})); err != nil {
+	if err := promRegistry.Register(metric.NewProcessCollector(metric.ProcessCollectorOpts{})); err != nil {
 		var arErr stdprometheus.AlreadyRegisteredError
 		if !errors.As(err, &arErr) {
 			log.Ctx(ctx).Warn().Msg("ProcessCollector is already registered")
 		}
 	}
 
-	if err := promRegistry.Register(collectors.NewGoCollector()); err != nil {
+	if err := promRegistry.Register(metric.NewGoCollector()); err != nil {
 		var arErr stdprometheus.AlreadyRegisteredError
 		if !errors.As(err, &arErr) {
 			log.Ctx(ctx).Warn().Msg("GoCollector is already registered")
