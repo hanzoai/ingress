@@ -17,7 +17,7 @@ env:
 jobs:
 
   test-gateway-api-conformance:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 20
 
     steps:
