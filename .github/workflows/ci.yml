@@ -12,6 +12,8 @@ permissions:
 jobs:
   test:
     runs-on: [self-hosted, linux, amd64]
+    env:
+      GOPRIVATE: github.com/hanzoai/*,github.com/luxfi/*,github.com/zap-proto/*
     steps:
       - uses: actions/checkout@v4
       # webui/embed.go uses //go:embed static — webui/static is built
@@ -28,6 +30,13 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      # luxfi/zap (forward.Forwarder) is a private cross-org module; the
+      # runner-side go build/test needs authenticated git to fetch it. GH_PAT
+      # is the org cross-org token (reads hanzoai/* + luxfi/*).
+      - name: Configure private cross-org module auth
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: git config --global url."https://x-access-token:${GH_PAT}@github.com/".insteadOf "https://github.com/"
       - run: go mod download
       # ./integration runs docker-based e2e tests (require Docker daemon and a
       # built ingress binary); they live behind `make test-integration`. CI runs
