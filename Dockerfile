@@ -21,10 +21,18 @@ ARG TARGETARCH=amd64
 ARG VERSION=v0.1.0
 
 WORKDIR /src
+# Private cross-org modules (hanzoai/*, luxfi/* — luxfi/zap forward.Forwarder) are
+# fetched via authenticated git, bypassing the public proxy. gh_token is the
+# shared docker-build.yml BuildKit secret; no-op when absent (local/dev).
+ENV GOPRIVATE=github.com/hanzoai/*,github.com/luxfi/*,github.com/zap-proto/*
 # Copy go.mod, go.sum, and the local replace target first for layer caching.
 COPY go.mod go.sum ./
 COPY pkg/config/dynamic/ext/ ./pkg/config/dynamic/ext/
-RUN go mod download
+RUN --mount=type=secret,id=gh_token \
+    if [ -s /run/secrets/gh_token ]; then \
+      git config --global url."https://x-access-token:$(cat /run/secrets/gh_token)@github.com/".insteadOf "https://github.com/"; \
+    fi && \
+    go mod download
 
 # Copy full source.
 COPY . .
