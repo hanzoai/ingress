@@ -19,7 +19,7 @@ on:
 jobs:
   generate-packages:
     name: List Go Packages
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 15
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -43,7 +43,7 @@ jobs:
           echo "$matrix_output" >> $GITHUB_OUTPUT
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 15
     needs: generate-packages
     strategy:
@@ -67,7 +67,7 @@ jobs:
           go test -v -parallel 8 ${{ matrix.package.group }}
 
   test-ui-unit:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 15
 
     steps:

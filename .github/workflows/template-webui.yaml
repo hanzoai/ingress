@@ -5,7 +5,7 @@ on:
 jobs:
 
   build-webui:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 20
 
     steps:
