@@ -15,7 +15,7 @@ jobs:
 
   docs:
     name: Doc Process
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 15
     # Disabled: requires upstream-specific tooling (structor, mixtus, seo-doc)
     # and GH_TOKEN_REPO secret. Re-enable when Hanzo docs pipeline is set up.
