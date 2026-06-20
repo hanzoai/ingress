@@ -1,4 +1,4 @@
-# LLM.md - Hanzo Ingress
+# Hanzo Ingress
 
 ## Overview
 Go module: github.com/hanzoai/ingress/v3
