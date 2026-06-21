@@ -13,7 +13,7 @@ import "context"
 // management API every operator + admin tool uses.
 type Router interface {
 	// Kind reports the backend identifier
-	// (hanzo-ingress | traefik | envoy | nginx).
+	// (hanzo-ingress | envoy | nginx).
 	Kind() string
 
 	// UpsertVHost creates or replaces a virtual host. Idempotent.
