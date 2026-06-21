@@ -1,14 +1,14 @@
-Owner = "traefik"
-RepositoryName = "traefik"
+Owner = "hanzoai"
+RepositoryName = "ingress"
 
 OutputType = "file"
-FileName = "traefik_changelog.md"
+FileName = "ingress_changelog.md"
 
-# example RC1 of v3.6.0-rc1
-CurrentRef = "master"
+# example final release of v3.6.0
+CurrentRef = "v3.6.0-rc1"
 PreviousRef = "v3.5.0-rc1"
 BaseBranch = "master"
-FutureCurrentRefName = "v3.6.0-rc1"
+FutureCurrentRefName = "v3.6.0"
 
 ThresholdPreviousRef = 10
 ThresholdCurrentRef = 10
