@@ -78,10 +78,10 @@ func parseZapBackendList(raw string) []string {
 //
 //  1. Exact host:port match against allowlist entries. Works when
 //     IngressRoute backends point at a stable in-cluster address that
-//     Traefik does NOT resolve before dialing.
+//     the ingress does NOT resolve before dialing.
 //  2. Port-only fallback: if any allowlist entry's port matches the
 //     request's port, route through ZAP-HTTP regardless of host.
-//     Traefik resolves Service DNS to a Pod IP before invoking the
+//     The ingress resolves Service DNS to a Pod IP before invoking the
 //     transport (req.URL.Host becomes 10.x.x.x:port at this layer);
 //     pinning the dial to (resolved-IP, port) lets the ZAP transport
 //     reach the same pod the regular transport would have. Operators
@@ -144,7 +144,7 @@ func (z *zapBackendRoundTripper) transportFor(addr string) *zaphttp.Transport {
 	return actual.(*zaphttp.Transport)
 }
 
-// backendAddr returns the upstream host:port for the request. Traefik
+// backendAddr returns the upstream host:port for the request. The ingress
 // rewrites req.URL to point at the chosen backend before invoking the
 // transport, so URL.Host is the source of truth. Falls back to req.Host
 // if URL.Host is empty (defensive; this is not expected in practice).
