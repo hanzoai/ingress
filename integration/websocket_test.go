@@ -282,7 +282,7 @@ func (s *WebsocketSuite) TestBasicAuth() {
 		defer conn.Close()
 
 		user, password, _ := r.BasicAuth()
-		assert.Equal(s.T(), "traefiker", user)
+		assert.Equal(s.T(), "ingressuser", user)
 		assert.Equal(s.T(), "secret", password)
 
 		for {
@@ -309,7 +309,7 @@ func (s *WebsocketSuite) TestBasicAuth() {
 	require.NoError(s.T(), err)
 
 	config, err := websocket.NewConfig("ws://127.0.0.1:8000/ws", "ws://127.0.0.1:8000")
-	auth := "traefiker:secret"
+	auth := "ingressuser:secret"
 	config.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(auth)))
 
 	assert.NoError(s.T(), err)

@@ -64,7 +64,7 @@
       }
     ]
   },
-  "description": "Official dashboard for Traefik on Kubernetes",
+  "description": "Official dashboard for Hanzo Ingress on Kubernetes",
   "editable": false,
   "fiscalYearStartMonth": 0,
   "gnetId": 17347,
@@ -143,13 +143,13 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "count(traefik_config_reloads_total)",
+          "expr": "count(ingress_config_reloads_total)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Traefik Instances",
+      "title": "Ingress Instances",
       "type": "stat"
     },
     {
@@ -242,7 +242,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(traefik_entrypoint_requests_total{entrypoint=~\"$entrypoint\"}[$interval])) by (entrypoint)",
+          "expr": "sum(rate(ingress_entrypoint_requests_total{entrypoint=~\"$entrypoint\"}[$interval])) by (entrypoint)",
           "legendFormat": "{{entrypoint}}",
           "range": true,
           "refId": "A"
@@ -340,7 +340,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "(sum(rate(traefik_entrypoint_request_duration_seconds_bucket{le=\"0.3\",code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method) + \n sum(rate(traefik_entrypoint_request_duration_seconds_bucket{le=\"1.2\",code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method)) / 2 / \n sum(rate(traefik_entrypoint_request_duration_seconds_count{code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method)\n",
+          "expr": "(sum(rate(ingress_entrypoint_request_duration_seconds_bucket{le=\"0.3\",code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method) + \n sum(rate(ingress_entrypoint_request_duration_seconds_bucket{le=\"1.2\",code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method)) / 2 / \n sum(rate(ingress_entrypoint_request_duration_seconds_count{code=\"200\",entrypoint=~\"$entrypoint\"}[$interval])) by (method)\n",
           "legendFormat": "{{method}}",
           "range": true,
           "refId": "A"
@@ -408,7 +408,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(traefik_service_requests_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) by (method, code)",
+          "expr": "sum(rate(ingress_service_requests_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) by (method, code)",
           "legendFormat": "{{method}}[{{code}}]",
           "range": true,
           "refId": "A"
@@ -507,7 +507,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        traefik_service_request_duration_seconds_sum{service=~\"$service.*\",protocol=\"http\"} / \n          traefik_service_request_duration_seconds_count{service=~\"$service.*\",protocol=\"http\"},\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)\n\n",
+          "expr": "topk(15,\n    label_replace(\n        ingress_service_request_duration_seconds_sum{service=~\"$service.*\",protocol=\"http\"} / \n          ingress_service_request_duration_seconds_count{service=~\"$service.*\",protocol=\"http\"},\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)\n\n",
           "legendFormat": "{{method}}[{{code}}] on {{service}}",
           "range": true,
           "refId": "A"
@@ -606,7 +606,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,code) \n          (rate(traefik_service_requests_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,code) \n          (rate(ingress_service_requests_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "[{{code}}] on {{service}}",
           "range": true,
           "refId": "A"
@@ -711,7 +711,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "label_replace(\n  1 - (sum by (service)\n    (rate(traefik_service_request_duration_seconds_bucket{le=\"1.2\",service=~\"$service.*\"}[$interval])) / sum by (service) \n    (rate(traefik_service_request_duration_seconds_count{service=~\"$service.*\"}[$interval]))\n  ) > 0,\n  \"service\", \"$1\", \"service\", \"([^@]+)@.*\"\n)",
+              "expr": "label_replace(\n  1 - (sum by (service)\n    (rate(ingress_service_request_duration_seconds_bucket{le=\"1.2\",service=~\"$service.*\"}[$interval])) / sum by (service) \n    (rate(ingress_service_request_duration_seconds_count{service=~\"$service.*\"}[$interval]))\n  ) > 0,\n  \"service\", \"$1\", \"service\", \"([^@]+)@.*\"\n)",
               "legendFormat": "{{service}}",
               "range": true,
               "refId": "A"
@@ -806,7 +806,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "label_replace(\n  1 - (sum by (service)\n    (rate(traefik_service_request_duration_seconds_bucket{le=\"0.3\",service=~\"$service.*\"}[$interval])) / sum by (service) \n    (rate(traefik_service_request_duration_seconds_count{service=~\"$service.*\"}[$interval]))\n  ) > 0,\n  \"service\", \"$1\", \"service\", \"([^@]+)@.*\"\n)",
+              "expr": "label_replace(\n  1 - (sum by (service)\n    (rate(ingress_service_request_duration_seconds_bucket{le=\"0.3\",service=~\"$service.*\"}[$interval])) / sum by (service) \n    (rate(ingress_service_request_duration_seconds_count{service=~\"$service.*\"}[$interval]))\n  ) > 0,\n  \"service\", \"$1\", \"service\", \"([^@]+)@.*\"\n)",
               "legendFormat": "{{service}}",
               "range": true,
               "refId": "A"
@@ -922,7 +922,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(traefik_service_requests_total{service=~\"$service.*\",code=~\"2..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(ingress_service_requests_total{service=~\"$service.*\",code=~\"2..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "{{method}}[{{code}}] on {{service}}",
           "range": true,
           "refId": "A"
@@ -1022,7 +1022,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(traefik_service_requests_total{service=~\"$service.*\",code=~\"5..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(ingress_service_requests_total{service=~\"$service.*\",code=~\"5..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "{{method}}[{{code}}] on {{service}}",
           "range": true,
           "refId": "A"
@@ -1122,7 +1122,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(traefik_service_requests_total{service=~\"$service.*\",code!~\"2..|5..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,method,code) \n          (rate(ingress_service_requests_total{service=~\"$service.*\",code!~\"2..|5..\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "{{method}}[{{code}}] on {{service}}",
           "range": true,
           "refId": "A"
@@ -1222,7 +1222,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,method) \n          (rate(traefik_service_requests_bytes_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,method) \n          (rate(ingress_service_requests_bytes_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "{{method}} on {{service}}",
           "range": true,
           "refId": "A"
@@ -1322,7 +1322,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "topk(15,\n    label_replace(\n        sum by (service,method) \n          (rate(traefik_service_responses_bytes_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
+          "expr": "topk(15,\n    label_replace(\n        sum by (service,method) \n          (rate(ingress_service_responses_bytes_total{service=~\"$service.*\",protocol=\"http\"}[$interval])) > 0,\n        \"service\", \"$1\", \"service\", \"([^@]+)@.*\")\n)",
           "legendFormat": "{{method}} on {{service}}",
           "range": true,
           "refId": "A"
@@ -1421,7 +1421,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(traefik_open_connections{entrypoint=~\"$entrypoint\"}) by (entrypoint)\n",
+          "expr": "sum(ingress_open_connections{entrypoint=~\"$entrypoint\"}) by (entrypoint)\n",
           "legendFormat": "{{entrypoint}}",
           "range": true,
           "refId": "A"
@@ -1461,14 +1461,14 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(traefik_open_connections, entrypoint)",
+        "definition": "label_values(ingress_open_connections, entrypoint)",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "entrypoint",
         "options": [],
         "query": {
-          "query": "label_values(traefik_open_connections, entrypoint)",
+          "query": "label_values(ingress_open_connections, entrypoint)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -1546,14 +1546,14 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(traefik_service_requests_total, service)",
+        "definition": "label_values(ingress_service_requests_total, service)",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "service",
         "options": [],
         "query": {
-          "query": "label_values(traefik_service_requests_total, service)",
+          "query": "label_values(ingress_service_requests_total, service)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -1570,7 +1570,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Traefik Official Kubernetes Dashboard",
+  "title": "Hanzo Ingress Official Kubernetes Dashboard",
   "uid": "n5bu_kv4k",
   "version": 7,
   "weekStart": ""
