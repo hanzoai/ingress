@@ -17,7 +17,7 @@
 //     and forwards. The gateway-relay speaks the luxfi/zap Forward protocol,
 //     not zaphttp, so this needs forward.Forwarder, not zaphttp.Transport.
 //
-// TLS termination is unaffected: Traefik still terminates the client TLS at
+// TLS termination is unaffected: the ingress still terminates the client TLS at
 // the edge. This only changes what happens to the DECRYPTED request for the
 // matched AI routes — it leaves the edge as a Forward envelope to the
 // gateway-relay over ZAP.
@@ -232,7 +232,7 @@ func (f *forwardBackendRoundTripper) RoundTrip(req *http.Request) (*http.Respons
 //
 // The caller's *http.Request is NOT mutated: a shallow copy with a cloned,
 // scrubbed Header is returned, since a RoundTripper must not modify the
-// request it is given (Traefik may reuse/retry it).
+// request it is given (the ingress may reuse/retry it).
 func stripEdgeIdentity(req *http.Request) *http.Request {
 	clone := req.Clone(req.Context())
 	clone.Header.Del(forward.HeaderOrgID)       // X-Org-Id

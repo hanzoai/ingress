@@ -46,7 +46,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
       -X github.com/hanzoai/ingress/v3/pkg/version.Version=${VERSION} \
       -X github.com/hanzoai/ingress/v3/pkg/version.Codename=hanzo \
       -X github.com/hanzoai/ingress/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
-    -o /hanzo-ingress ./cmd/traefik
+    -o /hanzo-ingress ./cmd/ingress
 
 # ---- Stage 3: Runtime ----
 FROM alpine:3.23

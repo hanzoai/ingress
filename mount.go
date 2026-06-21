@@ -7,7 +7,7 @@
 // Hanzo Ingress.
 //
 // Architecturally, the full reverse-proxy / TLS / provider machinery
-// lives in `cmd/traefik` and stays out-of-process at the cluster edge —
+// lives in `cmd/ingress` and stays out-of-process at the cluster edge —
 // nothing about that changes. What Mount provides is the small
 // in-process slice the unified cloud binary needs: a healthz endpoint
 // (so probes work even when the edge proxy is reloading) and a
@@ -83,7 +83,7 @@ func Mount(app *zip.App, deps cloud.Deps) error {
 // static config. We do NOT import pkg/config/static into the cloud
 // build path — that pulls in the entire provider tree (Kubernetes,
 // Docker, AWS, Consul, …). The full config still lives in
-// cmd/traefik/cmd.go for the standalone binary.
+// cmd/ingress/ingress.go for the standalone binary.
 type runtimeConfig struct {
 	Entrypoints []string
 	Providers   []string

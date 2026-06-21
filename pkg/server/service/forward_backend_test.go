@@ -110,7 +110,7 @@ func TestForwardBackendRoundTripper_AIRouteTunnelsOverZAP(t *testing.T) {
 		t.Fatal("matched AI route fell through to next transport; must tunnel over ZAP")
 	}
 
-	// The RoundTripper must NOT mutate the request it was given (Traefik may
+	// The RoundTripper must NOT mutate the request it was given (the ingress may
 	// reuse/retry it): stripEdgeIdentity clones, so the caller's request still
 	// carries its original identity header here.
 	if got := req.Header.Get(forward.HeaderOrgID); got != "evil-org" {

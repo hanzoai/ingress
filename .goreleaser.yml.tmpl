@@ -10,7 +10,7 @@ dist: "./dist/[[ .GOOS ]]"
 builds:
   - binary: hanzo-ingress
 
-    main: ./cmd/traefik/
+    main: ./cmd/ingress/
     env:
       - CGO_ENABLED=0
     ldflags:
