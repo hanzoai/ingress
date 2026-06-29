@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="ingress" width="880"></p>
+
 # Hanzo Ingress
 
 [![Build](https://github.com/hanzoai/ingress/actions/workflows/build.yaml/badge.svg)](https://github.com/hanzoai/ingress/actions/workflows/build.yaml)
