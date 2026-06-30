@@ -136,6 +136,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
+	github.com/coder/websocket v1.8.12 // indirect
 	github.com/grandcat/zeroconf v1.0.0 // indirect
 	github.com/luxfi/accel v1.1.9 // indirect
 	github.com/luxfi/crypto v1.19.17 // indirect
@@ -453,6 +454,22 @@ replace (
 	github.com/mailgun/minheap => github.com/containous/minheap v0.0.0-20190809180810-6e71eb837595
 	github.com/vulcand/oxy/v2 => github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
 )
+
+// nhooyr.io/websocket was moved to github.com/coder/websocket; the nhooyr.io
+// vanity import path no longer resolves (unknown revision v1.8.7), which breaks
+// the transitive require pulled in by github.com/traefik/grpc-web v0.16.0.
+// coder/websocket v1.8.11 is the highest patch in the 1.8.x line whose go.mod
+// still declares `module nhooyr.io/websocket` (v1.8.12 renamed it to
+// github.com/coder/websocket). Pinning to v1.8.11 keeps the package's own
+// internal self-imports under nhooyr.io/websocket/internal/* — addressing the
+// replaced module under the nhooyr.io path stays self-consistent, so it builds
+// cleanly. Replacing with v1.8.12+ fails: grpc-web's code would then reach
+// github.com/coder/websocket/internal/* (a separate module already in the graph
+// as an indirect dep), tripping Go's internal-package rule. The API grpc-web
+// uses (Accept, AcceptOptions, Conn.{Read,Write,Close,SetReadLimit},
+// MessageBinary, StatusNormalClosure, CompressionMode,
+// CompressionNoContextTakeover) is identical across the whole 1.8.x line.
+replace nhooyr.io/websocket => github.com/coder/websocket v1.8.11
 
 // HIP-0106 unified-binary contract — pin to local sibling repos so the
 // ingress Mount() signature evolves in lockstep with cloud + zip.
