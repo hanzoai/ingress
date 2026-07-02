@@ -2,10 +2,7 @@ module github.com/hanzoai/ingress
 
 go 1.26.4
 
-require (
-	github.com/hanzoai/cloud v0.1.1
-	github.com/hanzoai/zip v0.2.0
-)
+require github.com/hanzoai/cloud v0.1.1
 
 require (
 	github.com/BurntSushi/toml v1.6.0
@@ -404,6 +401,7 @@ require (
 	github.com/yandex-cloud/go-sdk/v2 v2.56.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
+	github.com/zap-proto/zip v1.0.0
 	go.etcd.io/etcd/api/v3 v3.6.4 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.6.4 // indirect
 	go.etcd.io/etcd/client/v3 v3.6.4 // indirect
