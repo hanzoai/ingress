@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"github.com/hanzoai/cloud"
-	"github.com/hanzoai/zip"
+	"github.com/zap-proto/zip"
 )
 
 // Mount registers ingress on app per HIP-0106. Order 90 — runs after
