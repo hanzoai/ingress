@@ -689,6 +689,8 @@ github.com/hanzoai/grpc-web v0.16.0 h1:BgRa0iWNIrpddgf2ynUP8vYSIGLuCpTZsRxADwuUu
 github.com/hanzoai/grpc-web v0.16.0/go.mod h1:2ttniSv7pTgBWIU2HZLokxRfFX3SA60c/DTmQQgVml4=
 github.com/hanzoai/ingress-parser v0.2.3 h1:q8tmR95HUnsOxNceqjEkaiaaxjrVgfT8cIWBqrJhMAw=
 github.com/hanzoai/ingress-parser v0.2.3/go.mod h1:bqV04MSCLynOayWZj/Fxa6nDPUcyZYK8VELpS1vuuNI=
+github.com/hanzoai/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf h1:kf8xjwcqGZGl/vAx8zJhdPZPY9DJZ/Zzb2VtBK/a2Rw=
+github.com/hanzoai/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf/go.mod h1:as06A23Znc9S/ilJpKqJ/UhO3Zu5JztlxVwQuKl+iZs=
 github.com/hanzoai/yaegi v0.16.1 h1:j6TrJz3r9pyfM6lJGRkbg1s7jUfguKJY9wZKE1KOeBo=
 github.com/hanzoai/yaegi v0.16.1/go.mod h1:4eVhbPb3LnD2VigQjhYbEJ69vDRFdT2HQNrXx8eEwUY=
 github.com/hashicorp/consul/api v1.1.0/go.mod h1:VmuI/Lkw1nC05EYQWNKwWGbkg+FbDBtguAZLlVdkD9Q=
@@ -1338,12 +1340,6 @@ github.com/tklauser/numcpus v0.6.1/go.mod h1:1XfjsgE2zo8GVw7POkMbHENHzVg3GzmoZ9f
 github.com/tklauser/numcpus v0.11.0 h1:nSTwhKH5e1dMNsCdVBukSZrURJRoHbSEQjdEbY+9RXw=
 github.com/tklauser/numcpus v0.11.0/go.mod h1:z+LwcLq54uWZTX0u/bGobaV34u6V7KNlTZejzM6/3MQ=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=
-github.com/traefik/grpc-web v0.16.0 h1:eeUWZaFg6ZU0I9dWOYE2D5qkNzRBmXzzuRlxdltascY=
-github.com/traefik/grpc-web v0.16.0/go.mod h1:2ttniSv7pTgBWIU2HZLokxRfFX3SA60c/DTmQQgVml4=
-github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf h1:qOjmGqgXvycy0+tda6rWhTPulgQxnImwRrM1AROIvJ4=
-github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf/go.mod h1:as06A23Znc9S/ilJpKqJ/UhO3Zu5JztlxVwQuKl+iZs=
-github.com/traefik/yaegi v0.16.1 h1:f1De3DVJqIDKmnasUF6MwmWv1dSEEat0wcpXhD2On3E=
-github.com/traefik/yaegi v0.16.1/go.mod h1:4eVhbPb3LnD2VigQjhYbEJ69vDRFdT2HQNrXx8eEwUY=
 github.com/transip/gotransip/v6 v6.26.1 h1:MeqIjkTBBsZwWAK6giZyMkqLmKMclVHEuTNmoBdx4MA=
 github.com/transip/gotransip/v6 v6.26.1/go.mod h1:x0/RWGRK/zob817O3tfO2xhFoP1vu8YOHORx6Jpk80s=
 github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926/go.mod h1:9ESjWnEqriFuLhtthL60Sar/7RFoluCcXsuvEwTV5KM=
