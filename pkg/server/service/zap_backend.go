@@ -17,6 +17,7 @@ package service
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 	"net/textproto"
@@ -41,12 +42,22 @@ const zapHTTPProto = "ZAP-HTTP/1.0"
 // targets, comma-separated.
 const zapBackendEnv = "INGRESS_ZAP_BACKENDS"
 
+// zapMaxBodyEnv overrides the per-request body cap (bytes) the ZAP-HTTP codec
+// buffers. Defaults to defaultMaxZapBodyBytes.
+const zapMaxBodyEnv = "INGRESS_ZAP_MAX_BODY_BYTES"
+
+// defaultMaxZapBodyBytes bounds the request body the ZAP-HTTP codec buffers in
+// one frame. Without a cap, io.ReadAll on the request body lets a single
+// oversized request OOM the ingress. 64 MiB is generous for API backends.
+const defaultMaxZapBodyBytes int64 = 64 << 20
+
 // zapBackendRoundTripper routes requests to a ZAP-HTTP transport when
 // the request's destination host:port matches the allowlist; everything
 // else is delegated to the wrapped RoundTripper.
 type zapBackendRoundTripper struct {
 	next       http.RoundTripper
 	allowlist  map[string]struct{}
+	maxBody    int64
 	transports sync.Map // host:port -> *zaphttp.Transport
 }
 
@@ -61,7 +72,19 @@ func newZapBackendRoundTripper(next http.RoundTripper) http.RoundTripper {
 	for _, a := range addrs {
 		allow[a] = struct{}{}
 	}
-	return &zapBackendRoundTripper{next: next, allowlist: allow}
+	return &zapBackendRoundTripper{next: next, allowlist: allow, maxBody: parseMaxBody(os.Getenv(zapMaxBodyEnv))}
+}
+
+// parseMaxBody parses the body-cap env; falls back to the default on empty or
+// invalid input. A non-positive value is rejected (a zero cap would break all
+// bodied requests).
+func parseMaxBody(raw string) int64 {
+	if raw != "" {
+		if n, err := strconv.ParseInt(strings.TrimSpace(raw), 10, 64); err == nil && n > 0 {
+			return n
+		}
+	}
+	return defaultMaxZapBodyBytes
 }
 
 // parseZapBackendList splits a comma-separated list and trims whitespace.
@@ -167,17 +190,31 @@ func backendAddr(req *http.Request) string {
 }
 
 // dialZap performs one ZAP-HTTP exchange for req over transport t and adapts
-// it to the http.RoundTripper contract. zap-proto/http v0.1 speaks fasthttp:
-// the inbound *http.Request is translated to a *fasthttp.Request, the PQ-secure
-// round trip runs via Transport.Do, and the filled *fasthttp.Response is
-// translated back to the *http.Response the caller expects. Do fully buffers
-// the response and returns its pooled connection before it returns, so there
-// is no caller-visible body/connection lifecycle to manage — unlike the prior
+// it to the http.RoundTripper contract. zap-proto/http v0.1.0 speaks fasthttp:
+// the inbound *http.Request is translated to a *fasthttp.Request, the round
+// trip runs via Transport.Do, and the filled *fasthttp.Response is translated
+// back to the *http.Response the caller expects. Do fully buffers the response
+// and returns its pooled connection before it returns, so there is no
+// caller-visible body/connection lifecycle to manage — unlike the prior
 // net/http RoundTrip, whose Body.Close released the connection.
+//
+// SECURITY / do-not-enable notes (INGRESS_ZAP_BACKENDS is inert by default):
+//   - v0.1.0 dials PLAINTEXT TCP (net.DialTimeout). It is NOT PQ-secure and
+//     NOT encrypted — only route trusted in-cluster backends through it until
+//     the transport negotiates a PQ/TLS handshake.
+//   - The transport enforces a dial timeout (10s) and response-read timeout
+//     (30s) but exposes no request-WRITE deadline; a slow-reading peer can
+//     stall the write. Add a write deadline upstream before exposing this to
+//     untrusted callers.
 func (z *zapBackendRoundTripper) dialZap(t *zaphttp.Transport, req *http.Request) (*http.Response, error) {
+	// Honour caller cancellation/deadline before spending work on the dial.
+	if err := req.Context().Err(); err != nil {
+		return nil, err
+	}
+
 	freq := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(freq)
-	if err := httpToFastRequest(req, freq); err != nil {
+	if err := httpToFastRequest(req, freq, z.maxBody); err != nil {
 		return nil, err
 	}
 
@@ -197,7 +234,7 @@ func (z *zapBackendRoundTripper) dialZap(t *zaphttp.Transport, req *http.Request
 // Host slot, Content-Length is derived from the body), so they need no special
 // casing beyond SetHost / SetBody. The request body is fully read and closed —
 // the ZAP-HTTP frame carries the whole body in one shot.
-func httpToFastRequest(req *http.Request, freq *fasthttp.Request) error {
+func httpToFastRequest(req *http.Request, freq *fasthttp.Request, maxBody int64) error {
 	method := req.Method
 	if method == "" {
 		method = http.MethodGet
@@ -226,10 +263,23 @@ func httpToFastRequest(req *http.Request, freq *fasthttp.Request) error {
 	}
 
 	if req.Body != nil {
-		body, err := io.ReadAll(req.Body)
+		// A non-positive cap means "unset" (e.g. a directly-constructed
+		// transport) — fall back to the default rather than rejecting all
+		// bodies.
+		if maxBody <= 0 {
+			maxBody = defaultMaxZapBodyBytes
+		}
+		// Cap the buffered body. The ZAP-HTTP frame carries the whole body in
+		// one shot, so an unbounded io.ReadAll lets a single oversized request
+		// OOM the ingress. Read one byte past the cap to detect (and reject) an
+		// over-limit body instead of silently truncating it.
+		body, err := io.ReadAll(io.LimitReader(req.Body, maxBody+1))
 		_ = req.Body.Close()
 		if err != nil {
 			return err
+		}
+		if int64(len(body)) > maxBody {
+			return fmt.Errorf("zap-backend: request body exceeds %d-byte cap", maxBody)
 		}
 		freq.SetBody(body)
 	}
