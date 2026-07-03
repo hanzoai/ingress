@@ -47,14 +47,35 @@ The engine is fully de-traefik'd: the parser dependency was forked to
 the CRD apiGroup is `hanzo.ai`. The standalone binary is built from
 `cmd/ingress` (was `cmd/traefik`) and ships as `hanzo-ingress`.
 
+### Framework ownership — the `traefik/*` runtime libs (#29)
+
+The Traefik engine itself is already a full source-fork under
+`github.com/hanzoai/ingress` (own module path, whole tree). The auxiliary
+upstream libraries the engine links are owned by pinning them to hanzoai
+source-forks via `replace` in `go.mod` — the import lines stay
+`github.com/traefik/*` (the forks keep the upstream module path at the same
+version tag), only resolution moves to a path hanzoai controls.
+
+| Upstream import | Resolves to | Ownership | Used by |
+|-----------------|-------------|-----------|---------|
+| `github.com/traefik/yaegi` v0.16.1 | **`github.com/hanzoai/yaegi` v0.16.1** | fork (ours) | `pkg/plugins` (Go interpreter for plugins) |
+| `github.com/traefik/grpc-web` v0.16.0 | **`github.com/hanzoai/grpc-web` v0.16.0** | fork (ours) | `pkg/middlewares/grpcweb` |
+| `github.com/vulcand/oxy/v2` | `github.com/traefik/oxy/v2` (pseudo) | **upstream — next-wave** | reverse-proxy lib; needs a `hanzoai/oxy` fork first |
+| `github.com/hanzoai/ingress-parser` | — | fork (ours) | config parser (`DefaultRootName=ingress`, `INGRESS_` prefix) |
+
+`go list -m github.com/traefik/{yaegi,grpc-web}` shows both `=> hanzoai/*`.
+Forwards-only: when `hanzoai/oxy` exists, add the third replace and drop the
+`traefik/oxy` line above.
+
 ### Load-bearing "traefik" that intentionally STAYS
 These are the only remaining `traefik` strings outside the vendored
 upstream docs/changelog. They are NOT branding and must not be renamed:
 
-- **External Go imports** — `github.com/traefik/yaegi`,
-  `github.com/traefik/grpc-web`, `github.com/traefik/oxy` are real
-  third-party modules (in `go.mod`/`go.sum` and the import lines that
-  use them). Renaming breaks the build.
+- **External Go import paths** — the import lines `github.com/traefik/yaegi`,
+  `github.com/traefik/grpc-web`, `github.com/traefik/oxy` stay verbatim; yaegi
+  and grpc-web resolve to hanzoai forks via `replace` (see the ownership table
+  above), so the path is upstream-looking but hanzoai-owned. Renaming the
+  import path itself breaks the build.
 - **Hash-bound test data** — `pkg/middlewares/auth/digest_auth_test.go`
   htdigest hashes are `md5(user:realm:password)` with realm `"traefik"`.
   Changing the realm invalidates the precomputed hashes (~10 refs).
