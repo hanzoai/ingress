@@ -45,7 +45,7 @@ webui/static/index.html:
 	# Run only the production build, NOT `build:prod` (which chains
 	# test+tsc+lint). Tests live in .github/workflows/test-unit.yaml;
 	# coupling them to the image build means every npm flake takes
-	# the image build with it. Decoupled per upstream Traefik practice.
+	# the image build with it. Decoupled image build / test pipeline.
 	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui pnpm build
 	docker run --rm -v "$(PWD)/webui/static":'/src/webui/static' hanzo-ingress-webui chown -R $(shell id -u):$(shell id -g) ./static
 	printf 'For more information see `webui/readme.md`' > webui/static/DONT-EDIT-FILES-IN-THIS-DIRECTORY.md
@@ -67,7 +67,7 @@ binary: generate-webui dist
     -X github.com/hanzoai/ingress/v3/pkg/version.Version=$(VERSION) \
     -X github.com/hanzoai/ingress/v3/pkg/version.Codename=$(CODENAME) \
     -X github.com/hanzoai/ingress/v3/pkg/version.BuildDate=$(DATE)" \
-    -installsuffix nocgo -o "./dist/${GOOS}/${GOARCH}/$(BIN_NAME)" ./cmd/traefik
+    -installsuffix nocgo -o "./dist/${GOOS}/${GOARCH}/$(BIN_NAME)" ./cmd/ingress
 
 binary-linux-arm64: export GOOS := linux
 binary-linux-arm64: export GOARCH := arm64

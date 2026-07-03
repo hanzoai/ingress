@@ -6,7 +6,7 @@ import (
 	kschema "k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-// GroupName is the group name for the hanzoai Traefik-fork CRDs
+// GroupName is the group name for the hanzoai Ingress CRDs
 // (Middleware, IngressRoute, TLSOption, ServersTransport, etc.).
 //
 // Was "ingress.k8s.io" — but every cluster installs the CRDs under
@@ -20,7 +20,7 @@ import (
 //
 // Result: every rewrite/headers/redirect Middleware referenced by a
 // standard K8s Ingress via the
-// `traefik.ingress.kubernetes.io/router.middlewares` annotation was
+// `ingress.kubernetes.io/router.middlewares` annotation was
 // silently ignored — the route still landed at the backend but no
 // rewrite ever ran. Latent for any deployment using middleware-based
 // path rewrites.
