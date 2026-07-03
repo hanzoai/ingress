@@ -453,19 +453,20 @@ replace (
 	github.com/abbot/go-http-auth => github.com/containous/go-http-auth v0.4.1-0.20200324110947-a37a7636d23e
 	github.com/gorilla/mux => github.com/containous/mux v0.0.0-20250523120546-41b6ec3aed59
 	github.com/mailgun/minheap => github.com/containous/minheap v0.0.0-20190809180810-6e71eb837595
-	github.com/vulcand/oxy/v2 => github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
 )
 
 // Own the framework deps (#29): the auxiliary upstream libraries the engine
-// links are pinned to hanzoai source-forks. The forks keep the upstream module
-// path (`module github.com/traefik/...`) at the identical version tag, so the
-// import lines in pkg/plugins and pkg/middlewares/grpcweb are unchanged — only
+// links are pinned to hanzoai source-forks. Each fork keeps its upstream module
+// path at the identical version — `github.com/traefik/*` for yaegi & grpc-web,
+// `github.com/vulcand/oxy/v2` for oxy — so the import lines in pkg/plugins,
+// pkg/middlewares/grpcweb and the oxy-based middlewares are unchanged; only
 // resolution moves to a path hanzoai controls (immune to upstream re-tag /
-// deletion; patchable in-house). oxy has no hanzoai fork yet and stays on the
-// traefik/oxy replace above — tracked next-wave (create hanzoai/oxy first).
+// deletion; patchable in-house). oxy is a straight source-mirror of traefik/oxy
+// (itself a fork of vulcand/oxy) pinned to the exact commit previously resolved.
 replace (
 	github.com/traefik/grpc-web => github.com/hanzoai/grpc-web v0.16.0
 	github.com/traefik/yaegi => github.com/hanzoai/yaegi v0.16.1
+	github.com/vulcand/oxy/v2 => github.com/hanzoai/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
 )
 
 // nhooyr.io/websocket was moved to github.com/coder/websocket; the nhooyr.io
