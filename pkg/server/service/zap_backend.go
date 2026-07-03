@@ -16,15 +16,26 @@
 package service
 
 import (
+	"bytes"
+	"io"
 	"net/http"
+	"net/textproto"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 
+	"github.com/valyala/fasthttp"
 	zaphttp "github.com/zap-proto/http"
 
 	"github.com/rs/zerolog/log"
 )
+
+// zapHTTPProto is the fallback protocol label used when a decoded frame
+// carries none. It matches github.com/zap-proto/http's own defaultProto so
+// the reconstructed *http.Response is byte-for-byte what the previous
+// net/http ZAP-HTTP codec produced.
+const zapHTTPProto = "ZAP-HTTP/1.0"
 
 // zapBackendEnv is the env var that lists ZAP-HTTP backend host:port
 // targets, comma-separated.
@@ -93,13 +104,13 @@ func (z *zapBackendRoundTripper) RoundTrip(req *http.Request) (*http.Response, e
 		log.Info().Str("addr", addr).Str("path", req.URL.Path).
 			Msg("[ZAP-BACKEND] dialing via zap-http (exact match)")
 		t := z.transportFor(addr)
-		return t.RoundTrip(req)
+		return z.dialZap(t, req)
 	}
 	if z.matchPort(addr) {
 		log.Info().Str("addr", addr).Str("path", req.URL.Path).
 			Msg("[ZAP-BACKEND] dialing via zap-http (port match)")
 		t := z.transportFor(addr)
-		return t.RoundTrip(req)
+		return z.dialZap(t, req)
 	}
 	return z.next.RoundTrip(req)
 }
@@ -153,4 +164,148 @@ func backendAddr(req *http.Request) string {
 		return req.URL.Host
 	}
 	return req.Host
+}
+
+// dialZap performs one ZAP-HTTP exchange for req over transport t and adapts
+// it to the http.RoundTripper contract. zap-proto/http v0.1 speaks fasthttp:
+// the inbound *http.Request is translated to a *fasthttp.Request, the PQ-secure
+// round trip runs via Transport.Do, and the filled *fasthttp.Response is
+// translated back to the *http.Response the caller expects. Do fully buffers
+// the response and returns its pooled connection before it returns, so there
+// is no caller-visible body/connection lifecycle to manage — unlike the prior
+// net/http RoundTrip, whose Body.Close released the connection.
+func (z *zapBackendRoundTripper) dialZap(t *zaphttp.Transport, req *http.Request) (*http.Response, error) {
+	freq := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(freq)
+	if err := httpToFastRequest(req, freq); err != nil {
+		return nil, err
+	}
+
+	fresp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseResponse(fresp)
+	if err := t.Do(freq, fresp); err != nil {
+		return nil, err
+	}
+
+	// Copy everything out of fresp before the deferred release recycles it.
+	return fastToHTTPResponse(fresp, req), nil
+}
+
+// httpToFastRequest populates freq from req: method, origin-form request
+// target, protocol, headers, host, body, and any declared trailers. Host and
+// Content-Length are frame-owned by the ZAP-HTTP codec (Host rides fasthttp's
+// Host slot, Content-Length is derived from the body), so they need no special
+// casing beyond SetHost / SetBody. The request body is fully read and closed —
+// the ZAP-HTTP frame carries the whole body in one shot.
+func httpToFastRequest(req *http.Request, freq *fasthttp.Request) error {
+	method := req.Method
+	if method == "" {
+		method = http.MethodGet
+	}
+	freq.Header.SetMethod(method)
+
+	target := req.RequestURI
+	if target == "" && req.URL != nil {
+		target = req.URL.RequestURI()
+	}
+	freq.SetRequestURI(target)
+
+	if req.Proto != "" {
+		freq.Header.SetProtocol(req.Proto)
+	}
+	if req.Host != "" {
+		freq.Header.SetHost(req.Host)
+	} else if req.URL != nil && req.URL.Host != "" {
+		freq.Header.SetHost(req.URL.Host)
+	}
+
+	for name, values := range req.Header {
+		for _, v := range values {
+			freq.Header.Add(name, v)
+		}
+	}
+
+	if req.Body != nil {
+		body, err := io.ReadAll(req.Body)
+		_ = req.Body.Close()
+		if err != nil {
+			return err
+		}
+		freq.SetBody(body)
+	}
+
+	// Declared request trailers ride the frame's trailer slot; AddTrailer
+	// registers the name so the codec routes it there rather than into the
+	// headers map.
+	for name, values := range req.Trailer {
+		_ = freq.Header.AddTrailer(name)
+		for _, v := range values {
+			freq.Header.Add(name, v)
+		}
+	}
+	return nil
+}
+
+// fastToHTTPResponse builds the *http.Response the RoundTripper contract
+// expects from the fasthttp response Transport.Do filled. Body and header
+// bytes are copied out of fresp so the caller may return it to fasthttp's
+// pool. Header/trailer separation mirrors the ZAP-HTTP codec and net/http's
+// own Transport: Content-Length and the Trailer meta-header are frame-owned
+// (Content-Length is surfaced via Response.ContentLength), and declared
+// trailers are lifted into Response.Trailer instead of being duplicated into
+// Response.Header.
+func fastToHTTPResponse(fresp *fasthttp.Response, req *http.Request) *http.Response {
+	status := fresp.StatusCode()
+	if status == 0 {
+		status = http.StatusOK
+	}
+	reason := string(fresp.Header.StatusMessage())
+	if reason == "" {
+		reason = http.StatusText(status)
+	}
+	proto := string(fresp.Header.Protocol())
+	if proto == "" {
+		proto = zapHTTPProto
+	}
+
+	// Canonicalized set of declared trailer names, so their values are lifted
+	// into Response.Trailer and excluded from Response.Header.
+	var trailer http.Header
+	trailerSet := map[string]bool{}
+	if keys := fresp.Header.PeekTrailerKeys(); len(keys) > 0 {
+		trailer = make(http.Header, len(keys))
+		for _, k := range keys {
+			ck := textproto.CanonicalMIMEHeaderKey(string(k))
+			trailerSet[ck] = true
+			for _, v := range fresp.Header.PeekAll(string(k)) {
+				trailer[ck] = append(trailer[ck], string(v))
+			}
+		}
+	}
+
+	header := make(http.Header)
+	fresp.Header.VisitAll(func(key, value []byte) {
+		k := textproto.CanonicalMIMEHeaderKey(string(key))
+		if k == "Content-Length" || k == "Trailer" || trailerSet[k] {
+			return // frame-owned or lifted into Trailer
+		}
+		header[k] = append(header[k], string(value))
+	})
+
+	// The body is fully buffered inside fresp; copy it so the response holds
+	// no reference into pooled fasthttp memory.
+	body := append([]byte(nil), fresp.Body()...)
+
+	return &http.Response{
+		Status:        strconv.Itoa(status) + " " + reason,
+		StatusCode:    status,
+		Proto:         proto,
+		ProtoMajor:    1,
+		ProtoMinor:    0,
+		Header:        header,
+		Body:          io.NopCloser(bytes.NewReader(body)),
+		ContentLength: int64(len(body)),
+		Trailer:       trailer,
+		Request:       req,
+	}
 }
