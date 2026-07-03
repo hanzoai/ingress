@@ -1,8 +1,6 @@
 ################################################################
 #
-# Configuration sample for Traefik v2.
-#
-# For Traefik v1: https://github.com/traefik/traefik/blob/v1.7/traefik.sample.toml
+# Configuration sample for Hanzo Ingress.
 #
 ################################################################
 
@@ -29,10 +27,10 @@
     address = ":443"
 
 ################################################################
-# Traefik logs configuration
+# Ingress logs configuration
 ################################################################
 
-# Traefik logs
+# Ingress logs
 # Enabled by default and log to stdout
 #
 # Optional
@@ -82,7 +80,7 @@
   # filePath = "/path/to/log/log.txt"
 
   # Format is either "json", "common", or "genericCLF".
-  # - "common": Traefik's extended CLF format (default)
+  # - "common": the ingress' extended CLF format (default)
   # - "genericCLF": Standard CLF format compatible with standard log analyzers
   # - "json": JSON format for structured logging
   #

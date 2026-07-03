@@ -456,6 +456,18 @@ replace (
 	github.com/vulcand/oxy/v2 => github.com/traefik/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
 )
 
+// Own the framework deps (#29): the auxiliary upstream libraries the engine
+// links are pinned to hanzoai source-forks. The forks keep the upstream module
+// path (`module github.com/traefik/...`) at the identical version tag, so the
+// import lines in pkg/plugins and pkg/middlewares/grpcweb are unchanged — only
+// resolution moves to a path hanzoai controls (immune to upstream re-tag /
+// deletion; patchable in-house). oxy has no hanzoai fork yet and stays on the
+// traefik/oxy replace above — tracked next-wave (create hanzoai/oxy first).
+replace (
+	github.com/traefik/grpc-web => github.com/hanzoai/grpc-web v0.16.0
+	github.com/traefik/yaegi => github.com/hanzoai/yaegi v0.16.1
+)
+
 // nhooyr.io/websocket was moved to github.com/coder/websocket; the nhooyr.io
 // vanity import path no longer resolves (unknown revision v1.8.7), which breaks
 // the transitive require pulled in by github.com/traefik/grpc-web v0.16.0.
