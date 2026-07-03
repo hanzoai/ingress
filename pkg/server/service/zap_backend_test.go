@@ -194,3 +194,46 @@ func TestParseZapBackendList(t *testing.T) {
 		}
 	}
 }
+
+func TestParseMaxBody(t *testing.T) {
+	tests := []struct {
+		in   string
+		want int64
+	}{
+		{"", defaultMaxZapBodyBytes},
+		{"  ", defaultMaxZapBodyBytes},
+		{"0", defaultMaxZapBodyBytes},    // non-positive -> default
+		{"-5", defaultMaxZapBodyBytes},   // non-positive -> default
+		{"nope", defaultMaxZapBodyBytes}, // unparseable -> default
+		{"1048576", 1 << 20},
+		{" 4096 ", 4096},
+	}
+	for _, tt := range tests {
+		if got := parseMaxBody(tt.in); got != tt.want {
+			t.Fatalf("parseMaxBody(%q) = %d, want %d", tt.in, got, tt.want)
+		}
+	}
+}
+
+// TestHTTPToFastRequest_BodyCapRejectsOversize proves the DoS guard: a request
+// body larger than the cap is rejected instead of being buffered unbounded.
+func TestHTTPToFastRequest_BodyCapRejectsOversize(t *testing.T) {
+	const cap = 1024
+	freq := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(freq)
+
+	over := httptest.NewRequest(http.MethodPost, "http://svc/echo", bytes.NewReader(make([]byte, cap+1)))
+	if err := httpToFastRequest(over, freq, cap); err == nil {
+		t.Fatal("expected over-cap body to be rejected, got nil error")
+	}
+
+	freq2 := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(freq2)
+	atCap := httptest.NewRequest(http.MethodPost, "http://svc/echo", bytes.NewReader(make([]byte, cap)))
+	if err := httpToFastRequest(atCap, freq2, cap); err != nil {
+		t.Fatalf("body exactly at cap must pass, got %v", err)
+	}
+	if got := len(freq2.Body()); got != cap {
+		t.Fatalf("at-cap body length = %d, want %d", got, cap)
+	}
+}
