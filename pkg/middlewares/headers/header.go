@@ -30,7 +30,7 @@ func NewHeader(next http.Handler, cfg dynamic.Headers) (*Header, error) {
 
 	regexes := make([]*regexp.Regexp, len(cfg.AccessControlAllowOriginListRegex))
 	for i, str := range cfg.AccessControlAllowOriginListRegex {
-		reg, err := regexp.Compile(str)
+		reg, err := regexp.Compile(anchorOriginRegex(str))
 		if err != nil {
 			return nil, fmt.Errorf("error occurred during origin parsing: %w", err)
 		}
@@ -77,16 +77,23 @@ func (s *Header) PostRequestModifyResponseHeaders(res *http.Response) error {
 		}
 	}
 
+	// Access-Control-Allow-Credentials MUST only be emitted alongside a matched
+	// Access-Control-Allow-Origin. Emitting it unconditionally lets a
+	// credentialed response pair with a reflected/foreign origin set by another
+	// layer (backend or CDN) — the near-account-takeover class. Gate the
+	// credentials header on the same allow decision as the origin.
+	originAllowed := false
 	if res != nil && res.Request != nil {
 		originHeader := res.Request.Header.Get("Origin")
 		allowed, match := s.isOriginAllowed(originHeader)
+		originAllowed = allowed
 
 		if allowed {
 			res.Header.Set("Access-Control-Allow-Origin", match)
 		}
 	}
 
-	if s.headers.AccessControlAllowCredentials {
+	if originAllowed && s.headers.AccessControlAllowCredentials {
 		res.Header.Set("Access-Control-Allow-Credentials", "true")
 	}
 
@@ -149,7 +156,15 @@ func (s *Header) processCorsHeaders(rw http.ResponseWriter, req *http.Request) b
 		// If the request is an OPTIONS request with an Access-Control-Request-Method header,
 		// and Origin headers, then it is a CORS preflight request,
 		// and we need to build a custom response: https://www.w3.org/TR/cors/#preflight-request
-		if s.headers.AccessControlAllowCredentials {
+		allowed, match := s.isOriginAllowed(originHeader)
+		if allowed {
+			rw.Header().Set("Access-Control-Allow-Origin", match)
+		}
+
+		// Only advertise credentialed CORS to an allowlisted origin. Emitting
+		// Access-Control-Allow-Credentials for an unmatched origin is the
+		// near-account-takeover class (it pairs with a reflected origin).
+		if allowed && s.headers.AccessControlAllowCredentials {
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
 		}
 
@@ -161,11 +176,6 @@ func (s *Header) processCorsHeaders(rw http.ResponseWriter, req *http.Request) b
 		allowMethods := strings.Join(s.headers.AccessControlAllowMethods, ",")
 		if allowMethods != "" {
 			rw.Header().Set("Access-Control-Allow-Methods", allowMethods)
-		}
-
-		allowed, match := s.isOriginAllowed(originHeader)
-		if allowed {
-			rw.Header().Set("Access-Control-Allow-Origin", match)
 		}
 
 		rw.Header().Set("Access-Control-Max-Age", strconv.Itoa(int(s.headers.AccessControlMaxAge)))
@@ -189,4 +199,20 @@ func (s *Header) isOriginAllowed(origin string) (bool, string) {
 	}
 
 	return false, ""
+}
+
+// anchorOriginRegex forces a configured origin pattern to match the WHOLE
+// origin, never a substring. regexp.MatchString is unanchored, so an operator
+// pattern like `https://([a-z0-9-]+\.)?hanzo\.ai` matches the attacker origin
+// `https://hanzo.ai.evil.com` (found as a prefix) and would reflect it — the
+// credentialed-CORS hole. We wrap every pattern in `^(?:…)$` so the match is
+// full-string. The `(?:…)` group keeps top-level alternation intact (`a|b`
+// would otherwise anchor as `^a|b$`). Any anchors the operator already added
+// are stripped first so the result is never a doubly-anchored, never-matching
+// `^(?:^…$)$`. Anchoring in code is defense in depth: even a mis-authored,
+// unanchored CRD/middleware config can no longer re-open the hole.
+func anchorOriginRegex(pattern string) string {
+	p := strings.TrimPrefix(pattern, "^")
+	p = strings.TrimSuffix(p, "$")
+	return "^(?:" + p + ")$"
 }

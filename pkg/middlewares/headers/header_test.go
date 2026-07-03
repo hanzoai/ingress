@@ -293,7 +293,12 @@ func TestNewHeader_CORSResponses(t *testing.T) {
 			},
 		},
 		{
-			desc: "Partial Regexp Origin Request",
+			// An unanchored config pattern must NOT substring-match the origin.
+			// Before anchorOriginRegex, "([a-z]+)\.bar" matched *inside*
+			// "https://foo.bar.org" and reflected it — the credentialed-CORS
+			// hole. Every pattern is now wrapped in ^(?:…)$, so a partial
+			// pattern can never reflect a foreign origin.
+			desc: "Partial Regexp Origin Request is not substring-matched",
 			next: emptyHandler,
 			cfg: dynamic.Headers{
 				AccessControlAllowOriginListRegex: []string{"([a-z]+)\\.bar"},
@@ -301,8 +306,51 @@ func TestNewHeader_CORSResponses(t *testing.T) {
 			requestHeaders: map[string][]string{
 				"Origin": {"https://foo.bar.org"},
 			},
+			expected: map[string][]string{},
+		},
+		{
+			// Regression for the live near-ATO: the ingress cors-allow-all
+			// pattern is the UNANCHORED "https://([a-z0-9-]+\.)?hanzo\.ai".
+			// Unanchored, it matches the attacker origin
+			// "https://hanzo.ai.evil.com" as a prefix and reflects it with
+			// credentials. Anchoring rejects it.
+			desc: "Credentialed CORS: attacker suffix origin hanzo.ai.evil.com rejected",
+			next: emptyHandler,
+			cfg: dynamic.Headers{
+				AccessControlAllowOriginListRegex: []string{"https://([a-z0-9-]+\\.)?hanzo\\.ai"},
+				AccessControlAllowCredentials:     true,
+			},
+			requestHeaders: map[string][]string{
+				"Origin": {"https://hanzo.ai.evil.com"},
+			},
+			expected: map[string][]string{},
+		},
+		{
+			desc: "Credentialed CORS: null origin rejected (no reflect, no credentials)",
+			next: emptyHandler,
+			cfg: dynamic.Headers{
+				AccessControlAllowOriginListRegex: []string{"https://([a-z0-9-]+\\.)?hanzo\\.ai"},
+				AccessControlAllowCredentials:     true,
+			},
+			requestHeaders: map[string][]string{
+				"Origin": {"null"},
+			},
+			expected: map[string][]string{},
+		},
+		{
+			// Credentials are emitted ONLY alongside a matched origin.
+			desc: "Credentialed CORS: allowlisted subdomain reflects origin + credentials",
+			next: emptyHandler,
+			cfg: dynamic.Headers{
+				AccessControlAllowOriginListRegex: []string{"https://([a-z0-9-]+\\.)?hanzo\\.ai"},
+				AccessControlAllowCredentials:     true,
+			},
+			requestHeaders: map[string][]string{
+				"Origin": {"https://console.hanzo.ai"},
+			},
 			expected: map[string][]string{
-				"Access-Control-Allow-Origin": {"https://foo.bar.org"},
+				"Access-Control-Allow-Origin":      {"https://console.hanzo.ai"},
+				"Access-Control-Allow-Credentials": {"true"},
 			},
 		},
 		{
@@ -491,6 +539,59 @@ func TestNewHeader_CORSResponses(t *testing.T) {
 			mid.ServeHTTP(rw, req)
 
 			assert.Equal(t, test.expected, rw.Result().Header)
+		})
+	}
+}
+
+// TestCORSPreflightCredentialsGated proves the preflight (OPTIONS) path emits
+// Access-Control-Allow-Origin and Access-Control-Allow-Credentials ONLY for an
+// allowlisted origin — never for an attacker origin that suffixes an
+// unanchored brand pattern, and never for the "null" origin.
+func TestCORSPreflightCredentialsGated(t *testing.T) {
+	emptyHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	cfg := dynamic.Headers{
+		// The exact shape shipped by the ingress cors-allow-all middleware.
+		AccessControlAllowOriginListRegex: []string{"https://([a-z0-9-]+\\.)?hanzo\\.ai"},
+		AccessControlAllowCredentials:     true,
+		AccessControlAllowMethods:         []string{"GET", "POST", "OPTIONS"},
+		AccessControlMaxAge:               86400,
+	}
+
+	cases := []struct {
+		desc         string
+		origin       string
+		wantOrigin   string // "" => header must be absent
+		wantCredsSet bool
+	}{
+		{"allowlisted apex", "https://hanzo.ai", "https://hanzo.ai", true},
+		{"allowlisted subdomain", "https://console.hanzo.ai", "https://console.hanzo.ai", true},
+		{"attacker suffix", "https://hanzo.ai.evil.com", "", false},
+		{"unrelated origin", "https://evil.example.com", "", false},
+		{"null origin", "null", "", false},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.desc, func(t *testing.T) {
+			mid, err := NewHeader(emptyHandler, cfg)
+			require.NoError(t, err)
+
+			req := httptest.NewRequest(http.MethodOptions, "/foo", nil)
+			req.Header.Set("Origin", tc.origin)
+			req.Header.Set("Access-Control-Request-Method", "GET")
+
+			rw := httptest.NewRecorder()
+			mid.ServeHTTP(rw, req)
+			h := rw.Result().Header
+
+			assert.Equal(t, tc.wantOrigin, h.Get("Access-Control-Allow-Origin"),
+				"Access-Control-Allow-Origin for origin %q", tc.origin)
+			if tc.wantCredsSet {
+				assert.Equal(t, "true", h.Get("Access-Control-Allow-Credentials"),
+					"credentials must be advertised to an allowlisted origin")
+			} else {
+				assert.Empty(t, h.Get("Access-Control-Allow-Credentials"),
+					"credentials MUST NOT be advertised to a non-allowlisted origin %q", tc.origin)
+			}
 		})
 	}
 }
