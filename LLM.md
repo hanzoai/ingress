@@ -38,26 +38,70 @@ ingress/
 - `Makefile` -- Build automation
 - `Dockerfile` -- Container build
 
-## Rebrand Notes (v3.8.0)
+## Rebrand Notes
 
-### External library constraints
-- `github.com/traefik/paerser` defines `DefaultRootName = "traefik"` and `DefaultNamePrefix = "TRAEFIK_"`.
-  Config file flags (`-traefik.configfile`), env var prefix (`TRAEFIK_*`), and parser root name
-  **must** stay as `traefik` to match the external library. These are NOT candidates for rebrand.
-- `github.com/traefik/yaegi`, `github.com/traefik/grpc-web`, `github.com/traefik/oxy` are external
-  imports -- never touch their paths.
+The engine is fully de-traefik'd: the parser dependency was forked to
+`github.com/hanzoai/ingress-parser` (`DefaultRootName = "ingress"`,
+`DefaultNamePrefix = "INGRESS_"`), the config base paths are
+`/etc/ingress/ingress`, the Prometheus metric prefix is `ingress_`, and
+the CRD apiGroup is `hanzo.ai`. The standalone binary is built from
+`cmd/ingress` (was `cmd/traefik`) and ships as `hanzo-ingress`.
 
-### Hash-bound test data
-- `pkg/middlewares/auth/digest_auth_test.go` contains htdigest hashes computed as
-  `md5(user:realm:password)` where realm=`"traefik"`. Changing the realm invalidates the hash.
-  These 10 references must stay.
+### Framework ownership — the `traefik/*` runtime libs (#29)
+
+The Traefik engine itself is already a full source-fork under
+`github.com/hanzoai/ingress` (own module path, whole tree). The auxiliary
+upstream libraries the engine links are owned by pinning them to hanzoai
+source-forks via `replace` in `go.mod` — the import lines stay
+`github.com/traefik/*` (the forks keep the upstream module path at the same
+version tag), only resolution moves to a path hanzoai controls.
+
+| Upstream import | Resolves to | Ownership | Used by |
+|-----------------|-------------|-----------|---------|
+| `github.com/traefik/yaegi` v0.16.1 | **`github.com/hanzoai/yaegi` v0.16.1** | fork (ours) | `pkg/plugins` (Go interpreter for plugins) |
+| `github.com/traefik/grpc-web` v0.16.0 | **`github.com/hanzoai/grpc-web` v0.16.0** | fork (ours) | `pkg/middlewares/grpcweb` |
+| `github.com/vulcand/oxy/v2` | `github.com/traefik/oxy/v2` (pseudo) | **upstream — next-wave** | reverse-proxy lib; needs a `hanzoai/oxy` fork first |
+| `github.com/hanzoai/ingress-parser` | — | fork (ours) | config parser (`DefaultRootName=ingress`, `INGRESS_` prefix) |
+
+`go list -m github.com/traefik/{yaegi,grpc-web}` shows both `=> hanzoai/*`.
+Forwards-only: when `hanzoai/oxy` exists, add the third replace and drop the
+`traefik/oxy` line above.
+
+### Load-bearing "traefik" that intentionally STAYS
+These are the only remaining `traefik` strings outside the vendored
+upstream docs/changelog. They are NOT branding and must not be renamed:
+
+- **External Go import paths** — the import lines `github.com/traefik/yaegi`,
+  `github.com/traefik/grpc-web`, `github.com/traefik/oxy` stay verbatim; yaegi
+  and grpc-web resolve to hanzoai forks via `replace` (see the ownership table
+  above), so the path is upstream-looking but hanzoai-owned. Renaming the
+  import path itself breaks the build.
+- **Hash-bound test data** — `pkg/middlewares/auth/digest_auth_test.go`
+  htdigest hashes are `md5(user:realm:password)` with realm `"traefik"`.
+  Changing the realm invalidates the precomputed hashes (~10 refs).
+- **Upstream issue citation** — `integration/consul_test.go` links
+  `https://github.com/traefik/traefik/issues/8092` as the provenance of
+  a regression test. The issue only exists at that URL.
+
+### Vendored upstream content (out of scope by nature)
+`docs/content/**`, `CHANGELOG.md`, `webui/**` (the dashboard SPA), and
+the `traefik.io_*.yaml` CRD reference dumps under `docs/` are imported
+upstream Traefik material kept for reference. They carry the bulk of the
+remaining `traefik` occurrences and do not ship in the runtime binary or
+image. Rebrand them only as part of a dedicated docs pass.
 
 ### Wire protocol changes (intentional)
 - `X-Traefik-Fast-Proxy` header renamed to `X-Ingress-Fast-Proxy`
 - `X-Traefik-Router` header renamed to `X-Ingress-Router`
 - Prometheus/InfluxDB metric prefix: `traefik.*` renamed to `ingress.*`
+  (the bundled Grafana dashboards in `contrib/grafana/ingress*.json`
+  query the `ingress_*` metric names accordingly)
 
-### Pre-existing test failures (not caused by rebrand)
+### Pre-existing build/test issues (not caused by rebrand)
+- `webui/embed.go` `//go:embed static` fails until the dashboard assets
+  are built (`make generate-webui`); `go build ./...` therefore needs the
+  webui built first, or build the subset
+  `go build $(go list ./... | grep -v /webui)`.
 - `pkg/muxer/http/Test_addRoute/Host_IPv6`: Go 1.26 broke IPv6 URL parsing
 - `pkg/middlewares/ratelimiter`: Timing-sensitive tests, flaky
 

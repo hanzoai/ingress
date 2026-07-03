@@ -1,18 +1,18 @@
 [Unit]
-Description=Traefik
-Documentation=https://doc.traefik.io/traefik/
+Description=Hanzo Ingress
+Documentation=https://github.com/hanzoai/ingress
 #After=network-online.target
-#AssertFileIsExecutable=/usr/bin/traefik
-#AssertPathExists=/etc/traefik/traefik.toml
+#AssertFileIsExecutable=/usr/bin/hanzo-ingress
+#AssertPathExists=/etc/ingress/ingress.toml
 
 [Service]
-# Run traefik as its own user (create new user with: useradd -r -s /bin/false -U -M traefik)
-#User=traefik
+# Run the ingress as its own user (create new user with: useradd -r -s /bin/false -U -M ingress)
+#User=ingress
 #AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 # configure service behavior
 Type=notify
-#ExecStart=/usr/bin/traefik --configFile=/etc/traefik/traefik.toml
+#ExecStart=/usr/bin/hanzo-ingress --configFile=/etc/ingress/ingress.toml
 Restart=always
 WatchdogSec=1s
 
@@ -31,7 +31,7 @@ WatchdogSec=1s
 #ProtectControlGroups=true
 
 # allow writing of acme.json
-#ReadWritePaths=/etc/traefik/acme.json
+#ReadWritePaths=/etc/ingress/acme.json
 # depending on log and entrypoint configuration, you may need to allow writing to other paths, too
 
 # limit number of processes in this unit

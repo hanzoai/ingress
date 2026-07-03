@@ -4,7 +4,7 @@
 // the Hanzo Ingress subsystem.
 //
 // The mount logic ships under the `cloud` build tag so the standalone
-// cmd/traefik binary (the full hanzo-ingress reverse proxy that runs
+// cmd/ingress binary (the full hanzo-ingress reverse proxy that runs
 // at the k8s cluster edge) builds without pulling hanzoai/cloud +
 // zap-proto/zip into its dependency tree. Build with `-tags=cloud` to
 // compile the Mount.

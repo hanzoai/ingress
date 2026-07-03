@@ -18,7 +18,7 @@ framework, which routes every JSON path through stdlib
 flag; manual builds should do the same:
 
 ```bash
-GOEXPERIMENT=jsonv2 CGO_ENABLED=0 go build ./cmd/traefik
+GOEXPERIMENT=jsonv2 CGO_ENABLED=0 go build ./cmd/ingress
 ```
 
 Without the experiment the binary still compiles and runs — zip falls
