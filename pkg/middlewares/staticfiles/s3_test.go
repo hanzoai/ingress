@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
@@ -153,6 +154,9 @@ func TestS3AssetContentTypeAndValidators(t *testing.T) {
 	}
 	if resp.Header.Get("Cache-Control") == "" {
 		t.Fatal("asset missing Cache-Control")
+	}
+	if resp.Header.Get("X-Content-Type-Options") != "nosniff" {
+		t.Fatalf("asset missing nosniff, got %q", resp.Header.Get("X-Content-Type-Options"))
 	}
 	wantETag := `"` + etagOf(js) + `"`
 	if got := resp.Header.Get("ETag"); got != wantETag {
@@ -358,25 +362,164 @@ func TestParseObjectRoot(t *testing.T) {
 }
 
 // TestNewObjectFSFailsClosed proves the middleware refuses to build an S3 origin
-// without an endpoint or credentials, rather than silently serving nothing.
+// that would be unsafe or misconfigured: an empty prefix (whole-bucket exposure),
+// a missing endpoint, or missing credentials all fail closed. Endpoint, region
+// and credentials come only from the environment — never from the resource.
 func TestNewObjectFSFailsClosed(t *testing.T) {
-	// No endpoint anywhere.
-	t.Setenv("S3_ENDPOINT", "")
-	t.Setenv("AWS_ACCESS_KEY_ID", "")
-	t.Setenv("AWS_SECRET_ACCESS_KEY", "")
-	if _, err := newObjectFS("s3://cdn/cd", "", ""); err == nil {
-		t.Fatal("expected error with no endpoint")
+	t.Setenv("S3_ENDPOINT", "s3.local:9000")
+	t.Setenv("AWS_ACCESS_KEY_ID", "ak")
+	t.Setenv("AWS_SECRET_ACCESS_KEY", "sk")
+
+	// Empty prefix -> reject (would let a site read the whole shared bucket).
+	for _, root := range []string{"s3://cdn", "s3://cdn/"} {
+		if _, err := newObjectFS(root); err == nil {
+			t.Fatalf("expected error for empty-prefix root %q", root)
+		}
 	}
 
-	// Endpoint present, credentials absent.
-	if _, err := newObjectFS("s3://cdn/cd", "s3.local:9000", ""); err == nil {
+	// Missing endpoint.
+	t.Setenv("S3_ENDPOINT", "")
+	if _, err := newObjectFS("s3://cdn/cd"); err == nil {
+		t.Fatal("expected error with no S3_ENDPOINT")
+	}
+
+	// Missing credentials.
+	t.Setenv("S3_ENDPOINT", "s3.local:9000")
+	t.Setenv("AWS_ACCESS_KEY_ID", "")
+	t.Setenv("AWS_SECRET_ACCESS_KEY", "")
+	if _, err := newObjectFS("s3://cdn/cd"); err == nil {
 		t.Fatal("expected error with no credentials")
 	}
 
-	// Endpoint + credentials present → builds.
+	// Endpoint + credentials + non-empty prefix -> builds.
 	t.Setenv("AWS_ACCESS_KEY_ID", "ak")
 	t.Setenv("AWS_SECRET_ACCESS_KEY", "sk")
-	if _, err := newObjectFS("s3://cdn/cd", "s3.local:9000", ""); err != nil {
-		t.Fatalf("expected success with endpoint+creds, got %v", err)
+	if _, err := newObjectFS("s3://cdn/cd"); err != nil {
+		t.Fatalf("expected success, got %v", err)
+	}
+}
+
+// ctxStore is a fake objectStore driven by injected functions, used to observe
+// the context threaded into a read and to force specific store errors.
+type ctxStore struct {
+	statFn func(context.Context, string) (objectInfo, error)
+	openFn func(context.Context, string) (readSeekCloser, error)
+	listFn func(context.Context, string) ([]objectInfo, error)
+}
+
+func (c *ctxStore) stat(ctx context.Context, k string) (objectInfo, error) { return c.statFn(ctx, k) }
+func (c *ctxStore) open(ctx context.Context, k string) (readSeekCloser, error) {
+	return c.openFn(ctx, k)
+}
+func (c *ctxStore) list(ctx context.Context, k string) ([]objectInfo, error) { return c.listFn(ctx, k) }
+
+// TestOpenCtxBindsToRequestContext proves the object read is bound to the caller's
+// context, so a client disconnect cancels the upstream read (frees the conn).
+func TestOpenCtxBindsToRequestContext(t *testing.T) {
+	var captured context.Context
+	store := &ctxStore{
+		statFn: func(_ context.Context, k string) (objectInfo, error) { return objectInfo{key: k, size: 1}, nil },
+		openFn: func(ctx context.Context, _ string) (readSeekCloser, error) {
+			captured = ctx
+			return nopSeekCloser{bytes.NewReader([]byte("x"))}, nil
+		},
+	}
+	fsys := &s3FS{store: store, prefix: "cd"}
+
+	parent, cancel := context.WithCancel(context.Background())
+	f, err := fsys.openCtx(parent, "/a.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if captured == nil {
+		t.Fatal("read context not captured")
+	}
+	if captured.Err() != nil {
+		t.Fatal("read context already cancelled before parent")
+	}
+	cancel() // simulate client disconnect
+	if captured.Err() == nil {
+		t.Fatal("cancelling the request context did not cancel the object read")
+	}
+	f.Close()
+}
+
+// TestS3ErrorMapping proves an object-store outage is a 502 (availability), a
+// genuine access-denied is a 403 (authorization), and a missing object is a 404.
+func TestS3ErrorMapping(t *testing.T) {
+	cases := []struct {
+		name string
+		err  error
+		want int
+	}{
+		{"outage", fmt.Errorf("%w: dial tcp: connection refused", errObjectStoreUnavailable), http.StatusBadGateway},
+		{"accessDenied", fs.ErrPermission, http.StatusForbidden},
+		{"missing", fs.ErrNotExist, http.StatusNotFound},
+	}
+	for _, c := range cases {
+		store := &ctxStore{
+			statFn: func(context.Context, string) (objectInfo, error) { return objectInfo{}, c.err },
+			openFn: func(context.Context, string) (readSeekCloser, error) { return nil, c.err },
+			listFn: func(context.Context, string) ([]objectInfo, error) { return nil, c.err },
+		}
+		srv := httptest.NewServer(s3Handler(store, "cd", dynamic.StaticFiles{}))
+		resp, err := srv.Client().Get(srv.URL + "/whatever.js")
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp.Body.Close()
+		srv.Close()
+		if resp.StatusCode != c.want {
+			t.Fatalf("%s: got %d, want %d", c.name, resp.StatusCode, c.want)
+		}
+	}
+}
+
+// TestS3SPAAssetMiss404 proves SPA fallback is gated: a missing hashed asset is a
+// visible 404, while an extensionless client route still falls back to the shell.
+func TestS3SPAAssetMiss404(t *testing.T) {
+	store := newMapStore(map[string][]byte{"cd/index.html": []byte("<div id=app></div>")})
+	srv := httptest.NewServer(s3Handler(store, "cd", dynamic.StaticFiles{SPAMode: true}))
+	defer srv.Close()
+
+	for _, asset := range []string{"/assets/app.deadbeef.js", "/styles.abc.css", "/img/logo.png", "/app.wasm"} {
+		resp, err := srv.Client().Get(srv.URL + asset)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp.Body.Close()
+		if resp.StatusCode != http.StatusNotFound {
+			t.Fatalf("missing asset %s in spa: want 404, got %d", asset, resp.StatusCode)
+		}
+	}
+
+	resp, _ := srv.Client().Get(srv.URL + "/applications/deploy/xyz")
+	body, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusOK || !strings.Contains(string(body), "id=app") {
+		t.Fatalf("client route: want 200 shell, got %d %q", resp.StatusCode, body)
+	}
+}
+
+// TestS3CacheControlDefaults proves the SPA shell is never cached stale
+// (no-cache) while other assets keep the long default.
+func TestS3CacheControlDefaults(t *testing.T) {
+	store := newMapStore(map[string][]byte{
+		"cd/index.html": []byte("<html></html>"),
+		"cd/app.js":     []byte("x"),
+	})
+	srv := httptest.NewServer(s3Handler(store, "cd", dynamic.StaticFiles{}))
+	defer srv.Close()
+
+	// index.html served directly (not via the root redirect).
+	resp, _ := srv.Client().Get(srv.URL + "/index.html")
+	resp.Body.Close()
+	if got := resp.Header.Get("Cache-Control"); got != "no-cache" {
+		t.Fatalf("index.html Cache-Control = %q, want no-cache", got)
+	}
+	resp2, _ := srv.Client().Get(srv.URL + "/app.js")
+	resp2.Body.Close()
+	if got := resp2.Header.Get("Cache-Control"); got != "max-age=86400" {
+		t.Fatalf("app.js Cache-Control = %q, want max-age=86400", got)
 	}
 }
