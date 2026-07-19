@@ -128,11 +128,31 @@ static plane for the fleet (one ingress, unlimited sites). `Root` is a union:
 
 Both origins run through the same handler, so index resolution, `spaMode`
 fallback, `errorPage404` and `cacheControl` behave identically. `spaMode` is
-the only difference between an SPA site and a plain static site. Object-store
-credentials come only from the process environment
-(`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`); `endpoint`/`region` default from
-`S3_ENDPOINT`/`S3_REGION` and can be overridden per middleware. A missing
-endpoint or credentials fails the middleware build (never serves open).
+the only difference between an SPA site and a plain static site.
+
+The object store is defined **only** by the ingress environment — one shared
+store for the whole fleet: `S3_ENDPOINT`, `S3_REGION`, and credentials from
+`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`. A `Middleware` carries only `root`
+(+`spaMode`/`spaIndex`/index/cache/404); it can neither point the ingress
+credential at another host nor leak a secret into the dynamic-config plane. The
+middleware build **fails closed** on an empty prefix (`s3://cdn` would expose
+the whole bucket), a missing endpoint, or missing credentials.
+
+Isolation and behavior:
+- Keys are joined traversal-safe under the middleware's non-empty prefix; a
+  request can never read another site's prefix.
+- Under `spaMode`, a not-found *navigation* (extensionless path) returns the
+  shell, but a missing *asset* (a non-HTML extension) returns 404 — a broken
+  deploy stays visible, not masked by a 200 `index.html`.
+- Errors map by cause: missing→404/SPA, access-denied→403, object-store
+  outage→502 (availability is not authorization). Error responses are not cached.
+- `index.html` (the shell) defaults to `Cache-Control: no-cache` (revalidated
+  via ETag/Last-Modified); other assets keep the long default or a `cacheControl`
+  override. Every served response carries `X-Content-Type-Options: nosniff`, and
+  content-type is derived from the file extension (S3 metadata is not trusted).
+- Object reads are bound to the request context, so a client disconnect cancels
+  the upstream read (5-minute backstop remains).
+
 `staticFiles` serves terminally (never calls `next`), so an attached route's
 backend service is never reached — point it at an empty/placeholder service.
 The `shadow`-tagged test drives the real object-store path against a live S3.
