@@ -52,6 +52,7 @@ type MiddlewareSpec struct {
 	Retry             *Retry                     `json:"retry,omitempty"`
 	ContentType       *dynamic.ContentType       `json:"contentType,omitempty"`
 	GrpcWeb           *dynamic.GrpcWeb           `json:"grpcWeb,omitempty"`
+	StaticFiles       *dynamic.StaticFiles       `json:"staticFiles,omitempty"`
 	// Plugin defines the middleware plugin configuration.
 	// More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/overview/#community-middlewares
 	Plugin map[string]apiextensionv1.JSON `json:"plugin,omitempty"`
