@@ -14,8 +14,6 @@ func TestMiddlewareSpecStaticFilesDeepCopy(t *testing.T) {
 	in := &MiddlewareSpec{
 		StaticFiles: &dynamic.StaticFiles{
 			Root:         "s3://cdn/cd",
-			Endpoint:     "s3.hanzo.svc.cluster.local:9000",
-			Region:       "us-east-1",
 			SPAMode:      true,
 			SPAIndex:     "index.html",
 			IndexFiles:   []string{"index.html"},
@@ -31,7 +29,7 @@ func TestMiddlewareSpecStaticFilesDeepCopy(t *testing.T) {
 	if out.StaticFiles == in.StaticFiles {
 		t.Fatal("StaticFiles not deep-copied (shared pointer)")
 	}
-	if out.StaticFiles.Root != "s3://cdn/cd" || out.StaticFiles.Endpoint != "s3.hanzo.svc.cluster.local:9000" || !out.StaticFiles.SPAMode {
+	if out.StaticFiles.Root != "s3://cdn/cd" || !out.StaticFiles.SPAMode {
 		t.Fatalf("StaticFiles values not copied: %+v", out.StaticFiles)
 	}
 

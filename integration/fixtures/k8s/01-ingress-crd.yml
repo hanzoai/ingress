@@ -2248,11 +2248,6 @@ spec:
                   enableDirectoryListing:
                     description: EnableDirectoryListing enables directory browsing.
                     type: boolean
-                  endpoint:
-                    description: |-
-                      Endpoint is the object store endpoint for an s3:// Root (e.g. s3.hanzo.svc.cluster.local:9000).
-                      Empty falls back to the S3_ENDPOINT environment value. Ignored for a local Root.
-                    type: string
                   errorPage404:
                     description: ErrorPage404 is the path to a custom 404 error page
                       relative to root.
@@ -2263,18 +2258,14 @@ spec:
                     items:
                       type: string
                     type: array
-                  region:
-                    description: |-
-                      Region is the object store region for an s3:// Root.
-                      Empty falls back to the S3_REGION environment value, then "us-east-1". Ignored for a local Root.
-                    type: string
                   root:
                     description: |-
                       Root is where the files live.
                       A local path (e.g. /var/www) serves from disk.
-                      An "s3://bucket/prefix" URL serves from an object store; the endpoint,
-                      region and credentials for that store come from the ingress environment
-                      (Endpoint/Region below override the environment per middleware).
+                      An "s3://bucket/prefix" URL serves from an object store. The prefix must be
+                      non-empty. The store's endpoint, region and credentials come only from the
+                      ingress environment (one shared store for the whole fleet), never from this
+                      resource.
                     type: string
                   spaIndex:
                     description: SPAIndex is the file to serve in SPA mode.
