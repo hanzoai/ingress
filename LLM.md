@@ -106,6 +106,36 @@ image. Rebrand them only as part of a dedicated docs pass.
   `go build $(go list ./... | grep -v /webui)`.
 - `pkg/muxer/http/Test_addRoute/Host_IPv6`: Go 1.26 broke IPv6 URL parsing
 - `pkg/middlewares/ratelimiter`: Timing-sensitive tests, flaky
+- `pkg/provider/kubernetes/crd` tests panic: `no kind "IngressService" is
+  registered for version "ingress.k8s.io/v1alpha1"` — the CRD Go types use
+  apiGroup `hanzo.ai` (register.go) but several `kubernetes_test.go` fixtures
+  still declare `apiVersion: ingress.k8s.io/v1alpha1`. Group-name drift in the
+  test fixtures; the provider itself builds and runs on `hanzo.ai`.
+- Codegen drift: `script/code-gen.sh` regenerates 130+ files with a copyright
+  header from `boilerplate.go.tmpl` that differs from the committed headers,
+  and `controller-gen` emits group `ingress.k8s.io` (stale `+groupName` marker
+  in `hanzoai/v1alpha1/doc.go`) instead of `hanzo.ai`. Re-running it wholesale
+  produces branding/group noise; hand-apply small generated-code changes and
+  extract only the intended CRD-schema block from a scratch run.
+
+## Static file serving (`staticFiles` middleware)
+`pkg/middlewares/staticfiles` serves a site directly at the edge — the shared
+static plane for the fleet (one ingress, unlimited sites). `Root` is a union:
+- a local path (`/var/www`) serves from disk (`http.Dir`), or
+- an `s3://bucket/prefix` URL serves from an object store (`s3.go`, over
+  `hanzos3/go-sdk`). The object stream is the SDK's seekable object, so
+  `http.ServeContent` streams and Ranges without buffering the whole bundle.
+
+Both origins run through the same handler, so index resolution, `spaMode`
+fallback, `errorPage404` and `cacheControl` behave identically. `spaMode` is
+the only difference between an SPA site and a plain static site. Object-store
+credentials come only from the process environment
+(`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`); `endpoint`/`region` default from
+`S3_ENDPOINT`/`S3_REGION` and can be overridden per middleware. A missing
+endpoint or credentials fails the middleware build (never serves open).
+`staticFiles` serves terminally (never calls `next`), so an attached route's
+backend service is never reached — point it at an empty/placeholder service.
+The `shadow`-tagged test drives the real object-store path against a live S3.
 
 ## Header Passthrough Behavior (2026-04-13)
 
