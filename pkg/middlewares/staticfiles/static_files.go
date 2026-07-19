@@ -31,7 +31,6 @@ type dirEntry struct {
 
 type staticFiles struct {
 	root                 http.FileSystem
-	rootPath             string
 	enableDirListing     bool
 	indexFiles           []string
 	spaMode              bool
@@ -53,15 +52,28 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 		root = "."
 	}
 
-	absRoot, err := filepath.Abs(root)
-	if err != nil {
-		return nil, fmt.Errorf("invalid root path: %w", err)
-	}
-
-	if _, err := os.Stat(absRoot); os.IsNotExist(err) {
-		if err := os.MkdirAll(absRoot, 0755); err != nil {
-			return nil, fmt.Errorf("failed to create root directory: %w", err)
+	// The origin is a union: a local directory or an object store, selected by
+	// the Root form. An "s3://bucket/prefix" Root serves from the object store;
+	// anything else is a local path. Both are served through the same handler
+	// via http.FileSystem, so only the origin differs.
+	var rootFS http.FileSystem
+	if _, _, ok := parseObjectRoot(root); ok {
+		fsys, err := newObjectFS(root, config.Endpoint, config.Region)
+		if err != nil {
+			return nil, err
 		}
+		rootFS = fsys
+	} else {
+		absRoot, err := filepath.Abs(root)
+		if err != nil {
+			return nil, fmt.Errorf("invalid root path: %w", err)
+		}
+		if _, err := os.Stat(absRoot); os.IsNotExist(err) {
+			if err := os.MkdirAll(absRoot, 0755); err != nil {
+				return nil, fmt.Errorf("failed to create root directory: %w", err)
+			}
+		}
+		rootFS = http.Dir(absRoot)
 	}
 
 	indexFiles := config.IndexFiles
@@ -80,8 +92,7 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 	}
 
 	return &staticFiles{
-		root:                 http.Dir(absRoot),
-		rootPath:             absRoot,
+		root:                 rootFS,
 		enableDirListing:     config.EnableDirectoryListing,
 		indexFiles:           indexFiles,
 		spaMode:              config.SPAMode,
@@ -108,12 +119,12 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			if h.spaMode {
-				h.serveFile(w, r, filepath.Join(h.rootPath, h.spaIndex))
+				h.serveFile(w, r, h.spaIndex)
 				return
 			}
 			if h.errorPage404 != "" {
 				w.WriteHeader(h.notFoundResponseCode)
-				h.serveFile(w, r, filepath.Join(h.rootPath, h.errorPage404))
+				h.serveFile(w, r, h.errorPage404)
 				return
 			}
 			http.NotFound(w, r)
@@ -150,7 +161,7 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if !h.enableDirListing {
 			if h.errorPage404 != "" {
 				w.WriteHeader(h.notFoundResponseCode)
-				h.serveFile(w, r, filepath.Join(h.rootPath, h.errorPage404))
+				h.serveFile(w, r, h.errorPage404)
 				return
 			}
 			http.NotFound(w, r)
@@ -229,11 +240,25 @@ func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, d fs.FileInfo) {
 		w.Header().Set("Cache-Control", "max-age=86400")
 	}
 
+	// A strong validator lets http.ServeContent answer conditional requests
+	// (If-None-Match). Only the object-store origin carries one; the local
+	// origin is unchanged.
+	if e, ok := d.(etagger); ok {
+		if tag := e.ETag(); tag != "" {
+			if !strings.HasPrefix(tag, `"`) {
+				tag = `"` + tag + `"`
+			}
+			w.Header().Set("ETag", tag)
+		}
+	}
+
 	w.Header().Set("Last-Modified", d.ModTime().UTC().Format(http.TimeFormat))
 }
 
-func (h *staticFiles) serveFile(w http.ResponseWriter, r *http.Request, filePath string) {
-	f, err := os.Open(filePath)
+// serveFile serves a single file (SPA index or 404 page) named relative to the
+// root, through the same origin as everything else — local disk or object store.
+func (h *staticFiles) serveFile(w http.ResponseWriter, r *http.Request, name string) {
+	f, err := h.root.Open("/" + strings.TrimPrefix(name, "/"))
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return

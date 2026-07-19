@@ -59,6 +59,7 @@ type MiddlewareSpecApplyConfiguration struct {
 	Retry             *RetryApplyConfiguration          `json:"retry,omitempty"`
 	ContentType       *dynamic.ContentType              `json:"contentType,omitempty"`
 	GrpcWeb           *dynamic.GrpcWeb                  `json:"grpcWeb,omitempty"`
+	StaticFiles       *dynamic.StaticFiles              `json:"staticFiles,omitempty"`
 	Plugin            map[string]v1.JSON                `json:"plugin,omitempty"`
 }
 
@@ -265,6 +266,14 @@ func (b *MiddlewareSpecApplyConfiguration) WithContentType(value dynamic.Content
 // If called multiple times, the GrpcWeb field is set to the value of the last call.
 func (b *MiddlewareSpecApplyConfiguration) WithGrpcWeb(value dynamic.GrpcWeb) *MiddlewareSpecApplyConfiguration {
 	b.GrpcWeb = &value
+	return b
+}
+
+// WithStaticFiles sets the StaticFiles field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the StaticFiles field is set to the value of the last call.
+func (b *MiddlewareSpecApplyConfiguration) WithStaticFiles(value dynamic.StaticFiles) *MiddlewareSpecApplyConfiguration {
+	b.StaticFiles = &value
 	return b
 }
 

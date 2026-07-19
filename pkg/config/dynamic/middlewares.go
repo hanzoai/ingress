@@ -75,10 +75,21 @@ type GrpcWeb struct {
 // +k8s:deepcopy-gen=true
 
 // StaticFiles holds the static file server middleware configuration.
-// This middleware serves static files directly from the ingress layer.
+// This middleware serves static files directly from the ingress layer,
+// from either a local directory or an object store.
 type StaticFiles struct {
-	// Root directory to serve files from.
+	// Root is where the files live.
+	// A local path (e.g. /var/www) serves from disk.
+	// An "s3://bucket/prefix" URL serves from an object store; the endpoint,
+	// region and credentials for that store come from the ingress environment
+	// (Endpoint/Region below override the environment per middleware).
 	Root string `json:"root,omitempty" toml:"root,omitempty" yaml:"root,omitempty" export:"true"`
+	// Endpoint is the object store endpoint for an s3:// Root (e.g. s3.hanzo.svc.cluster.local:9000).
+	// Empty falls back to the S3_ENDPOINT environment value. Ignored for a local Root.
+	Endpoint string `json:"endpoint,omitempty" toml:"endpoint,omitempty" yaml:"endpoint,omitempty" export:"true"`
+	// Region is the object store region for an s3:// Root.
+	// Empty falls back to the S3_REGION environment value, then "us-east-1". Ignored for a local Root.
+	Region string `json:"region,omitempty" toml:"region,omitempty" yaml:"region,omitempty" export:"true"`
 	// EnableDirectoryListing enables directory browsing.
 	EnableDirectoryListing bool `json:"enableDirectoryListing,omitempty" toml:"enableDirectoryListing,omitempty" yaml:"enableDirectoryListing,omitempty" export:"true"`
 	// IndexFiles is a list of filenames to try when a directory is requested.

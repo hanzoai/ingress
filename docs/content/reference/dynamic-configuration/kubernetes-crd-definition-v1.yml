@@ -2232,6 +2232,57 @@ spec:
                     pattern: ^([0-9]+(ns|us|µs|ms|s|m|h)?)+$
                     x-kubernetes-int-or-string: true
                 type: object
+              staticFiles:
+                description: |-
+                  StaticFiles holds the static file server middleware configuration.
+                  This middleware serves static files directly from the ingress layer,
+                  from either a local directory or an object store.
+                properties:
+                  cacheControl:
+                    additionalProperties:
+                      type: string
+                    description: CacheControl maps file extensions to Cache-Control
+                      header values.
+                    type: object
+                  enableDirectoryListing:
+                    description: EnableDirectoryListing enables directory browsing.
+                    type: boolean
+                  endpoint:
+                    description: |-
+                      Endpoint is the object store endpoint for an s3:// Root (e.g. s3.hanzo.svc.cluster.local:9000).
+                      Empty falls back to the S3_ENDPOINT environment value. Ignored for a local Root.
+                    type: string
+                  errorPage404:
+                    description: ErrorPage404 is the path to a custom 404 error page
+                      relative to root.
+                    type: string
+                  indexFiles:
+                    description: IndexFiles is a list of filenames to try when a directory
+                      is requested.
+                    items:
+                      type: string
+                    type: array
+                  region:
+                    description: |-
+                      Region is the object store region for an s3:// Root.
+                      Empty falls back to the S3_REGION environment value, then "us-east-1". Ignored for a local Root.
+                    type: string
+                  root:
+                    description: |-
+                      Root is where the files live.
+                      A local path (e.g. /var/www) serves from disk.
+                      An "s3://bucket/prefix" URL serves from an object store; the endpoint,
+                      region and credentials for that store come from the ingress environment
+                      (Endpoint/Region below override the environment per middleware).
+                    type: string
+                  spaIndex:
+                    description: SPAIndex is the file to serve in SPA mode.
+                    type: string
+                  spaMode:
+                    description: SPAMode redirects all not-found requests to a single
+                      page.
+                    type: boolean
+                type: object
               stripPrefix:
                 description: |-
                   StripPrefix holds the strip prefix middleware configuration.

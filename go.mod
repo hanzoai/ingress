@@ -123,6 +123,7 @@ require (
 )
 
 require (
+	github.com/hanzos3/go-sdk v1.0.2
 	github.com/luxfi/log v1.4.3
 	github.com/luxfi/zap v0.8.8
 	github.com/prometheus/client_golang v1.23.2
@@ -135,15 +136,22 @@ require (
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/dlclark/regexp2/v2 v2.2.1 // indirect
 	github.com/dop251/goja v0.0.0-20260607120635-348e6bea910d // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/evanw/esbuild v0.28.1 // indirect
+	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
 	github.com/grandcat/zeroconf v1.0.0 // indirect
+	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
+	github.com/klauspost/crc32 v1.3.0 // indirect
 	github.com/luxfi/accel v1.1.9 // indirect
 	github.com/luxfi/crypto v1.19.17 // indirect
 	github.com/luxfi/mdns v0.1.1 // indirect
+	github.com/minio/crc64nvme v1.1.1 // indirect
+	github.com/minio/md5-simd v1.1.2 // indirect
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.20.1 // indirect
+	github.com/rs/xid v1.6.0 // indirect
 	github.com/zap-proto/go v1.3.0 // indirect
 )
 
