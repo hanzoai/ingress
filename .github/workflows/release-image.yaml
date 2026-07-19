@@ -1,0 +1,89 @@
+name: Release Image
+
+# Builds and pushes the ghcr.io/hanzoai/ingress container image on Hanzo's own
+# ARC runners (hanzo-build-linux-amd64). Two entry points, one build:
+#   - a v* tag push builds :{version} from the tag,
+#   - workflow_dispatch builds any ref with an explicit version (recovery lane
+#     when tag-push dispatch is degraded on GitHub's side).
+# linux/amd64 only, to match the deployed image. Self-contained: no reusable
+# workflow, so a floating @main dependency can never wedge it. No deploy step —
+# the rollout is driven separately.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image version, no leading v (e.g. 1.10.0)"
+        required: true
+      ref:
+        description: "Git ref to build (tag, branch, or sha)"
+        required: true
+        default: main
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/hanzoai/ingress
+
+jobs:
+  image:
+    if: github.repository == 'hanzoai/ingress'
+    runs-on: hanzo-build-linux-amd64
+    timeout-minutes: 45
+    steps:
+      - name: Resolve version and ref
+        id: v
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            v="${GITHUB_REF_NAME#v}"
+            ref="${GITHUB_REF_NAME}"
+          else
+            v="${{ inputs.version }}"
+            ref="${{ inputs.ref }}"
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.v.outputs.ref }}
+          fetch-depth: 0
+
+      - name: Short sha
+        id: s
+        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          build-args: |
+            VERSION=v${{ steps.v.outputs.version }}
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.v.outputs.version }}
+            ${{ env.IMAGE }}:${{ steps.v.outputs.version }}-amd64
+            ${{ env.IMAGE }}:sha-${{ steps.s.outputs.sha }}
+          # Private cross-repo Go modules (hanzoai/cloud, luxfi/*) are fetched
+          # in the Dockerfile builder stage via url.insteadOf auth. The Dockerfile
+          # mounts --mount=type=secret,id=gh_token; no-op if the token is absent.
+          secrets: |
+            gh_token=${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
