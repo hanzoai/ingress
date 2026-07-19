@@ -110,10 +110,16 @@ func (s *s3FS) keyFor(name string) string {
 	}
 }
 
-// Open implements http.FileSystem. Directories (root and any trailing-slash
-// path) resolve to a lazily-listed directory; everything else resolves to an
-// object, or fs.ErrNotExist so the handler can apply its SPA / 404 policy.
+// Open implements http.FileSystem with a background context.
 func (s *s3FS) Open(name string) (http.File, error) {
+	return s.openCtx(context.Background(), name)
+}
+
+// openCtx resolves a path bound to ctx, so a client disconnect cancels the
+// object-store reads. Directories (root and any trailing-slash path) resolve to
+// a lazily-listed directory; everything else resolves to an object, or
+// fs.ErrNotExist so the handler can apply its SPA / 404 policy.
+func (s *s3FS) openCtx(ctx context.Context, name string) (http.File, error) {
 	if name == "" {
 		name = "/"
 	}
@@ -124,28 +130,33 @@ func (s *s3FS) Open(name string) (http.File, error) {
 		return &s3Dir{store: s.store, key: key}, nil
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), metadataTimeout)
-	info, err := s.store.stat(ctx, key)
+	sctx, cancel := context.WithTimeout(ctx, metadataTimeout)
+	info, err := s.store.stat(sctx, key)
 	cancel()
 	if err != nil {
-		if errors.Is(err, fs.ErrNotExist) {
-			return nil, &os.PathError{Op: "open", Path: name, Err: os.ErrNotExist}
-		}
-		return nil, err
+		return nil, mapOpenErr(name, err)
 	}
 
-	// The stream lives until Close; its context is cancelled there so a slow or
-	// abandoned read cannot outlive objectServeTimeout.
-	octx, ocancel := context.WithTimeout(context.Background(), objectServeTimeout)
+	// The stream lives until Close; its context is a child of the request's,
+	// with an objectServeTimeout backstop, and is cancelled in Close — so a
+	// disconnected or slow client frees the upstream connection promptly.
+	octx, ocancel := context.WithTimeout(ctx, objectServeTimeout)
 	rc, err := s.store.open(octx, key)
 	if err != nil {
 		ocancel()
-		if errors.Is(err, fs.ErrNotExist) {
-			return nil, &os.PathError{Op: "open", Path: name, Err: os.ErrNotExist}
-		}
-		return nil, err
+		return nil, mapOpenErr(name, err)
 	}
 	return &s3File{rc: rc, info: info, cancel: ocancel}, nil
+}
+
+// mapOpenErr normalizes a not-found into os.ErrNotExist (so os.IsNotExist drives
+// the handler's SPA / 404 policy) and passes every other error through so the
+// handler can tell access-denied from an object-store outage.
+func mapOpenErr(name string, err error) error {
+	if errors.Is(err, fs.ErrNotExist) {
+		return &os.PathError{Op: "open", Path: name, Err: os.ErrNotExist}
+	}
+	return err
 }
 
 // s3File is one object exposed as an http.File. Read/Seek delegate to the
@@ -216,10 +227,7 @@ type minioStore struct {
 func (m *minioStore) stat(ctx context.Context, key string) (objectInfo, error) {
 	oi, err := m.client.StatObject(ctx, m.bucket, key, s3.StatObjectOptions{})
 	if err != nil {
-		if isNotFound(err) {
-			return objectInfo{}, fs.ErrNotExist
-		}
-		return objectInfo{}, err
+		return objectInfo{}, classifyStoreErr(err)
 	}
 	return objectInfo{key: key, size: oi.Size, modTime: oi.LastModified, etag: oi.ETag}, nil
 }
@@ -227,10 +235,7 @@ func (m *minioStore) stat(ctx context.Context, key string) (objectInfo, error) {
 func (m *minioStore) open(ctx context.Context, key string) (readSeekCloser, error) {
 	obj, err := m.client.GetObject(ctx, m.bucket, key, s3.GetObjectOptions{})
 	if err != nil {
-		if isNotFound(err) {
-			return nil, fs.ErrNotExist
-		}
-		return nil, err
+		return nil, classifyStoreErr(err)
 	}
 	return obj, nil
 }
@@ -252,33 +257,48 @@ func (m *minioStore) list(ctx context.Context, prefix string) ([]objectInfo, err
 	return out, nil
 }
 
-// isNotFound reports whether an object-store error means "no such object".
-func isNotFound(err error) bool {
+// errObjectStoreUnavailable marks an object-store transport/availability
+// failure (down, timeout, 5xx) so the handler answers 502 rather than
+// mislabeling an outage as an authorization failure.
+var errObjectStoreUnavailable = errors.New("object store unavailable")
+
+// classifyStoreErr maps an object-store error to the handler's response policy:
+// missing -> fs.ErrNotExist (404 / SPA fallback); access denied ->
+// fs.ErrPermission (403); anything else -> errObjectStoreUnavailable (502).
+func classifyStoreErr(err error) error {
 	resp := s3.ToErrorResponse(err)
-	return resp.StatusCode == http.StatusNotFound || resp.Code == "NoSuchKey" || resp.Code == "NoSuchBucket"
+	switch {
+	case resp.StatusCode == http.StatusNotFound || resp.Code == "NoSuchKey" || resp.Code == "NoSuchBucket":
+		return fs.ErrNotExist
+	case resp.StatusCode == http.StatusForbidden || resp.Code == "AccessDenied":
+		return fs.ErrPermission
+	default:
+		return fmt.Errorf("%w: %w", errObjectStoreUnavailable, err)
+	}
 }
 
 // newObjectFS builds an object-store file system for an "s3://bucket/prefix"
-// root. Endpoint and region default from the ingress environment; credentials
-// come only from the environment (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) so
-// no secret ever enters the dynamic configuration plane. Missing endpoint or
-// credentials fail closed — the middleware refuses to build.
-func newObjectFS(root, endpoint, region string) (*s3FS, error) {
+// root. The object store (endpoint, region, credentials) is defined ONLY by the
+// ingress environment — one shared store for the whole fleet — so a Middleware
+// CR can neither point the ingress credential at another host nor leak a secret
+// into the dynamic configuration plane. It fails closed: an empty prefix (which
+// would expose the whole shared bucket), a missing endpoint, or missing
+// credentials all refuse the build.
+func newObjectFS(root string) (*s3FS, error) {
 	bucket, prefix, ok := parseObjectRoot(root)
 	if !ok {
 		return nil, fmt.Errorf("invalid s3 root %q (want s3://bucket/prefix)", root)
 	}
-
-	if endpoint == "" {
-		endpoint = os.Getenv("S3_ENDPOINT")
-	}
-	if endpoint == "" {
-		return nil, fmt.Errorf("s3 root %q needs an endpoint (set staticFiles.endpoint or S3_ENDPOINT)", root)
+	if prefix == "" {
+		return nil, fmt.Errorf("s3 root %q needs a non-empty prefix (s3://bucket/prefix); serving a whole bucket would expose every other site", root)
 	}
 
-	if region == "" {
-		region = os.Getenv("S3_REGION")
+	endpoint := os.Getenv("S3_ENDPOINT")
+	if endpoint == "" {
+		return nil, fmt.Errorf("s3 root %q needs S3_ENDPOINT in the ingress environment", root)
 	}
+
+	region := os.Getenv("S3_REGION")
 	if region == "" {
 		region = "us-east-1"
 	}

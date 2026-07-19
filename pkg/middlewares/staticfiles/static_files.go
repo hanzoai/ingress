@@ -2,6 +2,7 @@ package staticfiles
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -58,7 +59,7 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 	// via http.FileSystem, so only the origin differs.
 	var rootFS http.FileSystem
 	if _, _, ok := parseObjectRoot(root); ok {
-		fsys, err := newObjectFS(root, config.Endpoint, config.Region)
+		fsys, err := newObjectFS(root)
 		if err != nil {
 			return nil, err
 		}
@@ -109,16 +110,40 @@ func (h *staticFiles) GetTracingInformation() (string, string) {
 	return h.name, typeName
 }
 
+// contextFS is an http.FileSystem whose opens can be bound to a request context.
+type contextFS interface {
+	openCtx(ctx context.Context, name string) (http.File, error)
+}
+
+// open resolves a path against the root, binding object-store reads to ctx when
+// the origin supports it so a client disconnect cancels the upstream read. The
+// local origin (http.Dir) has no context to bind and is opened directly.
+func (h *staticFiles) open(ctx context.Context, name string) (http.File, error) {
+	if cf, ok := h.root.(contextFS); ok {
+		return cf.openCtx(ctx, name)
+	}
+	return h.root.Open(name)
+}
+
+// looksLikeAsset reports whether a not-found path should return 404 rather than
+// the SPA shell: true for a concrete file (a non-HTML extension), false for an
+// extensionless client-route navigation. This stops a missing content-hashed
+// asset from being masked by a 200 index.html.
+func looksLikeAsset(p string) bool {
+	ext := strings.ToLower(path.Ext(p))
+	return ext != "" && ext != ".html" && ext != ".htm"
+}
+
 func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	upath := r.URL.Path
 	if !strings.HasPrefix(upath, "/") {
 		upath = "/" + upath
 	}
 
-	f, err := h.root.Open(upath)
+	f, err := h.open(r.Context(), upath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			if h.spaMode {
+			if h.spaMode && !looksLikeAsset(upath) {
 				h.serveFile(w, r, h.spaIndex)
 				return
 			}
@@ -128,6 +153,12 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			http.NotFound(w, r)
+			return
+		}
+		// An object-store outage is an availability failure, not authorization:
+		// answer 502, and keep access-denied / local errors as 403.
+		if errors.Is(err, errObjectStoreUnavailable) {
+			http.Error(w, "Bad Gateway", http.StatusBadGateway)
 			return
 		}
 		http.Error(w, "Forbidden", http.StatusForbidden)
@@ -150,7 +181,7 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		for _, index := range h.indexFiles {
 			indexPath := path.Join(upath, index)
-			indexFile, err := h.root.Open(indexPath)
+			indexFile, err := h.open(r.Context(), indexPath)
 			if err == nil {
 				indexFile.Close()
 				localRedirect(w, r, indexPath)
@@ -232,13 +263,22 @@ func (h *staticFiles) serveDirectoryListing(w http.ResponseWriter, r *http.Reque
 func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, d fs.FileInfo) {
 	ext := filepath.Ext(d.Name())
 
-	if maxAge, ok := h.cacheControl[ext]; ok {
-		w.Header().Set("Cache-Control", maxAge)
-	} else if maxAge, ok := h.cacheControl["*"]; ok {
-		w.Header().Set("Cache-Control", maxAge)
-	} else {
+	switch {
+	case cacheControlHas(h.cacheControl, ext):
+		w.Header().Set("Cache-Control", h.cacheControl[ext])
+	case cacheControlHas(h.cacheControl, "*"):
+		w.Header().Set("Cache-Control", h.cacheControl["*"])
+	case ext == ".html" || ext == ".htm":
+		// The shell references content-hashed assets; served stale it would pin
+		// clients to an old asset graph. Revalidate every time (cheap: the ETag
+		// / Last-Modified below answers 304 when unchanged).
+		w.Header().Set("Cache-Control", "no-cache")
+	default:
 		w.Header().Set("Cache-Control", "max-age=86400")
 	}
+
+	// This plane serves third-party bundles; never let the browser MIME-sniff.
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 
 	// A strong validator lets http.ServeContent answer conditional requests
 	// (If-None-Match). Only the object-store origin carries one; the local
@@ -255,10 +295,15 @@ func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, d fs.FileInfo) {
 	w.Header().Set("Last-Modified", d.ModTime().UTC().Format(http.TimeFormat))
 }
 
+func cacheControlHas(m map[string]string, key string) bool {
+	_, ok := m[key]
+	return ok
+}
+
 // serveFile serves a single file (SPA index or 404 page) named relative to the
 // root, through the same origin as everything else — local disk or object store.
 func (h *staticFiles) serveFile(w http.ResponseWriter, r *http.Request, name string) {
-	f, err := h.root.Open("/" + strings.TrimPrefix(name, "/"))
+	f, err := h.open(r.Context(), "/"+strings.TrimPrefix(name, "/"))
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
