@@ -1,0 +1,36 @@
+Hanzo Ingress
+Copyright (c) 2026 Hanzo AI, Inc.
+
+This product includes software from Traefik (https://github.com/traefik/traefik),
+licensed under MIT:
+
+    Copyright (c) 2016-2020 Containous SAS; 2020-2025 Traefik Labs
+
+Forked from https://github.com/traefik/traefik (tracking upstream v3.6.9).
+
+DEVIATIONS
+
+Hanzo Ingress is a source fork of Traefik. The changes relative to upstream are:
+
+- Rebranded to "Hanzo Ingress"; the Go module path is
+  github.com/hanzoai/ingress.
+- The standalone binary is built from cmd/ingress (upstream cmd/traefik) and
+  ships as hanzo-ingress.
+- The configuration parser is forked to github.com/hanzoai/ingress-parser
+  (root name "ingress", INGRESS_ environment prefix).
+- Auxiliary runtime libraries resolve to Hanzo source forks via go.mod replace,
+  keeping the upstream import paths: github.com/traefik/yaegi =>
+  github.com/hanzoai/yaegi, github.com/traefik/grpc-web =>
+  github.com/hanzoai/grpc-web, github.com/vulcand/oxy/v2 =>
+  github.com/hanzoai/oxy/v2.
+- The Kubernetes CRD API group is hanzo.ai.
+- The Kubernetes Ingress annotation prefix is ingress.kubernetes.io/.
+- The Prometheus metric prefix is ingress_.
+- Internal proxy headers are renamed: X-Traefik-Fast-Proxy => X-Ingress-Fast-Proxy,
+  X-Traefik-Router => X-Ingress-Router.
+- A HIP-0106 in-process mount surface (mount.go) exposes the ingress for the
+  Hanzo unified-binary stack.
+- A ZAP-HTTP backend transport (pkg/server/service/zap_backend.go) dials backends
+  listed in INGRESS_ZAP_BACKENDS over github.com/zap-proto/http.
+- The upstream release check is disabled (version.CheckNewVersion is a no-op);
+  the version endpoint is served at /v1/ingress/version.
