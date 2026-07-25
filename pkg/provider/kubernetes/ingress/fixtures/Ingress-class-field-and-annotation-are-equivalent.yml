@@ -1,0 +1,163 @@
+# Reproduces the production topology of the hanzo-k8s cluster:
+#   * two IngressClasses, ours ("ingress") and a sibling controller's
+#     ("gateway"), neither of which uses the generic default controller
+#     string baked into the binary.
+#   * the provider pinned with --providers.kubernetesingress.ingressclass=ingress
+#   * Ingresses selecting the class both ways, each carrying spec.tls.
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: ingress
+spec:
+  controller: hanzo.ai/ingress-controller
+
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: gateway
+spec:
+  controller: hanzo.ai/gateway-controller
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-field
+  namespace: testing
+data:
+  # "-----BEGIN CERTIFICATE-----\nfield\n-----END CERTIFICATE-----"
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCmZpZWxkCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=
+  # "-----BEGIN PRIVATE KEY-----\nfield\n-----END PRIVATE KEY-----"
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCmZpZWxkCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-annotation
+  namespace: testing
+data:
+  # "-----BEGIN CERTIFICATE-----\nannotation\n-----END CERTIFICATE-----"
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCmFubm90YXRpb24KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+  # "-----BEGIN PRIVATE KEY-----\nannotation\n-----END PRIVATE KEY-----"
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCmFubm90YXRpb24KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ==
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-gateway
+  namespace: testing
+data:
+  # "-----BEGIN CERTIFICATE-----\ngateway\n-----END CERTIFICATE-----"
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCmdhdGV3YXkKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+  # "-----BEGIN PRIVATE KEY-----\ngateway\n-----END PRIVATE KEY-----"
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCmdhdGV3YXkKLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQ==
+
+---
+# Class selected by the spec.ingressClassName FIELD. This is the Ingress that
+# used to be dropped whole, silently discarding its spec.tls.
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: field
+  namespace: testing
+  annotations:
+    ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: ingress
+  tls:
+    - secretName: tls-field
+  rules:
+    - host: field.example.com
+      http:
+        paths:
+          - path: ""
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+
+---
+# Class selected by the deprecated ANNOTATION. This kept working, which is why
+# the outage was worked around by converting manifests to the annotation form.
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: annotation
+  namespace: testing
+  annotations:
+    kubernetes.io/ingress.class: ingress
+    ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+    - secretName: tls-annotation
+  rules:
+    - host: annotation.example.com
+      http:
+        paths:
+          - path: ""
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+
+---
+# Belongs to the sibling gateway controller. Must never be claimed by us, and
+# its certificate must never be loaded.
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: gateway
+  namespace: testing
+  annotations:
+    ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: gateway
+  tls:
+    - secretName: tls-gateway
+  rules:
+    - host: gateway.example.com
+      http:
+        paths:
+          - path: ""
+            pathType: Prefix
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: service1
+  namespace: testing
+spec:
+  ports:
+    - port: 80
+  clusterIP: 10.0.0.1
+
+---
+kind: EndpointSlice
+apiVersion: discovery.k8s.io/v1
+metadata:
+  name: service1-abc
+  namespace: testing
+  labels:
+    kubernetes.io/service-name: service1
+addressType: IPv4
+ports:
+  - port: 8080
+    name: ""
+endpoints:
+  - addresses:
+      - 10.10.0.1
+    conditions:
+      ready: true

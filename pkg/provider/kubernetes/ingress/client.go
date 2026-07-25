@@ -359,19 +359,32 @@ func (c *clientWrapper) GetIngressClasses() ([]*netv1.IngressClass, error) {
 		return nil, errors.New("cluster factory not loaded")
 	}
 
-	var ics []*netv1.IngressClass
 	ingressClasses, err := c.clusterScopeFactory.Networking().V1().IngressClasses().Lister().List(labels.Everything())
 	if err != nil {
 		return nil, err
 	}
 
-	for _, ic := range ingressClasses {
+	return filterIngressClassByController(ingressClasses), nil
+}
+
+// filterIngressClassByController returns the IngressClasses served by this
+// controller, i.e. those whose spec.controller equals IngressClassController.
+//
+// This is the sole implementation of that filter: the test double calls it too,
+// so tests exercise the same narrowing the live client applies. A double that
+// returned every IngressClass regardless of controller would make the whole
+// controller-matching path untested, which is how a controller-name mismatch
+// once reached production unnoticed.
+func filterIngressClassByController(ics []*netv1.IngressClass) []*netv1.IngressClass {
+	var ingressClasses []*netv1.IngressClass
+
+	for _, ic := range ics {
 		if ic.Spec.Controller == IngressClassController {
-			ics = append(ics, ic)
+			ingressClasses = append(ingressClasses, ic)
 		}
 	}
 
-	return ics, nil
+	return ingressClasses
 }
 
 // lookupNamespace returns the lookup namespace key for the given namespace.

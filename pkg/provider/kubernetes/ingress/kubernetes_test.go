@@ -1725,6 +1725,63 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 	}
 }
 
+// TestIngressClassSelectionParity pins the invariant that the two ways an
+// Ingress can select this controller are equivalent: the spec.ingressClassName
+// field and the deprecated kubernetes.io/ingress.class annotation must claim
+// the same Ingresses and produce the same TLS.
+//
+// Regression. Through v1.9.0 the field form carried an extra requirement the
+// annotation form did not: the named IngressClass had to resolve to an object
+// whose spec.controller equalled IngressClassController. IngressClassController
+// defaults to the generic "ingress.k8s.io/ingress-controller" and is only
+// overridden by the INGRESS_CONTROLLER_NAME env var, which the production
+// Deployment never set — while the cluster's IngressClass declares
+// "hanzo.ai/ingress-controller". No class ever matched, so GetIngressClasses
+// returned an empty list and every field-form Ingress was skipped whole, taking
+// its spec.tls with it. Nothing was logged. Annotation-form Ingresses were
+// unaffected, which is why manifests were converted to the annotation as a
+// workaround, leaving the fleet with two ways to express one thing.
+//
+// The fixture reproduces that topology exactly, and additionally asserts that
+// an Ingress belonging to the sibling gateway controller is still not claimed —
+// the failure mode a careless fix would introduce.
+func TestIngressClassSelectionParity(t *testing.T) {
+	clientMock := newClientMock(generateTestFilename("Ingress class field and annotation are equivalent"))
+
+	// Mirrors --providers.kubernetesingress.ingressclass=ingress in production.
+	p := Provider{IngressClass: "ingress"}
+
+	conf := p.loadConfigurationFromIngresses(t.Context(), clientMock)
+
+	// Both class forms are claimed, and neither loses its TLS.
+	assert.Equal(t, map[string]*dynamic.Router{
+		"testing-field-field-example-com": {
+			Rule:    "Host(`field.example.com`)",
+			Service: "testing-service1-80",
+			TLS:     &dynamic.RouterTLSConfig{},
+		},
+		"testing-annotation-annotation-example-com": {
+			Rule:    "Host(`annotation.example.com`)",
+			Service: "testing-service1-80",
+			TLS:     &dynamic.RouterTLSConfig{},
+		},
+	}, conf.HTTP.Routers)
+
+	// spec.tls survives for both, and the gateway controller's certificate is
+	// never loaded. Sorted by "<namespace>-<secretName>" per getTLSConfig.
+	require.NotNil(t, conf.TLS)
+	assert.Equal(t, []*tls.CertAndStores{
+		{Certificate: tls.Certificate{
+			CertFile: types.FileOrContent("-----BEGIN CERTIFICATE-----\nannotation\n-----END CERTIFICATE-----"),
+			KeyFile:  types.FileOrContent("-----BEGIN PRIVATE KEY-----\nannotation\n-----END PRIVATE KEY-----"),
+		}},
+		{Certificate: tls.Certificate{
+			CertFile: types.FileOrContent("-----BEGIN CERTIFICATE-----\nfield\n-----END CERTIFICATE-----"),
+			KeyFile:  types.FileOrContent("-----BEGIN PRIVATE KEY-----\nfield\n-----END PRIVATE KEY-----"),
+		}},
+	}, conf.TLS.Certificates)
+}
+
 func TestLoadConfigurationFromIngressesWithExternalNameServices(t *testing.T) {
 	testCases := []struct {
 		desc                      string
