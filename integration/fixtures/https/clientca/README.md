@@ -1,6 +1,6 @@
 # This is how the certs were created
 
-Password: traefik
+Password: ingress
 
 ```bash
 # ca1.example.com

@@ -49,7 +49,7 @@ services:
       ingress.http.routers.rt-digestAuthMiddleware.entryPoints: digestAuth
       ingress.http.routers.rt-digestAuthMiddleware.rule: Host(`entrypoint.digest.auth.docker.local`)
       ingress.http.routers.rt-digestAuthMiddleware.middlewares: digestauth
-      ingress.http.middlewares.digestauth.digestauth.users: test:traefik:a2688e031edb4be6a3797f3882655c05, test2:traefik:518845800f9e2bfb1f1f740ec24f074e
+      ingress.http.middlewares.digestauth.digestauth.users: test:ingress:c6ab6673638f15e297094e67b4f57798, test2:ingress:4edd369c81fa595a914e837ee66e26c8
       ingress.http.services.service3.loadbalancer.server.port: 80
 
   frontendRedirect:
