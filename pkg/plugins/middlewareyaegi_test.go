@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/traefik/yaegi/interp"
+	"github.com/hanzoai/yaegi/interp"
 )
 
 // TestNewInterpreter_SyscallErrorCase - Tests the security gate logic

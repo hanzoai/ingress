@@ -31,8 +31,10 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674
+	github.com/hanzoai/grpc-web v0.16.1
 	github.com/hanzoai/ingress-parser v0.2.3
 	github.com/hanzoai/ingress/dynamic/ext v0.0.0-00010101000000-000000000000
+	github.com/hanzoai/yaegi v0.16.2
 	github.com/hashicorp/consul/api v1.26.1
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-multierror v1.1.1
@@ -72,8 +74,6 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/k3s v0.32.0
 	github.com/tetratelabs/wazero v1.8.0
 	github.com/tidwall/gjson v1.18.0
-	github.com/traefik/grpc-web v0.16.0
-	github.com/traefik/yaegi v0.16.1
 	github.com/unrolled/render v1.0.2
 	github.com/unrolled/secure v1.15.0
 	github.com/valyala/fasthttp v1.70.0
@@ -463,23 +463,18 @@ replace (
 	github.com/mailgun/minheap => github.com/containous/minheap v0.0.0-20190809180810-6e71eb837595
 )
 
-// Own the framework deps (#29): the auxiliary upstream libraries the engine
-// links are pinned to hanzoai source-forks. Each fork keeps its upstream module
-// path at the identical version — `github.com/traefik/*` for yaegi & grpc-web,
-// `github.com/vulcand/oxy/v2` for oxy — so the import lines in pkg/plugins,
-// pkg/middlewares/grpcweb and the oxy-based middlewares are unchanged; only
-// resolution moves to a path hanzoai controls (immune to upstream re-tag /
-// deletion; patchable in-house). oxy is a straight source-mirror of traefik/oxy
-// (itself a fork of vulcand/oxy) pinned to the exact commit previously resolved.
-replace (
-	github.com/traefik/grpc-web => github.com/hanzoai/grpc-web v0.16.0
-	github.com/traefik/yaegi => github.com/hanzoai/yaegi v0.16.1
-	github.com/vulcand/oxy/v2 => github.com/hanzoai/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
-)
+// Own the framework deps (#29): the auxiliary libraries the engine links are
+// hanzoai source-forks. yaegi (pkg/plugins) and grpc-web
+// (pkg/middlewares/grpcweb) declare their own module path and are required
+// directly above — no `replace`, so the import lines carry no upstream brand.
+// oxy still resolves through a `replace` because the fork has not yet been
+// republished under its own path; converting it is the same one-line change
+// once github.com/hanzoai/oxy declares `module github.com/hanzoai/oxy/v2`.
+replace github.com/vulcand/oxy/v2 => github.com/hanzoai/oxy/v2 v2.0.0-20260126093803-fb11d60e0fdf
 
 // nhooyr.io/websocket was moved to github.com/coder/websocket; the nhooyr.io
 // vanity import path no longer resolves (unknown revision v1.8.7), which breaks
-// the transitive require pulled in by github.com/traefik/grpc-web v0.16.0.
+// the transitive require pulled in by github.com/hanzoai/grpc-web.
 // coder/websocket v1.8.11 is the highest patch in the 1.8.x line whose go.mod
 // still declares `module nhooyr.io/websocket` (v1.8.12 renamed it to
 // github.com/coder/websocket). Pinning to v1.8.11 keeps the package's own
