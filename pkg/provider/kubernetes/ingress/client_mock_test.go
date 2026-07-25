@@ -114,7 +114,9 @@ func (c clientMock) GetSecret(namespace, name string) (*corev1.Secret, bool, err
 }
 
 func (c clientMock) GetIngressClasses() ([]*netv1.IngressClass, error) {
-	return c.ingressClasses, nil
+	// Same narrowing the live clientWrapper applies, so fixtures must declare a
+	// spec.controller this build actually serves in order to be discovered.
+	return filterIngressClassByController(c.ingressClasses), nil
 }
 
 func (c clientMock) WatchAll(namespaces []string, stopCh <-chan struct{}) (<-chan any, error) {
