@@ -167,9 +167,9 @@
           "Address": "",
           "EnableTagOverride": false,
           "Tags": [
-            "traefik.enable=true",
-            "traefik.tcp.routers.job7.rule=HostSNI(`job7`)",
-            "traefik.tcp.routers.job7.tls.passthrough=true"
+            "ingress.enable=true",
+            "ingress.tcp.routers.job7.rule=HostSNI(`job7`)",
+            "ingress.tcp.routers.job7.tls.passthrough=true"
           ],
           "CanaryTags": null,
           "Checks": null,
