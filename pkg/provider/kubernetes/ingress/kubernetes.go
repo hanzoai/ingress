@@ -390,7 +390,15 @@ func (p *Provider) loadConfigurationFromIngresses(ctx context.Context, client Cl
 				serviceName := provider.Normalize(ingress.Namespace + "-" + pa.Backend.Service.Name + "-" + portString)
 				conf.HTTP.Services[serviceName] = service
 
-				rt := p.loadRouter(rule, pa, rtConfig, serviceName)
+				rt, err := p.loadRouter(rule, pa, rtConfig, serviceName)
+				if err != nil {
+					logger.Error().Err(err).
+						Str("serviceName", pa.Backend.Service.Name).
+						Str("path", pa.Path).
+						Msg("Skipping path.")
+
+					continue
+				}
 
 				p.applyRouterTransform(ctxIngress, rt, ingress)
 
@@ -732,7 +740,7 @@ func (p *Provider) loadService(client Client, namespace string, backend netv1.In
 	return svc, nil
 }
 
-func (p *Provider) loadRouter(rule netv1.IngressRule, pa netv1.HTTPIngressPath, rtConfig *RouterConfig, serviceName string) *dynamic.Router {
+func (p *Provider) loadRouter(rule netv1.IngressRule, pa netv1.HTTPIngressPath, rtConfig *RouterConfig, serviceName string) (*dynamic.Router, error) {
 	rt := &dynamic.Router{
 		Service: serviceName,
 	}
@@ -760,6 +768,16 @@ func (p *Provider) loadRouter(rule netv1.IngressRule, pa netv1.HTTPIngressPath, 
 
 		if pa.PathType == nil || *pa.PathType == "" || *pa.PathType == netv1.PathTypeImplementationSpecific {
 			if rtConfig != nil && rtConfig.Router != nil && rtConfig.Router.PathMatcher != "" {
+				// The matcher is a bare identifier in the rule expression, so it
+				// cannot be quoted like the operands are. It comes straight from
+				// an annotation, so it is restricted to the matchers it is
+				// allowed to name.
+				switch rtConfig.Router.PathMatcher {
+				case "Path", "PathPrefix", "PathRegexp":
+				default:
+					return nil, fmt.Errorf("invalid router path matcher %q: must be one of Path, PathPrefix, PathRegexp", rtConfig.Router.PathMatcher)
+				}
+
 				matcher = rtConfig.Router.PathMatcher
 			}
 		} else if *pa.PathType == netv1.PathTypeExact {
@@ -770,7 +788,7 @@ func (p *Provider) loadRouter(rule netv1.IngressRule, pa netv1.HTTPIngressPath, 
 	}
 
 	rt.Rule = strings.Join(rules, " && ")
-	return rt
+	return rt, nil
 }
 
 func buildHostRuleV2(host string) string {
@@ -929,7 +947,13 @@ func buildRule(strictPrefixMatching bool, matcher string, path string) string {
 		return buildStrictPrefixMatchingRule(path)
 	}
 
-	return fmt.Sprintf("%s(`%s`)", matcher, path)
+	// %q, not backticks: the path is attacker-controlled (any user able to create
+	// an Ingress picks it, and Kubernetes only validates that it starts with "/"),
+	// and it is being interpolated into a rule expression. A backtick-delimited
+	// operand cannot escape a backtick, so a path containing one closes the
+	// operand and the rest is parsed as rule syntax — letting an Ingress in one
+	// namespace match traffic for hosts and paths it does not own.
+	return fmt.Sprintf("%s(%q)", matcher, path)
 }
 
 // buildStrictPrefixMatchingRule is a helper function to build a path prefix rule that matches path prefix split by `/`.
@@ -940,11 +964,11 @@ func buildRule(strictPrefixMatching bool, matcher string, path string) string {
 // Kubernetes Ingress API.
 func buildStrictPrefixMatchingRule(path string) string {
 	if path == "/" {
-		return "PathPrefix(`/`)"
+		return `PathPrefix("/")`
 	}
 
 	path = strings.TrimSuffix(path, "/")
-	return fmt.Sprintf("(Path(`%[1]s`) || PathPrefix(`%[1]s/`))", path)
+	return fmt.Sprintf("(Path(%q) || PathPrefix(%q))", path, path+"/")
 }
 
 func throttleEvents(ctx context.Context, throttleDuration time.Duration, pool *safe.Pool, eventsChan <-chan any) chan any {
