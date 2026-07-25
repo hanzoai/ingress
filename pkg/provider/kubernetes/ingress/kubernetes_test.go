@@ -1737,7 +1737,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 // have no escape sequence, so a path containing a backtick used to terminate its
 // operand early and have the remainder parsed as rule syntax — letting an Ingress
 // in one namespace claim hosts and paths belonging to another. Ported from
-// upstream Traefik #13227.
+// upstream #13227.
 func TestRuleInjection(t *testing.T) {
 	prefix := netv1.PathTypePrefix
 
