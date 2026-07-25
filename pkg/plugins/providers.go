@@ -14,7 +14,7 @@ import (
 	"github.com/hanzoai/ingress/pkg/observability/logs"
 	"github.com/hanzoai/ingress/pkg/provider"
 	"github.com/hanzoai/ingress/pkg/safe"
-	"github.com/traefik/yaegi/interp"
+	"github.com/hanzoai/yaegi/interp"
 )
 
 // PP the interface of a plugin's provider.
