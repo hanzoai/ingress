@@ -14,10 +14,10 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/hanzoai/ingress/pkg/observability/logs"
-	"github.com/traefik/yaegi/interp"
-	"github.com/traefik/yaegi/stdlib"
-	"github.com/traefik/yaegi/stdlib/syscall"
-	"github.com/traefik/yaegi/stdlib/unsafe"
+	"github.com/hanzoai/yaegi/interp"
+	"github.com/hanzoai/yaegi/stdlib"
+	"github.com/hanzoai/yaegi/stdlib/syscall"
+	"github.com/hanzoai/yaegi/stdlib/unsafe"
 )
 
 type yaegiMiddlewareBuilder struct {
