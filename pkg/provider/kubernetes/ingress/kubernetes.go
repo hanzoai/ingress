@@ -260,6 +260,16 @@ func (p *Provider) loadConfigurationFromIngresses(ctx context.Context, client Cl
 		ctxIngress := logger.WithContext(ctx)
 
 		if !p.shouldProcessIngress(ingress, ingressClasses) {
+			// Say why. Disowning an Ingress discards its routers and its
+			// spec.TLS together, so when the class is misconfigured the visible
+			// symptom is a certificate that never appears — with nothing in the
+			// logs connecting that back to class selection.
+			logger.Debug().
+				Str("ingressClassName", ptr.Deref(ingress.Spec.IngressClassName, "")).
+				Str("ingressClassAnnotation", ingress.Annotations[annotationKubernetesIngressClass]).
+				Str("providerIngressClass", p.IngressClass).
+				Msg("Skipping Ingress: class is not served by this controller")
+
 			continue
 		}
 
@@ -523,13 +533,33 @@ func (p *Provider) updateIngressStatus(ing *netv1.Ingress, k8sClient Client) err
 }
 
 func (p *Provider) shouldProcessIngress(ingress *netv1.Ingress, ingressClasses []*netv1.IngressClass) bool {
-	// configuration through the new kubernetes ingressClass
+	// Configuration through the Kubernetes IngressClass (spec.ingressClassName).
 	if ingress.Spec.IngressClassName != nil {
+		// An explicit ingressClass option names the class this provider serves,
+		// so it alone decides ownership — exactly as it does for the annotation
+		// form below. Both ways of selecting this controller must claim the same
+		// Ingresses; anything else silently drops routers and their spec.TLS for
+		// one form only.
+		//
+		// Deferring to the discovered IngressClass objects here instead would add
+		// a second, invisible condition: the class would also have to carry a
+		// spec.controller equal to IngressClassController. That value is
+		// deployment-specific (INGRESS_CONTROLLER_NAME), so a mismatch silently
+		// emptied the discovered set and disowned every field-form Ingress.
+		if len(p.IngressClass) > 0 {
+			return p.IngressClass == *ingress.Spec.IngressClassName
+		}
+
+		// Without an explicit option, fall back to discovery: the class must
+		// resolve to an IngressClass this build serves. ingressClasses is already
+		// narrowed to IngressClassController by the client, which is what keeps
+		// sibling controllers' classes from being claimed here.
 		return slices.ContainsFunc(ingressClasses, func(ic *netv1.IngressClass) bool {
 			return *ingress.Spec.IngressClassName == ic.ObjectMeta.Name
 		})
 	}
 
+	// Configuration through the deprecated kubernetes.io/ingress.class annotation.
 	return p.IngressClass == ingress.Annotations[annotationKubernetesIngressClass] ||
 		len(p.IngressClass) == 0 && ingress.Annotations[annotationKubernetesIngressClass] == defaultIngressClass
 }
