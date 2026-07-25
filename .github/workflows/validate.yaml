@@ -11,6 +11,15 @@ on:
 env:
   GOLANGCI_LINT_VERSION: v2.10.1
   MISSPELL_VERSION: v0.7.0
+  # Must match ci.yml. Without it every job here fails the checksum-database
+  # lookup for github.com/luxfi/zap@v0.8.8, whose tag was force-re-tagged
+  # upstream: sum.golang.org holds h1:gFDyzMJ… while the proxy, the origin and
+  # our go.sum all serve h1:B3R960O…. The /go.mod hash is identical across both,
+  # which is the signature of a source-content re-tag rather than a different
+  # module. The transparency log is append-only, so that mismatch is permanent.
+  # ci.yml already exempts these namespaces and passes; validate.yaml set no
+  # GOPRIVATE at all, so it alone tripped the sumdb check.
+  GOPRIVATE: github.com/hanzoai/*,github.com/luxfi/*,github.com/zap-proto/*
 
 jobs:
 
