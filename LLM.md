@@ -40,64 +40,93 @@ ingress/
 
 ## Rebrand Notes
 
-The engine is fully de-traefik'd: the parser dependency was forked to
+The engine is fully de-branded: the parser dependency was forked to
 `github.com/hanzoai/ingress-parser` (`DefaultRootName = "ingress"`,
 `DefaultNamePrefix = "INGRESS_"`), the config base paths are
-`/etc/ingress/ingress`, the Prometheus metric prefix is `ingress_`, and
-the CRD apiGroup is `hanzo.ai`. The standalone binary is built from
-`cmd/ingress` (was `cmd/traefik`) and ships as `hanzo-ingress`.
+`/etc/ingress/ingress`, the Prometheus metric prefix is `ingress_`, the
+CRD apiGroup is `hanzo.ai`, the internal entry point is `ingress`, and the
+auth middlewares' default realm is `ingress`. The standalone binary is
+built from `cmd/ingress` and ships as `hanzo-ingress`.
 
-### Framework ownership — the `traefik/*` runtime libs (#29)
+### Framework ownership — every fork owns its module path (#29)
 
-The Traefik engine itself is already a full source-fork under
-`github.com/hanzoai/ingress` (own module path, whole tree). The auxiliary
-upstream libraries the engine links are owned by pinning them to hanzoai
-source-forks via `replace` in `go.mod` — the import lines stay
-`github.com/traefik/*` (the forks keep the upstream module path at the same
-version tag), only resolution moves to a path hanzoai controls.
+The engine itself is a full source-fork under `github.com/hanzoai/ingress`
+(own module path, whole tree). The auxiliary libraries it links follow the
+same rule: **a hanzoai fork declares its OWN module path and is required
+directly — never resolved via `replace` against the upstream path.** A
+`replace` leaves the upstream brand on every import line in every consumer,
+which is exactly what the rule exists to prevent.
 
-| Upstream import | Resolves to | Ownership | Used by |
-|-----------------|-------------|-----------|---------|
-| `github.com/traefik/yaegi` v0.16.1 | **`github.com/hanzoai/yaegi` v0.16.1** | fork (ours) | `pkg/plugins` (Go interpreter for plugins) |
-| `github.com/traefik/grpc-web` v0.16.0 | **`github.com/hanzoai/grpc-web` v0.16.0** | fork (ours) | `pkg/middlewares/grpcweb` |
-| `github.com/vulcand/oxy/v2` | **`github.com/hanzoai/oxy/v2` v2.0.0-20260126093803-fb11d60e0fdf** | fork (ours) | reverse-proxy lib — `utils`/`forward`/`buffer`/`cbreaker`/`connlimit` across `pkg/middlewares/*` |
-| `github.com/hanzoai/ingress-parser` | — | fork (ours) | config parser (`DefaultRootName=ingress`, `INGRESS_` prefix) |
+| Import path | Version | Ownership | Used by |
+|-------------|---------|-----------|---------|
+| `github.com/hanzoai/yaegi` | v0.16.2 | fork (ours), own module path | `pkg/plugins` (Go interpreter for plugins) |
+| `github.com/hanzoai/grpc-web` | v0.16.1 | fork (ours), own module path | `pkg/middlewares/grpcweb` |
+| `github.com/hanzoai/ingress-parser` | v0.2.3 | fork (ours), own module path | config parser (`DefaultRootName=ingress`, `INGRESS_` prefix) |
+| `github.com/vulcand/oxy/v2` | pseudo-v2.0.0-2026… | fork (ours), **still via `replace`** | reverse-proxy lib — `utils`/`forward`/`buffer`/`cbreaker`/`connlimit` across `pkg/middlewares/*` |
 
-`go list -m github.com/traefik/{yaegi,grpc-web} github.com/vulcand/oxy/v2` shows
-all three `=> hanzoai/*`. `hanzoai/oxy` is a straight source-mirror of
-`traefik/oxy` (itself a fork of `vulcand/oxy`) pinned to the exact commit
-previously resolved — the module path stays `github.com/vulcand/oxy/v2`, so it
-is a drop-in and the import lines are unchanged.
+`go list -m all | grep hanzoai` shows yaegi/grpc-web/ingress-parser resolving
+with no `replace` in play. oxy is the one remaining `replace`: it carries no
+upstream brand in its path, so it is not a leak, but it does violate the
+own-your-module-path rule. Closing it is a one-line change here once
+`github.com/hanzoai/oxy` declares `module github.com/hanzoai/oxy/v2`.
 
 ### Load-bearing "traefik" that intentionally STAYS
-These are the only remaining `traefik` strings outside the vendored
-upstream docs/changelog. They are NOT branding and must not be renamed:
+Not branding — renaming these breaks behaviour or breaches a licence:
 
-- **External Go import paths** — the import lines `github.com/traefik/yaegi`,
-  `github.com/traefik/grpc-web`, `github.com/vulcand/oxy/v2` stay verbatim; all
-  three resolve to hanzoai forks via `replace` (see the ownership table above),
-  so the path is upstream-looking but hanzoai-owned. Renaming the import path
-  itself breaks the build.
-- **Hash-bound test data** — `pkg/middlewares/auth/digest_auth_test.go`
-  htdigest hashes are `md5(user:realm:password)` with realm `"traefik"`.
-  Changing the realm invalidates the precomputed hashes (~10 refs).
+- **Licence attribution (legal)** — `LICENSE.md`, `NOTICE`, and the
+  `script/boilerplate.go.tmpl` copyright header carry the upstream
+  copyright line. Retaining it is an obligation of the MIT/Apache-2.0
+  grant we forked under, not a branding choice. Never strip it.
+- **k3s CLI flag** — `integration/resources/compose/k8s.yml` passes
+  `--disable=traefik` to k3s, which is how k3s is told not to install its
+  own bundled ingress. The token names *k3s's* component, not ours;
+  renaming it silently re-enables that ingress and the test starts racing
+  a second controller for port 80.
+- **Upstream test images** — `integration/**` pulls `traefik/whoami`,
+  `traefik/whoamitcp`, `traefik/whoamiudp`. These are published images on
+  Docker Hub; the name is an address, not a label. Closing this needs the
+  three images mirrored to `ghcr.io/hanzoai/whoami{,tcp,udp}` first.
 - **Upstream issue citation** — `integration/consul_test.go` links
   `https://github.com/traefik/traefik/issues/8092` as the provenance of
-  a regression test. The issue only exists at that URL.
+  a regression test. The issue only exists at that URL; a rewritten link
+  would be a dead link, which is worse than the mention.
+
+### Known remaining leaks (tracked, not yet closed)
+- **Generated CRD manifests** — `docs/content/reference/dynamic-configuration/`
+  still holds `traefik.io_*.yaml`: stale controller-gen output whose
+  *filenames and `description:` text* carry the brand, and which
+  `kubectl explain` surfaces to customers. The Go CRD types they are
+  generated from are already clean (`// IngressRoute is the CRD
+  implementation of a Ingress HTTP Router.`), so this is pure staleness.
+  Note `script/code-gen.sh` globs `hanzo.ai_*.yaml`, which matches nothing
+  — the regeneration pipeline is broken and must be fixed before the
+  dumps can be refreshed. `integration/fixtures/k8s/01-ingress-crd.yml`
+  (the copy that is actually applied) has been hand-corrected to match
+  what a fixed regeneration would emit.
+- **Test certificate DN** — `integration/fixtures/acme/ssl/wildcard.crt`
+  has `OU=Traefik` in its X.509 subject, documented by
+  `integration/fixtures/acme/README.md`. Closing it means regenerating
+  the cert/key pair with `OU=Ingress` and can only be validated by the
+  acme integration suite (Docker + pebble).
 
 ### Vendored upstream content (out of scope by nature)
-`docs/content/**`, `CHANGELOG.md`, `webui/**` (the dashboard SPA), and
-the `traefik.io_*.yaml` CRD reference dumps under `docs/` are imported
-upstream Traefik material kept for reference. They carry the bulk of the
-remaining `traefik` occurrences and do not ship in the runtime binary or
-image. Rebrand them only as part of a dedicated docs pass.
+`docs/content/**` (prose), `CHANGELOG.md`, and `webui/**` (the dashboard
+SPA) are imported upstream material kept for reference. They carry the bulk
+of the remaining occurrences and do not ship in the runtime binary or image.
+Rebranding them makes future upstream syncs harder; do it only as a
+dedicated docs pass.
 
-### Wire protocol changes (intentional)
-- `X-Traefik-Fast-Proxy` header renamed to `X-Ingress-Fast-Proxy`
-- `X-Traefik-Router` header renamed to `X-Ingress-Router`
-- Prometheus/InfluxDB metric prefix: `traefik.*` renamed to `ingress.*`
-  (the bundled Grafana dashboards in `contrib/grafana/ingress*.json`
-  query the `ingress_*` metric names accordingly)
+### Wire protocol (diverges from upstream — intentional)
+- Internal proxy headers are `X-Ingress-Fast-Proxy` and `X-Ingress-Router`.
+- Prometheus/InfluxDB metrics are prefixed `ingress.*` (the bundled Grafana
+  dashboards in `contrib/grafana/ingress*.json` query `ingress_*`
+  accordingly).
+- The internal entry point is named `ingress`, and the basic/digest auth
+  middlewares default to realm `ingress`.
+
+Each of these differs from the name upstream uses, so a config, dashboard
+or scrape rule written against upstream will silently no-op here. That is
+the intended behaviour: there is one name for each of these, and it is ours.
 
 ### Pre-existing build/test issues (not caused by rebrand)
 - `webui/embed.go` `//go:embed static` fails until the dashboard assets
@@ -179,9 +208,11 @@ the backend (Go's `http.ServeContent` or `http.ServeFile`).
 
 ### Annotation prefix
 
-The K8s Ingress provider uses annotation prefix `ingress.kubernetes.io/`, NOT
-`traefik.ingress.kubernetes.io/`. Annotations with the old Traefik prefix are
-silently ignored.
+The K8s Ingress provider reads exactly one annotation prefix:
+`ingress.kubernetes.io/`. Any other vendor prefix is silently ignored, so a
+manifest carrying an upstream-prefixed annotation applies no configuration
+and reports no error — check the prefix first when an annotation appears to
+have no effect.
 
 ## ZAP-HTTP Backend Transport
 
