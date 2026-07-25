@@ -16,10 +16,12 @@ import (
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
+	"github.com/hanzoai/ingress/pkg/middlewares/requestdecorator"
 	ingresshttp "github.com/hanzoai/ingress/pkg/muxer/http"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"github.com/hanzoai/ingress/pkg/provider"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/k8s"
+	"github.com/hanzoai/ingress/pkg/testhelpers"
 	"github.com/hanzoai/ingress/pkg/tls"
 	"github.com/hanzoai/ingress/pkg/types"
 	corev1 "k8s.io/api/core/v1"
@@ -71,7 +73,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -104,7 +106,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:        "Path(`/bar`)",
+							Rule:        "Path(\"/bar\")",
 							EntryPoints: []string{"ep1", "ep2"},
 							Service:     "testing-service1-80",
 							Middlewares: []string{"md1", "md2"},
@@ -170,11 +172,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 						"testing-foo": {
-							Rule:    "PathPrefix(`/foo`)",
+							Rule:    "PathPrefix(\"/foo\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -206,12 +208,12 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 				HTTP: &dynamic.HTTPConfiguration{
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
-						"testing-bar-bar-aba9a7d00e9b06a78e16": {
-							Rule:    "HostRegexp(`^[a-zA-Z0-9-]+\\.bar$`) && PathPrefix(`/bar`)",
+						"testing-bar-bar-78f95adb29fc8d92fb72": {
+							Rule:    "HostRegexp(`^[a-zA-Z0-9-]+\\.bar$`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
-						"testing-bar-bar-636bf36c00fedaab3d44": {
-							Rule:    "Host(`bar`) && PathPrefix(`/bar`)",
+						"testing-bar-bar-4e7b287b129e0f87d1e1": {
+							Rule:    "Host(`bar`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -243,12 +245,12 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 				HTTP: &dynamic.HTTPConfiguration{
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
-						"testing-foo-bar-d0b30949e54d6a7515ca": {
-							Rule:    "PathPrefix(`/foo/bar`)",
+						"testing-foo-bar-930f0e8b221e60bc7ab7": {
+							Rule:    "PathPrefix(\"/foo/bar\")",
 							Service: "testing-service1-80",
 						},
-						"testing-foo-bar-dcd54bae39a6d7557f48": {
-							Rule:    "PathPrefix(`/foo-bar`)",
+						"testing-foo-bar-207cc2245cb31ba18e29": {
+							Rule:    "PathPrefix(\"/foo-bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -281,11 +283,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 						"testing-foo": {
-							Rule:    "PathPrefix(`/foo`)",
+							Rule:    "PathPrefix(\"/foo\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -318,7 +320,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -381,11 +383,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 						"testing-ingress-tchouk-foo": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/foo`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/foo\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -418,11 +420,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 						"testing-ingress-courgette-carotte": {
-							Rule:    "Host(`ingress.courgette`) && PathPrefix(`/carotte`)",
+							Rule:    "Host(`ingress.courgette`) && PathPrefix(\"/carotte\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -455,11 +457,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 						"testing-ingress-courgette-carotte": {
-							Rule:    "Host(`ingress.courgette`) && PathPrefix(`/carotte`)",
+							Rule:    "Host(`ingress.courgette`) && PathPrefix(\"/carotte\")",
 							Service: "testing-service2-8082",
 						},
 					},
@@ -510,7 +512,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -587,7 +589,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"default-router": {
-							Rule:       "PathPrefix(`/`)",
+							Rule:       "PathPrefix(\"/\")",
 							RuleSyntax: "default",
 							Service:    "default-backend",
 							Priority:   math.MinInt32,
@@ -622,7 +624,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -655,7 +657,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-tchouk",
 						},
 					},
@@ -688,7 +690,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-tchouk",
 						},
 					},
@@ -721,11 +723,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-tchouk",
 						},
 						"testing-ingress-tchouk-foo": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/foo`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/foo\")",
 							Service: "testing-service1-carotte",
 						},
 					},
@@ -775,7 +777,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-tchouk",
 						},
 					},
@@ -808,11 +810,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-tchouk",
 						},
 						"toto-toto-ingress-tchouk-bar": {
-							Rule:    "Host(`toto.ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`toto.ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "toto-service1-tchouk",
 						},
 					},
@@ -882,7 +884,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-port-port": {
-							Rule:    "Host(`ingress.port`) && PathPrefix(`/port`)",
+							Rule:    "Host(`ingress.port`) && PathPrefix(\"/port\")",
 							Service: "testing-service1-8080",
 						},
 					},
@@ -953,7 +955,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-443",
 						},
 					},
@@ -986,7 +988,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-8443",
 						},
 					},
@@ -1020,7 +1022,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-8443",
 						},
 					},
@@ -1053,7 +1055,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"default-router": {
-							Rule:       "PathPrefix(`/`)",
+							Rule:       "PathPrefix(\"/\")",
 							RuleSyntax: "default",
 							Service:    "default-backend",
 							Priority:   math.MinInt32,
@@ -1088,7 +1090,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1161,7 +1163,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-foobar-com-bar": {
-							Rule:    "HostRegexp(`^[a-zA-Z0-9-]+\\.foobar\\.com$`) && PathPrefix(`/bar`)",
+							Rule:    "HostRegexp(`^[a-zA-Z0-9-]+\\.foobar\\.com$`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1194,7 +1196,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-foobar-com-bar": {
-							Rule:    "HostRegexp(`{subdomain:[a-zA-Z0-9-]+}.foobar.com`) && PathPrefix(`/bar`)",
+							Rule:    "HostRegexp(`{subdomain:[a-zA-Z0-9-]+}.foobar.com`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1226,11 +1228,11 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-foo": {
-							Rule:    "PathPrefix(`/foo`)",
+							Rule:    "PathPrefix(\"/foo\")",
 							Service: "testing-service1-80",
 						},
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1261,7 +1263,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-foo": {
-							Rule:    "PathPrefix(`/foo`)",
+							Rule:    "PathPrefix(\"/foo\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1291,7 +1293,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1321,7 +1323,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "Path(`/bar`)",
+							Rule:    "Path(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1351,7 +1353,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "Path(`/bar`)",
+							Rule:    "Path(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1381,7 +1383,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "Path(`/bar`)",
+							Rule:    "Path(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1411,7 +1413,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1444,7 +1446,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1477,7 +1479,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1507,7 +1509,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1563,7 +1565,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-foobar",
 						},
 					},
@@ -1603,7 +1605,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"default-router": {
-							Rule:       "PathPrefix(`/`)",
+							Rule:       "PathPrefix(\"/\")",
 							RuleSyntax: "default",
 							Priority:   math.MinInt32,
 							Service:    "default-backend",
@@ -1635,7 +1637,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1676,7 +1678,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-bar": {
-							Rule:    "(Path(`/bar`) || PathPrefix(`/bar/`))",
+							Rule:    "(Path(\"/bar\") || PathPrefix(\"/bar/\"))",
 							Service: "testing-service1-80",
 						},
 					},
@@ -1723,6 +1725,121 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 			assert.Equal(t, test.expected, conf)
 		})
 	}
+}
+
+// TestRuleInjection pins that Ingress-controlled text cannot break out of the
+// rule expression it is interpolated into.
+//
+// Both inputs below are chosen by whoever creates the Ingress, which in a shared
+// cluster is not necessarily the cluster operator. Kubernetes only validates that
+// a path starts with "/", and the pathMatcher annotation is an unvalidated
+// string, so both reach the rule builder verbatim. Backtick-delimited operands
+// have no escape sequence, so a path containing a backtick used to terminate its
+// operand early and have the remainder parsed as rule syntax — letting an Ingress
+// in one namespace claim hosts and paths belonging to another. Ported from
+// upstream Traefik #13227.
+func TestRuleInjection(t *testing.T) {
+	prefix := netv1.PathTypePrefix
+
+	t.Run("path escapes instead of terminating the operand", func(t *testing.T) {
+		p := Provider{}
+
+		rt, err := p.loadRouter(
+			netv1.IngressRule{Host: "tenant.example.com"},
+			netv1.HTTPIngressPath{
+				// Closes PathPrefix(`...`) and appends a matcher for a host this
+				// Ingress does not own.
+				Path:     "/x`) || Host(`iam.hanzo.ai",
+				PathType: &prefix,
+			},
+			nil,
+			"svc",
+		)
+		require.NoError(t, err)
+
+		// The whole path stays one quoted operand, so the injected backticks are
+		// inert data rather than a second matcher.
+		assert.Equal(t, "Host(`tenant.example.com`) && PathPrefix(\"/x`) || Host(`iam.hanzo.ai\")", rt.Rule)
+
+		// Behaviour is what actually matters: route the rule and confirm the
+		// injected host was not turned into an alternative that matches.
+		parser, err := ingresshttp.NewSyntaxParser()
+		require.NoError(t, err)
+
+		muxer := ingresshttp.NewMuxer(parser)
+		require.NoError(t, muxer.AddRoute(rt.Rule, "", 0,
+			http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })))
+
+		// RequestDecorator is necessary for the Host rule to evaluate at all.
+		reqHost := requestdecorator.New(nil)
+
+		// The host named in the payload must NOT be claimed by this router.
+		w := httptest.NewRecorder()
+		reqHost.ServeHTTP(w, testhelpers.MustNewRequest(http.MethodGet, "http://iam.hanzo.ai/", http.NoBody), muxer.ServeHTTP)
+		assert.Equal(t, http.StatusNotFound, w.Code, "injected Host must not match")
+	})
+
+	t.Run("ordinary paths still route through quoted operands", func(t *testing.T) {
+		p := Provider{}
+
+		rt, err := p.loadRouter(
+			netv1.IngressRule{Host: "tenant.example.com"},
+			netv1.HTTPIngressPath{Path: "/api", PathType: &prefix},
+			nil,
+			"svc",
+		)
+		require.NoError(t, err)
+		assert.Equal(t, "Host(`tenant.example.com`) && PathPrefix(\"/api\")", rt.Rule)
+
+		parser, err := ingresshttp.NewSyntaxParser()
+		require.NoError(t, err)
+
+		muxer := ingresshttp.NewMuxer(parser)
+		require.NoError(t, muxer.AddRoute(rt.Rule, "", 0,
+			http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })))
+
+		reqHost := requestdecorator.New(nil)
+
+		w := httptest.NewRecorder()
+		reqHost.ServeHTTP(w, testhelpers.MustNewRequest(http.MethodGet, "http://tenant.example.com/api/v1", http.NoBody), muxer.ServeHTTP)
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		w = httptest.NewRecorder()
+		reqHost.ServeHTTP(w, testhelpers.MustNewRequest(http.MethodGet, "http://other.example.com/api", http.NoBody), muxer.ServeHTTP)
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+
+	t.Run("path matcher is restricted to known matchers", func(t *testing.T) {
+		p := Provider{}
+		implSpecific := netv1.PathTypeImplementationSpecific
+
+		_, err := p.loadRouter(
+			netv1.IngressRule{Host: "tenant.example.com"},
+			netv1.HTTPIngressPath{Path: "/x", PathType: &implSpecific},
+			// The matcher is a bare identifier, so it cannot be quoted; an
+			// unrestricted value injects rule syntax directly.
+			&RouterConfig{Router: &RouterIng{PathMatcher: "Path(`/`) || Host"}},
+			"svc",
+		)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "invalid router path matcher")
+	})
+
+	t.Run("legitimate matchers still accepted", func(t *testing.T) {
+		p := Provider{}
+		implSpecific := netv1.PathTypeImplementationSpecific
+
+		for _, matcher := range []string{"Path", "PathPrefix", "PathRegexp"} {
+			rt, err := p.loadRouter(
+				netv1.IngressRule{},
+				netv1.HTTPIngressPath{Path: "/x", PathType: &implSpecific},
+				&RouterConfig{Router: &RouterIng{PathMatcher: matcher}},
+				"svc",
+			)
+			require.NoError(t, err, matcher)
+			assert.Equal(t, matcher+`("/x")`, rt.Rule)
+		}
+	})
 }
 
 // TestIngressClassSelectionParity pins the invariant that the two ways an
@@ -1807,7 +1924,7 @@ func TestLoadConfigurationFromIngressesWithExternalNameServices(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-8080",
 						},
 					},
@@ -1837,7 +1954,7 @@ func TestLoadConfigurationFromIngressesWithExternalNameServices(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-example-com-bar": {
-							Rule:    "PathPrefix(`/bar`)",
+							Rule:    "PathPrefix(\"/bar\")",
 							Service: "testing-service-bar-8080",
 						},
 					},
@@ -1868,7 +1985,7 @@ func TestLoadConfigurationFromIngressesWithExternalNameServices(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-example-com-foo": {
-							Rule:    "PathPrefix(`/foo`)",
+							Rule:    "PathPrefix(\"/foo\")",
 							Service: "testing-service-foo-8080",
 						},
 					},
@@ -1921,7 +2038,7 @@ func TestLoadConfigurationFromIngressesWithNativeLB(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-8080",
 						},
 					},
@@ -1971,7 +2088,7 @@ func TestLoadConfigurationFromIngressesWithNodePortLB(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-8080",
 						},
 					},
@@ -2209,7 +2326,7 @@ func TestLoadConfigurationFromIngressesWithNativeLBByDefault(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"testing-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "testing-service1-8080",
 						},
 					},
@@ -2237,7 +2354,7 @@ func TestLoadConfigurationFromIngressesWithNativeLBByDefault(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"default-global-native-lb-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "default-service1-8080",
 						},
 					},
@@ -2265,7 +2382,7 @@ func TestLoadConfigurationFromIngressesWithNativeLBByDefault(t *testing.T) {
 					Middlewares: map[string]*dynamic.Middleware{},
 					Routers: map[string]*dynamic.Router{
 						"default-global-native-lb-ingress-tchouk-bar": {
-							Rule:    "Host(`ingress.tchouk`) && PathPrefix(`/bar`)",
+							Rule:    "Host(`ingress.tchouk`) && PathPrefix(\"/bar\")",
 							Service: "default-native-disabled-svc-web",
 						},
 					},
