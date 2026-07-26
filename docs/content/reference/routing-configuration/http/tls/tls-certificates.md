@@ -98,8 +98,6 @@ tls:
 
 !!! tip "Per provider examples"
 
-    - [Docker: Enable TLS](../../../../expose/docker/basic.md#enable-tls)
-    - [Swarm: Enable TLS](../../../../expose/swarm/basic.md#enable-tls)
     - [Kubernetes: Enable TLS](../../../../expose/kubernetes/basic.md#enable-tls)
 
 ### Default Certificate

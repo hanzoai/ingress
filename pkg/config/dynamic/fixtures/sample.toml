@@ -33,20 +33,6 @@
 
 [providers]
   providersThrottleDuration = 42
-  [providers.docker]
-    constraints = "foobar"
-    watch = true
-    endpoint = "foobar"
-    defaultRule = "foobar"
-    exposedByDefault = true
-    useBindPortIP = true
-    network = "foobar"
-    httpClientTimeout = 42
-    [providers.docker.tls]
-      ca = "foobar"
-      cert = "foobar"
-      key = "foobar"
-      insecureSkipVerify = true
   [providers.file]
     directory = "foobar"
     watch = true
@@ -70,9 +56,6 @@
     namespaces = ["foobar", "foobar"]
     labelSelector = "foobar"
     ingressClass = "foobar"
-  [providers.rest]
-    entryPoint = "foobar"
-
 [api]
   entryPoint = "foobar"
   dashboard = true

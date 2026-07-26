@@ -1,7 +1,0 @@
-services:
-  server1:
-    image: traefik/whoami
-    labels:
-      ingress.enable: true
-      ingress.http.services.service1.loadbalancer.server.port: 80
-      ingress.http.routers.router1.rule: Host(`github.com`)

@@ -18,8 +18,6 @@ Following these guides, you'll learn how to:
 For detailed steps tailored to your environment, follow the guide for your platform:
 
 - [Kubernetes](./kubernetes/basic.md)
-- [Docker](./docker/basic.md)
-- [Docker Swarm](./swarm/basic.md)
 
 ## Advanced Use Cases
 
