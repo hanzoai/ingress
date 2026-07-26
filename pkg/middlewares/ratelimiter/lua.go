@@ -3,7 +3,7 @@ package ratelimiter
 import (
 	"context"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/hanzokv/go/v9"
 )
 
 type Rediser interface {
