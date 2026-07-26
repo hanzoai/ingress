@@ -101,9 +101,9 @@ func New(ctx context.Context, next http.Handler, config dynamic.RateLimit, name 
 	}
 	var limiter limiter
 	if config.Redis != nil {
-		limiter, err = newRedisLimiter(ctx, rate.Limit(rtl), burst, maxDelay, ttl, config, logger)
+		limiter, err = newKVLimiter(ctx, rate.Limit(rtl), burst, maxDelay, ttl, config, logger)
 		if err != nil {
-			return nil, fmt.Errorf("creating redis limiter: %w", err)
+			return nil, fmt.Errorf("creating kv limiter: %w", err)
 		}
 	} else {
 		limiter, err = newInMemoryRateLimiter(rate.Limit(rtl), burst, maxDelay, ttl, logger)

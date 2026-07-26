@@ -13,20 +13,20 @@ import (
 	"golang.org/x/time/rate"
 )
 
-const redisPrefix = "rate:"
+const kvPrefix = "rate:"
 
-type redisLimiter struct {
+type kvLimiter struct {
 	rate     rate.Limit // reqs/s
 	burst    int64
 	maxDelay time.Duration
 	period   ptypes.Duration
 	logger   *zerolog.Logger
 	ttl      int
-	client   Rediser
+	client   KVClient
 }
 
-func newRedisLimiter(ctx context.Context, rate rate.Limit, burst int64, maxDelay time.Duration, ttl int, config dynamic.RateLimit, logger *zerolog.Logger) (limiter, error) {
-	options := &redis.UniversalOptions{
+func newKVLimiter(ctx context.Context, rate rate.Limit, burst int64, maxDelay time.Duration, ttl int, config dynamic.RateLimit, logger *zerolog.Logger) (limiter, error) {
+	options := &kv.UniversalOptions{
 		Addrs:          config.Redis.Endpoints,
 		Username:       config.Redis.Username,
 		Password:       config.Redis.Password,
@@ -64,18 +64,18 @@ func newRedisLimiter(ctx context.Context, rate rate.Limit, burst int64, maxDelay
 		}
 	}
 
-	return &redisLimiter{
+	return &kvLimiter{
 		rate:     rate,
 		burst:    burst,
 		period:   config.Period,
 		maxDelay: maxDelay,
 		logger:   logger,
 		ttl:      ttl,
-		client:   redis.NewUniversalClient(options),
+		client:   kv.NewUniversalClient(options),
 	}, nil
 }
 
-func (r *redisLimiter) Allow(ctx context.Context, source string) (*time.Duration, error) {
+func (r *kvLimiter) Allow(ctx context.Context, source string) (*time.Duration, error) {
 	ok, delay, err := r.evaluateScript(ctx, source)
 	if err != nil {
 		return nil, fmt.Errorf("evaluating script: %w", err)
@@ -86,7 +86,7 @@ func (r *redisLimiter) Allow(ctx context.Context, source string) (*time.Duration
 	return delay, nil
 }
 
-func (r *redisLimiter) evaluateScript(ctx context.Context, key string) (bool, *time.Duration, error) {
+func (r *kvLimiter) evaluateScript(ctx context.Context, key string) (bool, *time.Duration, error) {
 	if r.rate == rate.Inf {
 		return true, nil, nil
 	}
@@ -98,7 +98,7 @@ func (r *redisLimiter) evaluateScript(ctx context.Context, key string) (bool, *t
 		time.Now().UnixMicro(),
 		r.maxDelay.Microseconds(),
 	}
-	v, err := AllowTokenBucketScript.Run(ctx, r.client, []string{redisPrefix + key}, params...).Result()
+	v, err := AllowTokenBucketScript.Run(ctx, r.client, []string{kvPrefix + key}, params...).Result()
 	if err != nil {
 		return false, nil, fmt.Errorf("running script: %w", err)
 	}
@@ -106,11 +106,11 @@ func (r *redisLimiter) evaluateScript(ctx context.Context, key string) (bool, *t
 	values := v.([]any)
 	ok, err := strconv.ParseBool(values[0].(string))
 	if err != nil {
-		return false, nil, fmt.Errorf("parsing ok value from redis rate lua script: %w", err)
+		return false, nil, fmt.Errorf("parsing ok value from kv rate lua script: %w", err)
 	}
 	delay, err := strconv.ParseFloat(values[1].(string), 64)
 	if err != nil {
-		return false, nil, fmt.Errorf("parsing delay value from redis rate lua script: %w", err)
+		return false, nil, fmt.Errorf("parsing delay value from kv rate lua script: %w", err)
 	}
 
 	microDelay := time.Duration(delay * float64(time.Microsecond))
