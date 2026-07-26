@@ -134,7 +134,7 @@ Servers represent individual backend instances for your service. The [service lo
 
 | Field          | Description                                        | Required                                                                         |
 |----------------|----------------------------------------------------|----------------------------------------------------------------------------------|
-| <a id="opt-url" href="#opt-url" title="#opt-url">`url`</a> | Points to a specific instance.                     | Yes for File provider, No for [Docker provider](../../other-providers/docker.md) |
+| <a id="opt-url" href="#opt-url" title="#opt-url">`url`</a> | Points to a specific instance.                     | Yes                                                                              |
 | <a id="opt-weight" href="#opt-weight" title="#opt-weight">`weight`</a> | Allows for weighted load balancing on the servers. | No                                                                               |
 | <a id="opt-preservePath" href="#opt-preservePath" title="#opt-preservePath">`preservePath`</a> | Allows to preserve the URL path.                   | No                                                                               |
 

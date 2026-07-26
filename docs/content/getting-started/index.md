@@ -8,7 +8,6 @@ description: "Quick start guides for deploying Hanzo Ingress in Kubernetes and D
 Hanzo Ingress can be deployed in various environments. Choose your preferred deployment method:
 
 - [Kubernetes Quick Start](./kubernetes.md) - Deploy Hanzo Ingress using Helm
-- [Docker Quick Start](./docker.md) - Deploy Hanzo Ingress using Docker
 
 Each guide will help you:
 

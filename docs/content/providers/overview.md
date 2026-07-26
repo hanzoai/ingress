@@ -134,19 +134,10 @@ Below is the list of the currently supported providers in Hanzo Ingress.
 
 | Provider                                          | Type         | Configuration Type   | Provider Name       |
 |---------------------------------------------------|--------------|----------------------|---------------------|
-| [Docker](./docker.md)                             | Orchestrator | Label                | `docker`            |
 | [Kubernetes IngressRoute](./kubernetes-crd.md)    | Orchestrator | Custom Resource      | `kubernetescrd`     |
 | [Kubernetes Ingress](./kubernetes-ingress.md)     | Orchestrator | Ingress              | `kubernetes`        |
 | [Kubernetes Gateway API](./kubernetes-gateway.md) | Orchestrator | Gateway API Resource | `kubernetesgateway` |
-| [Consul Catalog](./consul-catalog.md)             | Orchestrator | Label                | `consulcatalog`     |
-| [Nomad](./nomad.md)                               | Orchestrator | Label                | `nomad`             |
-| [ECS](./ecs.md)                                   | Orchestrator | Label                | `ecs`               |
 | [File](./file.md)                                 | Manual       | YAML/TOML format     | `file`              |
-| [Consul](./consul.md)                             | KV           | KV                   | `consul`            |
-| [Etcd](./etcd.md)                                 | KV           | KV                   | `etcd`              |
-| [ZooKeeper](./zookeeper.md)                       | KV           | KV                   | `zookeeper`         |
-| [Redis](./redis.md)                               | KV           | KV                   | `redis`             |
-| [HTTP](./http.md)                                 | Manual       | JSON format          | `http`              |
 
 !!! info "More Providers"
 
@@ -195,36 +186,3 @@ providers:
 TODO (document TCP VS HTTP dynamic configuration)
 -->
 
-## Restrict the Scope of Service Discovery
-
-By default, Hanzo Ingress creates routes for all detected containers.
-
-If you want to limit the scope of the Hanzo Ingress service discovery,
-i.e. disallow route creation for some containers,
-you can do so in two different ways:
-
-- the generic configuration option `exposedByDefault`,
-- a finer granularity mechanism based on constraints.
-
-### `exposedByDefault` and `traefik.enable`
-
-List of providers that support these features:
-
-- [Docker](./docker.md#exposedbydefault)
-- [ECS](./ecs.md#exposedbydefault)
-- [Consul Catalog](./consul-catalog.md#exposedbydefault)
-- [Nomad](./nomad.md#exposedbydefault)
-
-### Constraints
-
-List of providers that support constraints:
-
-- [Docker](./docker.md#constraints)
-- [ECS](./ecs.md#constraints)
-- [Consul Catalog](./consul-catalog.md#constraints)
-- [Nomad](./nomad.md#constraints)
-- [Kubernetes CRD](./kubernetes-crd.md#labelselector)
-- [Kubernetes Ingress](./kubernetes-ingress.md#labelselector)
-- [Kubernetes Gateway](./kubernetes-gateway.md#labelselector)
-
-{% include-markdown "includes/traefik-for-business-applications.md" %}
