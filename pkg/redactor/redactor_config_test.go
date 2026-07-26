@@ -16,20 +16,10 @@ import (
 	"github.com/hanzoai/ingress/pkg/ping"
 	"github.com/hanzoai/ingress/pkg/plugins"
 	"github.com/hanzoai/ingress/pkg/provider/acme"
-	"github.com/hanzoai/ingress/pkg/provider/consulcatalog"
-	"github.com/hanzoai/ingress/pkg/provider/docker"
-	"github.com/hanzoai/ingress/pkg/provider/ecs"
 	"github.com/hanzoai/ingress/pkg/provider/file"
-	"github.com/hanzoai/ingress/pkg/provider/http"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/crd"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/gateway"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/ingress"
-	"github.com/hanzoai/ingress/pkg/provider/kv"
-	"github.com/hanzoai/ingress/pkg/provider/kv/consul"
-	"github.com/hanzoai/ingress/pkg/provider/kv/etcd"
-	"github.com/hanzoai/ingress/pkg/provider/kv/redis"
-	"github.com/hanzoai/ingress/pkg/provider/kv/zk"
-	"github.com/hanzoai/ingress/pkg/provider/rest"
 	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 	"github.com/hanzoai/ingress/pkg/types"
 )
@@ -603,49 +593,6 @@ func TestDo_staticConfiguration(t *testing.T) {
 		DebugLogGeneratedTemplate: true,
 	}
 
-	config.Providers.Docker = &docker.Provider{
-		Shared: docker.Shared{
-			ExposedByDefault:   true,
-			Constraints:        `Label("foo", "bar")`,
-			AllowEmptyServices: true,
-			Network:            "MyNetwork",
-			UseBindPortIP:      true,
-			Watch:              true,
-			DefaultRule:        "PathPrefix(`/`)",
-		},
-		ClientConfig: docker.ClientConfig{
-			Endpoint: "MyEndPoint", TLS: &types.ClientTLS{
-				CA:                 "myCa",
-				Cert:               "mycert.pem",
-				Key:                "mycert.key",
-				InsecureSkipVerify: true,
-			},
-			HTTPClientTimeout: 42,
-		},
-	}
-
-	config.Providers.Swarm = &docker.SwarmProvider{
-		Shared: docker.Shared{
-			ExposedByDefault:   true,
-			Constraints:        `Label("foo", "bar")`,
-			AllowEmptyServices: true,
-			Network:            "MyNetwork",
-			UseBindPortIP:      true,
-			Watch:              true,
-			DefaultRule:        "PathPrefix(`/`)",
-		},
-		ClientConfig: docker.ClientConfig{
-			Endpoint: "MyEndPoint", TLS: &types.ClientTLS{
-				CA:                 "myCa",
-				Cert:               "mycert.pem",
-				Key:                "mycert.key",
-				InsecureSkipVerify: true,
-			},
-			HTTPClientTimeout: 42,
-		},
-		RefreshSeconds: 42,
-	}
-
 	config.Providers.KubernetesIngress = &ingress.Provider{
 		Endpoint:         "MyEndpoint",
 		Token:            "MyToken",
@@ -678,120 +625,6 @@ func TestDo_staticConfiguration(t *testing.T) {
 		Namespaces:       []string{"a", "b"},
 		LabelSelector:    "myLabelSelector",
 		ThrottleDuration: ptypes.Duration(111 * time.Second),
-	}
-
-	config.Providers.Rest = &rest.Provider{
-		Insecure: true,
-	}
-
-	config.Providers.ConsulCatalog = &consulcatalog.ProviderBuilder{
-		Configuration: consulcatalog.Configuration{
-			Constraints: `Label("foo", "bar")`,
-			Endpoint: &consulcatalog.EndpointConfig{
-				Address:    "MyAddress",
-				Scheme:     "MyScheme",
-				DataCenter: "MyDatacenter",
-				Token:      "MyToken",
-				TLS: &types.ClientTLS{
-					CA:                 "myCa",
-					Cert:               "mycert.pem",
-					Key:                "mycert.key",
-					InsecureSkipVerify: true,
-				},
-				HTTPAuth: &consulcatalog.EndpointHTTPAuthConfig{
-					Username: "MyUsername",
-					Password: "MyPassword",
-				},
-				EndpointWaitTime: 42,
-			},
-			Prefix:            "MyPrefix",
-			RefreshInterval:   42,
-			RequireConsistent: true,
-			Stale:             true,
-			Cache:             true,
-			ExposedByDefault:  true,
-			DefaultRule:       "PathPrefix(`/`)",
-		},
-		Namespaces: []string{"ns1", "ns2"},
-	}
-
-	config.Providers.Ecs = &ecs.Provider{
-		Constraints:          `Label("foo", "bar")`,
-		ExposedByDefault:     true,
-		RefreshSeconds:       42,
-		DefaultRule:          "PathPrefix(`/`)",
-		Clusters:             []string{"Cluster1", "Cluster2"},
-		AutoDiscoverClusters: true,
-		ECSAnywhere:          true,
-		Region:               "Awsregion",
-		AccessKeyID:          "AwsAccessKeyID",
-		SecretAccessKey:      "AwsSecretAccessKey",
-	}
-
-	config.Providers.Consul = &consul.ProviderBuilder{
-		Provider: kv.Provider{
-			RootKey:   "RootKey",
-			Endpoints: nil,
-		},
-		Token: "secret",
-		TLS: &types.ClientTLS{
-			CA:                 "myCa",
-			Cert:               "mycert.pem",
-			Key:                "mycert.key",
-			InsecureSkipVerify: true,
-		},
-		Namespaces: []string{"ns1", "ns2"},
-	}
-
-	config.Providers.Etcd = &etcd.Provider{
-		Provider: kv.Provider{
-			RootKey:   "RootKey",
-			Endpoints: nil,
-		},
-		Username: "username",
-		Password: "password",
-		TLS: &types.ClientTLS{
-			CA:                 "myCa",
-			Cert:               "mycert.pem",
-			Key:                "mycert.key",
-			InsecureSkipVerify: true,
-		},
-	}
-
-	config.Providers.ZooKeeper = &zk.Provider{
-		Provider: kv.Provider{
-			RootKey:   "RootKey",
-			Endpoints: nil,
-		},
-		Username: "username",
-		Password: "password",
-	}
-
-	config.Providers.Redis = &redis.Provider{
-		Provider: kv.Provider{
-			RootKey:   "RootKey",
-			Endpoints: nil,
-		},
-		Username: "username",
-		Password: "password",
-		TLS: &types.ClientTLS{
-			CA:                 "myCa",
-			Cert:               "mycert.pem",
-			Key:                "mycert.key",
-			InsecureSkipVerify: true,
-		},
-	}
-
-	config.Providers.HTTP = &http.Provider{
-		Endpoint:     "Myendpoint",
-		PollInterval: 42,
-		PollTimeout:  42,
-		TLS: &types.ClientTLS{
-			CA:                 "myCa",
-			Cert:               "mycert.pem",
-			Key:                "mycert.key",
-			InsecureSkipVerify: true,
-		},
 	}
 
 	config.API = &static.API{

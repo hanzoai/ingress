@@ -37,7 +37,6 @@ import (
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"github.com/hanzoai/ingress/pkg/provider/acme"
 	"github.com/hanzoai/ingress/pkg/provider/aggregator"
-	"github.com/hanzoai/ingress/pkg/provider/tailscale"
 	"github.com/hanzoai/ingress/pkg/provider/builtins"
 	"github.com/hanzoai/ingress/pkg/proxy"
 	"github.com/hanzoai/ingress/pkg/proxy/httputil"
@@ -197,10 +196,6 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 	}
 
 	acmeProviders := initACMEProvider(staticConfiguration, providerAggregator, tlsManager, httpChallengeProvider, tlsChallengeProvider, routinesPool)
-
-	// Tailscale
-
-	tsProviders := initTailscaleProviders(staticConfiguration, providerAggregator)
 
 	// Observability
 
@@ -372,12 +367,6 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 		watcher.AddListener(p.ListenConfiguration)
 	}
 
-	// Tailscale
-	for _, p := range tsProviders {
-		resolverNames[p.ResolverName] = struct{}{}
-		watcher.AddListener(p.HandleConfigUpdate)
-	}
-
 	// Certificate resolver logs
 	watcher.AddListener(func(config dynamic.Configuration) {
 		for rtName, rt := range config.HTTP.Routers {
@@ -486,27 +475,6 @@ func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.Pr
 	}
 
 	return resolvers
-}
-
-// initTailscaleProviders creates and registers tailscale.Provider instances corresponding to the configured Tailscale certificate resolvers.
-func initTailscaleProviders(cfg *static.Configuration, providerAggregator *aggregator.ProviderAggregator) []*tailscale.Provider {
-	var providers []*tailscale.Provider
-	for name, resolver := range cfg.CertificatesResolvers {
-		if resolver.Tailscale == nil {
-			continue
-		}
-
-		tsProvider := &tailscale.Provider{ResolverName: name}
-
-		if err := providerAggregator.AddProvider(tsProvider); err != nil {
-			log.Error().Err(err).Str(logs.ProviderName, name).Msg("Unable to create Tailscale provider")
-			continue
-		}
-
-		providers = append(providers, tsProvider)
-	}
-
-	return providers
 }
 
 func registerMetricClients(metricsConfig *otypes.Metrics) []metrics.Registry {

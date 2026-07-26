@@ -5,8 +5,7 @@
       "dashboard": {},
       "noop": {},
       "ping": {},
-      "prometheus": {},
-      "rest": {}
+      "prometheus": {}
     }
   },
   "tcp": {},
