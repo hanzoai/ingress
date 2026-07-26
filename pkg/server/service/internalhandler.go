@@ -12,18 +12,16 @@ import (
 type InternalHandlers struct {
 	api        http.Handler
 	dashboard  http.Handler
-	rest       http.Handler
 	prometheus http.Handler
 	ping       http.Handler
 	acmeHTTP   http.Handler
 }
 
 // NewInternalHandlers creates a new InternalHandlers.
-func NewInternalHandlers(apiHandler, rest, metricsHandler, pingHandler, dashboard, acmeHTTP http.Handler) *InternalHandlers {
+func NewInternalHandlers(apiHandler, metricsHandler, pingHandler, dashboard, acmeHTTP http.Handler) *InternalHandlers {
 	return &InternalHandlers{
 		api:        apiHandler,
 		dashboard:  dashboard,
-		rest:       rest,
 		prometheus: metricsHandler,
 		ping:       pingHandler,
 		acmeHTTP:   acmeHTTP,
@@ -68,12 +66,6 @@ func (m *InternalHandlers) get(serviceName string) (http.Handler, error) {
 			return nil, errors.New("dashboard is not enabled")
 		}
 		return m.dashboard, nil
-
-	case "rest@internal":
-		if m.rest == nil {
-			return nil, errors.New("rest is not enabled")
-		}
-		return m.rest, nil
 
 	case "ping@internal":
 		if m.ping == nil {

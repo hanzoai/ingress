@@ -77,18 +77,6 @@ func NewProviderAggregator(conf static.Providers) *ProviderAggregator {
 		p.quietAddProvider(conf.File)
 	}
 
-	if conf.Docker != nil {
-		p.quietAddProvider(conf.Docker)
-	}
-
-	if conf.Swarm != nil {
-		p.quietAddProvider(conf.Swarm)
-	}
-
-	if conf.Rest != nil {
-		p.quietAddProvider(conf.Rest)
-	}
-
 	if conf.KubernetesIngress != nil {
 		p.quietAddProvider(conf.KubernetesIngress)
 	}
@@ -107,44 +95,6 @@ func NewProviderAggregator(conf static.Providers) *ProviderAggregator {
 
 	if conf.KubernetesGateway != nil {
 		p.quietAddProvider(conf.KubernetesGateway)
-	}
-
-	if conf.Ecs != nil {
-		p.quietAddProvider(conf.Ecs)
-	}
-
-	if conf.ConsulCatalog != nil {
-		for _, pvd := range conf.ConsulCatalog.BuildProviders() {
-			p.quietAddProvider(pvd)
-		}
-	}
-
-	if conf.Nomad != nil {
-		for _, pvd := range conf.Nomad.BuildProviders() {
-			p.quietAddProvider(pvd)
-		}
-	}
-
-	if conf.Consul != nil {
-		for _, pvd := range conf.Consul.BuildProviders() {
-			p.quietAddProvider(pvd)
-		}
-	}
-
-	if conf.Etcd != nil {
-		p.quietAddProvider(conf.Etcd)
-	}
-
-	if conf.ZooKeeper != nil {
-		p.quietAddProvider(conf.ZooKeeper)
-	}
-
-	if conf.Redis != nil {
-		p.quietAddProvider(conf.Redis)
-	}
-
-	if conf.HTTP != nil {
-		p.quietAddProvider(conf.HTTP)
 	}
 
 	return p
