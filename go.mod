@@ -35,7 +35,7 @@ require (
 	github.com/hanzoai/ingress-parser v0.2.3
 	github.com/hanzoai/ingress/dynamic/ext v0.0.0-00010101000000-000000000000
 	github.com/hanzoai/yaegi v0.16.2
-	github.com/hanzokv/go/v9 v9.21.1
+	github.com/hanzokv/go/v9 v9.22.0
 	github.com/hashicorp/consul/api v1.26.1
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-multierror v1.1.1
