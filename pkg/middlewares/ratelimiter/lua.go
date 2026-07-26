@@ -6,15 +6,15 @@ import (
 	"github.com/hanzokv/go/v9"
 )
 
-type Rediser interface {
-	Eval(ctx context.Context, script string, keys []string, args ...any) *redis.Cmd
-	EvalSha(ctx context.Context, sha1 string, keys []string, args ...any) *redis.Cmd
-	ScriptExists(ctx context.Context, hashes ...string) *redis.BoolSliceCmd
-	ScriptLoad(ctx context.Context, script string) *redis.StringCmd
-	Del(ctx context.Context, keys ...string) *redis.IntCmd
+type KVClient interface {
+	Eval(ctx context.Context, script string, keys []string, args ...any) *kv.Cmd
+	EvalSha(ctx context.Context, sha1 string, keys []string, args ...any) *kv.Cmd
+	ScriptExists(ctx context.Context, hashes ...string) *kv.BoolSliceCmd
+	ScriptLoad(ctx context.Context, script string) *kv.StringCmd
+	Del(ctx context.Context, keys ...string) *kv.IntCmd
 
-	EvalRO(ctx context.Context, script string, keys []string, args ...any) *redis.Cmd
-	EvalShaRO(ctx context.Context, sha1 string, keys []string, args ...any) *redis.Cmd
+	EvalRO(ctx context.Context, script string, keys []string, args ...any) *kv.Cmd
+	EvalShaRO(ctx context.Context, sha1 string, keys []string, args ...any) *kv.Cmd
 }
 
 //nolint:dupword
@@ -63,4 +63,4 @@ redis.call('expire', key, ttl)
 
 return {tostring(true), tostring(wait_duration),tostring(tokens)}`
 
-var AllowTokenBucketScript = redis.NewScript(AllowTokenBucketRaw)
+var AllowTokenBucketScript = kv.NewScript(AllowTokenBucketRaw)

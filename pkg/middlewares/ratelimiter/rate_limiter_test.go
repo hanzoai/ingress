@@ -93,7 +93,7 @@ func TestNewRateLimiter(t *testing.T) {
 			expectedError: "getting source extractor: iPStrategy and RequestHeaderName are mutually exclusive",
 		},
 		{
-			desc: "Use Redis",
+			desc: "Use KV",
 			config: dynamic.RateLimit{
 				Average: 200,
 				Burst:   10,
@@ -344,7 +344,7 @@ func TestInMemoryRateLimit(t *testing.T) {
 	}
 }
 
-func TestRedisRateLimit(t *testing.T) {
+func TestKVRateLimit(t *testing.T) {
 	testCases := []struct {
 		desc         string
 		config       dynamic.RateLimit
@@ -479,8 +479,8 @@ func TestRedisRateLimit(t *testing.T) {
 
 			l := h.(*rateLimiter)
 
-			limiter := l.limiter.(*redisLimiter)
-			limiter.client = newMockRedisClient(limiter.ttl)
+			limiter := l.limiter.(*kvLimiter)
+			limiter.client = newMockKVClient(limiter.ttl)
 
 			h = l
 
@@ -551,20 +551,20 @@ func TestRedisRateLimit(t *testing.T) {
 	}
 }
 
-type mockRedisClient struct {
+type mockKVClient struct {
 	ttl  int
 	keys *ttlmap.TtlMap
 }
 
-func newMockRedisClient(ttl int) Rediser {
+func newMockKVClient(ttl int) KVClient {
 	buckets, _ := ttlmap.NewConcurrent(65536)
-	return &mockRedisClient{
+	return &mockKVClient{
 		ttl:  ttl,
 		keys: buckets,
 	}
 }
 
-func (m *mockRedisClient) EvalSha(ctx context.Context, _ string, keys []string, args ...any) *redis.Cmd {
+func (m *mockKVClient) EvalSha(ctx context.Context, _ string, keys []string, args ...any) *kv.Cmd {
 	state := lua.NewState()
 	defer state.Close()
 
@@ -622,7 +622,7 @@ func (m *mockRedisClient) EvalSha(ctx context.Context, _ string, keys []string, 
 	state.SetGlobal("redis", mod)
 	state.Push(mod)
 
-	cmd := redis.NewCmd(ctx)
+	cmd := kv.NewCmd(ctx)
 	if err := state.DoString(AllowTokenBucketRaw); err != nil {
 		cmd.SetErr(err)
 		return cmd
@@ -655,27 +655,27 @@ func (m *mockRedisClient) EvalSha(ctx context.Context, _ string, keys []string, 
 	return cmd
 }
 
-func (m *mockRedisClient) Eval(ctx context.Context, script string, keys []string, args ...any) *redis.Cmd {
+func (m *mockKVClient) Eval(ctx context.Context, script string, keys []string, args ...any) *kv.Cmd {
 	return m.EvalSha(ctx, script, keys, args...)
 }
 
-func (m *mockRedisClient) ScriptExists(ctx context.Context, hashes ...string) *redis.BoolSliceCmd {
+func (m *mockKVClient) ScriptExists(ctx context.Context, hashes ...string) *kv.BoolSliceCmd {
 	return nil
 }
 
-func (m *mockRedisClient) ScriptLoad(ctx context.Context, script string) *redis.StringCmd {
+func (m *mockKVClient) ScriptLoad(ctx context.Context, script string) *kv.StringCmd {
 	return nil
 }
 
-func (m *mockRedisClient) Del(ctx context.Context, keys ...string) *redis.IntCmd {
+func (m *mockKVClient) Del(ctx context.Context, keys ...string) *kv.IntCmd {
 	return nil
 }
 
-func (m *mockRedisClient) EvalRO(ctx context.Context, script string, keys []string, args ...any) *redis.Cmd {
+func (m *mockKVClient) EvalRO(ctx context.Context, script string, keys []string, args ...any) *kv.Cmd {
 	return nil
 }
 
-func (m *mockRedisClient) EvalShaRO(ctx context.Context, sha1 string, keys []string, args ...any) *redis.Cmd {
+func (m *mockKVClient) EvalShaRO(ctx context.Context, sha1 string, keys []string, args ...any) *kv.Cmd {
 	return nil
 }
 
