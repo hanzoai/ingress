@@ -761,8 +761,11 @@ http:
 ```
 
 ```toml tab="File (TOML)"
-[providers.redis.tls]
-  ca = "path/to/ca.crt"
+[http.middlewares]
+  [http.middlewares.test-ratelimit.rateLimit]
+    [http.middlewares.test-ratelimit.rateLimit.redis]
+      [http.middlewares.test-ratelimit.rateLimit.redis.tls]
+        ca = "path/to/ca.crt"
 ```
 
 ##### `redis.tls.cert`

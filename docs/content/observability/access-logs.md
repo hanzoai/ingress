@@ -311,7 +311,6 @@ services:
       - TZ=US/Alaska
     command:
       - --accesslog.fields.names.StartUTC=drop
-      - --providers.docker
     ports:
       - 80:80
     volumes:

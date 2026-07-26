@@ -16,9 +16,6 @@
   insecure = true
 
 [providers]
-  [providers.docker]
-    watch = true
-
   [providers.file]
     filename = "{{ .SelfFilename }}"
 

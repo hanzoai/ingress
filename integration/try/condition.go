@@ -1,7 +1,6 @@
 package try
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -9,7 +8,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/kvtools/valkeyrie/store"
 )
 
 // ResponseCondition is a retry condition function.
@@ -181,12 +179,3 @@ func HasHeaderStruct(header http.Header) ResponseCondition {
 // DoCondition is a retry condition function.
 // It returns an error.
 type DoCondition func() error
-
-// KVExists is a retry condition function.
-// Verify if a Key exists in the store.
-func KVExists(kv store.Store, key string) DoCondition {
-	return func() error {
-		_, err := kv.Exists(context.Background(), key, nil)
-		return err
-	}
-}

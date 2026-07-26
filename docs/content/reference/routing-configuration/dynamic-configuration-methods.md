@@ -10,10 +10,7 @@ Dynamic configuration—now also known as routing configuration—defines how Ha
 Depending on your environment and preferences, there are several ways to supply this routing configuration:
 
 - File or Structured Provider: Use TOML or YAML files.
-- Docker and ECS Providers: Use container labels.
 - Kubernetes Providers: Use annotations.
-- KV Providers : Use key-value pairs.
-- Other Providers (Consul, Nomad, etc.) : Use tags.
 
 ## Using the File Provider
 
@@ -63,42 +60,6 @@ providers:
               url = "http://localhost:8080"
       ```
 
-## Using Labels With Docker and ECS
-
-When using Docker or Amazon ECS, you can define routing configuration using container labels. This method allows Hanzo Ingress to automatically discover services and apply configurations without the need for additional files.
-
-???+ example "Example with Docker"
-
-    When deploying a Docker container, you can specify labels to define routing rules and services:
-
-    ```yaml
-    services:
-      my-service:
-        image: my-image
-        labels:
-          - "traefik.http.routers.my-router.rule=Host(`example.com`)"
-          - "traefik.http.services.my-service.loadbalancer.server.port=80"
-    ```
-
-???+ example "Example with ECS"
-
-    In ECS, you can use task definition labels to achieve the same effect:
-
-    ```yaml
-    {
-      "containerDefinitions": [
-        {
-          "name": "my-service",
-          "image": "my-image",
-          "dockerLabels": {
-            "traefik.http.routers.my-router.rule": "Host(`example.com`)",
-            "traefik.http.services.my-service.loadbalancer.server.port": "80"
-          }
-        }
-      ]
-    }
-    ```
-
 ## Using Kubernetes Providers
 
 For Kubernetes providers, you can configure Hanzo Ingress using the native Ingress or custom resources (like IngressRoute). Annotations in your Ingress or IngressRoute definition allow you to define routing rules and middleware settings. For example:
@@ -131,55 +92,4 @@ For Kubernetes providers, you can configure Hanzo Ingress using the native Ingre
                       number: 80
       tls:
         - secretName: supersecret    
-    ```
-
-## Using Key-Value Pairs With KV Providers
-
-For [KV providers](./other-providers/kv.md) you can configure Hanzo Ingress with key-value pairs.
-
-???+ example "Examples"
-
-    ```bash tab="etcd"
-    # Set a router rule
-    etcdctl put /traefik/http/routers/my-router/rule "Host(`example.com`)"
-    # Define the service associated with the router
-    etcdctl put /traefik/http/routers/my-router/service "my-service"
-    # Set the backend server URL for the service
-    etcdctl put /traefik/http/services/my-service/loadbalancer/servers/0/url "http://localhost:8080"
-    ```
-
-    ```bash tab="Redis"
-    # Set a router rule
-    redis-cli set traefik/http/routers/my-router/rule "Host(`example.com`)"
-    # Define the service associated with the router
-    redis-cli set traefik/http/routers/my-router/service "my-service"
-    # Set the backend server URL for the service
-    redis-cli set traefik/http/services/my-service/loadbalancer/servers/0/url "http://localhost:8080"
-    ```
-
-    ```bash tab="ZooKeeper"
-    # Set a router rule
-    create /traefik/http/routers/my-router/rule "Host(`example.com`)"
-    # Define the service associated with the router
-    create /traefik/http/routers/my-router/service "my-service"
-    # Set the backend server URL for the service
-    create /traefik/http/services/my-service/loadbalancer/servers/0/url "http://localhost:8080"
-    ```
-
-## Using Tags With Other Providers
-
-For providers that do not support labels, such as Consul & Nomad, you can use tags to provide routing configuration.
-
-???+ example "Example"
-
-    ```json tab="Consul / Nomad"
-    {
-      "Name": "my-service",
-      "Tags": [
-        "traefik.http.routers.my-router.rule=Host(`example.com`)",
-        "traefik.http.services.my-service.loadbalancer.server.port=80"
-      ],
-      "Address": "localhost",
-      "Port": 8080
-    }
     ```
