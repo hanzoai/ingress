@@ -22,7 +22,6 @@ type ManagerFactory struct {
 	proxyBuilder     ProxyBuilder
 
 	api              func(configuration *runtime.Configuration) http.Handler
-	restHandler      http.Handler
 	dashboardHandler http.Handler
 	metricsHandler   http.Handler
 	pingHandler      http.Handler
@@ -59,10 +58,6 @@ func NewManagerFactory(staticConfiguration static.Configuration, routinesPool *s
 		}
 	}
 
-	if staticConfiguration.Providers != nil && staticConfiguration.Providers.Rest != nil {
-		factory.restHandler = staticConfiguration.Providers.Rest.CreateRouter()
-	}
-
 	if staticConfiguration.Metrics != nil && staticConfiguration.Metrics.Prometheus != nil {
 		factory.metricsHandler = metrics.PrometheusHandler()
 	}
@@ -84,6 +79,6 @@ func (f *ManagerFactory) Build(configuration *runtime.Configuration) *Manager {
 		apiHandler = f.api(configuration)
 	}
 
-	internalHandlers := NewInternalHandlers(apiHandler, f.restHandler, f.metricsHandler, f.pingHandler, f.dashboardHandler, f.acmeHTTPHandler)
+	internalHandlers := NewInternalHandlers(apiHandler, f.metricsHandler, f.pingHandler, f.dashboardHandler, f.acmeHTTPHandler)
 	return NewManager(configuration.Services, f.observabilityMgr, f.routinesPool, f.transportManager, f.proxyBuilder, internalHandlers)
 }
