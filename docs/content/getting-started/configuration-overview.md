@@ -28,10 +28,6 @@ Hanzo Ingress gets its _routing configuration_ from [providers](../providers/ove
 
 Since this configuration is specific to your infrastructure choices, we invite you to refer to the [dedicated section of this documentation](../routing/overview.md).
 
-!!! info ""
-
-    In the [Quick Start example](../getting-started/docker.md), the whoami application routing configuration comes from docker in the form of a label attached to the whoami container.
-
 !!! info "HTTPS Certificates also belong to the routing configuration."
 
     You can add / update / remove them without restarting your Hanzo Ingress instance.

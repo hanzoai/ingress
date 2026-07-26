@@ -47,6 +47,9 @@ const (
 	ingressDeployment       = "deployments/ingress"
 	ingressNamespace        = "ingress"
 	tailscaleSecretFilePath = "tailscale.secret"
+
+	ingressTestLogFile       = "ingress.log"
+	ingressTestAccessLogFile = "access.log"
 )
 
 type composeConfig struct {

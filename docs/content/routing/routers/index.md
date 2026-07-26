@@ -625,9 +625,7 @@ Each request must eventually be handled by a [service](../services/index.md),
 which is why each router definition should include a service target,
 which is basically where the request will be passed along to.
 
-In general, a service assigned to a router should have been defined,
-but there are exceptions for label-based providers.
-See the specific [docker](../providers/docker.md#service-definition) documentation.
+A service assigned to a router must have been defined.
 
 !!! warning "The character `@` is not authorized in the service name."
 

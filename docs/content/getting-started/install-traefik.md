@@ -24,8 +24,6 @@ docker run -d -p 8080:8080 -p 80:80 \
     -v $PWD/traefik.yml:/etc/traefik/traefik.yml traefik:v3.6
 ```
 
-For more details, go to the [Docker provider documentation](../providers/docker.md)
-
 !!! tip
 
     * Prefer a fixed version than the latest that could be an unexpected version.

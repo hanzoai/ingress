@@ -19,6 +19,3 @@
 [entryPoints]
   [entryPoints.web]
     address = ":8000"
-
-[providers.docker]
-  exposedByDefault = false

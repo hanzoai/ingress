@@ -1,15 +1,14 @@
 ---
 title: "Certificates Resolver"
-description: "Automatic Certificate Management using Let's Encrypt/Vault and Tailscale."
+description: "Automatic Certificate Management using Let's Encrypt/Vault."
 ---
 
 
 In Hanzo Ingress, TLS Certificates can be generated using Certificates Resolvers.
 
-In Hanzo Ingress, two certificate resolvers exist:
+In Hanzo Ingress, one certificate resolver exists:
 
 - [`acme`](./acme.md): It allows generating ACME certificates stored in a file (not distributed).
-- [`tailscale`](./tailscale.md): It allows provisioning TLS certificates for internal Tailscale services.
 
 The Certificates resolvers are defined in the static configuration.
 
