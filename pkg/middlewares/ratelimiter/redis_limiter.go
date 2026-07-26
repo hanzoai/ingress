@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/hanzokv/go/v9"
 	"github.com/rs/zerolog"
 	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/pkg/config/dynamic"

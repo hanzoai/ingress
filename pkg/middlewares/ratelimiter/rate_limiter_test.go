@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/mailgun/ttlmap"
-	"github.com/redis/go-redis/v9"
+	"github.com/hanzokv/go/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
