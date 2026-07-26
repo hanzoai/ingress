@@ -1,3 +1,0 @@
-services:
-  zookeeper:
-    image: zookeeper:3.5

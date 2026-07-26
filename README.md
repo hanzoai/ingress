@@ -46,7 +46,6 @@ Deployed on the `hanzo-k8s` cluster as the default IngressClass (`hanzo`), it ha
 - **Access logging** -- JSON and Common Log Format output
 - **Metrics export** -- Prometheus, Datadog, StatsD, InfluxDB, OTLP
 - **Web dashboard** -- built-in UI for route visualization and health monitoring
-- **REST API** -- programmatic access to configuration and status
 - **Single static binary** -- no runtime dependencies, minimal attack surface
 - **Host-network mode** -- direct port binding for minimal latency
 
@@ -59,21 +58,6 @@ Deployed on the `hanzo-k8s` cluster as the default IngressClass (`hanzo`), it ha
 | `ghcr.io/hanzoai/ingress:vX.Y.Z` | Pinned release version |
 
 ## Quick Start
-
-### Docker
-
-```bash
-docker run -d \
-  --name hanzo-ingress \
-  -p 80:80 \
-  -p 443:443 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  ghcr.io/hanzoai/ingress:latest \
-  --entrypoints.web.address=:80 \
-  --entrypoints.websecure.address=:443 \
-  --providers.docker=true \
-  --ping=true
-```
 
 ### Kubernetes
 
@@ -101,27 +85,6 @@ curl -sL https://github.com/hanzoai/ingress/releases/latest/download/hanzo-ingre
   --entrypoints.web.address=:80 \
   --entrypoints.websecure.address=:443 \
   --providers.kubernetesingress=true
-```
-
-### Docker Compose
-
-```yaml
-services:
-  ingress:
-    image: ghcr.io/hanzoai/ingress:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./acme.json:/acme.json
-    command:
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--providers.docker=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=ops@hanzo.ai"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
 ```
 
 ### Build from Source
@@ -332,13 +295,11 @@ Hanzo Ingress supports multiple provider backends:
 | Provider | Description |
 |----------|-------------|
 | **Kubernetes Ingress** | Watches `networking.k8s.io/v1` Ingress resources (primary) |
-| **Docker** | Discovers containers via Docker socket labels |
+| **Kubernetes CRD** | Watches IngressRoute and related custom resources |
+| **Kubernetes Gateway API** | Watches Gateway API resources |
 | **File** | Static TOML/YAML configuration files |
-| **Consul** | Service catalog integration |
-| **Etcd** | Key-value store configuration |
-| **ECS** | AWS ECS task discovery |
 
-Production runs exclusively with the Kubernetes Ingress provider.
+Production runs with the Kubernetes Ingress, Kubernetes CRD and File providers.
 
 ## Configuration
 

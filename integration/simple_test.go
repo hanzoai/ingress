@@ -6,14 +6,12 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"regexp"
 	"strings"
 	"sync/atomic"
 	"syscall"
@@ -25,7 +23,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"github.com/hanzoai/ingress/integration/try"
-	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	"golang.org/x/crypto/ocsp"
 )
 
@@ -452,104 +449,6 @@ func (s *SimpleSuite) TestNoAuthOnPing() {
 	require.NoError(s.T(), err)
 }
 
-func (s *SimpleSuite) TestDefaultEntryPointHTTP() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-}
-
-func (s *SimpleSuite) TestWithNonExistingEntryPoint() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd("--entryPoints.http.Address=:8000", "--log.level=DEBUG", "--providers.docker", "--api.insecure")
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-}
-
-func (s *SimpleSuite) TestMetricsPrometheusDefaultEntryPoint() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/metrics", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/metrics", 1*time.Second, try.BodyContains("_router_"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/metrics", 1*time.Second, try.BodyContains("_entrypoint_"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/metrics", 1*time.Second, try.BodyContains("_service_"))
-	require.NoError(s.T(), err)
-
-	// No metrics for internals.
-	err = try.GetRequest("http://127.0.0.1:8080/metrics", 1*time.Second, try.BodyNotContains("router=\"api@internal\"", "service=\"api@internal\""))
-	require.NoError(s.T(), err)
-}
-
-func (s *SimpleSuite) TestMetricsPrometheusTwoRoutersOneService() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd("--entryPoints.http.Address=:8000", "--api.insecure", "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0", "--providers.docker", "--metrics.prometheus.addentrypointslabels=false", "--metrics.prometheus.addrouterslabels=true", "--log.level=DEBUG")
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami2", 1*time.Second, try.StatusCodeIs(http.StatusOK))
-	require.NoError(s.T(), err)
-
-	// adding a loop to test if metrics are not deleted
-	for range 10 {
-		request, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8080/metrics", nil)
-		require.NoError(s.T(), err)
-
-		response, err := http.DefaultClient.Do(request)
-		require.NoError(s.T(), err)
-		assert.Equal(s.T(), http.StatusOK, response.StatusCode)
-
-		body, err := io.ReadAll(response.Body)
-		require.NoError(s.T(), err)
-
-		// Reqs count of 1 for both routers
-		assert.Contains(s.T(), string(body), "ingress_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router1@docker\",service=\"whoami1@docker\"} 1")
-		assert.Contains(s.T(), string(body), "ingress_router_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",router=\"router2@docker\",service=\"whoami1@docker\"} 1")
-		// Reqs count of 2 for service behind both routers
-		assert.Contains(s.T(), string(body), "ingress_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"whoami1@docker\"} 2")
-	}
-}
-
 // TestMetricsWithBufferingMiddleware checks that the buffering middleware
 // (which introduces its own response writer in the chain), does not interfere with
 // the capture middleware on which the metrics mechanism relies.
@@ -620,224 +519,6 @@ func (s *SimpleSuite) TestMetricsWithBufferingMiddleware() {
 	assert.Contains(s.T(), string(body), "ingress_service_requests_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 0")
 	assert.Contains(s.T(), string(body), "ingress_service_requests_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 1")
 	assert.Contains(s.T(), string(body), "ingress_service_responses_bytes_total{code=\"200\",method=\"GET\",protocol=\"http\",service=\"service-resp@file\"} 31")
-}
-
-func (s *SimpleSuite) TestMultipleProviderSameBackendName() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	whoami1IP := s.getComposeServiceIP("whoami1")
-	whoami2IP := s.getComposeServiceIP("whoami2")
-	file := s.adaptFile("fixtures/multiple_provider.toml", struct{ IP string }{IP: whoami2IP})
-
-	s.ingressCmd(withConfigFile(file))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/whoami", 1*time.Second, try.BodyContains(whoami1IP))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/file", 1*time.Second, try.BodyContains(whoami2IP))
-	require.NoError(s.T(), err)
-}
-
-func (s *SimpleSuite) TestIPStrategyAllowlist() {
-	s.createComposeProject("allowlist")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.allowlist.docker.local"))
-	require.NoError(s.T(), err)
-
-	testCases := []struct {
-		desc               string
-		xForwardedFor      string
-		host               string
-		expectedStatusCode int
-	}{
-		{
-			desc:               "override remote addr reject",
-			xForwardedFor:      "8.8.8.8,8.8.8.8",
-			host:               "override.remoteaddr.allowlist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override depth accept",
-			xForwardedFor:      "8.8.8.8,10.0.0.1,127.0.0.1",
-			host:               "override.depth.allowlist.docker.local",
-			expectedStatusCode: 200,
-		},
-		{
-			desc:               "override depth reject",
-			xForwardedFor:      "10.0.0.1,8.8.8.8,127.0.0.1",
-			host:               "override.depth.allowlist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override excludedIPs reject",
-			xForwardedFor:      "10.0.0.3,10.0.0.1,10.0.0.2",
-			host:               "override.excludedips.allowlist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override excludedIPs accept",
-			xForwardedFor:      "8.8.8.8,10.0.0.1,10.0.0.2",
-			host:               "override.excludedips.allowlist.docker.local",
-			expectedStatusCode: 200,
-		},
-	}
-
-	for _, test := range testCases {
-		req := httptest.NewRequest(http.MethodGet, "http://127.0.0.1:8000", nil)
-		req.Header.Set("X-Forwarded-For", test.xForwardedFor)
-		req.Host = test.host
-		req.RequestURI = ""
-
-		err = try.Request(req, 1*time.Second, try.StatusCodeIs(test.expectedStatusCode))
-		require.NoErrorf(s.T(), err, "Error during %s: %v", test.desc, err)
-	}
-}
-
-func (s *SimpleSuite) TestIPStrategyWhitelist() {
-	s.createComposeProject("whitelist")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd(withConfigFile("fixtures/simple_whitelist.toml"))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second, try.BodyContains("override.remoteaddr.whitelist.docker.local"))
-	require.NoError(s.T(), err)
-
-	testCases := []struct {
-		desc               string
-		xForwardedFor      string
-		host               string
-		expectedStatusCode int
-	}{
-		{
-			desc:               "override remote addr reject",
-			xForwardedFor:      "8.8.8.8,8.8.8.8",
-			host:               "override.remoteaddr.whitelist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override depth accept",
-			xForwardedFor:      "8.8.8.8,10.0.0.1,127.0.0.1",
-			host:               "override.depth.whitelist.docker.local",
-			expectedStatusCode: 200,
-		},
-		{
-			desc:               "override depth reject",
-			xForwardedFor:      "10.0.0.1,8.8.8.8,127.0.0.1",
-			host:               "override.depth.whitelist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override excludedIPs reject",
-			xForwardedFor:      "10.0.0.3,10.0.0.1,10.0.0.2",
-			host:               "override.excludedips.whitelist.docker.local",
-			expectedStatusCode: 403,
-		},
-		{
-			desc:               "override excludedIPs accept",
-			xForwardedFor:      "8.8.8.8,10.0.0.1,10.0.0.2",
-			host:               "override.excludedips.whitelist.docker.local",
-			expectedStatusCode: 200,
-		},
-	}
-
-	for _, test := range testCases {
-		req := httptest.NewRequest(http.MethodGet, "http://127.0.0.1:8000", nil)
-		req.Header.Set("X-Forwarded-For", test.xForwardedFor)
-		req.Host = test.host
-		req.RequestURI = ""
-
-		err = try.Request(req, 1*time.Second, try.StatusCodeIs(test.expectedStatusCode))
-		require.NoErrorf(s.T(), err, "Error during %s: %v", test.desc, err)
-	}
-}
-
-func (s *SimpleSuite) TestXForwardedHeaders() {
-	s.createComposeProject("allowlist")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	s.ingressCmd(withConfigFile("fixtures/simple_allowlist.toml"))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 2*time.Second,
-		try.BodyContains("override.remoteaddr.allowlist.docker.local"))
-	require.NoError(s.T(), err)
-
-	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:8000", nil)
-	require.NoError(s.T(), err)
-
-	req.Host = "override.depth.allowlist.docker.local"
-	req.Header.Set("X-Forwarded-For", "8.8.8.8,10.0.0.1,127.0.0.1")
-
-	err = try.Request(req, 1*time.Second,
-		try.StatusCodeIs(http.StatusOK),
-		try.BodyContains("X-Forwarded-Proto", "X-Forwarded-For", "X-Forwarded-Host",
-			"X-Forwarded-Host", "X-Forwarded-Port", "X-Forwarded-Server", "X-Real-Ip"))
-	require.NoError(s.T(), err)
-}
-
-func (s *SimpleSuite) TestMultiProvider() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	whoamiURL := "http://" + net.JoinHostPort(s.getComposeServiceIP("whoami1"), "80")
-
-	file := s.adaptFile("fixtures/multiprovider.toml", struct{ Server string }{Server: whoamiURL})
-
-	s.ingressCmd(withConfigFile(file))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1000*time.Millisecond, try.BodyContains("service"))
-	require.NoError(s.T(), err)
-
-	config := dynamic.Configuration{
-		HTTP: &dynamic.HTTPConfiguration{
-			Routers: map[string]*dynamic.Router{
-				"router1": {
-					EntryPoints: []string{"web"},
-					Middlewares: []string{"customheader@file"},
-					Service:     "service@file",
-					Rule:        "PathPrefix(`/`)",
-				},
-			},
-		},
-	}
-
-	jsonContent, err := json.Marshal(config)
-	require.NoError(s.T(), err)
-
-	request, err := http.NewRequest(http.MethodPut, "http://127.0.0.1:8080/v1/ingress/providers/rest", bytes.NewReader(jsonContent))
-	require.NoError(s.T(), err)
-
-	response, err := http.DefaultClient.Do(request)
-	require.NoError(s.T(), err)
-	assert.Equal(s.T(), http.StatusOK, response.StatusCode)
-
-	err = try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1000*time.Millisecond, try.BodyContains("PathPrefix(`/`)"))
-	require.NoError(s.T(), err)
-
-	err = try.GetRequest("http://127.0.0.1:8000/", 1*time.Second, try.StatusCodeIs(http.StatusOK), try.BodyContains("CustomValue"))
-	require.NoError(s.T(), err)
 }
 
 func (s *SimpleSuite) TestSimpleConfigurationHostRequestTrailingPeriod() {
@@ -1787,34 +1468,6 @@ func (s *SimpleSuite) TestMuxer() {
 			require.NoError(s.T(), err)
 			assert.Contains(s.T(), string(body), test.body)
 		}
-	}
-}
-
-func (s *SimpleSuite) TestDebugLog() {
-	s.createComposeProject("base")
-
-	s.composeUp()
-	defer s.composeDown()
-
-	file := s.adaptFile("fixtures/simple_debug_log.toml", struct{}{})
-
-	_, output := s.cmdIngress(withConfigFile(file))
-
-	err := try.GetRequest("http://127.0.0.1:8080/v1/ingress/rawdata", 1*time.Second, try.BodyContains("PathPrefix(`/whoami`)"))
-	require.NoError(s.T(), err)
-
-	req, err := http.NewRequest(http.MethodGet, "http://localhost:8000/whoami", http.NoBody)
-	require.NoError(s.T(), err)
-	req.Header.Set("Authorization", "Bearer ThisIsABearerToken")
-
-	response, err := http.DefaultClient.Do(req)
-	require.NoError(s.T(), err)
-	assert.Equal(s.T(), http.StatusOK, response.StatusCode)
-
-	if regexp.MustCompile("ThisIsABearerToken").MatchReader(output) {
-		log.Info().Msgf("Ingress Logs: %s", output.String())
-		log.Info().Msg("Found Authorization Header in Ingress DEBUG logs")
-		s.T().Fail()
 	}
 }
 
