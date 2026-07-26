@@ -49,15 +49,6 @@
         "rule": "PathPrefix(`/metrics`)",
         "ruleSyntax": "default",
         "priority": 9223372036854775807
-      },
-      "rest": {
-        "entryPoints": [
-          "ingress"
-        ],
-        "service": "rest@internal",
-        "rule": "PathPrefix(`/v1/ingress/providers`)",
-        "ruleSyntax": "default",
-        "priority": 9223372036854775807
       }
     },
     "services": {
@@ -65,8 +56,7 @@
       "dashboard": {},
       "noop": {},
       "ping": {},
-      "prometheus": {},
-      "rest": {}
+      "prometheus": {}
     },
     "middlewares": {
       "dashboard_redirect": {

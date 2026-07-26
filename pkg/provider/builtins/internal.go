@@ -76,7 +76,6 @@ func (i *Provider) createConfiguration(ctx context.Context) *dynamic.Configurati
 
 	i.apiConfiguration(cfg)
 	i.pingConfiguration(cfg)
-	i.restConfiguration(cfg)
 	i.prometheusConfiguration(cfg)
 	i.entryPointModels(cfg)
 	i.redirection(ctx, cfg)
@@ -354,25 +353,6 @@ func (i *Provider) pingConfiguration(cfg *dynamic.Configuration) {
 	}
 
 	cfg.HTTP.Services["ping"] = &dynamic.Service{}
-}
-
-func (i *Provider) restConfiguration(cfg *dynamic.Configuration) {
-	if i.staticCfg.Providers == nil || i.staticCfg.Providers.Rest == nil {
-		return
-	}
-
-	if i.staticCfg.Providers.Rest.Insecure {
-		cfg.HTTP.Routers["rest"] = &dynamic.Router{
-			EntryPoints: []string{defaultInternalEntryPointName},
-			Service:     "rest@internal",
-			Priority:    math.MaxInt,
-			Rule:        "PathPrefix(`/v1/ingress/providers`)",
-			// "default" stands for the default rule syntax in Ingress v3, i.e. the v3 syntax.
-			RuleSyntax: "default",
-		}
-	}
-
-	cfg.HTTP.Services["rest"] = &dynamic.Service{}
 }
 
 func (i *Provider) prometheusConfiguration(cfg *dynamic.Configuration) {

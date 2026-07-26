@@ -15,22 +15,12 @@ import (
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"github.com/hanzoai/ingress/pkg/ping"
 	acmeprovider "github.com/hanzoai/ingress/pkg/provider/acme"
-	"github.com/hanzoai/ingress/pkg/provider/consulcatalog"
-	"github.com/hanzoai/ingress/pkg/provider/docker"
-	"github.com/hanzoai/ingress/pkg/provider/ecs"
 	"github.com/hanzoai/ingress/pkg/provider/file"
-	"github.com/hanzoai/ingress/pkg/provider/http"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/crd"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/gateway"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/ingress"
 	ingressnginx "github.com/hanzoai/ingress/pkg/provider/kubernetes/ingress-nginx"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/knative"
-	"github.com/hanzoai/ingress/pkg/provider/kv/consul"
-	"github.com/hanzoai/ingress/pkg/provider/kv/etcd"
-	"github.com/hanzoai/ingress/pkg/provider/kv/redis"
-	"github.com/hanzoai/ingress/pkg/provider/kv/zk"
-	"github.com/hanzoai/ingress/pkg/provider/nomad"
-	"github.com/hanzoai/ingress/pkg/provider/rest"
 	"github.com/hanzoai/ingress/pkg/tls"
 	"github.com/hanzoai/ingress/pkg/types"
 )
@@ -106,8 +96,7 @@ type SpiffeClientConfig struct {
 
 // CertificateResolver contains the configuration for the different types of certificates resolver.
 type CertificateResolver struct {
-	ACME      *acmeprovider.Configuration `description:"Enables ACME (Let's Encrypt) automatic SSL." json:"acme,omitempty" toml:"acme,omitempty" yaml:"acme,omitempty" export:"true"`
-	Tailscale *struct{}                   `description:"Enables Tailscale certificate resolution." json:"tailscale,omitempty" toml:"tailscale,omitempty" yaml:"tailscale,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	ACME *acmeprovider.Configuration `description:"Enables ACME (Let's Encrypt) automatic SSL." json:"acme,omitempty" toml:"acme,omitempty" yaml:"acme,omitempty" export:"true"`
 }
 
 // Global holds the global configuration.
@@ -236,23 +225,12 @@ func (t *Tracing) SetDefaults() {
 type Providers struct {
 	ProvidersThrottleDuration ptypes.Duration `description:"Backends throttle duration: minimum duration between 2 events from providers before applying a new configuration. It avoids unnecessary reloads if multiples events are sent in a short amount of time." json:"providersThrottleDuration,omitempty" toml:"providersThrottleDuration,omitempty" yaml:"providersThrottleDuration,omitempty" export:"true"`
 
-	Docker                 *docker.Provider               `description:"Enables Docker provider." json:"docker,omitempty" toml:"docker,omitempty" yaml:"docker,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Swarm                  *docker.SwarmProvider          `description:"Enables Docker Swarm provider." json:"swarm,omitempty" toml:"swarm,omitempty" yaml:"swarm,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	File                   *file.Provider                 `description:"Enables File provider." json:"file,omitempty" toml:"file,omitempty" yaml:"file,omitempty" export:"true"`
-	KubernetesIngress      *ingress.Provider              `description:"Enables Kubernetes Ingress provider." json:"kubernetesIngress,omitempty" toml:"kubernetesIngress,omitempty" yaml:"kubernetesIngress,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	KubernetesIngressNGINX *ingressnginx.Provider         `description:"Enables Kubernetes Ingress NGINX provider." json:"kubernetesIngressNGINX,omitempty" toml:"kubernetesIngressNGINX,omitempty" yaml:"kubernetesIngressNGINX,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	KubernetesCRD          *crd.Provider                  `description:"Enables Kubernetes CRD provider." json:"kubernetesCRD,omitempty" toml:"kubernetesCRD,omitempty" yaml:"kubernetesCRD,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	KubernetesGateway      *gateway.Provider              `description:"Enables Kubernetes Gateway API provider." json:"kubernetesGateway,omitempty" toml:"kubernetesGateway,omitempty" yaml:"kubernetesGateway,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Knative                *knative.Provider              `description:"Enables Knative provider." json:"knative,omitempty" toml:"knative,omitempty" yaml:"knative,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Rest                   *rest.Provider                 `description:"Enables Rest provider." json:"rest,omitempty" toml:"rest,omitempty" yaml:"rest,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	ConsulCatalog          *consulcatalog.ProviderBuilder `description:"Enables Consul Catalog provider." json:"consulCatalog,omitempty" toml:"consulCatalog,omitempty" yaml:"consulCatalog,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Nomad                  *nomad.ProviderBuilder         `description:"Enables Nomad provider." json:"nomad,omitempty" toml:"nomad,omitempty" yaml:"nomad,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Ecs                    *ecs.Provider                  `description:"Enables AWS ECS provider." json:"ecs,omitempty" toml:"ecs,omitempty" yaml:"ecs,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Consul                 *consul.ProviderBuilder        `description:"Enables Consul provider." json:"consul,omitempty" toml:"consul,omitempty" yaml:"consul,omitempty" label:"allowEmpty" file:"allowEmpty"  export:"true"`
-	Etcd                   *etcd.Provider                 `description:"Enables Etcd provider." json:"etcd,omitempty" toml:"etcd,omitempty" yaml:"etcd,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	ZooKeeper              *zk.Provider                   `description:"Enables ZooKeeper provider." json:"zooKeeper,omitempty" toml:"zooKeeper,omitempty" yaml:"zooKeeper,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	Redis                  *redis.Provider                `description:"Enables Redis provider." json:"redis,omitempty" toml:"redis,omitempty" yaml:"redis,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
-	HTTP                   *http.Provider                 `description:"Enables HTTP provider." json:"http,omitempty" toml:"http,omitempty" yaml:"http,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	File                   *file.Provider         `description:"Enables File provider." json:"file,omitempty" toml:"file,omitempty" yaml:"file,omitempty" export:"true"`
+	KubernetesIngress      *ingress.Provider      `description:"Enables Kubernetes Ingress provider." json:"kubernetesIngress,omitempty" toml:"kubernetesIngress,omitempty" yaml:"kubernetesIngress,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	KubernetesIngressNGINX *ingressnginx.Provider `description:"Enables Kubernetes Ingress NGINX provider." json:"kubernetesIngressNGINX,omitempty" toml:"kubernetesIngressNGINX,omitempty" yaml:"kubernetesIngressNGINX,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	KubernetesCRD          *crd.Provider          `description:"Enables Kubernetes CRD provider." json:"kubernetesCRD,omitempty" toml:"kubernetesCRD,omitempty" yaml:"kubernetesCRD,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	KubernetesGateway      *gateway.Provider      `description:"Enables Kubernetes Gateway API provider." json:"kubernetesGateway,omitempty" toml:"kubernetesGateway,omitempty" yaml:"kubernetesGateway,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
+	Knative                *knative.Provider      `description:"Enables Knative provider." json:"knative,omitempty" toml:"knative,omitempty" yaml:"knative,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 
 	Plugin map[string]PluginConf `description:"Plugins configuration." json:"plugin,omitempty" toml:"plugin,omitempty" yaml:"plugin,omitempty"`
 }
@@ -274,8 +252,7 @@ func (c *Configuration) SetEffectiveConfiguration() {
 	// Creates the internal ingress entry point if needed
 	if (c.API != nil && c.API.Insecure) ||
 		(c.Ping != nil && !c.Ping.ManualRouting && c.Ping.EntryPoint == DefaultInternalEntryPointName) ||
-		(c.Metrics != nil && c.Metrics.Prometheus != nil && !c.Metrics.Prometheus.ManualRouting && c.Metrics.Prometheus.EntryPoint == DefaultInternalEntryPointName) ||
-		(c.Providers != nil && c.Providers.Rest != nil && c.Providers.Rest.Insecure) {
+		(c.Metrics != nil && c.Metrics.Prometheus != nil && !c.Metrics.Prometheus.ManualRouting && c.Metrics.Prometheus.EntryPoint == DefaultInternalEntryPointName) {
 		if _, ok := c.EntryPoints[DefaultInternalEntryPointName]; !ok {
 			ep := &EntryPoint{Address: ":8080"}
 			ep.SetDefaults()
@@ -285,22 +262,6 @@ func (c *Configuration) SetEffectiveConfiguration() {
 
 	if c.Tracing != nil && c.Tracing.GlobalAttributes != nil && c.Tracing.ResourceAttributes == nil {
 		c.Tracing.ResourceAttributes = c.Tracing.GlobalAttributes
-	}
-
-	if c.Providers.Docker != nil {
-		if c.Providers.Docker.HTTPClientTimeout < 0 {
-			c.Providers.Docker.HTTPClientTimeout = 0
-		}
-	}
-
-	if c.Providers.Swarm != nil {
-		if c.Providers.Swarm.RefreshSeconds <= 0 {
-			c.Providers.Swarm.RefreshSeconds = ptypes.Duration(15 * time.Second)
-		}
-
-		if c.Providers.Swarm.HTTPClientTimeout < 0 {
-			c.Providers.Swarm.HTTPClientTimeout = 0
-		}
 	}
 
 	// Configure Gateway API provider
@@ -399,10 +360,6 @@ func (c *Configuration) SetEffectiveConfiguration() {
 // ValidateConfiguration validate that configuration is coherent.
 func (c *Configuration) ValidateConfiguration() error {
 	for name, resolver := range c.CertificatesResolvers {
-		if resolver.ACME != nil && resolver.Tailscale != nil {
-			return fmt.Errorf("unable to initialize certificates resolver %q, as ACME and Tailscale providers are mutually exclusive", name)
-		}
-
 		if resolver.ACME == nil {
 			continue
 		}

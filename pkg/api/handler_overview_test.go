@@ -14,11 +14,9 @@ import (
 	"github.com/hanzoai/ingress/pkg/config/runtime"
 	"github.com/hanzoai/ingress/pkg/config/static"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
-	"github.com/hanzoai/ingress/pkg/provider/docker"
 	"github.com/hanzoai/ingress/pkg/provider/file"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/crd"
 	"github.com/hanzoai/ingress/pkg/provider/kubernetes/ingress"
-	"github.com/hanzoai/ingress/pkg/provider/rest"
 )
 
 func TestHandler_Overview(t *testing.T) {
@@ -232,12 +230,9 @@ func TestHandler_Overview(t *testing.T) {
 				Global: &static.Global{},
 				API:    &static.API{},
 				Providers: &static.Providers{
-					Docker:            &docker.Provider{},
-					Swarm:             &docker.SwarmProvider{},
 					File:              &file.Provider{},
 					KubernetesIngress: &ingress.Provider{},
 					KubernetesCRD:     &crd.Provider{},
-					Rest:              &rest.Provider{},
 					Plugin: map[string]static.PluginConf{
 						"test": map[string]any{},
 					},

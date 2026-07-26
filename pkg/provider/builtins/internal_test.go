@@ -12,7 +12,6 @@ import (
 	"github.com/hanzoai/ingress/pkg/config/static"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
 	"github.com/hanzoai/ingress/pkg/ping"
-	"github.com/hanzoai/ingress/pkg/provider/rest"
 	"github.com/hanzoai/ingress/pkg/types"
 )
 
@@ -37,11 +36,6 @@ func Test_createConfiguration(t *testing.T) {
 					EntryPoint:    "test",
 					ManualRouting: false,
 				},
-				Providers: &static.Providers{
-					Rest: &rest.Provider{
-						Insecure: true,
-					},
-				},
 				Metrics: &otypes.Metrics{
 					Prometheus: &otypes.Prometheus{
 						EntryPoint:    "test",
@@ -60,11 +54,6 @@ func Test_createConfiguration(t *testing.T) {
 				Ping: &ping.Handler{
 					EntryPoint:    "test",
 					ManualRouting: true,
-				},
-				Providers: &static.Providers{
-					Rest: &rest.Provider{
-						Insecure: false,
-					},
 				},
 				Metrics: &otypes.Metrics{
 					Prometheus: &otypes.Prometheus{
@@ -125,26 +114,6 @@ func Test_createConfiguration(t *testing.T) {
 				Ping: &ping.Handler{
 					EntryPoint:    "test",
 					ManualRouting: true,
-				},
-			},
-		},
-		{
-			desc: "rest_insecure.json",
-			staticCfg: static.Configuration{
-				Providers: &static.Providers{
-					Rest: &rest.Provider{
-						Insecure: true,
-					},
-				},
-			},
-		},
-		{
-			desc: "rest_secure.json",
-			staticCfg: static.Configuration{
-				Providers: &static.Providers{
-					Rest: &rest.Provider{
-						Insecure: false,
-					},
 				},
 			},
 		},
