@@ -39,7 +39,7 @@ require (
 	github.com/huandu/xstrings v1.5.0
 	github.com/influxdata/influxdb-client-go/v2 v2.7.0
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab // No tag on the repo.
-	github.com/klauspost/compress v1.18.5
+	github.com/klauspost/compress v1.18.6
 	github.com/mailgun/ttlmap v0.0.0-20170619185759-c1c17f74874f // No tag on the repo.
 	github.com/miekg/dns v1.1.72
 	github.com/mitchellh/copystructure v1.2.0
@@ -75,9 +75,6 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.14.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.39.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp v1.39.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.43.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.40.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.43.0
 	go.opentelemetry.io/otel/log v0.15.0
 	go.opentelemetry.io/otel/metric v1.43.0
 	go.opentelemetry.io/otel/sdk v1.43.0
@@ -112,7 +109,8 @@ require (
 require (
 	github.com/hanzos3/go-sdk v1.0.2
 	github.com/luxfi/log v1.4.3
-	github.com/luxfi/zap v0.8.8
+	github.com/luxfi/trace v1.4.0
+	github.com/luxfi/zap v1.2.6
 	github.com/prometheus/client_golang v1.23.2
 	github.com/zap-proto/http v0.1.0
 )
@@ -131,8 +129,8 @@ require (
 	github.com/grandcat/zeroconf v1.0.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/klauspost/crc32 v1.3.0 // indirect
-	github.com/luxfi/accel v1.1.9 // indirect
-	github.com/luxfi/crypto v1.19.17 // indirect
+	github.com/luxfi/accel v1.2.4 // indirect
+	github.com/luxfi/crypto v1.20.2 // indirect
 	github.com/luxfi/mdns v0.1.1 // indirect
 	github.com/minio/crc64nvme v1.1.1 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect

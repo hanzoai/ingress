@@ -1,11 +1,12 @@
 package types
 
 import (
+	luxtrace "github.com/luxfi/trace"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"strings"
 	"context"
 	"fmt"
 	"io"
-	"net"
-	"net/url"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -13,15 +14,9 @@ import (
 	"github.com/hanzoai/ingress/pkg/version"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.opentelemetry.io/otel/trace"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/encoding/gzip"
 )
 
 type TracingVerbosity string
@@ -54,15 +49,10 @@ func (c *OTelTracing) SetDefaults() {
 
 // Setup sets up the tracer.
 func (c *OTelTracing) Setup(ctx context.Context, serviceName string, sampleRate float64, resourceAttributes map[string]string) (trace.Tracer, io.Closer, error) {
-	var (
-		err      error
-		exporter *otlptrace.Exporter
-	)
-	if c.GRPC != nil {
-		exporter, err = c.setupGRPCExporter()
-	} else {
-		exporter, err = c.setupHTTPExporter()
-	}
+	// One transport: ZAP to o11y/pkg/zapreceiver. The GRPC/HTTP split existed to
+	// pick an OTLP flavour, and both flavours pull gRPC and protobuf — they share
+	// otlpconfig — so choosing between them never avoided either.
+	exporter, err := c.setupExporter(serviceName)
 	if err != nil {
 		return nil, nil, fmt.Errorf("setting up exporter: %w", err)
 	}
@@ -109,65 +99,29 @@ func (c *OTelTracing) Setup(ctx context.Context, serviceName string, sampleRate 
 	return tracerProvider.Tracer("github.com/hanzoai/ingress"), &tpCloser{provider: tracerProvider}, err
 }
 
-func (c *OTelTracing) setupHTTPExporter() (*otlptrace.Exporter, error) {
-	endpoint, err := url.Parse(c.HTTP.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", c.HTTP.Endpoint, err)
+// setupExporter builds the ZAP span exporter. Endpoint is host:port — the
+// configured value may carry an http(s) scheme from the OTLP era, which has no
+// meaning on this wire and is trimmed.
+func (c *OTelTracing) setupExporter(serviceName string) (sdktrace.SpanExporter, error) {
+	var endpoint string
+	insecure := true
+	switch {
+	case c.GRPC != nil && c.GRPC.Endpoint != "":
+		endpoint = c.GRPC.Endpoint
+		insecure = c.GRPC.Insecure
+	case c.HTTP != nil:
+		endpoint = c.HTTP.Endpoint
 	}
-
-	opts := []otlptracehttp.Option{
-		otlptracehttp.WithEndpoint(endpoint.Host),
-		otlptracehttp.WithHeaders(c.HTTP.Headers),
-		otlptracehttp.WithCompression(otlptracehttp.GzipCompression),
+	endpoint = strings.TrimPrefix(strings.TrimPrefix(endpoint, "https://"), "http://")
+	if i := strings.IndexByte(endpoint, '/'); i >= 0 {
+		endpoint = endpoint[:i]
 	}
-
-	if endpoint.Scheme == "http" {
-		opts = append(opts, otlptracehttp.WithInsecure())
-	}
-
-	if endpoint.Path != "" {
-		opts = append(opts, otlptracehttp.WithURLPath(endpoint.Path))
-	}
-
-	if c.HTTP.TLS != nil {
-		tlsConfig, err := c.HTTP.TLS.CreateTLSConfig(context.Background())
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlptracehttp.WithTLSClientConfig(tlsConfig))
-	}
-
-	return otlptrace.New(context.Background(), otlptracehttp.NewClient(opts...))
+	return luxtrace.NewZAPExporter(
+		luxtrace.ExporterConfig{Type: luxtrace.ZAP, Endpoint: endpoint, Insecure: insecure},
+		serviceName, "",
+	)
 }
 
-func (c *OTelTracing) setupGRPCExporter() (*otlptrace.Exporter, error) {
-	host, port, err := net.SplitHostPort(c.GRPC.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", c.GRPC.Endpoint, err)
-	}
-
-	opts := []otlptracegrpc.Option{
-		otlptracegrpc.WithEndpoint(fmt.Sprintf("%s:%s", host, port)),
-		otlptracegrpc.WithHeaders(c.GRPC.Headers),
-		otlptracegrpc.WithCompressor(gzip.Name),
-	}
-
-	if c.GRPC.Insecure {
-		opts = append(opts, otlptracegrpc.WithInsecure())
-	}
-
-	if c.GRPC.TLS != nil {
-		tlsConfig, err := c.GRPC.TLS.CreateTLSConfig(context.Background())
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlptracegrpc.WithTLSCredentials(credentials.NewTLS(tlsConfig)))
-	}
-
-	return otlptrace.New(context.Background(), otlptracegrpc.NewClient(opts...))
-}
 
 // tpCloser converts a TraceProvider into an io.Closer.
 type tpCloser struct {
