@@ -1,11 +1,10 @@
 package metrics
 
 import (
+	luxmetric "github.com/luxfi/metric"
+	"strings"
 	"context"
 	"fmt"
-	"net"
-	"net/url"
-	"strings"
 	"sync"
 	"time"
 
@@ -17,15 +16,11 @@ import (
 	"github.com/hanzoai/ingress/pkg/version"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.opentelemetry.io/otel/semconv/v1.37.0/httpconv"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/encoding/gzip"
 )
 
 var (
@@ -200,11 +195,7 @@ func newOpenTelemetryMeterProvider(ctx context.Context, config *otypes.OTLP) (*s
 		exporter sdkmetric.Exporter
 		err      error
 	)
-	if config.GRPC != nil {
-		exporter, err = newGRPCExporter(ctx, config.GRPC)
-	} else {
-		exporter, err = newHTTPExporter(ctx, config.HTTP)
-	}
+	exporter, err = newExporter(config)
 	if err != nil {
 		return nil, fmt.Errorf("creating exporter: %w", err)
 	}
@@ -256,65 +247,27 @@ func newOpenTelemetryMeterProvider(ctx context.Context, config *otypes.OTLP) (*s
 	return meterProvider, nil
 }
 
-func newHTTPExporter(ctx context.Context, config *otypes.OTelHTTP) (sdkmetric.Exporter, error) {
-	endpoint, err := url.Parse(config.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", config.Endpoint, err)
+// newExporter builds the ZAP metric exporter. Endpoint is host:port — a scheme
+// and path have no meaning on this wire, so a URL-shaped config value is
+// reduced to its host.
+func newExporter(config *otypes.OTLP) (sdkmetric.Exporter, error) {
+	endpoint := ""
+	switch {
+	case config.GRPC != nil && config.GRPC.Endpoint != "":
+		endpoint = config.GRPC.Endpoint
+	case config.HTTP != nil:
+		endpoint = config.HTTP.Endpoint
 	}
-
-	opts := []otlpmetrichttp.Option{
-		otlpmetrichttp.WithEndpoint(endpoint.Host),
-		otlpmetrichttp.WithHeaders(config.Headers),
-		otlpmetrichttp.WithCompression(otlpmetrichttp.GzipCompression),
+	endpoint = strings.TrimPrefix(strings.TrimPrefix(endpoint, "https://"), "http://")
+	if i := strings.IndexByte(endpoint, '/'); i >= 0 {
+		endpoint = endpoint[:i]
 	}
-
-	if endpoint.Scheme == "http" {
-		opts = append(opts, otlpmetrichttp.WithInsecure())
-	}
-
-	if endpoint.Path != "" {
-		opts = append(opts, otlpmetrichttp.WithURLPath(endpoint.Path))
-	}
-
-	if config.TLS != nil {
-		tlsConfig, err := config.TLS.CreateTLSConfig(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlpmetrichttp.WithTLSClientConfig(tlsConfig))
-	}
-
-	return otlpmetrichttp.New(ctx, opts...)
+	return luxmetric.NewOTelZAPExporter(luxmetric.ZAPExporterConfig{
+		Endpoint: endpoint,
+		AppName:  "ingress",
+	})
 }
 
-func newGRPCExporter(ctx context.Context, config *otypes.OTelGRPC) (sdkmetric.Exporter, error) {
-	host, port, err := net.SplitHostPort(config.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", config.Endpoint, err)
-	}
-
-	opts := []otlpmetricgrpc.Option{
-		otlpmetricgrpc.WithEndpoint(fmt.Sprintf("%s:%s", host, port)),
-		otlpmetricgrpc.WithHeaders(config.Headers),
-		otlpmetricgrpc.WithCompressor(gzip.Name),
-	}
-
-	if config.Insecure {
-		opts = append(opts, otlpmetricgrpc.WithInsecure())
-	}
-
-	if config.TLS != nil {
-		tlsConfig, err := config.TLS.CreateTLSConfig(ctx)
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlpmetricgrpc.WithTLSCredentials(credentials.NewTLS(tlsConfig)))
-	}
-
-	return otlpmetricgrpc.New(ctx, opts...)
-}
 
 func newOTLPCounterFrom(meter metric.Meter, name, desc string) *otelCounter {
 	c, _ := meter.Float64Counter(name,
