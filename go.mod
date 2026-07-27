@@ -71,10 +71,10 @@ require (
 	go.opentelemetry.io/contrib/bridges/otellogrus v0.13.0
 	go.opentelemetry.io/contrib/propagators/autoprop v0.63.0
 	go.opentelemetry.io/otel v1.44.0
-	go.opentelemetry.io/otel/log v0.15.0
+	go.opentelemetry.io/otel/log v0.20.0
 	go.opentelemetry.io/otel/metric v1.44.0
 	go.opentelemetry.io/otel/sdk v1.44.0
-	go.opentelemetry.io/otel/sdk/log v0.14.0
+	go.opentelemetry.io/otel/sdk/log v0.20.0
 	go.opentelemetry.io/otel/sdk/metric v1.44.0
 	go.opentelemetry.io/otel/trace v1.44.0
 	golang.org/x/crypto v0.52.0
@@ -104,7 +104,7 @@ require (
 
 require (
 	github.com/hanzos3/go-sdk v1.0.2
-	github.com/luxfi/log v1.4.3
+	github.com/luxfi/log v1.6.0
 	github.com/luxfi/metric v1.9.0
 	github.com/luxfi/trace v1.4.0
 	github.com/luxfi/zap v1.2.6
