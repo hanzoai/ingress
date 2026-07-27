@@ -1,22 +1,10 @@
 package types
 
 import (
+	"errors"
 	"context"
-	"fmt"
-	"net"
-	"net/url"
-
 	"github.com/hanzoai/ingress-parser/types"
-	ttypes "github.com/hanzoai/ingress/pkg/types"
-	"github.com/hanzoai/ingress/pkg/version"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc"
-	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
 	otelsdk "go.opentelemetry.io/otel/sdk/log"
-	"go.opentelemetry.io/otel/sdk/resource"
-	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/encoding/gzip"
 )
 
 const (
@@ -167,111 +155,12 @@ func (o *OTelLog) SetDefaults() {
 
 // NewLoggerProvider creates a new OpenTelemetry logger provider.
 func (o *OTelLog) NewLoggerProvider(ctx context.Context) (*otelsdk.LoggerProvider, error) {
-	var (
-		err      error
-		exporter otelsdk.Exporter
-	)
-	if o.GRPC != nil {
-		exporter, err = o.buildGRPCExporter()
-	} else {
-		exporter, err = o.buildHTTPExporter()
-	}
-	if err != nil {
-		return nil, fmt.Errorf("setting up exporter: %w", err)
-	}
-
-	var resAttrs []attribute.KeyValue
-	for k, v := range o.ResourceAttributes {
-		resAttrs = append(resAttrs, attribute.String(k, v))
-	}
-
-	res, err := resource.New(ctx,
-		resource.WithContainer(),
-		resource.WithHost(),
-		resource.WithOS(),
-		resource.WithProcess(),
-		resource.WithTelemetrySDK(),
-		resource.WithDetectors(ttypes.K8sAttributesDetector{}),
-		// The following order allows the user to override the service name and version,
-		// as well as any other attributes set by the above detectors.
-		resource.WithAttributes(
-			semconv.ServiceName(o.ServiceName),
-			semconv.ServiceVersion(version.Version),
-		),
-		resource.WithAttributes(resAttrs...),
-		// Use the environment variables to allow overriding above resource attributes.
-		resource.WithFromEnv(),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("building resource: %w", err)
-	}
-
-	// Register the trace provider to allow the global logger to access it.
-	bp := otelsdk.NewBatchProcessor(exporter)
-	loggerProvider := otelsdk.NewLoggerProvider(
-		otelsdk.WithResource(res),
-		otelsdk.WithProcessor(bp),
-	)
-
-	return loggerProvider, nil
+	// Logs have no ZAP wire. Traces ride MsgSpanBatch and metrics ride the
+	// MetricFamily batch, but nothing on the o11y side receives a log batch, so
+	// the only way to push logs from here was OTLP — and OTLP carries protobuf
+	// and gRPC on either flavour. ingress writes to stdout; the platform
+	// collects it. Refuse rather than pretend to ship.
+	return nil, errors.New("otel log export is not available: no ZAP log wire exists — ingress logs to stdout")
 }
 
-func (o *OTelLog) buildHTTPExporter() (*otlploghttp.Exporter, error) {
-	endpoint, err := url.Parse(o.HTTP.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", o.HTTP.Endpoint, err)
-	}
 
-	opts := []otlploghttp.Option{
-		otlploghttp.WithEndpoint(endpoint.Host),
-		otlploghttp.WithHeaders(o.HTTP.Headers),
-		otlploghttp.WithCompression(otlploghttp.GzipCompression),
-	}
-
-	if endpoint.Scheme == "http" {
-		opts = append(opts, otlploghttp.WithInsecure())
-	}
-
-	if endpoint.Path != "" {
-		opts = append(opts, otlploghttp.WithURLPath(endpoint.Path))
-	}
-
-	if o.HTTP.TLS != nil {
-		tlsConfig, err := o.HTTP.TLS.CreateTLSConfig(context.Background())
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlploghttp.WithTLSClientConfig(tlsConfig))
-	}
-
-	return otlploghttp.New(context.Background(), opts...)
-}
-
-func (o *OTelLog) buildGRPCExporter() (*otlploggrpc.Exporter, error) {
-	host, port, err := net.SplitHostPort(o.GRPC.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", o.GRPC.Endpoint, err)
-	}
-
-	opts := []otlploggrpc.Option{
-		otlploggrpc.WithEndpoint(fmt.Sprintf("%s:%s", host, port)),
-		otlploggrpc.WithHeaders(o.GRPC.Headers),
-		otlploggrpc.WithCompressor(gzip.Name),
-	}
-
-	if o.GRPC.Insecure {
-		opts = append(opts, otlploggrpc.WithInsecure())
-	}
-
-	if o.GRPC.TLS != nil {
-		tlsConfig, err := o.GRPC.TLS.CreateTLSConfig(context.Background())
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlploggrpc.WithTLSCredentials(credentials.NewTLS(tlsConfig)))
-	}
-
-	return otlploggrpc.New(context.Background(), opts...)
-}
