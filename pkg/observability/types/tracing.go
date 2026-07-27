@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net"
 	"net/url"
+
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -14,14 +14,11 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 	"go.opentelemetry.io/otel/trace"
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/encoding/gzip"
 )
 
 type TracingVerbosity string
@@ -42,7 +39,6 @@ func (v TracingVerbosity) Allows(verbosity TracingVerbosity) bool {
 
 // OTelTracing provides configuration settings for the open-telemetry tracer.
 type OTelTracing struct {
-	GRPC *OTelGRPC `description:"gRPC configuration for the OpenTelemetry collector." json:"grpc,omitempty" toml:"grpc,omitempty" yaml:"grpc,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 	HTTP *OTelHTTP `description:"HTTP configuration for the OpenTelemetry collector." json:"http,omitempty" toml:"http,omitempty" yaml:"http,omitempty" label:"allowEmpty" file:"allowEmpty" export:"true"`
 }
 
@@ -58,11 +54,7 @@ func (c *OTelTracing) Setup(ctx context.Context, serviceName string, sampleRate 
 		err      error
 		exporter *otlptrace.Exporter
 	)
-	if c.GRPC != nil {
-		exporter, err = c.setupGRPCExporter()
-	} else {
-		exporter, err = c.setupHTTPExporter()
-	}
+	exporter, err = c.setupExporter()
 	if err != nil {
 		return nil, nil, fmt.Errorf("setting up exporter: %w", err)
 	}
@@ -109,7 +101,7 @@ func (c *OTelTracing) Setup(ctx context.Context, serviceName string, sampleRate 
 	return tracerProvider.Tracer("github.com/hanzoai/ingress"), &tpCloser{provider: tracerProvider}, err
 }
 
-func (c *OTelTracing) setupHTTPExporter() (*otlptrace.Exporter, error) {
+func (c *OTelTracing) setupExporter() (*otlptrace.Exporter, error) {
 	endpoint, err := url.Parse(c.HTTP.Endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("invalid collector endpoint %q: %w", c.HTTP.Endpoint, err)
@@ -138,35 +130,12 @@ func (c *OTelTracing) setupHTTPExporter() (*otlptrace.Exporter, error) {
 		opts = append(opts, otlptracehttp.WithTLSClientConfig(tlsConfig))
 	}
 
+	// The wire is ZAP: zaphttp.Transport is an http.RoundTripper that frames
+	// requests as Cap'n Proto over TCP, so the OTLP client is unchanged and
+	// nothing speaks HTTP/1.1 or gRPC on the way to the collector.
+	opts = append(opts, otlptracehttp.WithHTTPClient(zapClient(endpoint.Host)))
+
 	return otlptrace.New(context.Background(), otlptracehttp.NewClient(opts...))
-}
-
-func (c *OTelTracing) setupGRPCExporter() (*otlptrace.Exporter, error) {
-	host, port, err := net.SplitHostPort(c.GRPC.Endpoint)
-	if err != nil {
-		return nil, fmt.Errorf("invalid collector endpoint %q: %w", c.GRPC.Endpoint, err)
-	}
-
-	opts := []otlptracegrpc.Option{
-		otlptracegrpc.WithEndpoint(fmt.Sprintf("%s:%s", host, port)),
-		otlptracegrpc.WithHeaders(c.GRPC.Headers),
-		otlptracegrpc.WithCompressor(gzip.Name),
-	}
-
-	if c.GRPC.Insecure {
-		opts = append(opts, otlptracegrpc.WithInsecure())
-	}
-
-	if c.GRPC.TLS != nil {
-		tlsConfig, err := c.GRPC.TLS.CreateTLSConfig(context.Background())
-		if err != nil {
-			return nil, fmt.Errorf("creating TLS client config: %w", err)
-		}
-
-		opts = append(opts, otlptracegrpc.WithTLSCredentials(credentials.NewTLS(tlsConfig)))
-	}
-
-	return otlptrace.New(context.Background(), otlptracegrpc.NewClient(opts...))
 }
 
 // tpCloser converts a TraceProvider into an io.Closer.

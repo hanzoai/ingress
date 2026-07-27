@@ -412,12 +412,6 @@ func (c *Configuration) ValidateConfiguration() error {
 		}
 	}
 
-	if c.Tracing != nil && c.Tracing.OTLP != nil {
-		if c.Tracing.OTLP.GRPC != nil && c.Tracing.OTLP.GRPC.TLS != nil && c.Tracing.OTLP.GRPC.Insecure {
-			return errors.New("tracing OTLP GRPC: TLS and Insecure options are mutually exclusive")
-		}
-	}
-
 	if c.Metrics != nil && c.Metrics.OTLP != nil {
 		if c.Metrics.OTLP.GRPC != nil && c.Metrics.OTLP.GRPC.TLS != nil && c.Metrics.OTLP.GRPC.Insecure {
 			return errors.New("metrics OTLP GRPC: TLS and Insecure options are mutually exclusive")
