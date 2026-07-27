@@ -114,7 +114,7 @@ require (
 	github.com/luxfi/log v1.4.3
 	github.com/luxfi/zap v0.8.8
 	github.com/prometheus/client_golang v1.23.2
-	github.com/zap-proto/http v0.1.0
+	github.com/zap-proto/http v0.2.1
 )
 
 require (
