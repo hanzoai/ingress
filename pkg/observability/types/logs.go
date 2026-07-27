@@ -1,7 +1,10 @@
 package types
 
 import (
-	"errors"
+	"fmt"
+	"strings"
+
+	luxlog "github.com/luxfi/log"
 	"context"
 	"github.com/hanzoai/ingress-parser/types"
 	otelsdk "go.opentelemetry.io/otel/sdk/log"
@@ -154,13 +157,38 @@ func (o *OTelLog) SetDefaults() {
 }
 
 // NewLoggerProvider creates a new OpenTelemetry logger provider.
-func (o *OTelLog) NewLoggerProvider(ctx context.Context) (*otelsdk.LoggerProvider, error) {
-	// Logs have no ZAP wire. Traces ride MsgSpanBatch and metrics ride the
-	// MetricFamily batch, but nothing on the o11y side receives a log batch, so
-	// the only way to push logs from here was OTLP — and OTLP carries protobuf
-	// and gRPC on either flavour. ingress writes to stdout; the platform
-	// collects it. Refuse rather than pretend to ship.
-	return nil, errors.New("otel log export is not available: no ZAP log wire exists — ingress logs to stdout")
+func (o *OTelLog) NewLoggerProvider(_ context.Context) (*otelsdk.LoggerProvider, error) {
+	// ZAP carries a JSON LogBatch to o11y/pkg/zaplogreceiver. The endpoint is
+	// host:port — a scheme or path means nothing on this wire, so a URL-shaped
+	// config value from the OTLP era is reduced to its host.
+	endpoint := ""
+	switch {
+	case o.GRPC != nil && o.GRPC.Endpoint != "":
+		endpoint = o.GRPC.Endpoint
+	case o.HTTP != nil:
+		endpoint = o.HTTP.Endpoint
+	}
+	endpoint = strings.TrimPrefix(strings.TrimPrefix(endpoint, "https://"), "http://")
+	if i := strings.IndexByte(endpoint, '/'); i >= 0 {
+		endpoint = endpoint[:i]
+	}
+
+	serviceName := o.ServiceName
+	if serviceName == "" {
+		serviceName = OTelIngressServiceName
+	}
+
+	exporter, err := luxlog.NewZAPExporter(luxlog.ZAPExporterConfig{
+		Endpoint: endpoint,
+		AppName:  serviceName,
+		Resource: o.ResourceAttributes,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("creating log exporter: %w", err)
+	}
+	return otelsdk.NewLoggerProvider(
+		otelsdk.WithProcessor(otelsdk.NewBatchProcessor(exporter)),
+	), nil
 }
 
 
