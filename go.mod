@@ -109,7 +109,7 @@ require (
 	github.com/luxfi/trace v1.4.0
 	github.com/luxfi/zap v1.2.6
 	github.com/prometheus/client_golang v1.23.2
-	github.com/zap-proto/http v0.1.0
+	github.com/zap-proto/http v0.3.0
 )
 
 require (
@@ -136,6 +136,7 @@ require (
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/shoenig/test v1.7.0 // indirect
+	github.com/zap-proto/fiber/v3 v3.2.1 // indirect
 	github.com/zap-proto/go v1.3.0 // indirect
 )
 
@@ -386,7 +387,7 @@ require (
 	github.com/yandex-cloud/go-sdk/v2 v2.56.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	github.com/zap-proto/zip v1.1.0
+	github.com/zap-proto/zip v1.10.0
 	go.mongodb.org/mongo-driver v1.17.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
