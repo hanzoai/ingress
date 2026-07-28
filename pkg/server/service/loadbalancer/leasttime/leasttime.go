@@ -17,8 +17,6 @@ import (
 
 const sampleSize = 100 // Number of response time samples to track.
 
-var errNoAvailableServer = errors.New("no available server")
-
 // namedHandler wraps an HTTP handler with metrics and server information.
 // Tracks response time (TTFB) and inflight request count for load balancing decisions.
 type namedHandler struct {
@@ -206,8 +204,8 @@ func (b *Balancer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	server, err := b.nextServer()
 	if err != nil {
-		if errors.Is(err, errNoAvailableServer) {
-			http.Error(rw, errNoAvailableServer.Error(), http.StatusServiceUnavailable)
+		if errors.Is(err, loadbalancer.ErrNoAvailableServer) {
+			loadbalancer.WriteNoAvailableServer(rw)
 		} else {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
@@ -336,7 +334,7 @@ func (b *Balancer) nextServer() (*namedHandler, error) {
 	healthy := b.getHealthyServers()
 
 	if len(healthy) == 0 {
-		return nil, errNoAvailableServer
+		return nil, loadbalancer.ErrNoAvailableServer
 	}
 
 	if len(healthy) == 1 {
@@ -367,7 +365,7 @@ func (b *Balancer) nextServer() (*namedHandler, error) {
 	// Multiple servers with same score: use WRR (EDF) tie-breaking.
 	selected := b.selectWRR(candidates)
 	if selected == nil {
-		return nil, errNoAvailableServer
+		return nil, loadbalancer.ErrNoAvailableServer
 	}
 
 	return selected, nil
