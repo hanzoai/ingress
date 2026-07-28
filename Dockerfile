@@ -24,7 +24,7 @@ WORKDIR /src
 # Private cross-org modules (hanzoai/*, luxfi/* — luxfi/zap forward.Forwarder) are
 # fetched via authenticated git, bypassing the public proxy. gh_token is the
 # shared docker-build.yml BuildKit secret; no-op when absent (local/dev).
-ENV GOPRIVATE=github.com/hanzoai/*,github.com/luxfi/*,github.com/zap-proto/*
+ENV GOPRIVATE=github.com/hanzoai/*,github.com/lux-private/*,github.com/zap-proto/*
 # Copy go.mod, go.sum, and the local replace target first for layer caching.
 COPY go.mod go.sum ./
 COPY pkg/config/dynamic/ext/ ./pkg/config/dynamic/ext/
