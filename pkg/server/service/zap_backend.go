@@ -173,7 +173,7 @@ func (z *zapBackendRoundTripper) transportFor(addr string) *zaphttp.Transport {
 	if v, ok := z.transports.Load(addr); ok {
 		return v.(*zaphttp.Transport)
 	}
-	t := zaphttp.NewTransport(addr)
+	t := zaphttp.Dial("tcp", addr)
 	actual, _ := z.transports.LoadOrStore(addr, t)
 	return actual.(*zaphttp.Transport)
 }
