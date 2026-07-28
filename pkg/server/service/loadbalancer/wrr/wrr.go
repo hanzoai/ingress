@@ -12,8 +12,6 @@ import (
 	"github.com/hanzoai/ingress/pkg/server/service/loadbalancer"
 )
 
-var errNoAvailableServer = errors.New("no available server")
-
 type namedHandler struct {
 	http.Handler
 
@@ -172,8 +170,8 @@ func (b *Balancer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	server, err := b.nextServer()
 	if err != nil {
-		if errors.Is(err, errNoAvailableServer) {
-			http.Error(rw, errNoAvailableServer.Error(), http.StatusServiceUnavailable)
+		if errors.Is(err, loadbalancer.ErrNoAvailableServer) {
+			loadbalancer.WriteNoAvailableServer(rw)
 		} else {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
@@ -227,7 +225,7 @@ func (b *Balancer) nextServer() (*namedHandler, error) {
 	defer b.handlersMu.Unlock()
 
 	if len(b.handlers) == 0 || len(b.status) == 0 || len(b.fenced) == len(b.handlers) {
-		return nil, errNoAvailableServer
+		return nil, loadbalancer.ErrNoAvailableServer
 	}
 
 	var handler *namedHandler
