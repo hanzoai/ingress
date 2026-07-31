@@ -43,7 +43,7 @@ const (
 // matches against IngressClass.spec.controller. It is set at process start
 // from the INGRESS_CONTROLLER_NAME env var, with a sensible fallback. White-
 // label deployments override this per tenant (e.g. <tenant>.io/ingress-controller,
-// acme.com/ingress-controller, equitytable.io/ingress-controller).
+// acme.com/ingress-controller, example.net/ingress-controller).
 //
 // Default is intentionally generic — `ingress.k8s.io/ingress-controller` —
 // so the controller works out-of-the-box without baking a tenant identity
