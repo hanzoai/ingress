@@ -2,9 +2,9 @@
 
 # Hanzo Ingress
 
-[![Build](https://github.com/hanzoai/ingress/actions/workflows/build.yaml/badge.svg)](https://github.com/hanzoai/ingress/actions/workflows/build.yaml)
+[![CI](https://github.com/hanzoai/ingress/actions/workflows/ci.yml/badge.svg)](https://github.com/hanzoai/ingress/actions/workflows/ci.yml)
 [![Go](https://img.shields.io/badge/go-1.25-00ADD8.svg)](https://go.dev/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hanzoai/ingress/blob/master/LICENSE.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![GHCR](https://img.shields.io/badge/ghcr.io-hanzoai%2Fingress-blue)](https://ghcr.io/hanzoai/ingress)
 
 Cloud-native L7 reverse proxy and load balancer for Hanzo AI infrastructure. Kubernetes-native with automatic TLS, dynamic configuration, and zero-downtime reloads.
@@ -33,7 +33,7 @@ only (HIP-0106 canonical Hanzo Go stack).
 
 Hanzo Ingress is the front door for all Hanzo production traffic. It watches Kubernetes Ingress resources, automatically provisions TLS certificates via Let's Encrypt, and routes traffic to internal services -- including [Hanzo Gateway](https://github.com/hanzoai/gateway) for API endpoints and direct service routing for web applications.
 
-Deployed on the `hanzo-k8s` cluster as the default IngressClass (`hanzo`), it handles all `*.hanzo.ai` traffic with 2 replicas in host-network mode for direct port 80/443 binding.
+Deployed on the `hanzo-k8s` cluster as the default IngressClass (`ingress`), it handles all `*.hanzo.ai` traffic with 2 replicas in host-network mode for direct port 80/443 binding.
 
 ## Features
 
@@ -62,23 +62,25 @@ Deployed on the `hanzo-k8s` cluster as the default IngressClass (`hanzo`), it ha
 ### Kubernetes
 
 ```bash
-# Apply all manifests (RBAC, IngressClass, Deployment, Service)
-kubectl apply -f https://raw.githubusercontent.com/hanzoai/ingress/master/k8s/hanzo/rbac.yaml
-kubectl apply -f https://raw.githubusercontent.com/hanzoai/ingress/master/k8s/hanzo/ingressclass.yaml
-kubectl apply -f https://raw.githubusercontent.com/hanzoai/ingress/master/k8s/hanzo/deployment.yaml
-kubectl apply -f https://raw.githubusercontent.com/hanzoai/ingress/master/k8s/hanzo/service.yaml
+# From a clone -- RBAC, IngressClass, Deployment, Service, middlewares
+kubectl apply -f k8s/hanzo/
 
 # Verify
 kubectl -n hanzo get pods -l app=hanzo-ingress
 ```
 
+The manifests are not fetchable by URL: this repository is private, so
+`raw.githubusercontent.com` returns 404 without credentials. Clone first.
+
 ### Binary
 
 Download a pre-built binary from [GitHub Releases](https://github.com/hanzoai/ingress/releases):
 
+Asset names carry the version, so pin the tag you want:
+
 ```bash
-# Download latest release (Linux amd64)
-curl -sL https://github.com/hanzoai/ingress/releases/latest/download/hanzo-ingress_linux_amd64.tar.gz | tar xz
+# Linux amd64, v1.7.36
+curl -sL https://github.com/hanzoai/ingress/releases/download/v1.7.36/hanzo-ingress_v1.7.36_linux_amd64.tar.gz | tar xz
 
 # Run
 ./hanzo-ingress \
@@ -108,7 +110,7 @@ make build
         | Hanzo Ingress   |   L7 reverse proxy
         | (ports 80/443)  |   TLS termination
         | IngressClass:   |   Route matching
-        |   "hanzo"       |   Load balancing
+        |   "ingress"     |   Load balancing
         +--+-+-+-+-+--+---+
            | | | | |  |
      +-----+ | | | |  +--------+
@@ -191,11 +193,11 @@ Hanzo Ingress registers as the default IngressClass on the cluster:
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: hanzo
+  name: ingress
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
 spec:
-  controller: hanzo.ai/ingress-controller
+  controller: ingress.k8s.io/ingress-controller
 ```
 
 Any Ingress resource without an explicit `ingressClassName` is automatically picked up.
@@ -205,7 +207,7 @@ Any Ingress resource without an explicit `ingressClassName` is automatically pic
 ```
 k8s/hanzo/
   rbac.yaml             # ServiceAccount, ClusterRole, ClusterRoleBinding
-  ingressclass.yaml     # IngressClass "hanzo" (default)
+  ingressclass.yaml     # IngressClass "ingress" (default)
   deployment.yaml       # 2 replicas, hostNetwork, ports 80/443
   service.yaml          # LoadBalancer service
 ```
@@ -223,7 +225,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
 spec:
-  ingressClassName: hanzo
+  ingressClassName: ingress
   tls:
   - hosts:
     - my-service.hanzo.ai
@@ -356,7 +358,7 @@ webui/                  # Built-in dashboard (React)
 k8s/
   hanzo/                # Production K8s manifests
     rbac.yaml           # ServiceAccount + ClusterRole
-    ingressclass.yaml   # IngressClass "hanzo" (default)
+    ingressclass.yaml   # IngressClass "ingress" (default)
     deployment.yaml     # 2-replica Deployment
     service.yaml        # LoadBalancer Service
 integration/            # Integration test suite
@@ -386,15 +388,22 @@ Hanzo Ingress is part of the Hanzo AI infrastructure stack:
 | Project | Role | Repository |
 |---------|------|------------|
 | [**Hanzo Ingress**](https://github.com/hanzoai/ingress) | L7 reverse proxy, TLS termination, load balancing | `hanzoai/ingress` |
-| [**Hanzo Gateway**](https://github.com/hanzoai/gateway) | API gateway, rate limiting, endpoint routing | `hanzoai/gateway` |
+| [**Hanzo Gateway**](https://github.com/hanzoai/gateway) | Trust boundary for the API — identity, rate limiting, circuit breaking | `hanzoai/gateway` |
 | [**Hanzo Engine**](https://github.com/hanzoai/engine) | GPU inference engine, model serving | `hanzoai/engine` |
 | [**Hanzo Edge**](https://github.com/hanzoai/edge) | On-device inference runtime (mobile, web, embedded) | `hanzoai/edge` |
 
 ```
-Internet -> Ingress (TLS/L7) -> Gateway (API routing) -> Engine (inference) / Cloud API / Services
+Internet -> Ingress (TLS/L7) -> Gateway (identity) -> Cloud API -> Engine (inference) / Services
                                                           Edge (on-device, client-side)
 ```
 
 ## License
 
-MIT -- see [LICENSE.md](LICENSE.md).
+MIT -- see [LICENSE.md](LICENSE.md) and [NOTICE](NOTICE).
+
+Hanzo Ingress is a fork of [Traefik](https://github.com/traefik/traefik)
+(Containous SAS, Traefik Labs), which is where the provider model, the
+middleware set and the entrypoint/router/service vocabulary come from. The
+upstream copyright is preserved in `LICENSE.md`. Anything above that describes
+Hanzo-specific deployment, naming or the HIP-0106 in-process mount is ours; the
+proxy core is theirs.
