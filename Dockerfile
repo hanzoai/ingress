@@ -12,7 +12,11 @@ COPY webui/ ./
 RUN pnpm build
 
 # ---- Stage 2: Build Go binary ----
-FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26.5-alpine AS builder
+# go.mod pins the toolchain. The golang base image sets GOTOOLCHAIN=local,
+# which turns a `go` directive newer than the image into a hard build
+# failure instead of a download.
+ENV GOTOOLCHAIN=auto
 
 RUN apk add --no-cache git
 
