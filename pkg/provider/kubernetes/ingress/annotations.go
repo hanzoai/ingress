@@ -50,6 +50,17 @@ type ServiceIng struct {
 	Sticky           *dynamic.Sticky `json:"sticky,omitempty" label:"allowEmpty"`
 	NativeLB         *bool           `json:"nativeLB,omitempty"`
 	NodePortLB       bool            `json:"nodePortLB,omitempty"`
+	// Strategy selects the load-balancing algorithm across the service's
+	// servers: wrr (default), p2c, hrw or leasttime.
+	//
+	// hrw is the reason this is exposed. Sticky is cookie-based, and a
+	// cross-origin JSON-RPC client — a wallet, a dapp on another domain, curl —
+	// does not send cookies, so cookie stickiness cannot pin the clients that
+	// most need pinning. hrw hashes the client address instead, which both pins
+	// one client to one server AND spreads distinct clients over every server.
+	// The strategy was already honoured by the dynamic configuration and by
+	// every other provider; only the Ingress provider had no way to ask for it.
+	Strategy dynamic.BalancerStrategy `json:"strategy,omitempty"`
 }
 
 // SetDefaults sets the default values.
