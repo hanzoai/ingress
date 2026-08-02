@@ -7,12 +7,13 @@ import (
 	"mime"
 	"net/http"
 	"slices"
+	"strings"
 
 	"github.com/andybalholm/brotli"
-	"github.com/klauspost/compress/gzhttp"
-	"github.com/klauspost/compress/zstd"
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	"github.com/hanzoai/ingress/pkg/middlewares"
+	"github.com/klauspost/compress/gzhttp"
+	"github.com/klauspost/compress/zstd"
 )
 
 const typeName = "Compress"
@@ -178,6 +179,34 @@ func (c *compress) chooseHandler(typ string, rw http.ResponseWriter, req *http.R
 	case brotliName:
 		c.brotliHandler.ServeHTTP(rw, req)
 	case gzipName:
+		// gzhttp negotiates Accept-Encoding AGAIN, and modern versions understand
+		// zstd — so handing it the client's full list lets it overturn the choice
+		// just made above. With "gzip, br, zstd" the middleware selects gzip and
+		// gzhttp then answers `Content-Encoding: zstd`, which is not what the
+		// encodings order configured here asked for.
+		//
+		// Narrow the header to the encoding already chosen — but ONLY when the
+		// client named gzip itself. When gzip was selected off a wildcard, the
+		// header is left alone on purpose: gzhttp does not compress for
+		// `Accept-Encoding: *`, and that no-compression outcome is the documented
+		// behaviour here (TestNegotiation/accept_any_header). Rewriting the header
+		// would quietly start compressing those responses.
+		//
+		// On a CLONE, because the wrapper wraps c.next: mutating the original would
+		// also change what the backend sees the client ask for.
+		if slices.ContainsFunc(req.Header.Values(acceptEncodingHeader), func(v string) bool {
+			for _, item := range strings.Split(strings.ReplaceAll(v, " ", ""), ",") {
+				if strings.SplitN(item, ";", 2)[0] == gzipName {
+					return true
+				}
+			}
+			return false
+		}) {
+			gzipReq := req.Clone(req.Context())
+			gzipReq.Header.Set(acceptEncodingHeader, gzipName)
+			c.gzipHandler.ServeHTTP(rw, gzipReq)
+			return
+		}
 		c.gzipHandler.ServeHTTP(rw, req)
 	default:
 		c.next.ServeHTTP(rw, req)
