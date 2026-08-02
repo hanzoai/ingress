@@ -424,10 +424,15 @@ func Test_FlushAfterWriteNil(t *testing.T) {
 			assert.Equal(t, http.StatusOK, res.StatusCode)
 			assert.Empty(t, res.Header.Get(contentEncoding))
 
-			reader, err := test.readerBuilder(res.Body)
-			require.NoError(t, err)
-
-			got, err := io.ReadAll(reader)
+			// Read the body DIRECTLY, not through a decoder. Flush() returns early
+			// when nothing was ever written — deliberately, so it does not emit the
+			// end-of-stream bytes a flush would otherwise produce — and the assertion
+			// just above proves no Content-Encoding was applied. There is therefore
+			// nothing encoded to decode, and running an empty unencoded body through
+			// a decoder tests the decoder, not this middleware: brotli.NewReader
+			// answers `unexpected EOF` on zero bytes where zstd answers nil, which is
+			// why this case failed for brotli only.
+			got, err := io.ReadAll(res.Body)
 			require.NoError(t, err)
 			assert.Empty(t, got)
 		})
