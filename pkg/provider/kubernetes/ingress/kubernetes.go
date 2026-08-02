@@ -616,6 +616,7 @@ func (p *Provider) loadService(client Client, namespace string, backend netv1.In
 
 	if svcConfig != nil && svcConfig.Service != nil {
 		svc.LoadBalancer.Sticky = svcConfig.Service.Sticky
+		svc.LoadBalancer.Strategy = svcConfig.Service.Strategy
 		svc.Middlewares = svcConfig.Service.Middlewares
 
 		if svcConfig.Service.PassHostHeader != nil {

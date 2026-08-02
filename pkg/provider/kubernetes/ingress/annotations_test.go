@@ -283,3 +283,44 @@ func Test_convertAnnotations(t *testing.T) {
 		})
 	}
 }
+
+func TestParseServiceConfig_Strategy(t *testing.T) {
+	// hrw is why this annotation exists: it hashes the client address, so one
+	// client stays on one server while distinct clients spread over all of
+	// them. Sticky cannot do that for cross-origin JSON-RPC clients, which
+	// never send the cookie.
+	testCases := []struct {
+		desc        string
+		annotations map[string]string
+		expected    dynamic.BalancerStrategy
+	}{
+		{
+			desc:        "hrw",
+			annotations: map[string]string{"ingress.kubernetes.io/service.strategy": "hrw"},
+			expected:    dynamic.BalancerStrategyHRW,
+		},
+		{
+			desc:        "p2c",
+			annotations: map[string]string{"ingress.kubernetes.io/service.strategy": "p2c"},
+			expected:    dynamic.BalancerStrategyP2C,
+		},
+		{
+			// Absent must stay empty, NOT default to something here: the empty
+			// value is what service.go maps to wrr, and stamping a value at this
+			// layer would silently change every existing Ingress.
+			desc:        "absent leaves the strategy unset",
+			annotations: map[string]string{"ingress.kubernetes.io/service.sticky.cookie": "true"},
+			expected:    "",
+		},
+	}
+
+	for _, test := range testCases {
+		t.Run(test.desc, func(t *testing.T) {
+			cfg, err := parseServiceConfig(test.annotations)
+			require.NoError(t, err)
+			require.NotNil(t, cfg)
+			require.NotNil(t, cfg.Service)
+			assert.Equal(t, test.expected, cfg.Service.Strategy)
+		})
+	}
+}
