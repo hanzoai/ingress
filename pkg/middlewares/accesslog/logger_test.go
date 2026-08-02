@@ -21,13 +21,13 @@ import (
 	"time"
 
 	"github.com/containous/alice"
-	"github.com/sirupsen/logrus"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/pkg/middlewares/capture"
 	"github.com/hanzoai/ingress/pkg/middlewares/observability"
 	otypes "github.com/hanzoai/ingress/pkg/observability/types"
+	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/pdata/plog/plogotlp"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -157,7 +157,14 @@ func TestOTelAccessLogWithBodyAndDualOutput(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Parallel()
 
-			logCh := make(chan string)
+			// Buffered: the collector handler must never block on the send. The
+			// receive below gives up after 5s, so an export that arrives later has
+			// no reader — on an unbuffered channel that handler blocks forever, and
+			// httptest.Server.Close() (registered as cleanup) waits for outstanding
+			// requests to finish. The result was not a failing test but a HUNG one:
+			// the package hit the 600s CI timeout with goroutine 1 parked in
+			// t.Run's chan receive.
+			logCh := make(chan string, 1)
 			collector := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				gzr, err := gzip.NewReader(r.Body)
 				require.NoError(t, err)
