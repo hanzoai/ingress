@@ -87,13 +87,18 @@ jobs:
       platforms: "linux/amd64"
     secrets: inherit
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: docker
-    runs-on: [self-hosted, linux, amd64]
-    environment: production
-    steps:
-      - name: Rolling restart ingress DaemonSet
-        run: |
-          kubectl rollout restart daemonset/hanzo-ingress -n hanzo
-          kubectl rollout status daemonset/hanzo-ingress -n hanzo --timeout=120s
+# The `deploy` job that used to live here is gone on purpose. It ran
+# `kubectl rollout restart daemonset/hanzo-ingress` and failed every time with
+#
+#     /var/run/act/workflow/0: line 2: kubectl: command not found
+#     exitcode '127'
+#
+# because jobs run in catthehacker/ubuntu:act-24.04, which has no kubectl and no
+# cluster credentials. So the whole run went red on a step that had never once
+# succeeded, while the tests and the image build beneath it were green.
+#
+# It was futile even with kubectl present: cd.hanzo.ai reconciles this DaemonSet
+# from the pin in hanzoai/universe, and its selfHeal reverts a CI-side patch on
+# the next poll. Rollout is a reviewed tag pin there, never a CI side effect —
+# CI's job ends at "the image exists and resolves". Same removal already made in
+# hanzoai/playground and hanzoai/superbase for the same two reasons.
