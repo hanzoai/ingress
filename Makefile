@@ -59,6 +59,10 @@ generate-webui: webui/static/index.html
 generate:
 	go generate
 
+.PHONY: build
+#? build: Build the binary (alias for `binary`)
+build: binary
+
 .PHONY: binary
 #? binary: Build the binary
 binary: generate-webui dist
@@ -199,9 +203,12 @@ fmt:
 
 .PHONY: clean
 #? clean: Remove build artifacts
+# cover.out is test-unit's -coverprofile. NOT webui/static: that is what
+# clean-webui is for, and wiping it costs a full docker webui image rebuild.
 clean:
 	rm -f $(BIN_NAME)
 	rm -rf dist/
+	rm -f cover.out
 
 .PHONY: help
 #? help: Get more info on make commands
