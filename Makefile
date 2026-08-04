@@ -20,6 +20,11 @@ LINT_EXECUTABLES = misspell shellcheck
 DOCKER_BUILD_PLATFORMS ?= linux/amd64,linux/arm64
 REGISTRY := ghcr.io/hanzoai/ingress
 
+# Bare `make` prints help instead of building. Nothing invokes a bare make —
+# not the Dockerfile, not .github/workflows/ci.yml (it calls `go test` directly),
+# not a script or doc — so this costs nothing, and `make default` still builds.
+.DEFAULT_GOAL := help
+
 .PHONY: default
 #? default: Run `make generate` and `make binary`
 default: generate binary
