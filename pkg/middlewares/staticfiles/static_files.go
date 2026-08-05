@@ -198,16 +198,28 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// A prerendered route before any fallback policy: the file exists,
-			// it is just named "pricing.html" rather than "pricing". Gated on
-			// looksLikeAsset so a missing content-hashed chunk stays a bare 404
-			// and can never be answered with a page.
-			if !looksLikeAsset(upath) {
-				for _, candidate := range pageCandidates(upath) {
-					if cf, cd, ok := h.openRegular(r.Context(), candidate); ok {
-						defer cf.Close()
-						h.serveOpen(w, r, cf, cd)
-						return
-					}
+			// it is just named "pricing.html" rather than "pricing".
+			//
+			// Deliberately NOT gated on looksLikeAsset. That predicate guesses
+			// from the extension, and a URL segment may carry a dot without
+			// being a file: "/models/z-ai/glm-5.2" has path.Ext ".2" and
+			// "/models/meta-llama/llama-3.2-1b-instruct" has ".2-1b-instruct".
+			// Gating here 404d 181 of hanzo.ai's 773 routes — every model page
+			// with a version number in it — while the plain ones worked.
+			//
+			// It does not need the gate. The ladder asks for ONE exact file per
+			// candidate; it never falls back to a shell, so there is nothing for
+			// it to mask something with. A missing chunk looks for
+			// "nope.js.html" and "nope.js/index.html", finds neither, and stays
+			// a bare 404 — the guarantee holds by construction rather than by
+			// guessing what a path means. looksLikeAsset still gates SPA mode
+			// below, which is where it belongs: THAT path serves the shell for
+			// anything, so it is the one that must not answer an asset.
+			for _, candidate := range pageCandidates(upath) {
+				if cf, cd, ok := h.openRegular(r.Context(), candidate); ok {
+					defer cf.Close()
+					h.serveOpen(w, r, cf, cd)
+					return
 				}
 			}
 
