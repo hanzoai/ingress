@@ -20,7 +20,7 @@ func exportRoot(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
 
-	for _, sub := range []string{"docs", "blog", "_next/static/chunks"} {
+	for _, sub := range []string{"docs", "blog", "models", "_next/static/chunks"} {
 		if err := os.MkdirAll(filepath.Join(dir, sub), 0o755); err != nil {
 			t.Fatal(err)
 		}
@@ -28,6 +28,8 @@ func exportRoot(t *testing.T) string {
 
 	files := map[string]string{
 		"index.html":                  "<!doctype html><title>home</title>",
+		"models/glm-5.2.html":         "<!doctype html><title>glm</title>",
+		"models/llama-3.2-1b.html":    "<!doctype html><title>llama</title>",
 		"pricing.html":                "<!doctype html><title>pricing</title>",
 		"docs/index.html":             "<!doctype html><title>docs</title>",
 		"blog.html":                   "<!doctype html><title>blog</title>",
@@ -130,6 +132,31 @@ func TestFileBackedRouteDoesNotRedirect(t *testing.T) {
 	}
 	if !strings.Contains(body, "<title>pricing</title>") {
 		t.Errorf("GET /pricing body = %q", truncate(body))
+	}
+}
+
+// TestDottedRouteSegmentIsAPage is the bug the first cut of this shipped with.
+// A version number in the last segment makes path.Ext non-empty — ".2" for
+// "glm-5.2", ".2-1b" for "llama-3.2-1b" — so an extension-based "is this an
+// asset" guess treats a page as a file and skips the ladder. On hanzo.ai that
+// was 181 of 773 routes: every model page carrying a version, 404 while the
+// plain routes served.
+func TestDottedRouteSegmentIsAPage(t *testing.T) {
+	srv := httptest.NewServer(newLocal(t, dynamic.StaticFiles{Root: exportRoot(t)}))
+	defer srv.Close()
+
+	for path, want := range map[string]string{
+		"/models/glm-5.2":      "<title>glm</title>",
+		"/models/llama-3.2-1b": "<title>llama</title>",
+	} {
+		status, _, body := get(t, srv, path)
+		if status != http.StatusOK {
+			t.Errorf("GET %s = %d, want 200 — a dot in a segment is not an extension", path, status)
+			continue
+		}
+		if !strings.Contains(body, want) {
+			t.Errorf("GET %s served %q, want %q", path, truncate(body), want)
+		}
 	}
 }
 
