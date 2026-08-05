@@ -134,6 +134,60 @@ func looksLikeAsset(p string) bool {
 	return ext != "" && ext != ".html" && ext != ".htm"
 }
 
+// pageCandidates returns the files a static export may have written for an
+// extensionless request, in the order a static host should try them.
+//
+// A prerendered site has no router: "/pricing" is a FILE, and which file depends
+// on a build flag. Next.js `output: export` writes "pricing.html" by default and
+// "pricing/index.html" under `trailingSlash: true`; Hugo, Astro and Eleventy all
+// emit one of the same two shapes. Serving only the literal key 404s every route
+// of every such site but the root — the whole site, from an origin that holds it
+// complete.
+//
+// Both shapes are tried because both are ordinary output of the same generators,
+// and this is the same ladder cloud's own site plane resolves (apps/sites
+// streamSite: the key, then .html, then /index.html), so a bundle served here and
+// the same bundle served there answer identically.
+//
+// The root is excluded: it is a directory, and the indexFiles loop owns it.
+func pageCandidates(upath string) []string {
+	trimmed := strings.TrimSuffix(upath, "/")
+	if trimmed == "" {
+		return nil
+	}
+	return []string{trimmed + ".html", path.Join(trimmed, "index.html")}
+}
+
+// openRegular opens name and hands it back only if it resolved to a regular
+// file, so a caller probing candidates can never mistake a directory for a page.
+func (h *staticFiles) openRegular(ctx context.Context, name string) (http.File, fs.FileInfo, bool) {
+	f, err := h.open(ctx, name)
+	if err != nil {
+		return nil, nil, false
+	}
+
+	d, err := f.Stat()
+	if err != nil || d.IsDir() {
+		f.Close()
+		return nil, nil, false
+	}
+
+	return f, d, true
+}
+
+// serveOpen writes an already-resolved file: cache headers, content type from
+// the extension, then the body through ServeContent so Range and conditional
+// requests keep working.
+func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.File, d fs.FileInfo) {
+	h.setCacheHeaders(w, d)
+
+	if contentType := mime.TypeByExtension(filepath.Ext(d.Name())); contentType != "" {
+		w.Header().Set("Content-Type", contentType)
+	}
+
+	http.ServeContent(w, r, d.Name(), d.ModTime(), f.(io.ReadSeeker))
+}
+
 func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	upath := r.URL.Path
 	if !strings.HasPrefix(upath, "/") {
@@ -143,6 +197,20 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	f, err := h.open(r.Context(), upath)
 	if err != nil {
 		if os.IsNotExist(err) {
+			// A prerendered route before any fallback policy: the file exists,
+			// it is just named "pricing.html" rather than "pricing". Gated on
+			// looksLikeAsset so a missing content-hashed chunk stays a bare 404
+			// and can never be answered with a page.
+			if !looksLikeAsset(upath) {
+				for _, candidate := range pageCandidates(upath) {
+					if cf, cd, ok := h.openRegular(r.Context(), candidate); ok {
+						defer cf.Close()
+						h.serveOpen(w, r, cf, cd)
+						return
+					}
+				}
+			}
+
 			if h.spaMode && !looksLikeAsset(upath) {
 				h.serveFile(w, r, h.spaIndex)
 				return
@@ -179,12 +247,26 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// SERVE the index, do not redirect to it. Redirecting made "/" answer
+		// 301 -> "/index.html", which moves every site's canonical URL to a
+		// path no one links to, costs a round trip on the first request, and is
+		// not what any static host does. The bytes are the index's either way.
 		for _, index := range h.indexFiles {
 			indexPath := path.Join(upath, index)
-			indexFile, err := h.open(r.Context(), indexPath)
-			if err == nil {
-				indexFile.Close()
-				localRedirect(w, r, indexPath)
+			if indexFile, indexInfo, ok := h.openRegular(r.Context(), indexPath); ok {
+				defer indexFile.Close()
+				h.serveOpen(w, r, indexFile, indexInfo)
+				return
+			}
+		}
+
+		// A directory with no index may still have a page of its own one level
+		// up ("/blog/" served by "blog.html"), which is what an export writes
+		// for a route that also has children.
+		for _, candidate := range pageCandidates(upath) {
+			if cf, cd, ok := h.openRegular(r.Context(), candidate); ok {
+				defer cf.Close()
+				h.serveOpen(w, r, cf, cd)
 				return
 			}
 		}
@@ -203,16 +285,7 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.setCacheHeaders(w, d)
-
-	name := d.Name()
-	ext := filepath.Ext(name)
-	contentType := mime.TypeByExtension(ext)
-	if contentType != "" {
-		w.Header().Set("Content-Type", contentType)
-	}
-
-	http.ServeContent(w, r, d.Name(), d.ModTime(), f.(io.ReadSeeker))
+	h.serveOpen(w, r, f, d)
 }
 
 func (h *staticFiles) serveDirectoryListing(w http.ResponseWriter, r *http.Request, f http.File) {
