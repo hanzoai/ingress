@@ -708,8 +708,8 @@ github.com/hanzoai/account v0.2.0 h1:WxIut3YMz8JNdHerlRIqP1a+k3P79BIKM1mjfRFDG0Y
 github.com/hanzoai/account v0.2.0/go.mod h1:8OzIGRphAhlabOI74O4GoL3RM0y8mbUV0pQUKgXLjkw=
 github.com/hanzoai/cloud v1.801.293 h1:ZlslLcPe84PBZkXd5Nm+Qagn1ZUy1++UwNkr6Vqhr4M=
 github.com/hanzoai/cloud v1.801.293/go.mod h1:AqWku5d3t8nQbTSu/zqtObdKZiScRmLLdJbvxwI/W74=
-github.com/hanzoai/commerce v1.49.29 h1:1cS4/KcR35H4biyi2EIWXBonaJwOGq92AR+1VcsNQYQ=
-github.com/hanzoai/commerce v1.49.29/go.mod h1:k5OrYZkKCbc86NjkFHvf0UMyLqjp3juoLEZ8UUJpJjc=
+github.com/hanzoai/commerce v1.49.29 h1:xla6VYD6PZoZXg7QDWCAuoj9hZlfQLzXff2806AQQNM=
+github.com/hanzoai/commerce v1.49.29/go.mod h1:wlWq8jprb72qdQbhPHcgZQAkpzfuNvexbXCh+H+C7jM=
 github.com/hanzoai/csqlite v0.1.0 h1:suwC3dh0INlfP/U0Es6cDf6JNQ+2+GVLLATPWCUux6k=
 github.com/hanzoai/csqlite v0.1.0/go.mod h1:H31a/O6VXuklR9UBkgY++bmAK5uzVfXPqU0F6P9Wsos=
 github.com/hanzoai/dbx v1.17.2 h1:EBADhGuOMxCsc4eHj5cJmtE9c7tSKaviyl8URx31NOQ=
