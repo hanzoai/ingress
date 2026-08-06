@@ -18,9 +18,6 @@ import (
 	"github.com/coreos/go-systemd/v22/daemon"
 	"github.com/go-acme/lego/v4/challenge"
 	gokitmetrics "github.com/go-kit/kit/metrics"
-	"github.com/rs/zerolog/log"
-	"github.com/sirupsen/logrus"
-	"github.com/spiffe/go-spiffe/v2/workloadapi"
 	"github.com/hanzoai/ingress-parser/cli"
 	"github.com/hanzoai/ingress/cmd"
 	"github.com/hanzoai/ingress/cmd/healthcheck"
@@ -48,6 +45,9 @@ import (
 	"github.com/hanzoai/ingress/pkg/tcp"
 	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 	"github.com/hanzoai/ingress/pkg/version"
+	"github.com/rs/zerolog/log"
+	"github.com/sirupsen/logrus"
+	"github.com/spiffe/go-spiffe/v2/workloadapi"
 )
 
 func main() {
@@ -442,7 +442,9 @@ func switchRouter(routerFactory *server.RouterFactory, serverEntryPointsTCP serv
 
 // initACMEProvider creates and registers acme.Provider instances corresponding to the configured ACME certificate resolvers.
 func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.ProviderAggregator, tlsManager *ingresstls.Manager, httpChallengeProvider, tlsChallengeProvider challenge.Provider, routinesPool *safe.Pool) []*acme.Provider {
-	localStores := map[string]*acme.LocalStore{}
+	// acme.Store, not *acme.LocalStore: where the state lives is now a decision
+	// (see acmeStore), and a map typed to one implementation cannot hold the other.
+	acmeStores := map[string]acme.Store{}
 
 	var resolvers []*acme.Provider
 	for name, resolver := range c.CertificatesResolvers {
@@ -450,13 +452,13 @@ func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.Pr
 			continue
 		}
 
-		if localStores[resolver.ACME.Storage] == nil {
-			localStores[resolver.ACME.Storage] = acme.NewLocalStore(resolver.ACME.Storage, routinesPool)
+		if acmeStores[resolver.ACME.Storage] == nil {
+			acmeStores[resolver.ACME.Storage] = acmeStore(resolver.ACME.Storage, routinesPool)
 		}
 
 		p := &acme.Provider{
 			Configuration:         resolver.ACME,
-			Store:                 localStores[resolver.ACME.Storage],
+			Store:                 acmeStores[resolver.ACME.Storage],
 			ResolverName:          name,
 			HTTPChallengeProvider: httpChallengeProvider,
 			TLSChallengeProvider:  tlsChallengeProvider,
@@ -637,4 +639,35 @@ func collect(staticConfiguration *static.Configuration) {
 			}
 		}
 	})
+}
+
+// acmeStore picks where ACME state lives.
+//
+// The default is unchanged: a local file, which is correct and simplest for ONE
+// replica. Set ACME_SHARED_STORE_NAMESPACE (the operator normally maps it from
+// metadata.namespace) and state moves to a Kubernetes object every replica reads,
+// with one elected writer — which is what more than one replica requires.
+//
+// It is opt-in rather than automatic because turning it on relocates the estate's
+// TLS state, and the migration is one-way in practice: the shared object starts
+// empty, so the writer re-orders whatever the file held. That is a deliberate act
+// against a rate limit, not something a deployment should discover on restart.
+//
+// A configured shared store that cannot be built is FATAL, never a silent
+// downgrade to the file. Falling back would reinstate per-node state exactly when
+// the cluster is unreachable — the moment two replicas are most likely to diverge
+// — and it would do so quietly, which is how the current split went unnoticed for
+// as long as it did.
+func acmeStore(storage string, pool *safe.Pool) acme.Store {
+	ns := os.Getenv("ACME_SHARED_STORE_NAMESPACE")
+	if ns == "" {
+		return acme.NewLocalStore(storage, pool)
+	}
+	shared, err := acme.NewSharedStore(acme.SharedStoreConfig{Namespace: ns})
+	if err != nil {
+		log.Fatal().Err(err).Msg("ACME shared store is configured but could not be built; refusing to fall back to per-node state")
+	}
+	shared.Start(context.Background())
+	log.Info().Str("namespace", ns).Msg("ACME state is shared: one elected writer, every replica reads")
+	return shared
 }
