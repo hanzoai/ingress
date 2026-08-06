@@ -1,0 +1,33 @@
+# Canonical CI config for hanzoai/ingress — read by the hanzoai/ci reusable
+# (.hanzo/workflows/cicd.yml) and platform.hanzo.ai. ci.hanzo.ai builds this on the
+# git-runner pool (act_runner on git.hanzo.ai); hanzoai/ci pushes to `repo:` and
+# server-side-mirrors to registry.hanzo.ai.
+#
+# WHY THIS FILE EXISTS: ingress was the last core repo still building through
+# .github/workflows/ci.yml on GitHub Actions, so it was outside git.hanzo.ai /
+# ci.hanzo.ai / cd.hanzo.ai — two ways to build one fleet. It is also why a commit
+# that had been on main for hours had no image: nothing on the native pipeline was
+# watching this repo.
+#
+# The Dockerfile is self-contained: its first stage builds the webui bundle with
+# pnpm, which is what `go build ./cmd/ingress` needs (webui/embed.go embeds
+# webui/static) and why a bare local Go build fails without it. So the image build
+# needs no separate asset step.
+#
+# TAGS: `sha-<sha7>-amd64` on every main push, and the bare semver on a cut v* tag.
+# PIN THE DIGEST in universe — infra/k8s/ingress/deployment.yaml already does
+# (`:1.10.6@sha256:…`), which is the practice to keep: a digest cannot be re-pointed.
+images:
+  - name: ingress
+    context: .
+    dockerfile: Dockerfile
+    repo: ghcr.io/hanzoai/ingress
+
+# Ported from the retired GitHub Actions `test` job. The Go tests need the webui
+# bundle present, because webui/embed.go embeds webui/static and the package will
+# not compile without it.
+test:
+  - corepack enable && corepack prepare pnpm@9.15.0 --activate
+  - cd webui && pnpm install --frozen-lockfile && pnpm build
+  - go mod download
+  - go test ./pkg/provider/acme/... ./pkg/tls/...
