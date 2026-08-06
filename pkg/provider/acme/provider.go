@@ -26,7 +26,6 @@ import (
 	"github.com/go-acme/lego/v4/lego"
 	"github.com/go-acme/lego/v4/providers/dns"
 	"github.com/go-acme/lego/v4/registration"
-	"github.com/rs/zerolog/log"
 	ptypes "github.com/hanzoai/ingress-parser/types"
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
 	httpmuxer "github.com/hanzoai/ingress/pkg/muxer/http"
@@ -36,6 +35,7 @@ import (
 	ingresstls "github.com/hanzoai/ingress/pkg/tls"
 	"github.com/hanzoai/ingress/pkg/types"
 	"github.com/hanzoai/ingress/pkg/version"
+	"github.com/rs/zerolog/log"
 )
 
 const resolverSuffix = ".acme"
@@ -967,6 +967,22 @@ func (p *Provider) renewCertificates(ctx context.Context, renewPeriod time.Durat
 // from static and dynamic provided certificates.
 func (p *Provider) getUncheckedDomains(ctx context.Context, domainsToCheck []string, tlsStore string) []string {
 	log.Ctx(ctx).Debug().Msgf("Looking for provided certificate(s) to validate %q...", domainsToCheck)
+
+	// A replica that is not the ACME writer orders NOTHING. This is the single
+	// point where that is decidable, because everything downstream of it is the
+	// expensive half: a DNS-01 round trip, a rate-limit slot against Let's
+	// Encrypt's 50-per-week registered-domain ceiling, and a challenge TXT record
+	// that two replicas racing to write and clean up can delete out from under
+	// each other. Declining here means a reader spends none of it and simply
+	// serves what the writer obtained.
+	//
+	// A store that does not know about writers (LocalStore) is single-writer by
+	// construction, so it never gates and every replica orders — which is the
+	// correct behaviour for one replica and the bug for more than one.
+	if gate, ok := p.Store.(writerGate); ok && !gate.IsWriter(ctx) {
+		log.Ctx(ctx).Debug().Msg("Not the ACME writer for this deployment; leaving resolution to the writer")
+		return nil
+	}
 
 	var allDomains []string
 	store := p.tlsManager.GetStore(tlsStore)
