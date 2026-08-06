@@ -1,0 +1,24 @@
+# Canonical caller — all real config lives in /hanzo.yml.
+#
+# Builds and pushes the ingress image on ci.hanzo.ai's own act_runner pool
+# (git-runner, on git.hanzo.ai) and mirrors it to registry.hanzo.ai. There is no
+# ARC in this fleet.
+#
+# @v1, not @v2: hanzoai/ci is tagged v1.0.32..v1.0.35 plus a bare floating `v2`
+# that points at the SAME commit as v1.0.35 — an alias, not a second major.
+#
+# Rollout is a reviewed digest pin in hanzoai/universe, never a CI side effect.
+# The `deploy` job that once lived in the GitHub workflow is deliberately not
+# recreated here: it ran `kubectl rollout restart` from a runner with no kubectl
+# and failed every time, and cd.hanzo.ai reconciles from the universe pin anyway.
+name: CI/CD
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+jobs:
+  cicd:
+    uses: hanzoai/ci/.hanzo/workflows/build.yml@v1
+    secrets: inherit
