@@ -137,7 +137,7 @@ func TestLoadConfigurationFromIngresses(t *testing.T) {
 					Services: map[string]*dynamic.Service{
 						"testing-service1-80": {
 							LoadBalancer: &dynamic.ServersLoadBalancer{
-								Strategy:       dynamic.BalancerStrategyWRR,
+								Strategy:       dynamic.BalancerStrategyHRW,
 								PassHostHeader: pointer(true),
 								ResponseForwarding: &dynamic.ResponseForwarding{
 									FlushInterval: ptypes.Duration(100 * time.Millisecond),

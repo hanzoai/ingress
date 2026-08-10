@@ -45,6 +45,7 @@ metadata:
     ingress.kubernetes.io/foo: bar
     ingress.kubernetes.io/service.serversscheme: protocol
     ingress.kubernetes.io/service.serverstransport: foobar@file
+    ingress.kubernetes.io/service.strategy: hrw
     ingress.kubernetes.io/service.passhostheader: "true"
     ingress.kubernetes.io/service.sticky.cookie: "true"
     ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
