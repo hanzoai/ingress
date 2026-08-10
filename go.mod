@@ -108,7 +108,7 @@ require (
 	github.com/luxfi/trace v1.4.0
 	github.com/luxfi/zap v1.2.6
 	github.com/prometheus/client_golang v1.23.2
-	github.com/zap-proto/http v0.1.0
+	github.com/zap-proto/http v0.3.1
 )
 
 require (
