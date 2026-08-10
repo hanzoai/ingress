@@ -147,6 +147,29 @@ the intended behaviour: there is one name for each of these, and it is ours.
   produces branding/group noise; hand-apply small generated-code changes and
   extract only the intended CRD-schema block from a scratch run.
 
+## In-process surface (`App`, root package)
+
+`app.go` builds the small surface a co-resident binary needs — `GET
+/_/ingress/healthz` and a read-only `GET /_/ingress/config` (brand, domain,
+expected entrypoints/providers, ACME on/off, from `INGRESS_*` env). The proxy
+itself is unaffected: it is `cmd/ingress`, out of process, at the cluster edge.
+
+```go
+func App(brand, domain string) (*zip.App, error)
+```
+
+Two strings, because those are the only two facts it reports back. It took
+`cloud.Deps` and registered itself into `cloud.Registry`, which made ingress
+import its own host — and `hanzoai/cloud` ships two editions under one module
+path, so `cloud.Deps` is a different type in each and only one of them could
+ever compose this package. Returning the app instead of writing into one handed
+in means a host holds what it gets back and mounts it where it likes; nothing
+here knows a registry exists. Rule: a subsystem imports `zip`, never its host.
+
+It was also behind a `cloud` build tag, so nothing compiled it and it had
+drifted to symbols cloud no longer has. No tag now, and `.` is in `test-unit`
+and in the `hanzo.yml` test list.
+
 ## Static file serving (`staticFiles` middleware)
 `pkg/middlewares/staticfiles` serves a site directly at the edge — the shared
 static plane for the fleet (one ingress, unlimited sites). `Root` is a union:

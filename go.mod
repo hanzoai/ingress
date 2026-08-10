@@ -2,10 +2,7 @@ module github.com/hanzoai/ingress
 
 go 1.26.4
 
-require github.com/hanzoai/cloud v0.1.1
-
 require (
-	github.com/hanzoai/ha v0.2.0
 	github.com/BurntSushi/toml v1.6.0
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/abbot/go-http-auth v0.0.0-00010101000000-000000000000 // No tag on the repo.
@@ -29,6 +26,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674
 	github.com/hanzoai/grpc-web v0.16.1
+	github.com/hanzoai/ha v0.2.0
 	github.com/hanzoai/ingress-parser v0.2.3
 	github.com/hanzoai/ingress/dynamic/ext v0.0.0-00010101000000-000000000000
 	github.com/hanzoai/yaegi v0.16.2
