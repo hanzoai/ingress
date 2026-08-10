@@ -97,7 +97,7 @@ test: test-ui-unit test-unit test-integration
 .PHONY: test-unit
 #? test-unit: Run the unit tests
 test-unit:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go test -cover "-coverprofile=cover.out" -v $(TESTFLAGS) ./pkg/... ./cmd/...
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go test -cover "-coverprofile=cover.out" -v $(TESTFLAGS) . ./pkg/... ./cmd/...
 
 .PHONY: test-integration
 #? test-integration: Run the integration tests
