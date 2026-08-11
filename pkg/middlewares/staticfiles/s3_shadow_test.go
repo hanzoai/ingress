@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/hanzoai/ingress/pkg/config/dynamic"
-	s3 "github.com/hanzos3/go-sdk"
-	"github.com/hanzos3/go-sdk/pkg/credentials"
+	s3 "github.com/hanzos3/go"
+	"github.com/hanzos3/go/pkg/credentials"
 )
 
 const shadowBucket = "cdn"
