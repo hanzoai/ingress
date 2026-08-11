@@ -25,10 +25,21 @@ ARG TARGETARCH=amd64
 ARG VERSION=v0.1.0
 
 WORKDIR /src
-# Private cross-org modules (hanzoai/*, luxfi/* — luxfi/zap forward.Forwarder) are
-# fetched via authenticated git, bypassing the public proxy. gh_token is the
-# shared docker-build.yml BuildKit secret; no-op when absent (local/dev).
-ENV GOPRIVATE=github.com/hanzoai/*,github.com/lux-private/*,github.com/zap-proto/*
+# hanzoai/* is private, so it is fetched via authenticated git, bypassing the
+# public proxy. gh_token is the shared docker-build.yml BuildKit secret; no-op
+# when absent (local/dev).
+#
+# zap-proto/* is NOT private — the repos are public and proxy.golang.org serves
+# them. Listing it here sent go to direct git for a module the proxy already
+# had, and that path is the fragile one:
+#
+#   reading github.com/zap-proto/go/go.mod at revision v1.3.0: git ls-remote …
+#   fatal: unable to access 'https://github.com/zap-proto/go/': SSL: certificate
+#   subject name 'dotcom.glb' does not match target hostname 'github.com'
+#
+# GOPRIVATE names what is actually private. Anything public goes through the
+# proxy, which is faster and checksum-verified.
+ENV GOPRIVATE=github.com/hanzoai/*
 # Copy go.mod, go.sum, and the local replace target first for layer caching.
 COPY go.mod go.sum ./
 COPY pkg/config/dynamic/ext/ ./pkg/config/dynamic/ext/
