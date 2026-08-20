@@ -21,7 +21,6 @@ ingress_changelog.md
 integration/tailscale.secret
 integration/gateway-api-conformance-reports/**/experimental-dev-default-report.yaml
 hanzo-ingress
-CLAUDE.md
 AGENTS.md
 GEMINI.md
 QWEN.md
