@@ -64,23 +64,24 @@ spec:
         - "--accesslog=true"
         - "--accesslog.fields.defaultmode=keep"
         - "--accesslog.fields.headers.defaultmode=drop"
-        # The edge's secrets come from KMS, not from this file and not from a
-        # Kubernetes Secret.
+        # The key /data/acme.json is sealed under comes from KMS — it is never
+        # in this file and never in a Kubernetes Secret:
         #
-        # Two things decide whether the estate's TLS is the estate's: the key
-        # the ACME state is sealed under, and the DNS credential the ACME
-        # challenge is answered with. They were a Secret named
-        # cloudflare-api-credentials holding the Cloudflare account-GLOBAL API
-        # key — every zone, billing, workers — mounted into an env var of a
-        # DaemonSet on every node. They are now read at startup from
-        # kms.hanzo.ai and held in memory:
+        #   ingress/acme-seal   32 bytes, AES-256-GCM, seals the ACME state
         #
-        #   ingress/acme-seal        32 bytes, AES-256-GCM, seals /data/acme.json
-        #   ingress/cloudflare-token zone-scoped DNS:Edit token, not the global key
+        # Reading it needs one credential of its own, and that one IS a Secret,
+        # because it is what opens KMS. It reads one path, in one org, and
+        # nothing else. The reference is REQUIRED: this pod is configured for
+        # KMS, so a missing credential is a missing configuration and the
+        # kubelet naming the absent Secret is the clearest way to say so.
+        # Materialise it with a KMSSecret before applying this manifest.
         #
-        # Exactly one credential still has to be a Secret, because it is what
-        # opens KMS: this service's own IAM client. It reads one path, in one
-        # org, and nothing else.
+        # The Cloudflare credential the DNS-01 challenge is answered with stays
+        # where the cluster already holds it. Moving it to a zone-scoped token
+        # is its own change: it swaps the mechanism lego authenticates with,
+        # and lego prefers the account pair over any token, so the two do not
+        # coexist. The reference is optional because a deployment that supplies
+        # the credential another way should still start.
         env:
         - name: INGRESS_KMS_ENDPOINT
           value: "https://kms.hanzo.ai"
@@ -98,6 +99,18 @@ spec:
             secretKeyRef:
               name: ingress-kms
               key: clientSecret
+        - name: CF_API_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-api-credentials
+              key: EMAIL
+              optional: true
+        - name: CF_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-api-credentials
+              key: APIKEY
+              optional: true
         ports:
         - name: web
           containerPort: 80
