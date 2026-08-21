@@ -26,8 +26,13 @@ import (
 func twoReplicas(t *testing.T) (a, b *SharedStore) {
 	t.Helper()
 	client := fake.NewSimpleClientset()
+	// One seal for both, which is what two replicas of one deployment have:
+	// the same org, the same key from KMS. Running these sealed is not extra
+	// coverage, it is the deployment — under the identity seal every document
+	// reports no write count and the freshness rule is never reached.
+	seal := sealFor(t, false)
 	cfg := func(self string) SharedStoreConfig {
-		return SharedStoreConfig{Namespace: "hanzo", Self: self, LeaseDuration: time.Minute}
+		return SharedStoreConfig{Namespace: "hanzo", Self: self, LeaseDuration: time.Minute, Seal: seal}
 	}
 	var err error
 	if a, err = newSharedStore(client, cfg("ingress-0")); err != nil {
@@ -198,9 +203,11 @@ func TestFreshReplicaInheritsStateAndOrdersNothing(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// A brand-new pod: same cluster, no local state of any kind.
+	// A brand-new pod: same cluster, no local state of any kind. It reads the
+	// same sealing key from KMS that its siblings did, which is what makes the
+	// document theirs to read.
 	fresh, err := newSharedStore(a.client, SharedStoreConfig{
-		Namespace: "hanzo", Self: "ingress-2", LeaseDuration: time.Minute,
+		Namespace: "hanzo", Self: "ingress-2", LeaseDuration: time.Minute, Seal: a.seal,
 	})
 	if err != nil {
 		t.Fatal(err)

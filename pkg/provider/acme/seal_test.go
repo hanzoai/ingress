@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
@@ -14,8 +15,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
+	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes/fake"
+	k8stesting "k8s.io/client-go/testing"
 )
 
 // These drive the real seal rather than a stand-in. What this package owes is
@@ -221,6 +226,48 @@ func TestSharedStore_RefusesADocumentFromAnotherNamespace(t *testing.T) {
 	require.Error(t, there.refresh(ctx), "a document written for one namespace opened in another")
 }
 
+// A conflict is retried, and under a real seal the retry has to work. The
+// count of a write that did NOT land must not become the store's own view of
+// where the document is, or the re-read sees a document behind it and every
+// write from then on is refused — the writer keeps ordering and stops
+// persisting.
+func TestSharedStore_RetriesAConflictUnderSeal(t *testing.T) {
+	client := fake.NewSimpleClientset()
+	s, err := newSharedStore(client, SharedStoreConfig{
+		Namespace: "hanzo", Self: "ingress-0", LeaseDuration: time.Minute, Seal: sealFor(t, false),
+	})
+	require.NoError(t, err)
+	require.True(t, s.IsWriter(context.Background()))
+	require.NoError(t, s.SaveCertificates("letsencrypt", certs("first.hanzo.ai")))
+
+	// One injected conflict, as if a controller touched the object's metadata
+	// between the read and the update, then success.
+	var fired bool
+	client.PrependReactor("update", "secrets", func(k8stesting.Action) (bool, runtime.Object, error) {
+		if !fired {
+			fired = true
+			return true, nil, kerrors.NewConflict(
+				schema.GroupResource{Resource: "secrets"}, s.name, errors.New("modified"))
+		}
+		return false, nil, nil
+	})
+
+	require.NoError(t, s.SaveCertificates("letsencrypt", certs("first.hanzo.ai", "second.hanzo.ai")),
+		"a benign conflict must be retried, not surfaced")
+	require.True(t, fired, "the conflict reactor never fired — the test proved nothing")
+
+	got, err := s.GetCertificates("letsencrypt")
+	require.NoError(t, err)
+	assert.Len(t, got, 2, "the retry lost data")
+
+	// And the writer keeps working afterwards, which is what a high-water mark
+	// left ahead of the document would have taken away.
+	require.NoError(t, s.SaveCertificates("letsencrypt", certs("first.hanzo.ai", "second.hanzo.ai", "third.hanzo.ai")))
+	got, err = s.GetCertificates("letsencrypt")
+	require.NoError(t, err)
+	assert.Len(t, got, 3)
+}
+
 // The counter is the whole of the freshness rule, so it is stated once here.
 func TestCounter(t *testing.T) {
 	var c counter
@@ -234,8 +281,15 @@ func TestCounter(t *testing.T) {
 	// an unsealed store is, and it neither advances nor rolls back.
 	require.NoError(t, c.read(0), "a document carrying no count was read as a step back")
 
+	// next reserves and does not record, so an attempt that is refused leaves
+	// the count where the stored document is.
 	assert.Equal(t, uint64(10), c.next())
-	assert.Equal(t, uint64(11), c.next(), "next must advance whether or not the write landed")
+	assert.Equal(t, uint64(10), c.next(), "next recorded a write that had not landed")
+	require.NoError(t, c.read(9), "a reserved-but-unlanded write moved the count")
+
+	c.wrote(10)
+	assert.Equal(t, uint64(11), c.next())
+	require.Error(t, c.read(9), "the count did not move on a write that landed")
 }
 
 // Plain() is what every deployment ran before sealing existed, and it stays

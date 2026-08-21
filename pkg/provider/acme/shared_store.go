@@ -407,7 +407,8 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 		}
 		apply(d)
 
-		blob, err := encodeStored(s.seal, s.id(), s.count.next(), state)
+		want := s.count.next()
+		blob, err := encodeStored(s.seal, s.id(), want, state)
 		if err != nil {
 			return err
 		}
@@ -436,6 +437,7 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 			return fmt.Errorf("acme shared store: write: %w", err)
 		}
 
+		s.count.wrote(want)
 		s.mu.Lock()
 		s.cache, s.rv, s.loaded = state, out.ResourceVersion, true
 		s.mu.Unlock()
