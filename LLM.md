@@ -275,64 +275,176 @@ INGRESS_KMS_CLIENT_SECRET ← IAM_CLIENT_SECRET
 INGRESS_KMS_ORG           default "hanzo"   (the lux overlay sets "lux")
 INGRESS_KMS_ENV           default "default"
 INGRESS_KMS_PATH          default "ingress"
+INGRESS_ACME_ADOPT        unset; one boot, see "The seal"
 ```
+
+The endpoint must be https — the client secret is in the login body and the
+bearer is in a header of every read.
 
 Which secrets it reads is a property of the service, not of the environment, so
 the names are constants: `ingress/acme-seal` (32 bytes, hex or base64) and
-`ingress/cloudflare-token`.
+`ingress/cloudflare-token`. Only the first is required; see the pre-flight at
+the end of this section for which of them to create.
 
 ### The seal
 
 `acme.Seal` (`pkg/provider/acme/seal.go`) is a two-method interface — `Wrap`,
-`Unwrap` — and both persistent stores route their one serialize point through
-it (`encodeStored` / `decodeStored`). The implementation is `kms.Seal`:
-envelope, AES-256-GCM both ways. Each write mints a fresh 256-bit data key,
-encrypts the document under it, and encrypts that key under the key from KMS.
-The long-lived key therefore encrypts 48 bytes per write rather than the whole
-document, and recovering one write's data key opens that write only.
+`Unwrap` — and both persistent stores route their one serialize point through it
+(`encodeStored` / `decodeStored`). The implementation is `kms.Seal`: envelope,
+AES-256-GCM both ways. Each write mints a fresh 256-bit data key, encrypts the
+document under it, and encrypts that key under the key from KMS. The long-lived
+key therefore encrypts 48 bytes per write rather than the whole document, and
+recovering one write's data key opens that write only.
 
-`Unwrap` returns a document written before sealing was configured unchanged,
-with `sealed=false`. That is the whole migration: an edge upgrading from a
-plaintext `acme.json` keeps its certificates instead of re-ordering every one of
-them against a Let's Encrypt rate limit. `LocalStore.get` sees `sealed=false`,
-logs it, and pushes a save immediately — so the clear copy survives one boot and
-no longer. `SharedStore` cannot rewrite from a reader, so it logs and the
-elected writer seals on its next mutation.
+A store is NAMED and every write is COUNTED, and both travel into the seal:
+
+```
+{"seal":1,"id":"<key fingerprint>","count":<n>,"key":"…","data":"…"}
+```
+
+`{version, store name, key id, count}` is the additional data of BOTH AEAD
+layers, length-prefixed so no two field combinations render the same bytes. Each
+of those four is therefore verified by the decryption rather than trusted from
+the JSON. A document opens for the store it was written for (`/data/acme.json`
+for the file store, `<namespace>/<secret>` for the shared one), under the key it
+was written with, at the write it was made at:
+
+- an envelope moved between stores does not open — `TestSeal_RefusesADocumentFromAnotherStore`
+- an envelope edited to claim another count does not open — `TestSeal_CountCannotBeEdited`
+- an envelope sealed under a retired key names that key — `TestSeal_NamesTheKeyItWasSealedUnder`
+
+The count only moves forward (`counter`). A shared store re-reads its object on
+every poll, so a replica that has read write 9 keeps write 9 rather than
+stepping back to an earlier copy of the same document
+(`TestSharedStore_RefusesAnEarlierDocument`). Counting starts at one; zero is
+the count of a document never written under seal, and `Wrap` refuses it.
+
+A store that is not sealed is REFUSED. `INGRESS_ACME_ADOPT` (any non-empty
+value, unset everywhere by default) is the operator saying otherwise for one
+boot: that boot opens such a store once, keeps its certificates rather than
+re-ordering every one of them against a Let's Encrypt rate limit, and writes it
+back under seal. After that boot the store is sealed, so the opt-in has nothing
+left to do — it warns on every boot it is set, so it is not left on quietly.
+Adoption is a property of the READ only; every write an adopting seal makes is
+sealed, and the refusing seal over the same key reads it.
+
+The envelope is FORWARD-ONLY. There is no compatibility path for an earlier
+shape because there is no deployed sealed state — the `data` volume is
+node-local ephemeral storage, backed by neither a Secret nor a ConfigMap.
 
 `acme.Plain()` is the identity seal and is byte-for-byte what every deployment
 wrote before this existed (`TestPlain_IsTheDocumentItself`). It is a null object
 rather than a nil check, so no store has to ask whether it has a seal — that is
 the check one of them would eventually forget, on the path whose whole job is to
-not write private keys in the clear.
+not write private keys in the clear. It reports its document sealed, because for
+that deployment the document IS the storage format and there is nothing to adopt.
+
+A read that does not open is an ERROR line and a
+`ingress_acme_unseal_failures_total{store}` count. The local store publishes its
+state only once the file has been read, so a read that refuses stays refused —
+publishing an empty map first left the next call looking at a store that
+appeared new, and an ACME provider answers a new store by ordering the estate
+again over what is already there (`TestLocalStore_RefusesAnUnsealedStore`).
 
 Failure polarity, decided once in `cmd/ingress/secrets.go`:
 
-- KMS configured, sealing key unreadable → **fatal**. Never a quiet downgrade to
-  writing private keys in the clear; that failure happens when nobody is
-  watching and leaves the account key readable on the node forever after.
-- KMS configured, DNS token unreadable → **error, keep serving**. DNS-01 is one
-  challenge of three and an edge holding its certificates keeps serving TLS
-  without ever calling Cloudflare. Refusing to boot would turn a renewal problem
-  into an outage.
+- KMS configured, sealing key unreadable **within the bound** → **fatal**. Never
+  a quiet downgrade to writing private keys in the clear; that failure happens
+  when nobody is watching and leaves the account key readable on the node
+  forever after.
+- KMS configured, DNS token unreadable within the bound → **warn, keep
+  serving**. DNS-01 is one challenge of three, an edge holding its certificates
+  keeps serving TLS without ever calling Cloudflare, and the deployment may
+  supply that credential directly.
 - KMS not configured → `Plain()`, with a warning naming the file. An unsealed
   edge is a thing someone can see in the logs.
-- Endpoint set but credentials empty → **fatal**. That is a deployment that
-  meant to use KMS, not one that did not.
-- A seal failure at write time writes **nothing**. The previous code logged the
-  encode error and then wrote anyway, truncating the store.
+- Endpoint set but credentials empty, or endpoint not https → **fatal, not
+  retried**. A configuration error does not heal.
+- A seal failure at write time writes **nothing**.
 
-### Cloudflare: scoped token, not the account-global key
+Every KMS read at startup goes through `kms.Retry(reach, …)`. One deadline,
+taken once, covers the attempt in flight as well as the waits between attempts,
+and the wait is trimmed to what is left of the budget. `reach` is 30s — under
+the window a liveness probe allows a starting container, because a retry the
+kubelet outlives is not a retry.
+
+### Cloudflare: the credential is swapped, never dropped
 
 lego resolves DNS-provider credentials from the environment and offers no way to
 hand a provider its credential directly, so the value passes through this
 process's env either way. What is ours to decide is WHICH value.
-`loadDNSCredential` sets `CLOUDFLARE_DNS_API_TOKEN` from KMS and unsets
-`CLOUDFLARE_API_KEY` / `CLOUDFLARE_EMAIL` / `CF_API_KEY` / `CF_API_EMAIL`. The
-unset is load-bearing, not tidiness: lego tries the account-global pair FIRST
-(`cloudflare.go` `NewDNSProvider`) and only falls back to the token, so leaving
-the pair in the env means the scoped token is never read. The manifests no
-longer reference the `cloudflare-api-credentials` Secret at all.
+
+`loadDNSCredential` is a SWAP and only a swap: it sets
+`CLOUDFLARE_DNS_API_TOKEN` from KMS and, having done so, removes every other way
+that credential could arrive. The removal is load-bearing rather than tidiness —
+lego tries the account-global pair FIRST (`cloudflare.go` `NewDNSProvider`) and
+only falls back to a token, so a pair left in the env means the token is never
+read. Both spellings go: lego resolves each name through `env.GetOrFile`, so
+`CF_API_KEY` and `CF_API_KEY_FILE` are the same credential and a set that covers
+one covers neither.
+
+When KMS holds no token, or cannot be reached within the bound, the environment
+is left exactly as the manifest filled it. Removing the pair without a token to
+put in its place leaves the challenge with no credential at all, on every node
+at once (`TestLoadDNSCredential_UnreachableKMSLeavesTheEnvironment`).
+
+Today both clusters supply Cloudflare through the `cloudflare-api-credentials`
+Secret and there is no `ingress/cloudflare-token` in KMS. Moving to a
+zone-scoped token is a SEPARATE change with its own window: it swaps the
+mechanism lego authenticates with, and the pair and a token do not coexist.
 
 The hostPath is unchanged and still node-local — sealing makes the file inert,
 it does not make the store shared. `ACME_SHARED_STORE_NAMESPACE` is the fix for
 one-order-per-node, and the seal applies there too.
+
+## Deploy pre-flight — what a human creates BEFORE applying
+
+The image and the manifest in this repo are safe to build at any time. Applying
+them is not, until the two things below exist. Neither is created by the
+manifest and neither is created by the process.
+
+**1. In KMS, per org that runs an edge.** One new secret. 32 bytes, hex or
+standard base64:
+
+```
+lux    kms.lux.cloud   ingress/acme-seal
+hanzo  kms.hanzo.ai    ingress/acme-seal
+```
+
+Do NOT create `ingress/cloudflare-token` as part of this change — that is the
+separate token migration described above, and creating it here gives the same
+component the same credential two ways.
+
+**2. In each cluster, in the workload's own namespace.** Secret `ingress-kms`
+with keys `clientId` and `clientSecret` — the IAM application this edge
+authenticates to KMS as (`lux-ingress`, `hanzo-ingress`; `client_credentials`
+must be in its `grant_types`). Materialise it with a **KMSSecret**, which is the
+mechanism already in use in these clusters, not by hand and not from a file.
+
+The reference is deliberately NOT optional. This pod is configured for KMS, so
+an absent Secret is an absent configuration, and a kubelet
+`CreateContainerConfigError` naming `ingress-kms` says that more precisely than
+a process that starts and then reports it cannot read anything.
+
+**What applying without them does, per workload.** The two orgs run different
+kinds and they fail differently:
+
+| | kind | rollout | a pod that cannot start |
+|---|---|---|---|
+| lux | DaemonSet | `maxUnavailable: 1`, `maxSurge: 0` | the old pod on that node is deleted first, so that ONE node has no edge until a human rolls back; the rollout stalls there and the other nodes keep serving |
+| hanzo | Deployment | `maxSurge: 1`, `maxUnavailable: 0` | the new pod must be Ready before an old one goes, so it never is, the rollout stalls, and both old pods keep serving |
+
+Neither is a fleet-wide outage. The DaemonSet one is a real sustained
+single-node outage and is the reason to check first.
+
+**The manifests here are not the deployed shape.** `k8s/lux/deployment.yaml`
+matches what runs in `lux-system` (DaemonSet `hanzo-ingress`).
+`k8s/hanzo/deployment.yaml` is a DaemonSet named `hanzo-ingress` in namespace
+`hanzo`, and what runs there is a Deployment named `ingress`. Reconciling those
+two is its own change; applying this file as-is to hanzo creates a second
+workload rather than updating the one that is there.
+
+**Adoption.** A first boot against an empty `data` volume needs nothing: the
+store is written sealed from its first write. `INGRESS_ACME_ADOPT` is only for a
+node that already holds an unsealed `acme.json` worth keeping, is set for that
+one boot, and is removed after.
