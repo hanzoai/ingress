@@ -93,6 +93,7 @@ type SharedStore struct {
 
 	leaseDuration time.Duration
 	pollInterval  time.Duration
+	count         counter
 
 	mu     sync.RWMutex
 	cache  map[string]*StoredData // resolver -> state, last read
@@ -218,6 +219,12 @@ func newSharedStore(client kubernetes.Interface, cfg SharedStoreConfig) (*Shared
 	return s, nil
 }
 
+// id names the object this store keeps its state in. It is what the seal binds
+// the ciphertext to, so a document written for this Secret opens for this
+// Secret and for nothing else — not for another namespace's, and not for a
+// file on a node.
+func (s *SharedStore) id() string { return s.namespace + "/" + s.name }
+
 // IsWriter reports whether this replica currently owns the ACME role. The
 // ordering path asks it so a reader does not order a certificate it would then be
 // refused permission to store — the order is the expensive half (a DNS-01
@@ -265,15 +272,18 @@ func (s *SharedStore) refresh(ctx context.Context) error {
 	if unchanged {
 		return nil
 	}
-	data, sealed, err := decodeStored(s.seal, sec.Data[storeKey])
+	data, count, sealed, err := decodeStored(s.seal, s.id(), sec.Data[storeKey])
 	if err != nil {
 		return err
 	}
-	if !sealed && len(sec.Data[storeKey]) > 0 {
-		// Read in the clear. A reader cannot rewrite it — only the elected
-		// writer may — so it says so and the writer's next mutation seals it.
+	if err := s.count.read(count); err != nil {
+		return err
+	}
+	if !sealed {
+		// A reader cannot rewrite an adopted store — only the elected writer
+		// may — so it says so and the writer's next mutation seals it.
 		log.Warn().Str("secret", s.name).
-			Msg("ACME state is stored in the clear; the writer will seal it on its next write")
+			Msg("ACME state adopted unsealed; the writer will seal it on its next write")
 	}
 	s.mu.Lock()
 	s.cache, s.rv, s.loaded = data, sec.ResourceVersion, true
@@ -383,8 +393,11 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 			return fmt.Errorf("%w: round %d is held by %s, not %s", ErrStaleRound, recorded, who, s.self)
 		}
 
-		state, _, err := decodeStored(s.seal, sec.Data[storeKey])
+		state, count, _, err := decodeStored(s.seal, s.id(), sec.Data[storeKey])
 		if err != nil {
+			return err
+		}
+		if err := s.count.read(count); err != nil {
 			return err
 		}
 		d := state[resolverName]
@@ -394,7 +407,7 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 		}
 		apply(d)
 
-		blob, err := encodeStored(s.seal, state)
+		blob, err := encodeStored(s.seal, s.id(), s.count.next(), state)
 		if err != nil {
 			return err
 		}

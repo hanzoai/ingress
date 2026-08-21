@@ -19,6 +19,7 @@ type LocalStore struct {
 	saveDataChan chan map[string]*StoredData
 	filename     string
 	seal         Seal
+	count        counter
 
 	lock       sync.RWMutex
 	storedData map[string]*StoredData
@@ -97,8 +98,12 @@ func (s *LocalStore) get(resolverName string) (*StoredData, error) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
+	// storedData is published only once the file has been read, so a read that
+	// refuses stays refused. Publishing an empty map first would leave the next
+	// call looking at a store that appears new, and an ACME provider answers a
+	// new store by ordering the estate again over what is already there.
 	if s.storedData == nil {
-		s.storedData = map[string]*StoredData{}
+		loaded := map[string]*StoredData{}
 
 		hasData, err := CheckFile(s.filename)
 		if err != nil {
@@ -119,24 +124,26 @@ func (s *LocalStore) get(resolverName string) (*StoredData, error) {
 				return nil, err
 			}
 
-			stored, sealed, err := decodeStored(s.seal, file)
+			stored, count, sealed, err := decodeStored(s.seal, s.filename, file)
 			if err != nil {
 				return nil, err
 			}
-			s.storedData = stored
-			if !sealed && len(file) > 0 {
-				// A document this boot found in the clear. Rewrite it now
-				// rather than at the next renewal: the clear copy is on the
-				// node until something replaces it, and a renewal is sixty
-				// days away.
+			if err := s.count.read(count); err != nil {
+				return nil, err
+			}
+			loaded = stored
+			if !sealed {
+				// The operator adopted a store written before sealing was
+				// configured. Write it back under seal now rather than at the
+				// next renewal, which is sixty days away.
 				logger.Warn().Str("file", s.filename).
-					Msg("ACME state was stored in the clear; rewriting it under seal")
-				s.saveDataChan <- maps.Clone(s.storedData)
+					Msg("ACME state adopted unsealed; writing it back under seal")
+				s.saveDataChan <- maps.Clone(loaded)
 			}
 
 			// Delete all certificates with no value
 			var certificates []*CertAndStore
-			for _, storedData := range s.storedData {
+			for _, storedData := range loaded {
 				for _, certificate := range storedData.Certificates {
 					if len(certificate.Certificate.Certificate) == 0 || len(certificate.Key) == 0 {
 						logger.Debug().Msgf("Deleting empty certificate %v for %v", certificate, certificate.Domain.ToStrArray())
@@ -147,12 +154,14 @@ func (s *LocalStore) get(resolverName string) (*StoredData, error) {
 				if len(certificates) < len(storedData.Certificates) {
 					storedData.Certificates = certificates
 
-					// we cannot pass s.storedData directly, map is reference type and as result
-					// we can face with race condition, so we need to work with objects copy
-					s.saveDataChan <- s.unSafeCopyOfStoredData()
+					// we cannot pass loaded directly, map is reference type and as
+					// result we can face with race condition, so we need to work
+					// with objects copy
+					s.saveDataChan <- maps.Clone(loaded)
 				}
 			}
 		}
+		s.storedData = loaded
 	}
 
 	if s.storedData[resolverName] == nil {
@@ -178,7 +187,7 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 				default:
 				}
 
-				data, err := encodeStored(s.seal, object)
+				data, err := encodeStored(s.seal, s.filename, s.count.next(), object)
 				if err != nil {
 					// Never fall through to writing the document unsealed:
 					// the write that follows an encode failure is the one
