@@ -254,3 +254,85 @@ a `sync.Map`.
 External (client-facing) TLS termination is untouched. CRD schema is
 untouched. Reference doc:
 `docs/content/reference/dynamic-configuration/zap-backend.md`.
+
+## Edge secrets — KMS, and the ACME store is sealed
+
+The edge holds two things worth more than any request it proxies: the ACME
+account key, which re-issues certificates for every domain the estate serves,
+and the DNS credential the ACME challenge is answered with. Both used to be a
+base64 field in a Kubernetes Secret, mounted into the process environment or
+written to a node.
+
+`pkg/kms` is where they come from now. It speaks the same luxfi/kms HTTP
+contract the gateway's routes loader does — `POST /v1/kms/auth/login`, then
+`GET /v1/kms/secrets/{path}/{name}?env=` — so the estate has one KMS
+conversation, not two. The org is the token's, never a URL segment.
+
+```
+INGRESS_KMS_ENDPOINT      https://kms.hanzo.ai   (unset = no KMS; see below)
+INGRESS_KMS_CLIENT_ID     ← IAM_CLIENT_ID
+INGRESS_KMS_CLIENT_SECRET ← IAM_CLIENT_SECRET
+INGRESS_KMS_ORG           default "hanzo"   (the lux overlay sets "lux")
+INGRESS_KMS_ENV           default "default"
+INGRESS_KMS_PATH          default "ingress"
+```
+
+Which secrets it reads is a property of the service, not of the environment, so
+the names are constants: `ingress/acme-seal` (32 bytes, hex or base64) and
+`ingress/cloudflare-token`.
+
+### The seal
+
+`acme.Seal` (`pkg/provider/acme/seal.go`) is a two-method interface — `Wrap`,
+`Unwrap` — and both persistent stores route their one serialize point through
+it (`encodeStored` / `decodeStored`). The implementation is `kms.Seal`:
+envelope, AES-256-GCM both ways. Each write mints a fresh 256-bit data key,
+encrypts the document under it, and encrypts that key under the key from KMS.
+The long-lived key therefore encrypts 48 bytes per write rather than the whole
+document, and recovering one write's data key opens that write only.
+
+`Unwrap` returns a document written before sealing was configured unchanged,
+with `sealed=false`. That is the whole migration: an edge upgrading from a
+plaintext `acme.json` keeps its certificates instead of re-ordering every one of
+them against a Let's Encrypt rate limit. `LocalStore.get` sees `sealed=false`,
+logs it, and pushes a save immediately — so the clear copy survives one boot and
+no longer. `SharedStore` cannot rewrite from a reader, so it logs and the
+elected writer seals on its next mutation.
+
+`acme.Plain()` is the identity seal and is byte-for-byte what every deployment
+wrote before this existed (`TestPlain_IsTheDocumentItself`). It is a null object
+rather than a nil check, so no store has to ask whether it has a seal — that is
+the check one of them would eventually forget, on the path whose whole job is to
+not write private keys in the clear.
+
+Failure polarity, decided once in `cmd/ingress/secrets.go`:
+
+- KMS configured, sealing key unreadable → **fatal**. Never a quiet downgrade to
+  writing private keys in the clear; that failure happens when nobody is
+  watching and leaves the account key readable on the node forever after.
+- KMS configured, DNS token unreadable → **error, keep serving**. DNS-01 is one
+  challenge of three and an edge holding its certificates keeps serving TLS
+  without ever calling Cloudflare. Refusing to boot would turn a renewal problem
+  into an outage.
+- KMS not configured → `Plain()`, with a warning naming the file. An unsealed
+  edge is a thing someone can see in the logs.
+- Endpoint set but credentials empty → **fatal**. That is a deployment that
+  meant to use KMS, not one that did not.
+- A seal failure at write time writes **nothing**. The previous code logged the
+  encode error and then wrote anyway, truncating the store.
+
+### Cloudflare: scoped token, not the account-global key
+
+lego resolves DNS-provider credentials from the environment and offers no way to
+hand a provider its credential directly, so the value passes through this
+process's env either way. What is ours to decide is WHICH value.
+`loadDNSCredential` sets `CLOUDFLARE_DNS_API_TOKEN` from KMS and unsets
+`CLOUDFLARE_API_KEY` / `CLOUDFLARE_EMAIL` / `CF_API_KEY` / `CF_API_EMAIL`. The
+unset is load-bearing, not tidiness: lego tries the account-global pair FIRST
+(`cloudflare.go` `NewDNSProvider`) and only falls back to the token, so leaving
+the pair in the env means the scoped token is never read. The manifests no
+longer reference the `cloudflare-api-credentials` Secret at all.
+
+The hostPath is unchanged and still node-local — sealing makes the file inert,
+it does not make the store shared. `ACME_SHARED_STORE_NAMESPACE` is the fix for
+one-order-per-node, and the seal applies there too.

@@ -27,11 +27,9 @@ images:
 # bundle present, because webui/embed.go embeds webui/static and the package will
 # not compile without it.
 test:
-  # One gate: the Go tests need the webui bundle, because webui/embed.go embeds
-  # webui/static and the package does not compile without it.
   - name: go
     run: |
       corepack enable && corepack prepare pnpm@9.15.0 --activate
       ( cd webui && pnpm install --frozen-lockfile && pnpm build )
       go mod download
-      go test . ./pkg/provider/acme/... ./pkg/tls/...
+      go test . ./pkg/kms/... ./pkg/provider/acme/... ./pkg/tls/...

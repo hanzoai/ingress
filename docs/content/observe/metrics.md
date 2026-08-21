@@ -25,12 +25,12 @@ To enable metrics in Hanzo Ingress, you need to configure the metrics provider i
 metrics:
   otlp:
     http:
-      endpoint: http://myotlpcollector:4318/v1/metrics
+      endpoint: http://myotlpcollector:4318/ext/metrics
 ```
 
 ```toml tab="Structured (TOML)"
 [metrics.otlp.http]
-  endpoint = "http://myotlpcollector:4318/v1/metrics"
+  endpoint = "http://myotlpcollector:4318/ext/metrics"
 ```
 
 ```yaml tab="Helm Chart Values"
@@ -43,7 +43,7 @@ metrics:
     enabled: true
     http:
       enabled: true
-      endpoint: http://myotlpcollector:4318/v1/metrics
+      endpoint: http://myotlpcollector:4318/ext/metrics
 ```
 
 ## Per-Router Metrics

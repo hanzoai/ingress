@@ -67,17 +67,30 @@ spec:
             - --accesslog=true
             - --accesslog.fields.defaultmode=keep
             - --accesslog.fields.headers.defaultmode=drop
+          # The edge's secrets come from KMS, not from this file and not from a
+          # Kubernetes Secret. Same two as the hanzo edge — the key
+          # /data/acme.json is sealed under, and the zone-scoped Cloudflare
+          # DNS token the challenge is answered with — read at startup from
+          # this brand's own KMS, under this brand's own org, and held in
+          # memory. They were the Cloudflare account-GLOBAL API key in a
+          # Secret, in an env var, on every node.
           env:
-            - name: CF_API_EMAIL
+            - name: INGRESS_KMS_ENDPOINT
+              value: "https://kms.lux.cloud"
+            - name: INGRESS_KMS_ORG
+              value: "lux"
+            - name: INGRESS_KMS_PATH
+              value: "ingress"
+            - name: INGRESS_KMS_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: cloudflare-api-credentials
-                  key: email
-            - name: CF_API_KEY
+                  name: ingress-kms
+                  key: clientId
+            - name: INGRESS_KMS_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: cloudflare-api-credentials
-                  key: apiKey
+                  name: ingress-kms
+                  key: clientSecret
           ports:
             - name: web
               containerPort: 80
@@ -122,6 +135,12 @@ spec:
             - name: data
               mountPath: /data
       volumes:
+        # /data/acme.json holds the ACME account key and every leaf private key
+        # this node has been issued. It is sealed (AES-256-GCM under a key read
+        # from KMS at startup and held only in memory), so the file on the node
+        # is inert. Still node-local: ACME_SHARED_STORE_NAMESPACE moves the
+        # state to one Kubernetes object with one elected writer, sealed there
+        # too.
         - name: data
           hostPath:
             path: /var/lib/hanzo-ingress
