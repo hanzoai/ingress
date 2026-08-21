@@ -437,12 +437,21 @@ kinds and they fail differently:
 Neither is a fleet-wide outage. The DaemonSet one is a real sustained
 single-node outage and is the reason to check first.
 
-**The manifests here are not the deployed shape.** `k8s/lux/deployment.yaml`
-matches what runs in `lux-system` (DaemonSet `hanzo-ingress`).
-`k8s/hanzo/deployment.yaml` is a DaemonSet named `hanzo-ingress` in namespace
-`hanzo`, and what runs there is a Deployment named `ingress`. Reconciling those
-two is its own change; applying this file as-is to hanzo creates a second
-workload rather than updating the one that is there.
+**Only lux has a workload manifest here.** `k8s/lux/deployment.yaml` matches
+what runs in `lux-system` (DaemonSet `hanzo-ingress`). Hanzo's workload is
+declared in `hanzoai/universe` (`infra/k8s/ingress/`, Deployment `ingress`) and
+`k8s/hanzo/` carries only the cluster-level objects it uses — RBAC, the
+IngressClass, the `security-headers` Middleware.
+
+The Deployment and Service that used to be in `k8s/hanzo/` described a
+different workload from the one that runs: a `hostNetwork` DaemonSet named
+`hanzo-ingress` binding `hostPort` 80 and 443. `kubectl apply -f k8s/hanzo/` is
+in this repo's README and in the sibling gateway's Makefile, so that file was
+one command away from taking :80 and :443 on every node in the cluster, beside
+the Deployment that already had them, each pod with its own node-local ACME
+store ordering for the same domains. It is deleted rather than corrected:
+universe is the one place that says what runs, and a second copy here is a
+second answer.
 
 **Adoption.** A first boot against an empty `data` volume needs nothing: the
 store is written sealed from its first write. `INGRESS_ACME_ADOPT` is only for a

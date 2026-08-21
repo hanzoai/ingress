@@ -186,8 +186,9 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 	//
 	// The edge's own secrets are read here, before anything ACME is built: the
 	// sealing key the state is written under and the DNS credential the
-	// challenge is answered with are both inputs to the provider below.
-	seal := edgeSecrets()
+	// challenge is answered with are both inputs to the provider below. An edge
+	// with no ACME resolver reads none of them.
+	seal := edgeSecrets(staticConfiguration)
 
 	tlsManager := ingresstls.NewManager(staticConfiguration.OCSP)
 	routinesPool.GoCtx(tlsManager.Run)

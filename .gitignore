@@ -24,3 +24,6 @@ hanzo-ingress
 AGENTS.md
 GEMINI.md
 QWEN.md
+
+# the built binary
+/ingress

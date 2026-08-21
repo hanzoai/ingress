@@ -32,8 +32,9 @@ import (
 	"time"
 )
 
-// Env names. The prefix is this service's, so a pod that also carries another
-// subsystem's KMS credentials cannot have them picked up here by accident.
+// Env names. The prefix is this service's, and it is the ONLY spelling: a pod
+// that also carries another subsystem's KMS credentials cannot have them picked
+// up here by accident, which a bare fallback spelling would undo.
 const (
 	envEndpoint = "INGRESS_KMS_ENDPOINT"
 	envClientID = "INGRESS_KMS_CLIENT_ID"
@@ -83,8 +84,8 @@ func FromEnv() (*Client, error) {
 	if !strings.HasPrefix(endpoint, "https://") {
 		return nil, fmt.Errorf("kms: %s is %q; the endpoint carries a client secret and must be https", envEndpoint, endpoint)
 	}
-	id := firstOf(os.Getenv(envClientID), os.Getenv("IAM_CLIENT_ID"))
-	secret := firstOf(os.Getenv(envSecret), os.Getenv("IAM_CLIENT_SECRET"))
+	id := strings.TrimSpace(os.Getenv(envClientID))
+	secret := strings.TrimSpace(os.Getenv(envSecret))
 	if id == "" || secret == "" {
 		return nil, fmt.Errorf("kms: %s is set but %s/%s are empty", envEndpoint, envClientID, envSecret)
 	}
