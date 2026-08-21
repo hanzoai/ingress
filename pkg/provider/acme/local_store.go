@@ -202,6 +202,7 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 					continue
 				}
 				s.count.wrote(want)
+				s.seal.Persisted()
 			}
 		}
 	})

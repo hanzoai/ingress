@@ -163,6 +163,40 @@ func TestSeal_AdoptsOneStoreOnly(t *testing.T) {
 	}
 }
 
+// Adoption ends when a sealed write lands. The residual it closes: an adopted
+// plaintext keeps the same digest as the pre-seal snapshot, so a rollback that
+// replants that snapshot would be re-admitted as long as the process kept
+// adopting. Once the store is sealed, Persisted ends it, and the replanted
+// snapshot is refused.
+func TestSeal_AdoptionEndsAfterASealedWriteLands(t *testing.T) {
+	s, err := NewSeal(key(t), true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshot := []byte(acmeLike)
+
+	// Adopt the store and write it back under seal, exactly as a store does.
+	plain, _, sealed, err := s.Unwrap(store, snapshot)
+	if err != nil || sealed {
+		t.Fatalf("adopt: plain err=%v sealed=%v", err, sealed)
+	}
+	written, err := s.Wrap(store, 1, plain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.Persisted() // the store confirms the sealed write reached it
+
+	// The sealed store still opens — reads are unaffected.
+	if _, _, wasSealed, err := s.Unwrap(store, written); err != nil || !wasSealed {
+		t.Errorf("sealed read after Persisted: sealed=%v err=%v", wasSealed, err)
+	}
+	// The pre-seal snapshot, replanted, is now refused — even though it is the
+	// very bytes adoption admitted a moment ago.
+	if _, _, _, err := s.Unwrap(store, snapshot); !errors.Is(err, ErrUnsealed) {
+		t.Fatalf("a replanted pre-seal snapshot was admitted after the store was sealed: %v", err)
+	}
+}
+
 // A document belongs to the store it was written for. Moving one between
 // stores does not open it, because the store's name is what both layers were
 // sealed with and not merely what the JSON says.

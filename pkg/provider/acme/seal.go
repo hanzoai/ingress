@@ -33,6 +33,12 @@ type Seal interface {
 	// the store; then it returns them with sealed false, for the caller to
 	// write back under seal.
 	Unwrap(name string, stored []byte) (plain []byte, count uint64, sealed bool, err error)
+
+	// Persisted is called once a sealed write has reached the store. A seal
+	// that adopted an unsealed store ends adoption here: the store is sealed
+	// now, so a later unsealed store is a different store and is refused. It is
+	// called on the write that LANDS, not the one attempted.
+	Persisted()
 }
 
 // plain is the seal of a deployment that has configured none: the document is
@@ -50,6 +56,10 @@ func (plain) Wrap(_ string, _ uint64, doc []byte) ([]byte, error) { return doc, 
 func (plain) Unwrap(_ string, stored []byte) ([]byte, uint64, bool, error) {
 	return stored, 0, true, nil
 }
+
+// Persisted is nothing to the identity seal: it never adopted, so it has no
+// adoption to end.
+func (plain) Persisted() {}
 
 // unsealed counts the reads that did not open. It is a counter because the
 // interesting shape is the rate: one at boot is a store this edge was not
