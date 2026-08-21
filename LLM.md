@@ -400,11 +400,11 @@ one-order-per-node, and the seal applies there too.
 ## Deploy pre-flight — what a human creates BEFORE applying
 
 The image and the manifest in this repo are safe to build at any time. Applying
-them is not, until the two things below exist. Neither is created by the
-manifest and neither is created by the process.
+them is not, until the sealing key and the credential that reads it exist.
+Neither is created by the manifest and neither is created by the process.
 
-**1. In KMS, per org that runs an edge.** One new secret. 32 bytes, hex or
-standard base64:
+**The sealing key, in KMS, per org that runs an edge.** One new secret, 32
+bytes, hex or standard base64:
 
 ```
 lux    kms.lux.cloud   ingress/acme-seal
@@ -415,9 +415,9 @@ Do NOT create `ingress/cloudflare-token` as part of this change — that is the
 separate token migration described above, and creating it here gives the same
 component the same credential two ways.
 
-**2. In each cluster, in the workload's own namespace.** Secret `ingress-kms`
-with keys `clientId` and `clientSecret` — the IAM application this edge
-authenticates to KMS as (`lux-ingress`, `hanzo-ingress`; `client_credentials`
+**The credential that reads it, in each cluster, in the workload's own
+namespace.** Secret `ingress-kms` with keys `clientId` and `clientSecret` — the
+IAM application this edge authenticates to KMS as (`lux-ingress`, `hanzo-ingress`; `client_credentials`
 must be in its `grant_types`). Materialise it with a **KMSSecret**, which is the
 mechanism already in use in these clusters, not by hand and not from a file.
 
@@ -455,5 +455,14 @@ second answer.
 
 **Adoption.** A first boot against an empty `data` volume needs nothing: the
 store is written sealed from its first write. `INGRESS_ACME_ADOPT` is only for a
-node that already holds an unsealed `acme.json` worth keeping, is set for that
-one boot, and is removed after.
+node that already holds an unsealed `acme.json` worth keeping. It admits one
+store per process and it WRITES — it is not a read-only inspection — and a seal
+left adopting adopts again after every restart, whatever plaintext is on the
+disk at the time. Set it for one boot; remove it after.
+
+**Rolling the image before any of this is done is safe, and does nothing.**
+Universe declares no `INGRESS_KMS_*` for the hanzo edge and no `ingress-kms`
+Secret, so `FromEnv` returns no client, the seal is `Plain()`, and the process
+warns once and serves exactly as it does today. Nothing is sealed until universe
+adds the env — which is the change that needs the pre-flight above, not the
+image.
