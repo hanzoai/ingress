@@ -221,17 +221,17 @@ URL of the OpenTelemetry Collector to send metrics to.
 metrics:
   otlp:
     http:
-      endpoint: https://collector:4318/v1/metrics
+      endpoint: https://collector:4318/ext/metrics
 ```
 
 ```toml tab="File (TOML)"
 [metrics]
   [metrics.otlp.http]
-    endpoint = "https://collector:4318/v1/metrics"
+    endpoint = "https://collector:4318/ext/metrics"
 ```
 
 ```bash tab="CLI"
---metrics.otlp.http.endpoint=https://collector:4318/v1/metrics
+--metrics.otlp.http.endpoint=https://collector:4318/ext/metrics
 ```
 
 #### `headers`

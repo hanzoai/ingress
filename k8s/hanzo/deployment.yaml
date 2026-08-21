@@ -64,19 +64,40 @@ spec:
         - "--accesslog=true"
         - "--accesslog.fields.defaultmode=keep"
         - "--accesslog.fields.headers.defaultmode=drop"
+        # The edge's secrets come from KMS, not from this file and not from a
+        # Kubernetes Secret.
+        #
+        # Two things decide whether the estate's TLS is the estate's: the key
+        # the ACME state is sealed under, and the DNS credential the ACME
+        # challenge is answered with. They were a Secret named
+        # cloudflare-api-credentials holding the Cloudflare account-GLOBAL API
+        # key — every zone, billing, workers — mounted into an env var of a
+        # DaemonSet on every node. They are now read at startup from
+        # kms.hanzo.ai and held in memory:
+        #
+        #   ingress/acme-seal        32 bytes, AES-256-GCM, seals /data/acme.json
+        #   ingress/cloudflare-token zone-scoped DNS:Edit token, not the global key
+        #
+        # Exactly one credential still has to be a Secret, because it is what
+        # opens KMS: this service's own IAM client. It reads one path, in one
+        # org, and nothing else.
         env:
-        - name: CF_API_EMAIL
+        - name: INGRESS_KMS_ENDPOINT
+          value: "https://kms.hanzo.ai"
+        - name: INGRESS_KMS_ORG
+          value: "hanzo"
+        - name: INGRESS_KMS_PATH
+          value: "ingress"
+        - name: INGRESS_KMS_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: cloudflare-api-credentials
-              key: EMAIL
-              optional: true
-        - name: CF_API_KEY
+              name: ingress-kms
+              key: clientId
+        - name: INGRESS_KMS_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: cloudflare-api-credentials
-              key: APIKEY
-              optional: true
+              name: ingress-kms
+              key: clientSecret
         ports:
         - name: web
           containerPort: 80
@@ -117,6 +138,16 @@ spec:
             add: ["NET_BIND_SERVICE"]
             drop: ["ALL"]
       volumes:
+      # /data/acme.json holds the ACME account key and every leaf private key
+      # this node has been issued. It is sealed (AES-256-GCM under a key read
+      # from KMS at startup and held only in memory), so the file on the node
+      # is inert: node access alone no longer yields a certificate for any
+      # domain the estate serves.
+      #
+      # Still node-local, and that is a separate problem: a DaemonSet means one
+      # store per node and one ACME order per node. ACME_SHARED_STORE_NAMESPACE
+      # moves the state to a single Kubernetes object with one elected writer;
+      # the seal applies there too.
       - name: data
         hostPath:
           path: /var/lib/hanzo-ingress

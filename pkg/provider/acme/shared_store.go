@@ -7,7 +7,6 @@ package acme
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -90,6 +89,7 @@ type SharedStore struct {
 	name      string // Secret holding the ACME state
 	leaseName string // Lease naming the writer
 	self      string // this replica's stable identity (pod name)
+	seal      Seal   // how the state document reaches the Secret
 
 	leaseDuration time.Duration
 	pollInterval  time.Duration
@@ -140,6 +140,12 @@ type SharedStoreConfig struct {
 	Self          string
 	LeaseDuration time.Duration
 	PollInterval  time.Duration
+
+	// Seal is how the state document reaches the Secret. A Kubernetes Secret
+	// is base64, not encryption: whoever can read the object reads the ACME
+	// account key and every leaf private key in it. Zero value is Plain(),
+	// which is that.
+	Seal Seal
 }
 
 // NewSharedStore builds the store from in-cluster credentials.
@@ -194,6 +200,9 @@ func newSharedStore(client kubernetes.Interface, cfg SharedStoreConfig) (*Shared
 	if cfg.PollInterval <= 0 {
 		cfg.PollInterval = 10 * time.Second
 	}
+	if cfg.Seal == nil {
+		cfg.Seal = Plain()
+	}
 	s := &SharedStore{
 		client:        client,
 		namespace:     cfg.Namespace,
@@ -202,6 +211,7 @@ func newSharedStore(client kubernetes.Interface, cfg SharedStoreConfig) (*Shared
 		self:          cfg.Self,
 		leaseDuration: cfg.LeaseDuration,
 		pollInterval:  cfg.PollInterval,
+		seal:          cfg.Seal,
 		cache:         map[string]*StoredData{},
 	}
 	s.leases = &kubeLeases{store: s}
@@ -255,9 +265,15 @@ func (s *SharedStore) refresh(ctx context.Context) error {
 	if unchanged {
 		return nil
 	}
-	data, err := decodeStored(sec.Data[storeKey])
+	data, sealed, err := decodeStored(s.seal, sec.Data[storeKey])
 	if err != nil {
 		return err
+	}
+	if !sealed && len(sec.Data[storeKey]) > 0 {
+		// Read in the clear. A reader cannot rewrite it — only the elected
+		// writer may — so it says so and the writer's next mutation seals it.
+		log.Warn().Str("secret", s.name).
+			Msg("ACME state is stored in the clear; the writer will seal it on its next write")
 	}
 	s.mu.Lock()
 	s.cache, s.rv, s.loaded = data, sec.ResourceVersion, true
@@ -367,7 +383,7 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 			return fmt.Errorf("%w: round %d is held by %s, not %s", ErrStaleRound, recorded, who, s.self)
 		}
 
-		state, err := decodeStored(sec.Data[storeKey])
+		state, _, err := decodeStored(s.seal, sec.Data[storeKey])
 		if err != nil {
 			return err
 		}
@@ -378,9 +394,9 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 		}
 		apply(d)
 
-		blob, err := json.Marshal(state)
+		blob, err := encodeStored(s.seal, state)
 		if err != nil {
-			return fmt.Errorf("acme shared store: encode: %w", err)
+			return err
 		}
 		if sec.Data == nil {
 			sec.Data = map[string][]byte{}
@@ -424,19 +440,6 @@ func roundOf(sec *corev1.Secret) ha.Round {
 		return 0
 	}
 	return ha.Round(r)
-}
-
-// decodeStored parses the state document, treating empty as empty rather than as
-// an error — a store that has never been written is the normal first-boot case.
-func decodeStored(blob []byte) (map[string]*StoredData, error) {
-	out := map[string]*StoredData{}
-	if len(blob) == 0 {
-		return out, nil
-	}
-	if err := json.Unmarshal(blob, &out); err != nil {
-		return nil, fmt.Errorf("acme shared store: decode: %w", err)
-	}
-	return out, nil
 }
 
 // kubeLeases implements ha.Leases over a Kubernetes Lease.
