@@ -12,102 +12,149 @@ import (
 
 // The edge's own secrets, and where they come from.
 //
-// Two of them decide whether the estate's TLS is the estate's: the key the ACME
-// state is sealed under, and the DNS credential the ACME challenge is answered
-// with. Both used to be a base64 field in a Kubernetes Secret, mounted into the
-// process environment, and one of them was the Cloudflare account-GLOBAL API key
-// — a credential that can edit every zone, read billing and deploy workers, sat
-// in an env var of a DaemonSet on every node.
+// One of them decides whether the estate's TLS is the estate's: the key the
+// ACME state is sealed under. It is read from KMS at startup and held in
+// memory, so the state on the node is inert and the key that opens it is
+// nowhere on the node at all.
 //
-// Now they are fetched from KMS at startup, held in memory, and the manifests
-// reference no Secret at all.
+// The DNS credential the ACME challenge is answered with is read from KMS too
+// when KMS holds one. When it does not, the credential this deployment was
+// given stays exactly as it was given.
 
-// secretTimeout bounds startup on an unreachable KMS. It is short because the
-// answer to "KMS is down" is to fail and be restarted, not to wait: the edge
-// cannot issue a certificate without these, and a pod stuck in a long dial is a
-// pod that is not reporting why.
-const secretTimeout = 20 * time.Second
+// reach bounds how long startup spends reaching KMS.
+//
+// It is shorter than the window a liveness probe allows a starting container,
+// because a retry the kubelet outlives is not a retry — it is a slower way to
+// be killed, with the reason in a log nobody correlates. Inside this bound the
+// process either has its secrets or says why it does not.
+const reach = 30 * time.Second
+
+// envAdopt is the operator's one-time answer to a store that is not sealed.
+//
+// Unset — everywhere, always, unless someone is standing at the console — an
+// unsealed store is refused: this process was pointed at a store it did not
+// write, and writing this edge's account key over it is not a recovery. Set,
+// this boot opens that store once and writes it back under seal, which is how a
+// store that predates sealing keeps its certificates instead of re-ordering
+// every one of them against a rate limit.
+//
+// It does its work once and then does nothing: after that boot the store IS
+// sealed, so the unsealed path is never reached again. It says so at warn on
+// every boot it is set, so it is not left on quietly.
+const envAdopt = "INGRESS_ACME_ADOPT"
 
 // edgeSeal is how the ACME state reaches its store.
 //
-// KMS configured is the answer: the state is sealed and a KMS that cannot be
-// reached is FATAL, never a quiet downgrade to writing private keys in the
-// clear. That downgrade is the only failure mode worth refusing to have — it
-// would happen exactly when nobody is watching, and it leaves the account key
-// readable on a node forever after.
+// KMS configured is the answer: the state is sealed, and a KMS that cannot be
+// reached within the bound is fatal rather than a quiet downgrade to writing
+// private keys in the clear. That downgrade is the one failure mode worth
+// refusing to have — it would happen exactly when nobody is watching, and it
+// leaves the account key readable on a node forever after.
 //
 // KMS not configured is what every deployment did before this existed: plain
 // JSON at mode 0600. It says so, at warn, once, naming the file — so an
 // unsealed edge is a thing someone can see in the logs rather than a thing
 // nobody knew.
-func edgeSeal(client *kms.Client) acme.Seal {
+func edgeSeal(client *kms.Client, limit time.Duration) acme.Seal {
 	if client == nil {
 		log.Warn().Msg("ACME state will be written unsealed: set INGRESS_KMS_ENDPOINT so the account key and every leaf private key are encrypted at rest")
 		return acme.Plain()
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), secretTimeout)
-	defer cancel()
 
-	seal, err := kms.SealFrom(ctx, client, kms.AccountSeal)
+	adopt := os.Getenv(envAdopt) != ""
+	if adopt {
+		log.Warn().Str("env", envAdopt).
+			Msg("an ACME state that is not sealed will be adopted and written back under seal on this boot")
+	}
+
+	var seal *kms.Seal
+	err := kms.Retry(limit, func(ctx context.Context) error {
+		s, err := kms.SealFrom(ctx, client, kms.AccountSeal, adopt)
+		seal = s
+		return err
+	})
 	if err != nil {
 		log.Fatal().Err(err).Str("org", client.Org()).Str("secret", kms.AccountSeal).
+			Dur("tried", limit).
 			Msg("ACME sealing key could not be read; refusing to store private keys in the clear")
 	}
-	log.Info().Str("org", client.Org()).Msg("ACME state is sealed with a key held only in memory")
+	log.Info().Str("org", client.Org()).Str("key", seal.ID()).
+		Msg("ACME state is sealed with a key held only in memory")
 	return seal
 }
 
-// Cloudflare's own env names, in the two families lego reads. lego tries the
-// account-global pair FIRST and only falls back to the token, so clearing the
-// pair is not tidiness — it is what makes the scoped token take effect.
-const (
-	envCFToken       = "CLOUDFLARE_DNS_API_TOKEN"
-	envCFGlobalKey   = "CLOUDFLARE_API_KEY"
-	envCFGlobalEmail = "CLOUDFLARE_EMAIL"
-	envCFAltKey      = "CF_API_KEY"
-	envCFAltEmail    = "CF_API_EMAIL"
-)
+// envCFToken is the variable lego reads a zone-scoped Cloudflare token from.
+const envCFToken = "CLOUDFLARE_DNS_API_TOKEN"
 
-// loadDNSCredential puts the DNS-01 credential where lego reads it and takes
-// the account-global key away from it.
+// account is the Cloudflare account-global credential, in both namespaces lego
+// accepts it under. It authorizes every zone, billing and workers; a DNS-01
+// challenge needs one record in one zone.
+//
+// lego tries this pair FIRST and only falls back to a token, so the pair and a
+// token do not coexist: whichever process holds both uses the pair.
+var account = []string{
+	"CLOUDFLARE_EMAIL", "CLOUDFLARE_API_KEY",
+	"CF_API_EMAIL", "CF_API_KEY",
+}
+
+// loadDNSCredential puts a zone-scoped token where lego reads it, in place of
+// whatever else could have supplied that credential.
 //
 // lego offers no way to hand a provider its credential directly —
 // dns.NewDNSChallengeProviderByName resolves everything from the environment —
 // so the credential passes through this process's env either way. What is ours
-// to decide is WHICH credential: a zone-scoped DNS:Edit token whose worst case
-// is a DNS record, rather than an account-global key whose worst case is the
-// account.
+// to decide is WHICH credential.
 //
-// The clear runs whether or not KMS answered. A pod that still has the legacy
-// pair injected from somewhere drops it here rather than carrying it.
-func loadDNSCredential(client *kms.Client) {
-	defer func() {
-		for _, name := range []string{envCFGlobalKey, envCFGlobalEmail, envCFAltKey, envCFAltEmail} {
-			if os.Getenv(name) != "" {
-				log.Warn().Str("env", name).Msg("dropping Cloudflare account-global credential from the process environment")
-				os.Unsetenv(name)
-			}
-		}
-	}()
-
+// It is a swap, and only a swap. When KMS holds no token, or cannot be reached
+// within the bound, the environment is left exactly as the deployment filled
+// it: taking the account pair away without a token to put in its place would
+// leave the challenge with no credential at all.
+func loadDNSCredential(client *kms.Client, limit time.Duration) {
 	if client == nil {
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), secretTimeout)
-	defer cancel()
-
-	token, err := client.Get(ctx, kms.DNSToken)
+	var token string
+	err := kms.Retry(limit, func(ctx context.Context) error {
+		v, err := client.Get(ctx, kms.DNSToken)
+		token = v
+		return err
+	})
 	if err != nil {
-		// Not fatal, and deliberately so: the DNS-01 challenge is one of three,
-		// and an edge that already holds its certificates keeps serving TLS
-		// without ever calling Cloudflare. Refusing to boot here would turn a
-		// renewal problem into an outage.
-		log.Error().Err(err).Str("org", client.Org()).Str("secret", kms.DNSToken).
-			Msg("DNS challenge credential could not be read; DNS-01 issuance will fail until it can")
+		// Not fatal, and deliberately so. The DNS-01 challenge is one of three,
+		// an edge that already holds its certificates keeps serving TLS without
+		// ever calling Cloudflare, and a deployment may supply this credential
+		// to the process directly.
+		log.Warn().Err(err).Str("org", client.Org()).Str("secret", kms.DNSToken).
+			Msg("no DNS challenge credential in KMS; the challenge uses the credential this deployment was given")
 		return
 	}
-	os.Setenv(envCFToken, token)
+
+	swap(token)
 	log.Info().Str("org", client.Org()).Msg("DNS challenge credential loaded from KMS (zone-scoped token)")
+}
+
+// swap puts the token where lego reads it, in place of every other way that
+// credential could arrive: the file spelling of the token itself, and the
+// account pair lego prefers over any token. The removals go first, so nothing
+// removes what was just put in place.
+func swap(token string) {
+	for _, name := range append([]string{envCFToken}, account...) {
+		unset(name)
+	}
+	os.Setenv(envCFToken, token)
+}
+
+// unset removes a credential from the process environment in both spellings
+// lego reads it in: the variable, and the variable naming a file to read it
+// from (env.GetOrFile). A set that covers one and not the other covers neither.
+func unset(name string) {
+	for _, n := range []string{name, name + "_FILE"} {
+		if os.Getenv(n) == "" {
+			continue
+		}
+		log.Warn().Str("env", n).Msg("dropping a superseded Cloudflare credential from the process environment")
+		os.Unsetenv(n)
+	}
 }
 
 // edgeSecrets is the one call that reads everything this process needs from
@@ -116,8 +163,9 @@ func loadDNSCredential(client *kms.Client) {
 func edgeSecrets() acme.Seal {
 	client, err := kms.FromEnv()
 	if err != nil {
-		log.Fatal().Err(err).Msg("KMS is half-configured; refusing to start")
+		// A configuration error does not heal, so it is not retried.
+		log.Fatal().Err(err).Msg("KMS is configured but not usable; refusing to start")
 	}
-	loadDNSCredential(client)
-	return edgeSeal(client)
+	loadDNSCredential(client, reach)
+	return edgeSeal(client, reach)
 }
