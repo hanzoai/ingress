@@ -230,6 +230,10 @@ func TestCounter(t *testing.T) {
 	require.NoError(t, c.read(9))
 	require.Error(t, c.read(8), "a document behind the one already read was accepted")
 
+	// A document with no count makes no claim about being current — it is what
+	// an unsealed store is, and it neither advances nor rolls back.
+	require.NoError(t, c.read(0), "a document carrying no count was read as a step back")
+
 	assert.Equal(t, uint64(10), c.next())
 	assert.Equal(t, uint64(11), c.next(), "next must advance whether or not the write landed")
 }
