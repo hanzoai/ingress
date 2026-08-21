@@ -320,13 +320,20 @@ stepping back to an earlier copy of the same document
 the count of a document never written under seal, and `Wrap` refuses it.
 
 A store that is not sealed is REFUSED. `INGRESS_ACME_ADOPT` (any non-empty
-value, unset everywhere by default) is the operator saying otherwise for one
-boot: that boot opens such a store once, keeps its certificates rather than
-re-ordering every one of them against a Let's Encrypt rate limit, and writes it
-back under seal. After that boot the store is sealed, so the opt-in has nothing
-left to do — it warns on every boot it is set, so it is not left on quietly.
-Adoption is a property of the READ only; every write an adopting seal makes is
-sealed, and the refusing seal over the same key reads it.
+value, unset everywhere by default) is the operator saying otherwise: it opens
+one unsealed store, keeps its certificates rather than re-ordering every one of
+them against a Let's Encrypt rate limit, and writes it back under seal.
+
+Adoption ends the moment a sealed write lands (`Seal.Persisted`, called by both
+stores after the write reaches disk or the Secret). After that the store is
+sealed and reads open regardless; a store handed to the process afterwards that
+is STILL unsealed is a different store — a pre-seal snapshot, replanted — and is
+refused, even though it is the very bytes adoption admitted a moment ago. The
+flag is spent within the process, not merely once per boot. It still warns on
+every boot it is set, so it is not left on quietly, and a restart with the flag
+still set re-adopts whatever plaintext is on disk then — which is why it is set
+for one boot and removed. Adoption is a property of the READ; every write an
+adopting seal makes is sealed, and the refusing seal over the same key reads it.
 
 The envelope is FORWARD-ONLY. There is no compatibility path for an earlier
 shape because there is no deployed sealed state — the `data` volume is
@@ -456,9 +463,10 @@ second answer.
 **Adoption.** A first boot against an empty `data` volume needs nothing: the
 store is written sealed from its first write. `INGRESS_ACME_ADOPT` is only for a
 node that already holds an unsealed `acme.json` worth keeping. It admits one
-store per process and it WRITES — it is not a read-only inspection — and a seal
-left adopting adopts again after every restart, whatever plaintext is on the
-disk at the time. Set it for one boot; remove it after.
+store, it WRITES (not a read-only inspection), and it is spent the moment that
+store is sealed — a replanted pre-seal snapshot is refused thereafter. A restart
+with the flag STILL set re-adopts whatever plaintext is on disk then, so set it
+for one boot and remove it after.
 
 **Rolling the image before any of this is done is safe, and does nothing.**
 Universe declares no `INGRESS_KMS_*` for the hanzo edge and no `ingress-kms`

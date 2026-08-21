@@ -138,6 +138,35 @@ func TestLocalStore_RefusesADocumentFromAnotherPath(t *testing.T) {
 	require.Error(t, err, "a document written for one path opened at another")
 }
 
+// One seal backs every store in a process, and its adoption is consumed the
+// moment any of them lands a sealed write. So a store adopted and sealed, then a
+// second store over a replanted pre-seal snapshot under the SAME seal, is
+// refused — the rollback the flag would otherwise re-admit for the life of the
+// process.
+func TestLocalStore_AdoptionEndsAcrossStoresOnceSealed(t *testing.T) {
+	seal := sealFor(t, true)
+
+	first := plaintextStore(t)
+	snapshot, err := os.ReadFile(first)
+	require.NoError(t, err)
+
+	// A store adopts the plaintext and reseals it — a landed write, which
+	// consumes the seal's adoption.
+	s := NewLocalStore(first, safe.NewPool(t.Context()), seal)
+	_, err = s.GetAccount("letsencrypt")
+	require.NoError(t, err)
+	time.Sleep(150 * time.Millisecond)
+	sealedOnDisk, err := os.ReadFile(first)
+	require.NoError(t, err)
+	require.NotContains(t, string(sealedOnDisk), accountKey, "the first store did not seal")
+
+	// The same snapshot, replanted at another path, read through the SAME seal.
+	replanted := filepath.Join(t.TempDir(), "acme.json")
+	require.NoError(t, os.WriteFile(replanted, snapshot, 0o600))
+	_, err = NewLocalStore(replanted, safe.NewPool(t.Context()), seal).GetAccount("letsencrypt")
+	require.Error(t, err, "a replanted pre-seal snapshot was adopted after the seal had sealed a store")
+}
+
 // A store that cannot seal writes NOTHING. Falling through to an unsealed write
 // is the one outcome this path must not have.
 func TestLocalStore_RefusesToWriteWhenSealingFails(t *testing.T) {
@@ -160,6 +189,8 @@ func (brokenSeal) Wrap(string, uint64, []byte) ([]byte, error) { return nil, ass
 func (brokenSeal) Unwrap(_ string, b []byte) ([]byte, uint64, bool, error) {
 	return b, 0, true, nil
 }
+
+func (brokenSeal) Persisted() {}
 
 // A shared store keeps re-reading its object, so an earlier copy of it can be
 // presented to a running replica. The write count is what makes that copy

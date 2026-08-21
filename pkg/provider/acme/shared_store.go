@@ -438,6 +438,7 @@ func (s *SharedStore) mutate(resolverName string, apply func(*StoredData)) error
 		}
 
 		s.count.wrote(want)
+		s.seal.Persisted()
 		s.mu.Lock()
 		s.cache, s.rv, s.loaded = state, out.ResourceVersion, true
 		s.mu.Unlock()

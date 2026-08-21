@@ -244,6 +244,21 @@ func (s *Seal) take(stored []byte) bool {
 	return *s.taken == sum
 }
 
+// Persisted ends adoption once a sealed write has reached the store.
+//
+// Adoption admits the first unsealed store this process is handed, so a store
+// that predates sealing can be taken over. Once that store has been written
+// back under seal, adoption has done its work: a store handed to this process
+// afterwards that is STILL unsealed is a different store — a snapshot from
+// before the seal, replanted — and it is refused. Reads of the now-sealed store
+// are unaffected: a sealed envelope opens whether or not adoption is still on.
+func (s *Seal) Persisted() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.adopt = false
+	s.taken = nil
+}
+
 // bind renders the facts the ciphertext is tied to. Each variable-length field
 // is written after its length, so no combination of a store name and a key id
 // can produce the bytes of another combination.
