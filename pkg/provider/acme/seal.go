@@ -72,7 +72,16 @@ type counter struct {
 }
 
 // read records a document at write n, and refuses one that is behind.
+//
+// Zero is not a write — it is a document that carries no count, which is what
+// an unsealed store is and all an unsealed store can be. It makes no claim
+// about being current, so it neither advances the count nor steps it back. A
+// sealed document can never arrive at zero: Wrap counts from one and Unwrap
+// refuses an envelope claiming otherwise.
 func (c *counter) read(n uint64) error {
+	if n == 0 {
+		return nil
+	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if n < c.n {
