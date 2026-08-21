@@ -78,6 +78,19 @@ func PrometheusHandler() http.Handler {
 	return promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{})
 }
 
+// Register adds a collector to the registry this endpoint serves.
+//
+// It is how a subsystem publishes a counter of its own — the alternative is a
+// method on the Registry interface and an implementation of it in every
+// backend, for a number only one subsystem raises. Registering the same
+// collector twice is not an error; the first registration stands.
+func Register(c stdprometheus.Collector) {
+	var already stdprometheus.AlreadyRegisteredError
+	if err := promRegistry.Register(c); err != nil && !errors.As(err, &already) {
+		log.Error().Err(err).Msg("Unable to register metric")
+	}
+}
+
 // RegisterPrometheus registers all Prometheus metrics.
 // It must be called only once and failing to register the metrics will lead to a panic.
 func RegisterPrometheus(ctx context.Context, config *otypes.Prometheus) Registry {
