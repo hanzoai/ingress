@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 // fakeKMS answers the two calls the client makes, and records what it was
@@ -55,20 +56,40 @@ func (f *fakeKMS) server(t *testing.T) *httptest.Server {
 	return srv
 }
 
+// configured points a client at a test server. It builds the struct rather
+// than going through FromEnv because these tests are about what goes over the
+// wire, and FromEnv is about what an operator configured — including that the
+// endpoint is https, which a test server on loopback is not.
 func configured(t *testing.T, endpoint string) *Client {
 	t.Helper()
-	t.Setenv(envEndpoint, endpoint)
+	return &Client{
+		endpoint: endpoint,
+		clientID: "ingress",
+		secret:   "shhh",
+		org:      "hanzo",
+		env:      "default",
+		path:     "ingress",
+		http:     &http.Client{Timeout: 5 * time.Second},
+	}
+}
+
+// The client secret is in the body of the login and the bearer is in a header
+// of every read, so a plaintext endpoint is a configuration to fix rather than
+// a degraded mode to run in.
+func TestFromEnv_RequiresHTTPS(t *testing.T) {
 	t.Setenv(envClientID, "ingress")
 	t.Setenv(envSecret, "shhh")
-	t.Setenv(envPath, "ingress")
+
+	t.Setenv(envEndpoint, "http://kms.hanzo.ai")
+	if _, err := FromEnv(); err == nil {
+		t.Error("FromEnv accepted a plaintext endpoint")
+	}
+
+	t.Setenv(envEndpoint, "https://kms.hanzo.ai")
 	c, err := FromEnv()
-	if err != nil {
-		t.Fatal(err)
+	if err != nil || c == nil {
+		t.Errorf("FromEnv(https) = (%v, %v), want a client", c, err)
 	}
-	if c == nil {
-		t.Fatal("FromEnv returned no client for a configured endpoint")
-	}
-	return c
 }
 
 func TestClient_Get(t *testing.T) {
