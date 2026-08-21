@@ -1,54 +1,48 @@
 package acme
 
 import (
-	"bytes"
+	"context"
+	"crypto/rand"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
+	"github.com/hanzoai/ingress/pkg/kms"
 	"github.com/hanzoai/ingress/pkg/safe"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes/fake"
 )
 
-// testSeal is a stand-in for the KMS-backed one: a reversible transform that is
-// obviously not the plaintext, plus the same "a document written before sealing
-// was configured comes back with sealed=false" contract the real seal has.
-//
-// It is deliberately NOT encryption. This package's job is to route every read
-// and write through the seal; whether the seal is sound is pkg/kms's job and is
-// tested there against AES-256-GCM. A fake here keeps the two tests testing two
-// different things.
-type testSeal struct{ marker string }
-
-func (s testSeal) Wrap(plain []byte) ([]byte, error) {
-	return append([]byte(s.marker), reverse(plain)...), nil
-}
-
-func (s testSeal) Unwrap(stored []byte) ([]byte, bool, error) {
-	if !bytes.HasPrefix(stored, []byte(s.marker)) {
-		return stored, false, nil
-	}
-	return reverse(stored[len(s.marker):]), true, nil
-}
-
-func reverse(b []byte) []byte {
-	out := make([]byte, len(b))
-	for i := range b {
-		out[len(b)-1-i] = b[i]
-	}
-	return out
-}
+// These drive the real seal rather than a stand-in. What this package owes is
+// that every read and every write goes through the seal, carrying the store's
+// name and its write count; the only way to show that end to end is to compose
+// it with the implementation production runs.
 
 const accountKey = "PRIVATE-KEY-MATERIAL"
 
-// TestLocalStore_SealedAtRest is the pin that matters: what lands on the node
-// does not contain the account key, and the store still reads its own writes.
+func sealFor(t *testing.T, adopt bool) Seal {
+	t.Helper()
+	k := make([]byte, 32)
+	if _, err := rand.Read(k); err != nil {
+		t.Fatal(err)
+	}
+	s, err := kms.NewSeal(k, adopt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return s
+}
+
+// The pin that matters: what lands on the node does not contain the account
+// key, and the store still reads its own writes.
 func TestLocalStore_SealedAtRest(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "acme.json")
-	seal := testSeal{marker: "SEALED:"}
+	seal := sealFor(t, false)
 
 	s := NewLocalStore(file, safe.NewPool(t.Context()), seal)
 	require.NoError(t, s.SaveAccount("letsencrypt", &Account{
@@ -63,8 +57,8 @@ func TestLocalStore_SealedAtRest(t *testing.T) {
 		"the ACME account key reached the node in the clear")
 	assert.NotContains(t, string(onDisk), "dev@hanzo.ai")
 
-	// A second store over the same file reads it back — the seal is symmetric
-	// and the document survives a restart.
+	// A second store over the same file reads it back — the document survives
+	// a restart, under the same key and the same name.
 	again := NewLocalStore(file, safe.NewPool(t.Context()), seal)
 	account, err := again.GetAccount("letsencrypt")
 	require.NoError(t, err)
@@ -72,24 +66,45 @@ func TestLocalStore_SealedAtRest(t *testing.T) {
 	assert.Equal(t, []byte(accountKey), account.PrivateKey)
 }
 
-// TestLocalStore_SealsAPlaintextStoreOnBoot is the migration. An edge upgrading
-// from a plaintext acme.json keeps its certificates — re-ordering them would
-// cost a Let's Encrypt rate limit across every host it serves — and the clear
-// copy is replaced immediately rather than at the next renewal sixty days out.
-func TestLocalStore_SealsAPlaintextStoreOnBoot(t *testing.T) {
-	file := filepath.Join(t.TempDir(), "acme.json")
-	legacy := map[string]*StoredData{"letsencrypt": {
-		Account: &Account{Email: "dev@hanzo.ai", PrivateKey: []byte(accountKey)},
-	}}
-	blob, err := json.MarshalIndent(legacy, "", "  ")
+// The store this process was pointed at is sealed. One that is not is refused,
+// and the certificates already there are left exactly as they were.
+func TestLocalStore_RefusesAnUnsealedStore(t *testing.T) {
+	file := plaintextStore(t)
+	before, err := os.ReadFile(file)
 	require.NoError(t, err)
-	require.NoError(t, os.WriteFile(file, blob, 0o600))
 
-	s := NewLocalStore(file, safe.NewPool(t.Context()), testSeal{marker: "SEALED:"})
+	s := NewLocalStore(file, safe.NewPool(t.Context()), sealFor(t, false))
+	_, err = s.GetAccount("letsencrypt")
+	require.Error(t, err, "an unsealed store was read as if this edge had written it")
+
+	// And it keeps refusing. A refusal that only holds for the first read
+	// leaves the store looking empty to the next one, which is the state an
+	// ACME provider answers by ordering the estate again over what is there.
+	_, err = s.GetAccount("letsencrypt")
+	require.Error(t, err, "the second read of a refused store was allowed through")
+
+	// And it refuses to write, so nothing replaces what is there.
+	require.Error(t, s.SaveAccount("letsencrypt", &Account{PrivateKey: []byte("REPLACEMENT")}),
+		"a refused store accepted a write")
+	time.Sleep(150 * time.Millisecond)
+
+	after, err := os.ReadFile(file)
+	require.NoError(t, err)
+	assert.Equal(t, before, after, "a refused store was rewritten")
+}
+
+// Adopting is the operator saying the store is theirs. It keeps the
+// certificates — re-ordering them would spend a Let's Encrypt rate limit across
+// every host the estate serves — and the clear copy is replaced on the spot
+// rather than at the next renewal sixty days out.
+func TestLocalStore_AdoptsAnUnsealedStore(t *testing.T) {
+	file := plaintextStore(t)
+
+	s := NewLocalStore(file, safe.NewPool(t.Context()), sealFor(t, true))
 
 	account, err := s.GetAccount("letsencrypt")
 	require.NoError(t, err)
-	require.NotNil(t, account, "the upgrade lost the ACME account")
+	require.NotNil(t, account, "adoption lost the ACME account")
 	assert.Equal(t, []byte(accountKey), account.PrivateKey)
 
 	time.Sleep(200 * time.Millisecond)
@@ -99,8 +114,27 @@ func TestLocalStore_SealsAPlaintextStoreOnBoot(t *testing.T) {
 		"the clear copy was still on the node after the first read")
 }
 
+// A document belongs to the store it was written for, so one file's document
+// does not load from another path.
+func TestLocalStore_RefusesADocumentFromAnotherPath(t *testing.T) {
+	dir := t.TempDir()
+	here, there := filepath.Join(dir, "acme.json"), filepath.Join(dir, "other.json")
+	seal := sealFor(t, false)
+
+	s := NewLocalStore(here, safe.NewPool(t.Context()), seal)
+	require.NoError(t, s.SaveAccount("letsencrypt", &Account{PrivateKey: []byte(accountKey)}))
+	time.Sleep(100 * time.Millisecond)
+
+	blob, err := os.ReadFile(here)
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(there, blob, 0o600))
+
+	_, err = NewLocalStore(there, safe.NewPool(t.Context()), seal).GetAccount("letsencrypt")
+	require.Error(t, err, "a document written for one path opened at another")
+}
+
 // A store that cannot seal writes NOTHING. Falling through to an unsealed write
-// is the one failure this path must not have.
+// is the one outcome this path must not have.
 func TestLocalStore_RefusesToWriteWhenSealingFails(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "acme.json")
 	s := NewLocalStore(file, safe.NewPool(t.Context()), brokenSeal{})
@@ -116,21 +150,116 @@ func TestLocalStore_RefusesToWriteWhenSealingFails(t *testing.T) {
 
 type brokenSeal struct{}
 
-func (brokenSeal) Wrap([]byte) ([]byte, error) { return nil, assert.AnError }
+func (brokenSeal) Wrap(string, uint64, []byte) ([]byte, error) { return nil, assert.AnError }
 
-func (brokenSeal) Unwrap(b []byte) ([]byte, bool, error) { return b, false, nil }
+func (brokenSeal) Unwrap(_ string, b []byte) ([]byte, uint64, bool, error) {
+	return b, 0, true, nil
+}
 
-// Plain() is what every deployment ran before sealing existed, and it must stay
+// A shared store keeps re-reading its object, so an earlier copy of it can be
+// presented to a running replica. The write count is what makes that copy
+// visible as earlier, and a replica keeps what it has rather than stepping back.
+func TestSharedStore_RefusesAnEarlierDocument(t *testing.T) {
+	client := fake.NewSimpleClientset()
+	s, err := newSharedStore(client, SharedStoreConfig{
+		Namespace: "hanzo", Self: "ingress-0", LeaseDuration: time.Minute, Seal: sealFor(t, false),
+	})
+	require.NoError(t, err)
+	ctx := context.Background()
+
+	require.NoError(t, s.SaveCertificates("letsencrypt", certs("api.hanzo.ai")))
+	first, err := client.CoreV1().Secrets("hanzo").Get(ctx, s.name, metav1.GetOptions{})
+	require.NoError(t, err)
+	earlier := append([]byte(nil), first.Data[storeKey]...)
+
+	require.NoError(t, s.SaveCertificates("letsencrypt", certs("api.hanzo.ai", "cloud.hanzo.ai")))
+
+	// Put the earlier document back, exactly as it was written — a valid
+	// envelope, sealed under this key, for this store, at an earlier write.
+	current, err := client.CoreV1().Secrets("hanzo").Get(ctx, s.name, metav1.GetOptions{})
+	require.NoError(t, err)
+	current.Data[storeKey] = earlier
+	_, err = client.CoreV1().Secrets("hanzo").Update(ctx, current, metav1.UpdateOptions{})
+	require.NoError(t, err)
+
+	s.mu.Lock()
+	s.rv = "" // an empty version carries nothing to compare, so refresh reloads
+	s.mu.Unlock()
+
+	require.Error(t, s.refresh(ctx), "an earlier document replaced a later one")
+
+	held, err := s.GetCertificates("letsencrypt")
+	require.NoError(t, err)
+	assert.Len(t, held, 2, "the replica stepped back to the earlier document")
+}
+
+// A document belongs to the object it was written for, so one namespace's
+// document does not open in another.
+func TestSharedStore_RefusesADocumentFromAnotherNamespace(t *testing.T) {
+	client := fake.NewSimpleClientset()
+	seal := sealFor(t, false)
+	mk := func(ns string) *SharedStore {
+		s, err := newSharedStore(client, SharedStoreConfig{
+			Namespace: ns, Self: "ingress-0", LeaseDuration: time.Minute, Seal: seal,
+		})
+		require.NoError(t, err)
+		return s
+	}
+	here, there := mk("hanzo"), mk("lux-system")
+	ctx := context.Background()
+
+	require.NoError(t, here.SaveCertificates("letsencrypt", certs("api.hanzo.ai")))
+	from, err := client.CoreV1().Secrets("hanzo").Get(ctx, here.name, metav1.GetOptions{})
+	require.NoError(t, err)
+
+	_, err = client.CoreV1().Secrets("lux-system").Create(ctx, &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{Name: there.name, Namespace: "lux-system"},
+		Data:       map[string][]byte{storeKey: from.Data[storeKey]},
+	}, metav1.CreateOptions{})
+	require.NoError(t, err)
+
+	require.Error(t, there.refresh(ctx), "a document written for one namespace opened in another")
+}
+
+// The counter is the whole of the freshness rule, so it is stated once here.
+func TestCounter(t *testing.T) {
+	var c counter
+
+	require.NoError(t, c.read(5))
+	require.NoError(t, c.read(5), "the same document read twice is not a step back")
+	require.NoError(t, c.read(9))
+	require.Error(t, c.read(8), "a document behind the one already read was accepted")
+
+	assert.Equal(t, uint64(10), c.next())
+	assert.Equal(t, uint64(11), c.next(), "next must advance whether or not the write landed")
+}
+
+// Plain() is what every deployment ran before sealing existed, and it stays
 // byte-for-byte what it was: an operator reading acme.json on a node still sees
-// the document they always saw.
+// the document they always saw. It reports the document sealed because there is
+// nothing to adopt — for that deployment this IS the storage format.
 func TestPlain_IsTheDocumentItself(t *testing.T) {
 	doc := []byte(`{"letsencrypt":{"Account":null,"Certificates":null}}`)
-	wrapped, err := Plain().Wrap(doc)
+	wrapped, err := Plain().Wrap("/data/acme.json", 1, doc)
 	require.NoError(t, err)
 	assert.Equal(t, doc, wrapped)
 
-	plain, sealed, err := Plain().Unwrap(doc)
+	plain, count, sealed, err := Plain().Unwrap("/data/acme.json", doc)
 	require.NoError(t, err)
-	assert.False(t, sealed)
+	assert.True(t, sealed)
+	assert.Zero(t, count)
 	assert.Equal(t, doc, plain)
+}
+
+// plaintextStore writes the document an edge running before sealing existed
+// would have left on its node.
+func plaintextStore(t *testing.T) string {
+	t.Helper()
+	file := filepath.Join(t.TempDir(), "acme.json")
+	blob, err := json.MarshalIndent(map[string]*StoredData{"letsencrypt": {
+		Account: &Account{Email: "dev@hanzo.ai", PrivateKey: []byte(accountKey)},
+	}}, "", "  ")
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(file, blob, 0o600))
+	return file
 }
