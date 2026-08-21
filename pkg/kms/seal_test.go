@@ -138,6 +138,31 @@ func TestSeal_AdoptsAnUnsealedStoreOnce(t *testing.T) {
 	}
 }
 
+// Adoption covers ONE store. A second, different unsealed document is not the
+// store the operator was looking at, and it is refused — otherwise a seal left
+// adopting takes whatever plaintext it is handed for as long as the process
+// runs.
+func TestSeal_AdoptsOneStoreOnly(t *testing.T) {
+	s, err := NewSeal(key(t), true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	first := []byte(acmeLike)
+	other := []byte(`{"letsencrypt":{"Account":{"Email":"someone@example.invalid"}}}`)
+
+	if _, _, _, err := s.Unwrap(store, first); err != nil {
+		t.Fatalf("the first unsealed store was refused: %v", err)
+	}
+	// The same document again: a store is read more than once before the write
+	// that seals it lands, and a replica that cannot write reads it every poll.
+	if _, _, _, err := s.Unwrap(store, first); err != nil {
+		t.Errorf("re-reading the adopted store was refused: %v", err)
+	}
+	if _, _, _, err := s.Unwrap(store, other); !errors.Is(err, ErrUnsealed) {
+		t.Fatalf("a second, different unsealed store was adopted: err=%v", err)
+	}
+}
+
 // A document belongs to the store it was written for. Moving one between
 // stores does not open it, because the store's name is what both layers were
 // sealed with and not merely what the JSON says.

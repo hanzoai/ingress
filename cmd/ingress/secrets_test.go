@@ -6,7 +6,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hanzoai/ingress/pkg/config/static"
 	"github.com/hanzoai/ingress/pkg/kms"
+	"github.com/hanzoai/ingress/pkg/provider/acme"
 )
 
 // Every way a Cloudflare credential can reach lego: the variable, and the
@@ -88,5 +90,48 @@ func assertSupplied(t *testing.T) {
 	}
 	if got := os.Getenv(envCFToken); got != "" {
 		t.Errorf("%s = %q; a token appeared without one being read", envCFToken, got)
+	}
+}
+
+// An edge with no ACME resolver reads no secrets. Its certificates come from
+// Kubernetes Secrets and some of its routes are plain HTTP; making KMS a
+// condition of serving them would take the whole edge down on a node whenever
+// KMS is unreachable during a restart.
+func TestEdgeSecrets_NoResolverReadsNothing(t *testing.T) {
+	fill(t)
+	// Configured for KMS, and pointed at nothing that answers: reaching it
+	// would fail, and reaching it at all is the thing being ruled out.
+	t.Setenv("INGRESS_KMS_ENDPOINT", "https://127.0.0.1:1")
+	t.Setenv("INGRESS_KMS_CLIENT_ID", "ingress")
+	t.Setenv("INGRESS_KMS_CLIENT_SECRET", "shhh")
+
+	start := time.Now()
+	seal := edgeSecrets(&static.Configuration{})
+	if took := time.Since(start); took > time.Second {
+		t.Errorf("an edge with no resolver spent %v reaching KMS", took)
+	}
+	if _, ok := seal.(*kms.Seal); ok {
+		t.Error("an edge with no resolver built a seal from KMS")
+	}
+	assertSupplied(t)
+}
+
+// One resolver that orders certificates is enough to need them.
+func TestOrdering(t *testing.T) {
+	if ordering(&static.Configuration{}) {
+		t.Error("a configuration with no resolver was read as ordering certificates")
+	}
+	none := &static.Configuration{CertificatesResolvers: map[string]static.CertificateResolver{
+		"tailscale": {},
+	}}
+	if ordering(none) {
+		t.Error("a resolver that is not ACME was read as ordering certificates")
+	}
+	some := &static.Configuration{CertificatesResolvers: map[string]static.CertificateResolver{
+		"tailscale":   {},
+		"letsencrypt": {ACME: &acme.Configuration{}},
+	}}
+	if !ordering(some) {
+		t.Error("an ACME resolver was not read as ordering certificates")
 	}
 }

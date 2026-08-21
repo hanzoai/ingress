@@ -61,12 +61,17 @@ Deployed on the `hanzo-k8s` cluster as the default IngressClass (`ingress`), it 
 
 ### Kubernetes
 
+The workload is declared in `hanzoai/universe`
+(`infra/k8s/ingress/`) and reconciled by the operator, so it is not applied
+from here. What this repository carries is the cluster-level objects the
+workload uses:
+
 ```bash
-# From a clone -- RBAC, IngressClass, Deployment, Service, middlewares
+# RBAC, IngressClass, middlewares
 kubectl apply -f k8s/hanzo/
 
 # Verify
-kubectl -n hanzo get pods -l app=hanzo-ingress
+kubectl -n hanzo get pods -l app.kubernetes.io/name=ingress
 ```
 
 The manifests are not fetchable by URL: this repository is private, so
@@ -208,9 +213,13 @@ Any Ingress resource without an explicit `ingressClassName` is automatically pic
 k8s/hanzo/
   rbac.yaml             # ServiceAccount, ClusterRole, ClusterRoleBinding
   ingressclass.yaml     # IngressClass "ingress" (default)
-  deployment.yaml       # 2 replicas, hostNetwork, ports 80/443
-  service.yaml          # LoadBalancer service
+  middlewares.yaml      # security-headers Middleware CRD
 ```
+
+The Deployment and its Service are declared in `hanzoai/universe`
+(`infra/k8s/ingress/`), which is the one place that says what runs. A copy
+here would be a second answer to that question, and the copy that was here
+described a different workload than the one the cluster runs.
 
 ### Creating Ingress Resources
 
@@ -263,11 +272,14 @@ Hanzo Ingress runs on the `hanzo-k8s` DOKS cluster (`24.199.76.156`) as the sole
 
 ### Deploy / Update
 
+The image tag is pinned in `hanzoai/universe` and rolled by the operator. The
+manifests here are the cluster-level objects only:
+
 ```bash
 kubectl --context do-sfo3-hanzo-k8s apply -f k8s/hanzo/
 
 # Verify pods
-kubectl --context do-sfo3-hanzo-k8s -n hanzo get pods -l app=hanzo-ingress
+kubectl --context do-sfo3-hanzo-k8s -n hanzo get pods -l app.kubernetes.io/name=ingress
 
 # Check service
 kubectl --context do-sfo3-hanzo-k8s -n hanzo get svc hanzo-ingress

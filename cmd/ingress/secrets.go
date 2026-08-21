@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/hanzoai/ingress/pkg/config/static"
 	"github.com/hanzoai/ingress/pkg/kms"
 	"github.com/hanzoai/ingress/pkg/provider/acme"
 	"github.com/rs/zerolog/log"
@@ -38,9 +39,10 @@ const reach = 30 * time.Second
 // store that predates sealing keeps its certificates instead of re-ordering
 // every one of them against a rate limit.
 //
-// It does its work once and then does nothing: after that boot the store IS
-// sealed, so the unsealed path is never reached again. It says so at warn on
-// every boot it is set, so it is not left on quietly.
+// It admits ONE store — the one the operator was looking at — and adoption is
+// not a read: it writes that store back under seal. Left set, it adopts again
+// after every restart, whatever plaintext is on the disk at the time. So it is
+// set for one boot and removed, and it says so at warn on every boot it is set.
 const envAdopt = "INGRESS_ACME_ADOPT"
 
 // edgeSeal is how the ACME state reaches its store.
@@ -160,7 +162,15 @@ func unset(name string) {
 // edgeSecrets is the one call that reads everything this process needs from
 // KMS. It runs before the ACME provider is built, because both of its results
 // are inputs to it.
-func edgeSecrets() acme.Seal {
+func edgeSecrets(c *static.Configuration) acme.Seal {
+	if !ordering(c) {
+		// Nothing here orders a certificate, so there is no ACME state to seal
+		// and no challenge to answer. Reading KMS anyway would make it a
+		// condition of serving every route this edge has — the ones whose
+		// certificates come from a Kubernetes Secret, and the plain-HTTP ones
+		// — for a subsystem that is not running.
+		return acme.Plain()
+	}
 	client, err := kms.FromEnv()
 	if err != nil {
 		// A configuration error does not heal, so it is not retried.
@@ -168,4 +178,15 @@ func edgeSecrets() acme.Seal {
 	}
 	loadDNSCredential(client, reach)
 	return edgeSeal(client, reach)
+}
+
+// ordering reports whether any certificate resolver orders certificates. It is
+// the one question that decides whether this edge needs its own secrets at all.
+func ordering(c *static.Configuration) bool {
+	for _, r := range c.CertificatesResolvers {
+		if r.ACME != nil {
+			return true
+		}
+	}
+	return false
 }

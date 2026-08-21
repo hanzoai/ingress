@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 )
 
 // Seal encrypts the ACME state document at rest.
@@ -38,9 +39,12 @@ import (
 // editing its count all fail to open rather than opening into something the
 // ACME provider would act on.
 type Seal struct {
-	kek   cipher.AEAD
-	id    string
+	kek cipher.AEAD
+	id  string
+
+	mu    sync.Mutex
 	adopt bool
+	taken *[32]byte // the one unsealed document this seal admitted
 }
 
 // envelope is the sealed document as written. It is JSON so that a file which
@@ -66,9 +70,9 @@ var ErrUnsealed = errors.New("kms: the stored document is not sealed")
 // adopt says what to do with a store that is not sealed. False — the default
 // everywhere — reads it as an error: the store this process was pointed at is
 // not the store this key wrote, and continuing would mean writing this edge's
-// account key over whatever is there. True opens it once and hands it back for
-// the caller to write under seal, which is how a store that predates sealing
-// keeps its certificates instead of re-ordering every one of them.
+// account key over whatever is there. True opens ONE such store and hands it
+// back for the caller to write under seal, which is how a store that predates
+// sealing keeps its certificates instead of re-ordering every one of them.
 func NewSeal(key []byte, adopt bool) (*Seal, error) {
 	if len(key) != 32 {
 		return nil, fmt.Errorf("kms: seal key is %d bytes, want 32", len(key))
@@ -175,7 +179,7 @@ func (s *Seal) Wrap(name string, count uint64, plain []byte) ([]byte, error) {
 func (s *Seal) Unwrap(name string, stored []byte) (plain []byte, count uint64, sealed bool, err error) {
 	env, ok := parse(stored)
 	if !ok {
-		if !s.adopt {
+		if !s.take(stored) {
 			return nil, 0, false, ErrUnsealed
 		}
 		return stored, 0, false, nil
@@ -212,6 +216,32 @@ func (s *Seal) Unwrap(name string, stored []byte) (plain []byte, count uint64, s
 		return nil, 0, true, fmt.Errorf("kms: unseal document: %w", err)
 	}
 	return doc, env.Count, true, nil
+}
+
+// take spends the operator's adoption on ONE document.
+//
+// The first unsealed document is admitted and remembered. That same document is
+// admitted again, because a store is read more than once before the write that
+// seals it lands and a replica that cannot write reads it on every poll. A
+// DIFFERENT unsealed document is not: adoption covers the store the operator
+// was looking at, not every unsealed store this process is handed for as long
+// as it runs.
+//
+// The memory is this seal's, so it lasts one process. A seal built to adopt
+// will adopt again after a restart — which is why the setting is removed once
+// it has done its work, and why it announces itself on every boot it is set.
+func (s *Seal) take(stored []byte) bool {
+	sum := sha256.Sum256(stored)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if !s.adopt {
+		return false
+	}
+	if s.taken == nil {
+		s.taken = &sum
+		return true
+	}
+	return *s.taken == sum
 }
 
 // bind renders the facts the ciphertext is tied to. Each variable-length field

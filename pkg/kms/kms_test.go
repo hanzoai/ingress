@@ -150,16 +150,27 @@ func TestFromEnv_HalfConfiguredIsAnError(t *testing.T) {
 	}
 }
 
-func TestFromEnv_FallsBackToIAMCredentials(t *testing.T) {
+// One spelling for the credential. A pod that also carries another subsystem's
+// IAM client must not have it picked up here.
+func TestFromEnv_TakesOnlyItsOwnCredential(t *testing.T) {
 	t.Setenv(envEndpoint, "https://kms.hanzo.ai")
 	t.Setenv(envClientID, "")
 	t.Setenv(envSecret, "")
-	t.Setenv("IAM_CLIENT_ID", "ingress")
-	t.Setenv("IAM_CLIENT_SECRET", "shhh")
+	t.Setenv("IAM_CLIENT_ID", "someone-elses")
+	t.Setenv("IAM_CLIENT_SECRET", "someone-elses")
+	if _, err := FromEnv(); err == nil {
+		t.Error("FromEnv used a credential that was not addressed to it")
+	}
+
+	t.Setenv(envClientID, "ingress")
+	t.Setenv(envSecret, "shhh")
 	t.Setenv(envOrg, "lux")
 	c, err := FromEnv()
 	if err != nil {
 		t.Fatal(err)
+	}
+	if c.clientID != "ingress" {
+		t.Errorf("clientID = %q, want ingress", c.clientID)
 	}
 	if c.Org() != "lux" {
 		t.Errorf("org = %q, want lux", c.Org())
