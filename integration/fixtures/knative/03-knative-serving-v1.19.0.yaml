@@ -8593,7 +8593,7 @@ data:
     #
     # When the protocol is prometheus the endpoint can accept a 'host:port' string to customize the
     # listening host interface and port.
-    request-metrics-endpoint: http://promstack-kube-prometheus-prometheus.observability:9090/api/v1/otlp/v1/metrics
+    request-metrics-endpoint: http://promstack-kube-prometheus-prometheus.observability:9090/api/v1/otlp/ext/metrics
 
     # request-metrics-export-interval specifies the global metrics reporting period for the queue-proxy.
     #

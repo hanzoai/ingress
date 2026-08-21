@@ -46,7 +46,7 @@ func TestLocalStore_GetAccount(t *testing.T) {
 
 	for _, test := range testCases {
 		t.Run(test.desc, func(t *testing.T) {
-			s := NewLocalStore(test.filename, safe.NewPool(t.Context()))
+			s := NewLocalStore(test.filename, safe.NewPool(t.Context()), Plain())
 
 			account, err := s.GetAccount("test")
 			require.NoError(t, err)
@@ -59,7 +59,7 @@ func TestLocalStore_GetAccount(t *testing.T) {
 func TestLocalStore_SaveAccount(t *testing.T) {
 	acmeFile := filepath.Join(t.TempDir(), "acme.json")
 
-	s := NewLocalStore(acmeFile, safe.NewPool(t.Context()))
+	s := NewLocalStore(acmeFile, safe.NewPool(t.Context()), Plain())
 
 	email := "some@email.com"
 

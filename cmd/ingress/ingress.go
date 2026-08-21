@@ -183,6 +183,11 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 	}
 
 	// ACME
+	//
+	// The edge's own secrets are read here, before anything ACME is built: the
+	// sealing key the state is written under and the DNS credential the
+	// challenge is answered with are both inputs to the provider below.
+	seal := edgeSecrets()
 
 	tlsManager := ingresstls.NewManager(staticConfiguration.OCSP)
 	routinesPool.GoCtx(tlsManager.Run)
@@ -195,7 +200,7 @@ func setupServer(staticConfiguration *static.Configuration) (*server.Server, err
 		return nil, err
 	}
 
-	acmeProviders := initACMEProvider(staticConfiguration, providerAggregator, tlsManager, httpChallengeProvider, tlsChallengeProvider, routinesPool)
+	acmeProviders := initACMEProvider(staticConfiguration, providerAggregator, tlsManager, httpChallengeProvider, tlsChallengeProvider, routinesPool, seal)
 
 	// Observability
 
@@ -441,7 +446,7 @@ func switchRouter(routerFactory *server.RouterFactory, serverEntryPointsTCP serv
 }
 
 // initACMEProvider creates and registers acme.Provider instances corresponding to the configured ACME certificate resolvers.
-func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.ProviderAggregator, tlsManager *ingresstls.Manager, httpChallengeProvider, tlsChallengeProvider challenge.Provider, routinesPool *safe.Pool) []*acme.Provider {
+func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.ProviderAggregator, tlsManager *ingresstls.Manager, httpChallengeProvider, tlsChallengeProvider challenge.Provider, routinesPool *safe.Pool, seal acme.Seal) []*acme.Provider {
 	// acme.Store, not *acme.LocalStore: where the state lives is now a decision
 	// (see acmeStore), and a map typed to one implementation cannot hold the other.
 	acmeStores := map[string]acme.Store{}
@@ -453,7 +458,7 @@ func initACMEProvider(c *static.Configuration, providerAggregator *aggregator.Pr
 		}
 
 		if acmeStores[resolver.ACME.Storage] == nil {
-			acmeStores[resolver.ACME.Storage] = acmeStore(resolver.ACME.Storage, routinesPool)
+			acmeStores[resolver.ACME.Storage] = acmeStore(resolver.ACME.Storage, routinesPool, seal)
 		}
 
 		p := &acme.Provider{
@@ -641,7 +646,8 @@ func collect(staticConfiguration *static.Configuration) {
 	})
 }
 
-// acmeStore picks where ACME state lives.
+// acmeStore picks where ACME state lives. HOW it is written there — sealed or
+// in the clear — is the seal's business and is decided once, in edgeSecrets.
 //
 // The default is unchanged: a local file, which is correct and simplest for ONE
 // replica. Set ACME_SHARED_STORE_NAMESPACE (the operator normally maps it from
@@ -658,12 +664,12 @@ func collect(staticConfiguration *static.Configuration) {
 // the cluster is unreachable — the moment two replicas are most likely to diverge
 // — and it would do so quietly, which is how the current split went unnoticed for
 // as long as it did.
-func acmeStore(storage string, pool *safe.Pool) acme.Store {
+func acmeStore(storage string, pool *safe.Pool, seal acme.Seal) acme.Store {
 	ns := os.Getenv("ACME_SHARED_STORE_NAMESPACE")
 	if ns == "" {
-		return acme.NewLocalStore(storage, pool)
+		return acme.NewLocalStore(storage, pool, seal)
 	}
-	shared, err := acme.NewSharedStore(acme.SharedStoreConfig{Namespace: ns})
+	shared, err := acme.NewSharedStore(acme.SharedStoreConfig{Namespace: ns, Seal: seal})
 	if err != nil {
 		log.Fatal().Err(err).Msg("ACME shared store is configured but could not be built; refusing to fall back to per-node state")
 	}

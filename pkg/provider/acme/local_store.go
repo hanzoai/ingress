@@ -2,7 +2,6 @@ package acme
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"maps"
 	"os"
@@ -19,14 +18,20 @@ var _ Store = (*LocalStore)(nil)
 type LocalStore struct {
 	saveDataChan chan map[string]*StoredData
 	filename     string
+	seal         Seal
 
 	lock       sync.RWMutex
 	storedData map[string]*StoredData
 }
 
 // NewLocalStore initializes a new LocalStore with a file name.
-func NewLocalStore(filename string, routinesPool *safe.Pool) *LocalStore {
-	store := &LocalStore{filename: filename, saveDataChan: make(chan map[string]*StoredData)}
+//
+// The seal is how the document reaches the disk. Pass acme.Plain() to write it
+// as plain JSON — mode 0600 and nothing else, which is what protects a node's
+// ACME account key and every leaf key it holds from exactly one attacker: a
+// different UID on the same node.
+func NewLocalStore(filename string, routinesPool *safe.Pool, seal Seal) *LocalStore {
+	store := &LocalStore{filename: filename, seal: seal, saveDataChan: make(chan map[string]*StoredData)}
 	store.listenSaveAction(routinesPool)
 	return store
 }
@@ -114,10 +119,19 @@ func (s *LocalStore) get(resolverName string) (*StoredData, error) {
 				return nil, err
 			}
 
-			if len(file) > 0 {
-				if err := json.Unmarshal(file, &s.storedData); err != nil {
-					return nil, err
-				}
+			stored, sealed, err := decodeStored(s.seal, file)
+			if err != nil {
+				return nil, err
+			}
+			s.storedData = stored
+			if !sealed && len(file) > 0 {
+				// A document this boot found in the clear. Rewrite it now
+				// rather than at the next renewal: the clear copy is on the
+				// node until something replaces it, and a renewal is sixty
+				// days away.
+				logger.Warn().Str("file", s.filename).
+					Msg("ACME state was stored in the clear; rewriting it under seal")
+				s.saveDataChan <- maps.Clone(s.storedData)
 			}
 
 			// Delete all certificates with no value
@@ -164,9 +178,13 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 				default:
 				}
 
-				data, err := json.MarshalIndent(object, "", "  ")
+				data, err := encodeStored(s.seal, object)
 				if err != nil {
-					logger.Error().Err(err).Send()
+					// Never fall through to writing the document unsealed:
+					// the write that follows an encode failure is the one
+					// that would put private keys on the disk in the clear.
+					logger.Error().Err(err).Msg("ACME state not written")
+					continue
 				}
 
 				if err := os.WriteFile(s.filename, data, 0o600); err != nil {
