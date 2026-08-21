@@ -76,6 +76,13 @@ func FromEnv() (*Client, error) {
 	if endpoint == "" {
 		return nil, nil
 	}
+	// The credential travels in the body of the login and the bearer travels
+	// in a header of every read, so the endpoint has to be one that encrypts
+	// them. A plaintext endpoint is a configuration to fix, not a degraded mode
+	// to run in.
+	if !strings.HasPrefix(endpoint, "https://") {
+		return nil, fmt.Errorf("kms: %s is %q; the endpoint carries a client secret and must be https", envEndpoint, endpoint)
+	}
 	id := firstOf(os.Getenv(envClientID), os.Getenv("IAM_CLIENT_ID"))
 	secret := firstOf(os.Getenv(envSecret), os.Getenv("IAM_CLIENT_SECRET"))
 	if id == "" || secret == "" {
