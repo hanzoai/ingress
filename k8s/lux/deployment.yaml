@@ -87,7 +87,7 @@ spec:
           # token, so the two do not coexist.
           env:
             - name: INGRESS_KMS_ENDPOINT
-              value: "https://kms.lux.cloud"
+              value: "https://kms.hanzo.ai"
             - name: INGRESS_KMS_ORG
               value: "lux"
             - name: INGRESS_KMS_PATH
