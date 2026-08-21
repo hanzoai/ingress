@@ -187,7 +187,8 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 				default:
 				}
 
-				data, err := encodeStored(s.seal, s.filename, s.count.next(), object)
+				want := s.count.next()
+				data, err := encodeStored(s.seal, s.filename, want, object)
 				if err != nil {
 					// Never fall through to writing the document unsealed:
 					// the write that follows an encode failure is the one
@@ -198,7 +199,9 @@ func (s *LocalStore) listenSaveAction(routinesPool *safe.Pool) {
 
 				if err := os.WriteFile(s.filename, data, 0o600); err != nil {
 					logger.Error().Err(err).Send()
+					continue
 				}
+				s.count.wrote(want)
 			}
 		}
 	})

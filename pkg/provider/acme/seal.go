@@ -91,14 +91,27 @@ func (c *counter) read(n uint64) error {
 	return nil
 }
 
-// next reserves the write a store is about to make. It advances whether or not
-// that write lands: the numbering has to increase, it does not have to be
-// dense, and one call is one thing to remember instead of two.
+// next is the write a store is about to make. It reserves without recording.
+//
+// The count moves when a write LANDS, not when one is attempted. A store's
+// write can be refused after it is encoded — a resourceVersion conflict, a
+// filesystem error — and recording it then would leave the store's own view of
+// the document ahead of the document, so the next read of the very same bytes
+// would look like a step back and every write after it would be refused.
 func (c *counter) next() uint64 {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	c.n++
-	return c.n
+	return c.n + 1
+}
+
+// wrote records a write that landed. It is the only other way the count moves,
+// and it moves it forward or not at all.
+func (c *counter) wrote(n uint64) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if n > c.n {
+		c.n = n
+	}
 }
 
 // encodeStored renders the state document for storage as the count-th write of
