@@ -16,7 +16,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: IngressRoute is the CRD implementation of a Traefik HTTP Router.
+        description: IngressRoute is the CRD implementation of a Ingress HTTP Router.
         properties:
           apiVersion:
             description: |-
@@ -42,7 +42,7 @@ spec:
                 description: |-
                   EntryPoints defines the list of entry point names to bind to.
                   Entry points have to be configured in the static configuration.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/install-configuration/entrypoints/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/entrypoints/
                   Default: all.
                 items:
                   type: string
@@ -55,7 +55,7 @@ spec:
                 description: |-
                   ParentRefs defines references to parent IngressRoute resources for multi-layer routing.
                   When set, this IngressRoute's routers will be children of the referenced parent IngressRoute's routers.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/routing/routers/#parentrefs
+                  More info: https://hanzo.ai/docs/ingress/v3.6/routing/routers/#parentrefs
                 items:
                   description: IngressRouteRef is a reference to an IngressRoute resource.
                   properties:
@@ -87,12 +87,12 @@ spec:
                     match:
                       description: |-
                         Match defines the router's rule.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/
                       type: string
                     middlewares:
                       description: |-
                         Middlewares defines the list of references to Middleware resources.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/middleware/
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/middleware/
                       items:
                         description: MiddlewareRef is a reference to a Middleware
                           resource.
@@ -112,7 +112,7 @@ spec:
                     observability:
                       description: |-
                         Observability defines the observability configuration for a router.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/routing/observability/
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/observability/
                       properties:
                         accessLogs:
                           description: AccessLogs enables access logs for this router.
@@ -135,7 +135,7 @@ spec:
                     priority:
                       description: |-
                         Priority defines the router's priority.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#priority
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#priority
                       maximum: 9223372036854775000
                       type: integer
                     services:
@@ -203,7 +203,7 @@ spec:
                                 - type: integer
                                 - type: string
                                 description: |-
-                                  Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
+                                  Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
                                   Default: 5s
                                 x-kubernetes-int-or-string: true
                               unhealthyInterval:
@@ -261,7 +261,7 @@ spec:
                             description: |-
                               NodePortLB controls, when creating the load-balancer,
                               whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                              It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+                              It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
                               By default, NodePortLB is false.
                             type: boolean
                           passHostHeader:
@@ -297,7 +297,7 @@ spec:
                               This can be a reference to a named port.
                             x-kubernetes-int-or-string: true
                           responseForwarding:
-                            description: ResponseForwarding defines how Traefik forwards
+                            description: ResponseForwarding defines how Ingress forwards
                               the response from the upstream Kubernetes Service to
                               the client.
                             properties:
@@ -318,13 +318,13 @@ spec:
                           serversTransport:
                             description: |-
                               ServersTransport defines the name of ServersTransport resource to use.
-                              It allows to configure the transport between Traefik and your servers.
+                              It allows to configure the transport between Ingress and your servers.
                               Can only be used on a Kubernetes Service.
                             type: string
                           sticky:
                             description: |-
                               Sticky defines the sticky sessions configuration.
-                              More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                              More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                             properties:
                               cookie:
                                 description: Cookie defines the sticky cookie configuration.
@@ -395,7 +395,7 @@ spec:
                     syntax:
                       description: |-
                         Syntax defines the router's rule syntax.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#rulesyntax
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/rules-and-priority/#rulesyntax
 
                         Deprecated: Please do not use this field and rewrite the router rules to use the v3 syntax.
                       type: string
@@ -406,18 +406,18 @@ spec:
               tls:
                 description: |-
                   TLS defines the TLS configuration.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/routing/router/#tls
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/routing/router/#tls
                 properties:
                   certResolver:
                     description: |-
                       CertResolver defines the name of the certificate resolver to use.
                       Cert resolvers have to be configured in the static configuration.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
                     type: string
                   domains:
                     description: |-
                       Domains defines the list of domains that will be used to issue certificates.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#domains
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#domains
                     items:
                       description: Domain holds a domain name with SANs.
                       properties:
@@ -436,17 +436,17 @@ spec:
                     description: |-
                       Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection.
                       If not defined, the `default` TLSOption is used.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-options/
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-options/
                     properties:
                       name:
                         description: |-
                           Name defines the name of the referenced TLSOption.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
+                          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
                         type: string
                       namespace:
                         description: |-
                           Namespace defines the namespace of the referenced TLSOption.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
+                          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsoption/
                         type: string
                     required:
                     - name
@@ -463,12 +463,12 @@ spec:
                       name:
                         description: |-
                           Name defines the name of the referenced TLSStore.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
+                          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
                         type: string
                       namespace:
                         description: |-
                           Namespace defines the namespace of the referenced TLSStore.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
+                          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/tlsstore/
                         type: string
                     required:
                     - name
@@ -502,7 +502,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: IngressRouteTCP is the CRD implementation of a Traefik TCP Router.
+        description: IngressRouteTCP is the CRD implementation of a Ingress TCP Router.
         properties:
           apiVersion:
             description: |-
@@ -528,7 +528,7 @@ spec:
                 description: |-
                   EntryPoints defines the list of entry point names to bind to.
                   Entry points have to be configured in the static configuration.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/install-configuration/entrypoints/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/entrypoints/
                   Default: all.
                 items:
                   type: string
@@ -545,22 +545,22 @@ spec:
                     match:
                       description: |-
                         Match defines the router's rule.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/
                       type: string
                     middlewares:
                       description: Middlewares defines the list of references to MiddlewareTCP
                         resources.
                       items:
-                        description: ObjectReference is a generic reference to a Traefik
+                        description: ObjectReference is a generic reference to a Ingress
                           resource.
                         properties:
                           name:
-                            description: Name defines the name of the referenced Traefik
+                            description: Name defines the name of the referenced Ingress
                               resource.
                             type: string
                           namespace:
                             description: Namespace defines the namespace of the referenced
-                              Traefik resource.
+                              Ingress resource.
                             type: string
                         required:
                         - name
@@ -569,7 +569,7 @@ spec:
                     priority:
                       description: |-
                         Priority defines the router's priority.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/#priority
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/#priority
                       maximum: 9223372036854775000
                       type: integer
                     services:
@@ -597,7 +597,7 @@ spec:
                             description: |-
                               NodePortLB controls, when creating the load-balancer,
                               whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                              It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+                              It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
                               By default, NodePortLB is false.
                             type: boolean
                           port:
@@ -611,7 +611,7 @@ spec:
                           proxyProtocol:
                             description: |-
                               ProxyProtocol defines the PROXY protocol configuration.
-                              More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/service/#proxy-protocol
+                              More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/service/#proxy-protocol
 
                               Deprecated: ProxyProtocol will not be supported in future APIVersions, please use ServersTransport to configure ProxyProtocol instead.
                             properties:
@@ -625,7 +625,7 @@ spec:
                           serversTransport:
                             description: |-
                               ServersTransport defines the name of ServersTransportTCP resource to use.
-                              It allows to configure the transport between Traefik and your servers.
+                              It allows to configure the transport between Ingress and your servers.
                               Can only be used on a Kubernetes Service.
                             type: string
                           terminationDelay:
@@ -655,7 +655,7 @@ spec:
                     syntax:
                       description: |-
                         Syntax defines the router's rule syntax.
-                        More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/#rulesyntax
+                        More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/routing/rules-and-priority/#rulesyntax
 
                         Deprecated: Please do not use this field and rewrite the router rules to use the v3 syntax.
                       enum:
@@ -669,18 +669,18 @@ spec:
               tls:
                 description: |-
                   TLS defines the TLS configuration on a layer 4 / TCP Route.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/routing/router/#tls
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/routing/router/#tls
                 properties:
                   certResolver:
                     description: |-
                       CertResolver defines the name of the certificate resolver to use.
                       Cert resolvers have to be configured in the static configuration.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/tls/certificate-resolvers/acme/
                     type: string
                   domains:
                     description: |-
                       Domains defines the list of domains that will be used to issue certificates.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/tls/#domains
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/tls/#domains
                     items:
                       description: Domain holds a domain name with SANs.
                       properties:
@@ -699,15 +699,15 @@ spec:
                     description: |-
                       Options defines the reference to a TLSOption, that specifies the parameters of the TLS connection.
                       If not defined, the `default` TLSOption is used.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/tls/#tls-options
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/tls/#tls-options
                     properties:
                       name:
-                        description: Name defines the name of the referenced Traefik
+                        description: Name defines the name of the referenced Ingress
                           resource.
                         type: string
                       namespace:
                         description: Namespace defines the namespace of the referenced
-                          Traefik resource.
+                          Ingress resource.
                         type: string
                     required:
                     - name
@@ -726,12 +726,12 @@ spec:
                       Please note that only `default` TLSStore can be used.
                     properties:
                       name:
-                        description: Name defines the name of the referenced Traefik
+                        description: Name defines the name of the referenced Ingress
                           resource.
                         type: string
                       namespace:
                         description: Namespace defines the namespace of the referenced
-                          Traefik resource.
+                          Ingress resource.
                         type: string
                     required:
                     - name
@@ -765,7 +765,7 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: IngressRouteUDP is a CRD implementation of a Traefik UDP Router.
+        description: IngressRouteUDP is a CRD implementation of a Ingress UDP Router.
         properties:
           apiVersion:
             description: |-
@@ -791,7 +791,7 @@ spec:
                 description: |-
                   EntryPoints defines the list of entry point names to bind to.
                   Entry points have to be configured in the static configuration.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/install-configuration/entrypoints/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/install-configuration/entrypoints/
                   Default: all.
                 items:
                   type: string
@@ -830,7 +830,7 @@ spec:
                             description: |-
                               NodePortLB controls, when creating the load-balancer,
                               whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                              It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+                              It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
                               By default, NodePortLB is false.
                             type: boolean
                           port:
@@ -868,6 +868,1131 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
+  name: ingressservices.hanzo.ai
+spec:
+  group: hanzo.ai
+  names:
+    kind: IngressService
+    listKind: IngressServiceList
+    plural: ingressservices
+    singular: ingressservice
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          IngressService is the CRD implementation of a Ingress Service.
+          IngressService object allows to:
+          - Apply weight to Services on load-balancing
+          - Mirror traffic on services
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: IngressServiceSpec defines the desired state of a IngressService.
+            properties:
+              highestRandomWeight:
+                description: HighestRandomWeight defines the highest random weight
+                  service configuration.
+                properties:
+                  services:
+                    description: Services defines the list of Kubernetes Service and/or
+                      IngressService to load-balance, with weight.
+                    items:
+                      description: Service defines an upstream HTTP service to proxy
+                        traffic to.
+                      properties:
+                        healthCheck:
+                          description: Healthcheck defines health checks for ExternalName
+                            services.
+                          properties:
+                            followRedirects:
+                              description: |-
+                                FollowRedirects defines whether redirects should be followed during the health check calls.
+                                Default: true
+                              type: boolean
+                            headers:
+                              additionalProperties:
+                                type: string
+                              description: Headers defines custom headers to be sent
+                                to the health check endpoint.
+                              type: object
+                            hostname:
+                              description: Hostname defines the value of hostname
+                                in the Host header of the health check request.
+                              type: string
+                            interval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Interval defines the frequency of the health check calls for healthy targets.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                            method:
+                              description: Method defines the healthcheck method.
+                              type: string
+                            mode:
+                              description: |-
+                                Mode defines the health check mode.
+                                If defined to grpc, will use the gRPC health check protocol to probe the server.
+                                Default: http
+                              type: string
+                            path:
+                              description: Path defines the server URL path for the
+                                health check endpoint.
+                              type: string
+                            port:
+                              description: Port defines the server URL port for the
+                                health check endpoint.
+                              type: integer
+                            scheme:
+                              description: Scheme replaces the server URL scheme for
+                                the health check endpoint.
+                              type: string
+                            status:
+                              description: Status defines the expected HTTP status
+                                code of the response to the health check request.
+                              type: integer
+                            timeout:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
+                                Default: 5s
+                              x-kubernetes-int-or-string: true
+                            unhealthyInterval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
+                                When UnhealthyInterval is not defined, it defaults to the Interval value.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                          type: object
+                        kind:
+                          description: Kind defines the kind of the Service.
+                          enum:
+                          - Service
+                          - IngressService
+                          type: string
+                        middlewares:
+                          description: Middlewares defines the list of references
+                            to Middleware resources to apply to the service.
+                          items:
+                            description: MiddlewareRef is a reference to a Middleware
+                              resource.
+                            properties:
+                              name:
+                                description: Name defines the name of the referenced
+                                  Middleware resource.
+                                type: string
+                              namespace:
+                                description: Namespace defines the namespace of the
+                                  referenced Middleware resource.
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        name:
+                          description: |-
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
+                            The differentiation between the two is specified in the Kind field.
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            Kubernetes Service or IngressService.
+                          type: string
+                        nativeLB:
+                          description: |-
+                            NativeLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
+                            The Kubernetes Service itself does load-balance to the pods.
+                            By default, NativeLB is false.
+                          type: boolean
+                        nodePortLB:
+                          description: |-
+                            NodePortLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
+                            It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
+                            By default, NodePortLB is false.
+                          type: boolean
+                        passHostHeader:
+                          description: |-
+                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
+                            By default, passHostHeader is true.
+                          type: boolean
+                        passiveHealthCheck:
+                          description: PassiveHealthCheck defines passive health checks
+                            for ExternalName services.
+                          properties:
+                            failureWindow:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: FailureWindow defines the time window during
+                                which the failed attempts must occur for the server
+                                to be marked as unhealthy. It also defines for how
+                                long the server will be considered unhealthy.
+                              x-kubernetes-int-or-string: true
+                            maxFailedAttempts:
+                              description: MaxFailedAttempts is the number of consecutive
+                                failed attempts allowed within the failure window
+                                before marking the server as unhealthy.
+                              type: integer
+                          type: object
+                        port:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            Port defines the port of a Kubernetes Service.
+                            This can be a reference to a named port.
+                          x-kubernetes-int-or-string: true
+                        responseForwarding:
+                          description: ResponseForwarding defines how Ingress forwards
+                            the response from the upstream Kubernetes Service to the
+                            client.
+                          properties:
+                            flushInterval:
+                              description: |-
+                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
+                                A negative value means to flush immediately after each write to the client.
+                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
+                                for such responses, writes are flushed to the client immediately.
+                                Default: 100ms
+                              type: string
+                          type: object
+                        scheme:
+                          description: |-
+                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
+                            It defaults to https when Kubernetes Service port is 443, http otherwise.
+                          type: string
+                        serversTransport:
+                          description: |-
+                            ServersTransport defines the name of ServersTransport resource to use.
+                            It allows to configure the transport between Ingress and your servers.
+                            Can only be used on a Kubernetes Service.
+                          type: string
+                        sticky:
+                          description: |-
+                            Sticky defines the sticky sessions configuration.
+                            More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                          properties:
+                            cookie:
+                              description: Cookie defines the sticky cookie configuration.
+                              properties:
+                                domain:
+                                  description: |-
+                                    Domain defines the host to which the cookie will be sent.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+                                  type: string
+                                httpOnly:
+                                  description: HTTPOnly defines whether the cookie
+                                    can be accessed by client-side APIs, such as JavaScript.
+                                  type: boolean
+                                maxAge:
+                                  description: |-
+                                    MaxAge defines the number of seconds until the cookie expires.
+                                    When set to a negative number, the cookie expires immediately.
+                                    When set to zero, the cookie never expires.
+                                  type: integer
+                                name:
+                                  description: Name defines the Cookie name.
+                                  type: string
+                                path:
+                                  description: |-
+                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
+                                    When not provided the cookie will be sent on every request to the domain.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
+                                  type: string
+                                sameSite:
+                                  description: |-
+                                    SameSite defines the same site policy.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+                                  enum:
+                                  - none
+                                  - lax
+                                  - strict
+                                  type: string
+                                secure:
+                                  description: Secure defines whether the cookie can
+                                    only be transmitted over an encrypted connection
+                                    (i.e. HTTPS).
+                                  type: boolean
+                              type: object
+                          type: object
+                        strategy:
+                          description: |-
+                            Strategy defines the load balancing strategy between the servers.
+                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
+                            RoundRobin value is deprecated and supported for backward compatibility.
+                          enum:
+                          - wrr
+                          - p2c
+                          - hrw
+                          - leasttime
+                          - RoundRobin
+                          type: string
+                        weight:
+                          description: |-
+                            Weight defines the weight and should only be specified when Name references a IngressService object
+                            (and to be precise, one that embeds a Weighted Round Robin).
+                          minimum: 0
+                          type: integer
+                      required:
+                      - name
+                      type: object
+                    type: array
+                type: object
+              mirroring:
+                description: Mirroring defines the Mirroring service configuration.
+                properties:
+                  healthCheck:
+                    description: Healthcheck defines health checks for ExternalName
+                      services.
+                    properties:
+                      followRedirects:
+                        description: |-
+                          FollowRedirects defines whether redirects should be followed during the health check calls.
+                          Default: true
+                        type: boolean
+                      headers:
+                        additionalProperties:
+                          type: string
+                        description: Headers defines custom headers to be sent to
+                          the health check endpoint.
+                        type: object
+                      hostname:
+                        description: Hostname defines the value of hostname in the
+                          Host header of the health check request.
+                        type: string
+                      interval:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: |-
+                          Interval defines the frequency of the health check calls for healthy targets.
+                          Default: 30s
+                        x-kubernetes-int-or-string: true
+                      method:
+                        description: Method defines the healthcheck method.
+                        type: string
+                      mode:
+                        description: |-
+                          Mode defines the health check mode.
+                          If defined to grpc, will use the gRPC health check protocol to probe the server.
+                          Default: http
+                        type: string
+                      path:
+                        description: Path defines the server URL path for the health
+                          check endpoint.
+                        type: string
+                      port:
+                        description: Port defines the server URL port for the health
+                          check endpoint.
+                        type: integer
+                      scheme:
+                        description: Scheme replaces the server URL scheme for the
+                          health check endpoint.
+                        type: string
+                      status:
+                        description: Status defines the expected HTTP status code
+                          of the response to the health check request.
+                        type: integer
+                      timeout:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: |-
+                          Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
+                          Default: 5s
+                        x-kubernetes-int-or-string: true
+                      unhealthyInterval:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: |-
+                          UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
+                          When UnhealthyInterval is not defined, it defaults to the Interval value.
+                          Default: 30s
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  kind:
+                    description: Kind defines the kind of the Service.
+                    enum:
+                    - Service
+                    - IngressService
+                    type: string
+                  maxBodySize:
+                    description: |-
+                      MaxBodySize defines the maximum size allowed for the body of the request.
+                      If the body is larger, the request is not mirrored.
+                      Default value is -1, which means unlimited size.
+                    format: int64
+                    type: integer
+                  middlewares:
+                    description: Middlewares defines the list of references to Middleware
+                      resources to apply to the service.
+                    items:
+                      description: MiddlewareRef is a reference to a Middleware resource.
+                      properties:
+                        name:
+                          description: Name defines the name of the referenced Middleware
+                            resource.
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            Middleware resource.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  mirrorBody:
+                    description: |-
+                      MirrorBody defines whether the body of the request should be mirrored.
+                      Default value is true.
+                    type: boolean
+                  mirrors:
+                    description: Mirrors defines the list of mirrors where Ingress
+                      will duplicate the traffic.
+                    items:
+                      description: MirrorService holds the mirror configuration.
+                      properties:
+                        healthCheck:
+                          description: Healthcheck defines health checks for ExternalName
+                            services.
+                          properties:
+                            followRedirects:
+                              description: |-
+                                FollowRedirects defines whether redirects should be followed during the health check calls.
+                                Default: true
+                              type: boolean
+                            headers:
+                              additionalProperties:
+                                type: string
+                              description: Headers defines custom headers to be sent
+                                to the health check endpoint.
+                              type: object
+                            hostname:
+                              description: Hostname defines the value of hostname
+                                in the Host header of the health check request.
+                              type: string
+                            interval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Interval defines the frequency of the health check calls for healthy targets.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                            method:
+                              description: Method defines the healthcheck method.
+                              type: string
+                            mode:
+                              description: |-
+                                Mode defines the health check mode.
+                                If defined to grpc, will use the gRPC health check protocol to probe the server.
+                                Default: http
+                              type: string
+                            path:
+                              description: Path defines the server URL path for the
+                                health check endpoint.
+                              type: string
+                            port:
+                              description: Port defines the server URL port for the
+                                health check endpoint.
+                              type: integer
+                            scheme:
+                              description: Scheme replaces the server URL scheme for
+                                the health check endpoint.
+                              type: string
+                            status:
+                              description: Status defines the expected HTTP status
+                                code of the response to the health check request.
+                              type: integer
+                            timeout:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
+                                Default: 5s
+                              x-kubernetes-int-or-string: true
+                            unhealthyInterval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
+                                When UnhealthyInterval is not defined, it defaults to the Interval value.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                          type: object
+                        kind:
+                          description: Kind defines the kind of the Service.
+                          enum:
+                          - Service
+                          - IngressService
+                          type: string
+                        middlewares:
+                          description: Middlewares defines the list of references
+                            to Middleware resources to apply to the service.
+                          items:
+                            description: MiddlewareRef is a reference to a Middleware
+                              resource.
+                            properties:
+                              name:
+                                description: Name defines the name of the referenced
+                                  Middleware resource.
+                                type: string
+                              namespace:
+                                description: Namespace defines the namespace of the
+                                  referenced Middleware resource.
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        name:
+                          description: |-
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
+                            The differentiation between the two is specified in the Kind field.
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            Kubernetes Service or IngressService.
+                          type: string
+                        nativeLB:
+                          description: |-
+                            NativeLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
+                            The Kubernetes Service itself does load-balance to the pods.
+                            By default, NativeLB is false.
+                          type: boolean
+                        nodePortLB:
+                          description: |-
+                            NodePortLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
+                            It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
+                            By default, NodePortLB is false.
+                          type: boolean
+                        passHostHeader:
+                          description: |-
+                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
+                            By default, passHostHeader is true.
+                          type: boolean
+                        passiveHealthCheck:
+                          description: PassiveHealthCheck defines passive health checks
+                            for ExternalName services.
+                          properties:
+                            failureWindow:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: FailureWindow defines the time window during
+                                which the failed attempts must occur for the server
+                                to be marked as unhealthy. It also defines for how
+                                long the server will be considered unhealthy.
+                              x-kubernetes-int-or-string: true
+                            maxFailedAttempts:
+                              description: MaxFailedAttempts is the number of consecutive
+                                failed attempts allowed within the failure window
+                                before marking the server as unhealthy.
+                              type: integer
+                          type: object
+                        percent:
+                          description: |-
+                            Percent defines the part of the traffic to mirror.
+                            Supported values: 0 to 100.
+                          type: integer
+                        port:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            Port defines the port of a Kubernetes Service.
+                            This can be a reference to a named port.
+                          x-kubernetes-int-or-string: true
+                        responseForwarding:
+                          description: ResponseForwarding defines how Ingress forwards
+                            the response from the upstream Kubernetes Service to the
+                            client.
+                          properties:
+                            flushInterval:
+                              description: |-
+                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
+                                A negative value means to flush immediately after each write to the client.
+                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
+                                for such responses, writes are flushed to the client immediately.
+                                Default: 100ms
+                              type: string
+                          type: object
+                        scheme:
+                          description: |-
+                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
+                            It defaults to https when Kubernetes Service port is 443, http otherwise.
+                          type: string
+                        serversTransport:
+                          description: |-
+                            ServersTransport defines the name of ServersTransport resource to use.
+                            It allows to configure the transport between Ingress and your servers.
+                            Can only be used on a Kubernetes Service.
+                          type: string
+                        sticky:
+                          description: |-
+                            Sticky defines the sticky sessions configuration.
+                            More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                          properties:
+                            cookie:
+                              description: Cookie defines the sticky cookie configuration.
+                              properties:
+                                domain:
+                                  description: |-
+                                    Domain defines the host to which the cookie will be sent.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+                                  type: string
+                                httpOnly:
+                                  description: HTTPOnly defines whether the cookie
+                                    can be accessed by client-side APIs, such as JavaScript.
+                                  type: boolean
+                                maxAge:
+                                  description: |-
+                                    MaxAge defines the number of seconds until the cookie expires.
+                                    When set to a negative number, the cookie expires immediately.
+                                    When set to zero, the cookie never expires.
+                                  type: integer
+                                name:
+                                  description: Name defines the Cookie name.
+                                  type: string
+                                path:
+                                  description: |-
+                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
+                                    When not provided the cookie will be sent on every request to the domain.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
+                                  type: string
+                                sameSite:
+                                  description: |-
+                                    SameSite defines the same site policy.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+                                  enum:
+                                  - none
+                                  - lax
+                                  - strict
+                                  type: string
+                                secure:
+                                  description: Secure defines whether the cookie can
+                                    only be transmitted over an encrypted connection
+                                    (i.e. HTTPS).
+                                  type: boolean
+                              type: object
+                          type: object
+                        strategy:
+                          description: |-
+                            Strategy defines the load balancing strategy between the servers.
+                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
+                            RoundRobin value is deprecated and supported for backward compatibility.
+                          enum:
+                          - wrr
+                          - p2c
+                          - hrw
+                          - leasttime
+                          - RoundRobin
+                          type: string
+                        weight:
+                          description: |-
+                            Weight defines the weight and should only be specified when Name references a IngressService object
+                            (and to be precise, one that embeds a Weighted Round Robin).
+                          minimum: 0
+                          type: integer
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  name:
+                    description: |-
+                      Name defines the name of the referenced Kubernetes Service or IngressService.
+                      The differentiation between the two is specified in the Kind field.
+                    type: string
+                  namespace:
+                    description: Namespace defines the namespace of the referenced
+                      Kubernetes Service or IngressService.
+                    type: string
+                  nativeLB:
+                    description: |-
+                      NativeLB controls, when creating the load-balancer,
+                      whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
+                      The Kubernetes Service itself does load-balance to the pods.
+                      By default, NativeLB is false.
+                    type: boolean
+                  nodePortLB:
+                    description: |-
+                      NodePortLB controls, when creating the load-balancer,
+                      whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
+                      It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
+                      By default, NodePortLB is false.
+                    type: boolean
+                  passHostHeader:
+                    description: |-
+                      PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
+                      By default, passHostHeader is true.
+                    type: boolean
+                  passiveHealthCheck:
+                    description: PassiveHealthCheck defines passive health checks
+                      for ExternalName services.
+                    properties:
+                      failureWindow:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: FailureWindow defines the time window during
+                          which the failed attempts must occur for the server to be
+                          marked as unhealthy. It also defines for how long the server
+                          will be considered unhealthy.
+                        x-kubernetes-int-or-string: true
+                      maxFailedAttempts:
+                        description: MaxFailedAttempts is the number of consecutive
+                          failed attempts allowed within the failure window before
+                          marking the server as unhealthy.
+                        type: integer
+                    type: object
+                  port:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: |-
+                      Port defines the port of a Kubernetes Service.
+                      This can be a reference to a named port.
+                    x-kubernetes-int-or-string: true
+                  responseForwarding:
+                    description: ResponseForwarding defines how Ingress forwards the
+                      response from the upstream Kubernetes Service to the client.
+                    properties:
+                      flushInterval:
+                        description: |-
+                          FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
+                          A negative value means to flush immediately after each write to the client.
+                          This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
+                          for such responses, writes are flushed to the client immediately.
+                          Default: 100ms
+                        type: string
+                    type: object
+                  scheme:
+                    description: |-
+                      Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
+                      It defaults to https when Kubernetes Service port is 443, http otherwise.
+                    type: string
+                  serversTransport:
+                    description: |-
+                      ServersTransport defines the name of ServersTransport resource to use.
+                      It allows to configure the transport between Ingress and your servers.
+                      Can only be used on a Kubernetes Service.
+                    type: string
+                  sticky:
+                    description: |-
+                      Sticky defines the sticky sessions configuration.
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                    properties:
+                      cookie:
+                        description: Cookie defines the sticky cookie configuration.
+                        properties:
+                          domain:
+                            description: |-
+                              Domain defines the host to which the cookie will be sent.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+                            type: string
+                          httpOnly:
+                            description: HTTPOnly defines whether the cookie can be
+                              accessed by client-side APIs, such as JavaScript.
+                            type: boolean
+                          maxAge:
+                            description: |-
+                              MaxAge defines the number of seconds until the cookie expires.
+                              When set to a negative number, the cookie expires immediately.
+                              When set to zero, the cookie never expires.
+                            type: integer
+                          name:
+                            description: Name defines the Cookie name.
+                            type: string
+                          path:
+                            description: |-
+                              Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
+                              When not provided the cookie will be sent on every request to the domain.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
+                            type: string
+                          sameSite:
+                            description: |-
+                              SameSite defines the same site policy.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+                            enum:
+                            - none
+                            - lax
+                            - strict
+                            type: string
+                          secure:
+                            description: Secure defines whether the cookie can only
+                              be transmitted over an encrypted connection (i.e. HTTPS).
+                            type: boolean
+                        type: object
+                    type: object
+                  strategy:
+                    description: |-
+                      Strategy defines the load balancing strategy between the servers.
+                      Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
+                      RoundRobin value is deprecated and supported for backward compatibility.
+                    enum:
+                    - wrr
+                    - p2c
+                    - hrw
+                    - leasttime
+                    - RoundRobin
+                    type: string
+                  weight:
+                    description: |-
+                      Weight defines the weight and should only be specified when Name references a IngressService object
+                      (and to be precise, one that embeds a Weighted Round Robin).
+                    minimum: 0
+                    type: integer
+                required:
+                - name
+                type: object
+              weighted:
+                description: Weighted defines the Weighted Round Robin configuration.
+                properties:
+                  services:
+                    description: Services defines the list of Kubernetes Service and/or
+                      IngressService to load-balance, with weight.
+                    items:
+                      description: Service defines an upstream HTTP service to proxy
+                        traffic to.
+                      properties:
+                        healthCheck:
+                          description: Healthcheck defines health checks for ExternalName
+                            services.
+                          properties:
+                            followRedirects:
+                              description: |-
+                                FollowRedirects defines whether redirects should be followed during the health check calls.
+                                Default: true
+                              type: boolean
+                            headers:
+                              additionalProperties:
+                                type: string
+                              description: Headers defines custom headers to be sent
+                                to the health check endpoint.
+                              type: object
+                            hostname:
+                              description: Hostname defines the value of hostname
+                                in the Host header of the health check request.
+                              type: string
+                            interval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Interval defines the frequency of the health check calls for healthy targets.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                            method:
+                              description: Method defines the healthcheck method.
+                              type: string
+                            mode:
+                              description: |-
+                                Mode defines the health check mode.
+                                If defined to grpc, will use the gRPC health check protocol to probe the server.
+                                Default: http
+                              type: string
+                            path:
+                              description: Path defines the server URL path for the
+                                health check endpoint.
+                              type: string
+                            port:
+                              description: Port defines the server URL port for the
+                                health check endpoint.
+                              type: integer
+                            scheme:
+                              description: Scheme replaces the server URL scheme for
+                                the health check endpoint.
+                              type: string
+                            status:
+                              description: Status defines the expected HTTP status
+                                code of the response to the health check request.
+                              type: integer
+                            timeout:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
+                                Default: 5s
+                              x-kubernetes-int-or-string: true
+                            unhealthyInterval:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
+                                When UnhealthyInterval is not defined, it defaults to the Interval value.
+                                Default: 30s
+                              x-kubernetes-int-or-string: true
+                          type: object
+                        kind:
+                          description: Kind defines the kind of the Service.
+                          enum:
+                          - Service
+                          - IngressService
+                          type: string
+                        middlewares:
+                          description: Middlewares defines the list of references
+                            to Middleware resources to apply to the service.
+                          items:
+                            description: MiddlewareRef is a reference to a Middleware
+                              resource.
+                            properties:
+                              name:
+                                description: Name defines the name of the referenced
+                                  Middleware resource.
+                                type: string
+                              namespace:
+                                description: Namespace defines the namespace of the
+                                  referenced Middleware resource.
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        name:
+                          description: |-
+                            Name defines the name of the referenced Kubernetes Service or IngressService.
+                            The differentiation between the two is specified in the Kind field.
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            Kubernetes Service or IngressService.
+                          type: string
+                        nativeLB:
+                          description: |-
+                            NativeLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
+                            The Kubernetes Service itself does load-balance to the pods.
+                            By default, NativeLB is false.
+                          type: boolean
+                        nodePortLB:
+                          description: |-
+                            NodePortLB controls, when creating the load-balancer,
+                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
+                            It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
+                            By default, NodePortLB is false.
+                          type: boolean
+                        passHostHeader:
+                          description: |-
+                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
+                            By default, passHostHeader is true.
+                          type: boolean
+                        passiveHealthCheck:
+                          description: PassiveHealthCheck defines passive health checks
+                            for ExternalName services.
+                          properties:
+                            failureWindow:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: FailureWindow defines the time window during
+                                which the failed attempts must occur for the server
+                                to be marked as unhealthy. It also defines for how
+                                long the server will be considered unhealthy.
+                              x-kubernetes-int-or-string: true
+                            maxFailedAttempts:
+                              description: MaxFailedAttempts is the number of consecutive
+                                failed attempts allowed within the failure window
+                                before marking the server as unhealthy.
+                              type: integer
+                          type: object
+                        port:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: |-
+                            Port defines the port of a Kubernetes Service.
+                            This can be a reference to a named port.
+                          x-kubernetes-int-or-string: true
+                        responseForwarding:
+                          description: ResponseForwarding defines how Ingress forwards
+                            the response from the upstream Kubernetes Service to the
+                            client.
+                          properties:
+                            flushInterval:
+                              description: |-
+                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
+                                A negative value means to flush immediately after each write to the client.
+                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
+                                for such responses, writes are flushed to the client immediately.
+                                Default: 100ms
+                              type: string
+                          type: object
+                        scheme:
+                          description: |-
+                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
+                            It defaults to https when Kubernetes Service port is 443, http otherwise.
+                          type: string
+                        serversTransport:
+                          description: |-
+                            ServersTransport defines the name of ServersTransport resource to use.
+                            It allows to configure the transport between Ingress and your servers.
+                            Can only be used on a Kubernetes Service.
+                          type: string
+                        sticky:
+                          description: |-
+                            Sticky defines the sticky sessions configuration.
+                            More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                          properties:
+                            cookie:
+                              description: Cookie defines the sticky cookie configuration.
+                              properties:
+                                domain:
+                                  description: |-
+                                    Domain defines the host to which the cookie will be sent.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+                                  type: string
+                                httpOnly:
+                                  description: HTTPOnly defines whether the cookie
+                                    can be accessed by client-side APIs, such as JavaScript.
+                                  type: boolean
+                                maxAge:
+                                  description: |-
+                                    MaxAge defines the number of seconds until the cookie expires.
+                                    When set to a negative number, the cookie expires immediately.
+                                    When set to zero, the cookie never expires.
+                                  type: integer
+                                name:
+                                  description: Name defines the Cookie name.
+                                  type: string
+                                path:
+                                  description: |-
+                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
+                                    When not provided the cookie will be sent on every request to the domain.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
+                                  type: string
+                                sameSite:
+                                  description: |-
+                                    SameSite defines the same site policy.
+                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+                                  enum:
+                                  - none
+                                  - lax
+                                  - strict
+                                  type: string
+                                secure:
+                                  description: Secure defines whether the cookie can
+                                    only be transmitted over an encrypted connection
+                                    (i.e. HTTPS).
+                                  type: boolean
+                              type: object
+                          type: object
+                        strategy:
+                          description: |-
+                            Strategy defines the load balancing strategy between the servers.
+                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
+                            RoundRobin value is deprecated and supported for backward compatibility.
+                          enum:
+                          - wrr
+                          - p2c
+                          - hrw
+                          - leasttime
+                          - RoundRobin
+                          type: string
+                        weight:
+                          description: |-
+                            Weight defines the weight and should only be specified when Name references a IngressService object
+                            (and to be precise, one that embeds a Weighted Round Robin).
+                          minimum: 0
+                          type: integer
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  sticky:
+                    description: |-
+                      Sticky defines whether sticky sessions are enabled.
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/#stickiness-and-load-balancing
+                    properties:
+                      cookie:
+                        description: Cookie defines the sticky cookie configuration.
+                        properties:
+                          domain:
+                            description: |-
+                              Domain defines the host to which the cookie will be sent.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
+                            type: string
+                          httpOnly:
+                            description: HTTPOnly defines whether the cookie can be
+                              accessed by client-side APIs, such as JavaScript.
+                            type: boolean
+                          maxAge:
+                            description: |-
+                              MaxAge defines the number of seconds until the cookie expires.
+                              When set to a negative number, the cookie expires immediately.
+                              When set to zero, the cookie never expires.
+                            type: integer
+                          name:
+                            description: Name defines the Cookie name.
+                            type: string
+                          path:
+                            description: |-
+                              Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
+                              When not provided the cookie will be sent on every request to the domain.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
+                            type: string
+                          sameSite:
+                            description: |-
+                              SameSite defines the same site policy.
+                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+                            enum:
+                            - none
+                            - lax
+                            - strict
+                            type: string
+                          secure:
+                            description: Secure defines whether the cookie can only
+                              be transmitted over an encrypted connection (i.e. HTTPS).
+                            type: boolean
+                        type: object
+                    type: object
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: middlewares.hanzo.ai
 spec:
   group: hanzo.ai
@@ -882,8 +2007,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          Middleware is the CRD implementation of a Traefik Middleware.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/overview/
+          Middleware is the CRD implementation of a Ingress Middleware.
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/overview/
         properties:
           apiVersion:
             description: |-
@@ -909,7 +2034,7 @@ spec:
                 description: |-
                   AddPrefix holds the add prefix middleware configuration.
                   This middleware updates the path of a request before forwarding it.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/addprefix/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/addprefix/
                 properties:
                   prefix:
                     description: |-
@@ -924,12 +2049,12 @@ spec:
                 description: |-
                   BasicAuth holds the basic auth middleware configuration.
                   This middleware restricts access to your services to known users.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/basicauth/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/basicauth/
                 properties:
                   headerField:
                     description: |-
                       HeaderField defines a header field to store the authenticated user.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/basicauth/#headerfield
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/basicauth/#headerfield
                     type: string
                   realm:
                     description: |-
@@ -950,7 +2075,7 @@ spec:
                 description: |-
                   Buffering holds the buffering middleware configuration.
                   This middleware retries or limits the size of requests that can be forwarded to backends.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/buffering/#maxrequestbodybytes
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/buffering/#maxrequestbodybytes
                 properties:
                   maxRequestBodyBytes:
                     description: |-
@@ -982,14 +2107,14 @@ spec:
                     description: |-
                       RetryExpression defines the retry conditions.
                       It is a logical combination of functions with operators AND (&&) and OR (||).
-                      More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/buffering/#retryexpression
+                      More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/buffering/#retryexpression
                     type: string
                 type: object
               chain:
                 description: |-
                   Chain holds the configuration of the chain middleware.
                   This middleware enables to define reusable combinations of other pieces of middleware.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/chain/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/chain/
                 properties:
                   middlewares:
                     description: Middlewares is the list of MiddlewareRef which composes
@@ -1052,7 +2177,7 @@ spec:
                 description: |-
                   Compress holds the compress middleware configuration.
                   This middleware compresses responses before sending them to the client, using gzip, brotli, or zstd compression.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/compress/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/compress/
                 properties:
                   defaultEncoding:
                     description: DefaultEncoding specifies the default encoding if
@@ -1103,12 +2228,12 @@ spec:
                 description: |-
                   DigestAuth holds the digest auth middleware configuration.
                   This middleware restricts access to your services to known users.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/digestauth/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/digestauth/
                 properties:
                   headerField:
                     description: |-
                       HeaderField defines a header field to store the authenticated user.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/digestauth/#headerfield
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/digestauth/#headerfield
                     type: string
                   realm:
                     description: |-
@@ -1161,7 +2286,7 @@ spec:
                 description: |-
                   ErrorPage holds the custom error middleware configuration.
                   This middleware returns a custom page in lieu of the default, according to configured ranges of HTTP Status codes.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/errorpages/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/errorpages/
                 properties:
                   query:
                     description: |-
@@ -1173,7 +2298,7 @@ spec:
                   service:
                     description: |-
                       Service defines the reference to a Kubernetes Service that will serve the error page.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/errorpages/#service
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/errorpages/#service
                     properties:
                       healthCheck:
                         description: Healthcheck defines health checks for ExternalName
@@ -1232,7 +2357,7 @@ spec:
                             - type: integer
                             - type: string
                             description: |-
-                              Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
+                              Timeout defines the maximum duration Ingress will wait for a health check request before considering the server unhealthy.
                               Default: 5s
                             x-kubernetes-int-or-string: true
                           unhealthyInterval:
@@ -1290,7 +2415,7 @@ spec:
                         description: |-
                           NodePortLB controls, when creating the load-balancer,
                           whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                          It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
+                          It allows services to be reachable when Ingress runs externally from the Kubernetes cluster but within the same network of the nodes.
                           By default, NodePortLB is false.
                         type: boolean
                       passHostHeader:
@@ -1326,7 +2451,7 @@ spec:
                           This can be a reference to a named port.
                         x-kubernetes-int-or-string: true
                       responseForwarding:
-                        description: ResponseForwarding defines how Traefik forwards
+                        description: ResponseForwarding defines how Ingress forwards
                           the response from the upstream Kubernetes Service to the
                           client.
                         properties:
@@ -1347,13 +2472,13 @@ spec:
                       serversTransport:
                         description: |-
                           ServersTransport defines the name of ServersTransport resource to use.
-                          It allows to configure the transport between Traefik and your servers.
+                          It allows to configure the transport between Ingress and your servers.
                           Can only be used on a Kubernetes Service.
                         type: string
                       sticky:
                         description: |-
                           Sticky defines the sticky sessions configuration.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
+                          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
                         properties:
                           cookie:
                             description: Cookie defines the sticky cookie configuration.
@@ -1442,7 +2567,7 @@ spec:
                 description: |-
                   ForwardAuth holds the forward auth middleware configuration.
                   This middleware delegates the request authentication to a Service.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/forwardauth/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/forwardauth/
                 properties:
                   addAuthCookiesToResponse:
                     description: AddAuthCookiesToResponse defines the list of cookies
@@ -1470,7 +2595,7 @@ spec:
                   authResponseHeadersRegex:
                     description: |-
                       AuthResponseHeadersRegex defines the regex to match headers to copy from the authentication server response and set on forwarded request, after stripping all headers that match the regex.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/forwardauth/#authresponseheadersregex
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/forwardauth/#authresponseheadersregex
                     type: string
                   authSigninURL:
                     description: AuthSigninURL specifies the URL to redirect to when
@@ -1483,7 +2608,7 @@ spec:
                   headerField:
                     description: |-
                       HeaderField defines a header field to store the authenticated user.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/forwardauth/#headerfield
+                      More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/forwardauth/#headerfield
                     type: string
                   maxBodySize:
                     description: MaxBodySize defines the maximum body size in bytes
@@ -1533,6 +2658,81 @@ spec:
                       forward) all X-Forwarded-* headers.'
                     type: boolean
                 type: object
+              geoBlock:
+                description: |-
+                  GeoBlock holds the GeoIP-based country block + header-injection middleware
+                  configuration. It resolves the request's client IP to an ISO 3166-1
+                  alpha-2 country code via an embedded MaxMind GeoLite2-Country database,
+                  injects `X-Geo-Country` (and `X-Geo-Country-Reason` on block) upstream,
+                  and optionally short-circuits the request with 451 Unavailable For Legal
+                  Reasons when the resolved country matches BlockCountries.
+
+                  One middleware, one place — used by every Hanzo / Lux / Zoo app
+                  behind the ingress. The default block list is the OFAC comprehensive
+                  sanctions set (CU, IR, KP, SY). Per-tenant overrides set BlockCountries
+                  explicitly when stricter or looser policy is needed.
+                properties:
+                  allowCountries:
+                    description: |-
+                      AllowCountries, if non-empty, switches to allowlist mode: only the
+                      listed countries are permitted, everything else is blocked.
+                      BlockCountries is ignored when AllowCountries is set.
+                    items:
+                      type: string
+                    type: array
+                  blockCountries:
+                    description: |-
+                      BlockCountries is the explicit deny list (ISO 3166-1 alpha-2 codes).
+                      Requests resolving to any listed country are short-circuited with
+                      RejectStatusCode. Empty disables the block (header-only mode).
+                      Canonical default is the OFAC comprehensive sanctions set: CU, IR, KP, SY.
+                    items:
+                      type: string
+                    type: array
+                  databasePath:
+                    description: |-
+                      DatabasePath is the on-disk path to a MaxMind GeoLite2-Country.mmdb
+                      (or GeoLite2-City.mmdb). When empty, the ingress falls back to the
+                      embedded copy shipped with the binary so the middleware works
+                      out-of-the-box without filesystem setup.
+                    type: string
+                  headerName:
+                    description: |-
+                      HeaderName is the upstream header injected with the resolved country
+                      code (ISO 3166-1 alpha-2, uppercase). Empty disables injection.
+                      Default: "X-Geo-Country".
+                    type: string
+                  ipStrategy:
+                    description: |-
+                      IPStrategy defines how the client IP is extracted from the request
+                      (X-Forwarded-For, X-Real-IP, depth, excludedIPs, etc.) — same shape
+                      as IPAllowList so we honour the same proxy-trust posture.
+                    properties:
+                      depth:
+                        description: Depth tells Ingress to use the X-Forwarded-For
+                          header and take the IP located at the depth position (starting
+                          from the right).
+                        minimum: 0
+                        type: integer
+                      excludedIPs:
+                        description: ExcludedIPs configures Ingress to scan the X-Forwarded-For
+                          header and select the first IP not in the list.
+                        items:
+                          type: string
+                        type: array
+                      ipv6Subnet:
+                        description: IPv6Subnet configures Ingress to consider all
+                          IPv6 addresses from the defined subnet as originating from
+                          the same IP. Applies to RemoteAddrStrategy and DepthStrategy.
+                        type: integer
+                    type: object
+                  rejectStatusCode:
+                    description: |-
+                      RejectStatusCode is the HTTP status returned when a request is
+                      blocked. Default 451 (Unavailable For Legal Reasons — RFC 7725),
+                      which is the correct semantic for sanctions-based blocking.
+                    type: integer
+                type: object
               grpcWeb:
                 description: |-
                   GrpcWeb holds the gRPC web middleware configuration.
@@ -1550,7 +2750,7 @@ spec:
                 description: |-
                   Headers holds the headers middleware configuration.
                   This middleware manages the requests and responses headers.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/headers/#customrequestheaders
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/headers/#customrequestheaders
                 properties:
                   accessControlAllowCredentials:
                     description: AccessControlAllowCredentials defines whether the
@@ -1722,7 +2922,7 @@ spec:
                 description: |-
                   InFlightReq holds the in-flight request middleware configuration.
                   This middleware limits the number of requests being processed and served concurrently.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/inflightreq/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/inflightreq/
                 properties:
                   amount:
                     description: |-
@@ -1736,28 +2936,28 @@ spec:
                       SourceCriterion defines what criterion is used to group requests as originating from a common source.
                       If several strategies are defined at the same time, an error will be raised.
                       If none are set, the default is to use the requestHost.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/inflightreq/#sourcecriterion
+                      More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/inflightreq/#sourcecriterion
                     properties:
                       ipStrategy:
                         description: |-
-                          IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/ipallowlist/#ipstrategy
+                          IPStrategy holds the IP strategy configuration used by Ingress to determine the client IP.
+                          More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/ipallowlist/#ipstrategy
                         properties:
                           depth:
-                            description: Depth tells Traefik to use the X-Forwarded-For
+                            description: Depth tells Ingress to use the X-Forwarded-For
                               header and take the IP located at the depth position
                               (starting from the right).
                             minimum: 0
                             type: integer
                           excludedIPs:
-                            description: ExcludedIPs configures Traefik to scan the
+                            description: ExcludedIPs configures Ingress to scan the
                               X-Forwarded-For header and select the first IP not in
                               the list.
                             items:
                               type: string
                             type: array
                           ipv6Subnet:
-                            description: IPv6Subnet configures Traefik to consider
+                            description: IPv6Subnet configures Ingress to consider
                               all IPv6 addresses from the defined subnet as originating
                               from the same IP. Applies to RemoteAddrStrategy and
                               DepthStrategy.
@@ -1777,27 +2977,27 @@ spec:
                 description: |-
                   IPAllowList holds the IP allowlist middleware configuration.
                   This middleware limits allowed requests based on the client IP.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/ipallowlist/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/ipallowlist/
                 properties:
                   ipStrategy:
                     description: |-
-                      IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/ipallowlist/#ipstrategy
+                      IPStrategy holds the IP strategy configuration used by Ingress to determine the client IP.
+                      More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/ipallowlist/#ipstrategy
                     properties:
                       depth:
-                        description: Depth tells Traefik to use the X-Forwarded-For
+                        description: Depth tells Ingress to use the X-Forwarded-For
                           header and take the IP located at the depth position (starting
                           from the right).
                         minimum: 0
                         type: integer
                       excludedIPs:
-                        description: ExcludedIPs configures Traefik to scan the X-Forwarded-For
+                        description: ExcludedIPs configures Ingress to scan the X-Forwarded-For
                           header and select the first IP not in the list.
                         items:
                           type: string
                         type: array
                       ipv6Subnet:
-                        description: IPv6Subnet configures Traefik to consider all
+                        description: IPv6Subnet configures Ingress to consider all
                           IPv6 addresses from the defined subnet as originating from
                           the same IP. Applies to RemoteAddrStrategy and DepthStrategy.
                         type: integer
@@ -1819,23 +3019,23 @@ spec:
                 properties:
                   ipStrategy:
                     description: |-
-                      IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/ipallowlist/#ipstrategy
+                      IPStrategy holds the IP strategy configuration used by Ingress to determine the client IP.
+                      More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/ipallowlist/#ipstrategy
                     properties:
                       depth:
-                        description: Depth tells Traefik to use the X-Forwarded-For
+                        description: Depth tells Ingress to use the X-Forwarded-For
                           header and take the IP located at the depth position (starting
                           from the right).
                         minimum: 0
                         type: integer
                       excludedIPs:
-                        description: ExcludedIPs configures Traefik to scan the X-Forwarded-For
+                        description: ExcludedIPs configures Ingress to scan the X-Forwarded-For
                           header and select the first IP not in the list.
                         items:
                           type: string
                         type: array
                       ipv6Subnet:
-                        description: IPv6Subnet configures Traefik to consider all
+                        description: IPv6Subnet configures Ingress to consider all
                           IPv6 addresses from the defined subnet as originating from
                           the same IP. Applies to RemoteAddrStrategy and DepthStrategy.
                         type: integer
@@ -1851,7 +3051,7 @@ spec:
                 description: |-
                   PassTLSClientCert holds the pass TLS client cert middleware configuration.
                   This middleware adds the selected data from the passed client TLS certificate to a header.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/passtlsclientcert/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/passtlsclientcert/
                 properties:
                   info:
                     description: Info selects the specific client certificate details
@@ -1954,13 +3154,13 @@ spec:
                   x-kubernetes-preserve-unknown-fields: true
                 description: |-
                   Plugin defines the middleware plugin configuration.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/overview/#community-middlewares
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/overview/#community-middlewares
                 type: object
               rateLimit:
                 description: |-
                   RateLimit holds the rate limit configuration.
                   This middleware ensures that services will receive a fair amount of requests, and allows one to define what fair is.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/ratelimit/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/ratelimit/
                 properties:
                   average:
                     description: |-
@@ -2078,24 +3278,24 @@ spec:
                     properties:
                       ipStrategy:
                         description: |-
-                          IPStrategy holds the IP strategy configuration used by Traefik to determine the client IP.
-                          More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/ipallowlist/#ipstrategy
+                          IPStrategy holds the IP strategy configuration used by Ingress to determine the client IP.
+                          More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/ipallowlist/#ipstrategy
                         properties:
                           depth:
-                            description: Depth tells Traefik to use the X-Forwarded-For
+                            description: Depth tells Ingress to use the X-Forwarded-For
                               header and take the IP located at the depth position
                               (starting from the right).
                             minimum: 0
                             type: integer
                           excludedIPs:
-                            description: ExcludedIPs configures Traefik to scan the
+                            description: ExcludedIPs configures Ingress to scan the
                               X-Forwarded-For header and select the first IP not in
                               the list.
                             items:
                               type: string
                             type: array
                           ipv6Subnet:
-                            description: IPv6Subnet configures Traefik to consider
+                            description: IPv6Subnet configures Ingress to consider
                               all IPv6 addresses from the defined subnet as originating
                               from the same IP. Applies to RemoteAddrStrategy and
                               DepthStrategy.
@@ -2115,7 +3315,7 @@ spec:
                 description: |-
                   RedirectRegex holds the redirect regex middleware configuration.
                   This middleware redirects a request using regex matching and replacement.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/redirectregex/#regex
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/redirectregex/#regex
                 properties:
                   permanent:
                     description: Permanent defines whether the redirection is permanent
@@ -2134,7 +3334,7 @@ spec:
                 description: |-
                   RedirectScheme holds the redirect scheme middleware configuration.
                   This middleware redirects requests from a scheme/port to another.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/redirectscheme/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/redirectscheme/
                 properties:
                   permanent:
                     description: |-
@@ -2152,7 +3352,7 @@ spec:
                 description: |-
                   ReplacePath holds the replace path middleware configuration.
                   This middleware replaces the path of the request URL and store the original path in an X-Replaced-Path header.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/replacepath/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/replacepath/
                 properties:
                   path:
                     description: Path defines the path to use as replacement in the
@@ -2163,7 +3363,7 @@ spec:
                 description: |-
                   ReplacePathRegex holds the replace path regex middleware configuration.
                   This middleware replaces the path of a URL using regex matching and replacement.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/replacepathregex/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/replacepathregex/
                 properties:
                   regex:
                     description: Regex defines the regular expression used to match
@@ -2179,7 +3379,7 @@ spec:
                   Retry holds the retry middleware configuration.
                   This middleware reissues requests a given number of times to a backend server if that server does not reply.
                   As soon as the server answers, the middleware stops retrying, regardless of the response status.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/middlewares/retry/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/middlewares/retry/
                 properties:
                   attempts:
                     description: Attempts defines how many times the request should
@@ -2278,7 +3478,7 @@ spec:
                 description: |-
                   StripPrefix holds the strip prefix middleware configuration.
                   This middleware removes the specified prefixes from the URL path.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/stripprefix/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/stripprefix/
                 properties:
                   forceSlash:
                     description: |-
@@ -2297,11 +3497,38 @@ spec:
                 description: |-
                   StripPrefixRegex holds the strip prefix regex middleware configuration.
                   This middleware removes the matching prefixes from the URL path.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/middlewares/http/stripprefixregex/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/middlewares/http/stripprefixregex/
                 properties:
                   regex:
                     description: Regex defines the regular expression to match the
                       path prefix from the request URL.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              waf:
+                description: |-
+                  WAF holds the web application firewall middleware configuration.
+                  The engine is OWASP Coraza and the rule language is ModSecurity SecLang.
+                  Rules are applied in the order below, so a later one refines an earlier.
+                properties:
+                  coreRuleSet:
+                    description: |-
+                      CoreRuleSet loads the embedded OWASP Core Rule Set v4 together with the
+                      recommended engine configuration and the Core Rule Set defaults it reads.
+                    type: boolean
+                  detectionOnly:
+                    description: |-
+                      DetectionOnly logs what each rule matched and refuses nothing, which is
+                      how a ruleset is measured against live traffic before it may refuse.
+                    type: boolean
+                  directives:
+                    description: Directives is SecLang written inline, applied after
+                      every file.
+                    type: string
+                  directivesFiles:
+                    description: DirectivesFiles are SecLang files, loaded in the
+                      order given.
                     items:
                       type: string
                     type: array
@@ -2333,8 +3560,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          MiddlewareTCP is the CRD implementation of a Traefik TCP middleware.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/middlewares/overview/
+          MiddlewareTCP is the CRD implementation of a Ingress TCP middleware.
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/middlewares/overview/
         properties:
           apiVersion:
             description: |-
@@ -2371,7 +3598,7 @@ spec:
                 description: |-
                   IPAllowList defines the IPAllowList middleware configuration.
                   This middleware accepts/refuses connections based on the client IP.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/middlewares/ipallowlist/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/middlewares/ipallowlist/
                 properties:
                   sourceRange:
                     description: SourceRange defines the allowed IPs (or ranges of
@@ -2384,7 +3611,7 @@ spec:
                 description: |-
                   IPWhiteList defines the IPWhiteList middleware configuration.
                   This middleware accepts/refuses connections based on the client IP.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/middlewares/ipwhitelist/
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/middlewares/ipwhitelist/
 
                   Deprecated: please use IPAllowList instead.
                 properties:
@@ -2425,7 +3652,7 @@ spec:
           ServersTransport is the CRD implementation of a ServersTransport.
           If no serversTransport is specified, the default@internal will be used.
           The default@internal serversTransport is created from the static configuration.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/serverstransport/
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/load-balancing/serverstransport/
         properties:
           apiVersion:
             description: |-
@@ -2609,7 +3836,7 @@ spec:
           ServersTransportTCP is the CRD implementation of a TCPServersTransport.
           If no tcpServersTransport is specified, a default one named default@internal will be used.
           The default@internal tcpServersTransport can be configured in the static configuration.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/tcp/serverstransport/
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/tcp/serverstransport/
         properties:
           apiVersion:
             description: |-
@@ -2763,8 +3990,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          TLSOption is the CRD implementation of a Traefik TLS Option, allowing to configure some parameters of the TLS connection.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#tls-options
+          TLSOption is the CRD implementation of a Ingress TLS Option, allowing to configure some parameters of the TLS connection.
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#tls-options
         properties:
           apiVersion:
             description: |-
@@ -2789,14 +4016,14 @@ spec:
               alpnProtocols:
                 description: |-
                   ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#alpn-protocols
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#alpn-protocols
                 items:
                   type: string
                 type: array
               cipherSuites:
                 description: |-
                   CipherSuites defines the list of supported cipher suites for TLS versions up to TLS 1.2.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#cipher-suites
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#cipher-suites
                 items:
                   type: string
                 type: array
@@ -2824,7 +4051,7 @@ spec:
               curvePreferences:
                 description: |-
                   CurvePreferences defines the preferred elliptic curves.
-                  More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#curve-preferences
+                  More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#curve-preferences
                 items:
                   type: string
                 type: array
@@ -2834,13 +4061,13 @@ spec:
                 type: boolean
               maxVersion:
                 description: |-
-                  MaxVersion defines the maximum TLS version that Traefik will accept.
+                  MaxVersion defines the maximum TLS version that Ingress will accept.
                   Possible values: VersionTLS10, VersionTLS11, VersionTLS12, VersionTLS13.
                   Default: None.
                 type: string
               minVersion:
                 description: |-
-                  MinVersion defines the minimum TLS version that Traefik will accept.
+                  MinVersion defines the minimum TLS version that Ingress will accept.
                   Possible values: VersionTLS10, VersionTLS11, VersionTLS12, VersionTLS13.
                   Default: VersionTLS10.
                 type: string
@@ -2852,7 +4079,7 @@ spec:
                   Deprecated: https://github.com/golang/go/issues/45430
                 type: boolean
               sniStrict:
-                description: SniStrict defines whether Traefik allows connections
+                description: SniStrict defines whether Ingress allows connections
                   from clients connections that do not specify a server_name extension.
                 type: boolean
             type: object
@@ -2882,10 +4109,10 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          TLSStore is the CRD implementation of a Traefik TLS Store.
+          TLSStore is the CRD implementation of a Ingress TLS Store.
           For the time being, only the TLSStore named default is supported.
           This means that you cannot have two stores that are named default in different Kubernetes namespaces.
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#certificates-stores
+          More info: https://hanzo.ai/docs/ingress/v3.6/reference/routing-configuration/http/tls/tls-certificates/#certificates-stores#certificates-stores
         properties:
           apiVersion:
             description: |-
@@ -2951,1131 +4178,6 @@ spec:
                     description: Resolver is the name of the resolver that will be
                       used to issue the DefaultCertificate.
                     type: string
-                type: object
-            type: object
-        required:
-        - metadata
-        - spec
-        type: object
-    served: true
-    storage: true
----
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
-  name: ingressservices.hanzo.ai
-spec:
-  group: hanzo.ai
-  names:
-    kind: IngressService
-    listKind: IngressServiceList
-    plural: ingressservices
-    singular: ingressservice
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: |-
-          IngressService is the CRD implementation of a Traefik Service.
-          IngressService object allows to:
-          - Apply weight to Services on load-balancing
-          - Mirror traffic on services
-          More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: IngressServiceSpec defines the desired state of a IngressService.
-            properties:
-              highestRandomWeight:
-                description: HighestRandomWeight defines the highest random weight
-                  service configuration.
-                properties:
-                  services:
-                    description: Services defines the list of Kubernetes Service and/or
-                      IngressService to load-balance, with weight.
-                    items:
-                      description: Service defines an upstream HTTP service to proxy
-                        traffic to.
-                      properties:
-                        healthCheck:
-                          description: Healthcheck defines health checks for ExternalName
-                            services.
-                          properties:
-                            followRedirects:
-                              description: |-
-                                FollowRedirects defines whether redirects should be followed during the health check calls.
-                                Default: true
-                              type: boolean
-                            headers:
-                              additionalProperties:
-                                type: string
-                              description: Headers defines custom headers to be sent
-                                to the health check endpoint.
-                              type: object
-                            hostname:
-                              description: Hostname defines the value of hostname
-                                in the Host header of the health check request.
-                              type: string
-                            interval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Interval defines the frequency of the health check calls for healthy targets.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                            method:
-                              description: Method defines the healthcheck method.
-                              type: string
-                            mode:
-                              description: |-
-                                Mode defines the health check mode.
-                                If defined to grpc, will use the gRPC health check protocol to probe the server.
-                                Default: http
-                              type: string
-                            path:
-                              description: Path defines the server URL path for the
-                                health check endpoint.
-                              type: string
-                            port:
-                              description: Port defines the server URL port for the
-                                health check endpoint.
-                              type: integer
-                            scheme:
-                              description: Scheme replaces the server URL scheme for
-                                the health check endpoint.
-                              type: string
-                            status:
-                              description: Status defines the expected HTTP status
-                                code of the response to the health check request.
-                              type: integer
-                            timeout:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
-                                Default: 5s
-                              x-kubernetes-int-or-string: true
-                            unhealthyInterval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
-                                When UnhealthyInterval is not defined, it defaults to the Interval value.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                          type: object
-                        kind:
-                          description: Kind defines the kind of the Service.
-                          enum:
-                          - Service
-                          - IngressService
-                          type: string
-                        middlewares:
-                          description: Middlewares defines the list of references
-                            to Middleware resources to apply to the service.
-                          items:
-                            description: MiddlewareRef is a reference to a Middleware
-                              resource.
-                            properties:
-                              name:
-                                description: Name defines the name of the referenced
-                                  Middleware resource.
-                                type: string
-                              namespace:
-                                description: Namespace defines the namespace of the
-                                  referenced Middleware resource.
-                                type: string
-                            required:
-                            - name
-                            type: object
-                          type: array
-                        name:
-                          description: |-
-                            Name defines the name of the referenced Kubernetes Service or IngressService.
-                            The differentiation between the two is specified in the Kind field.
-                          type: string
-                        namespace:
-                          description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or IngressService.
-                          type: string
-                        nativeLB:
-                          description: |-
-                            NativeLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
-                            The Kubernetes Service itself does load-balance to the pods.
-                            By default, NativeLB is false.
-                          type: boolean
-                        nodePortLB:
-                          description: |-
-                            NodePortLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                            It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
-                            By default, NodePortLB is false.
-                          type: boolean
-                        passHostHeader:
-                          description: |-
-                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
-                            By default, passHostHeader is true.
-                          type: boolean
-                        passiveHealthCheck:
-                          description: PassiveHealthCheck defines passive health checks
-                            for ExternalName services.
-                          properties:
-                            failureWindow:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: FailureWindow defines the time window during
-                                which the failed attempts must occur for the server
-                                to be marked as unhealthy. It also defines for how
-                                long the server will be considered unhealthy.
-                              x-kubernetes-int-or-string: true
-                            maxFailedAttempts:
-                              description: MaxFailedAttempts is the number of consecutive
-                                failed attempts allowed within the failure window
-                                before marking the server as unhealthy.
-                              type: integer
-                          type: object
-                        port:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          description: |-
-                            Port defines the port of a Kubernetes Service.
-                            This can be a reference to a named port.
-                          x-kubernetes-int-or-string: true
-                        responseForwarding:
-                          description: ResponseForwarding defines how Traefik forwards
-                            the response from the upstream Kubernetes Service to the
-                            client.
-                          properties:
-                            flushInterval:
-                              description: |-
-                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
-                                A negative value means to flush immediately after each write to the client.
-                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
-                                for such responses, writes are flushed to the client immediately.
-                                Default: 100ms
-                              type: string
-                          type: object
-                        scheme:
-                          description: |-
-                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
-                            It defaults to https when Kubernetes Service port is 443, http otherwise.
-                          type: string
-                        serversTransport:
-                          description: |-
-                            ServersTransport defines the name of ServersTransport resource to use.
-                            It allows to configure the transport between Traefik and your servers.
-                            Can only be used on a Kubernetes Service.
-                          type: string
-                        sticky:
-                          description: |-
-                            Sticky defines the sticky sessions configuration.
-                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
-                          properties:
-                            cookie:
-                              description: Cookie defines the sticky cookie configuration.
-                              properties:
-                                domain:
-                                  description: |-
-                                    Domain defines the host to which the cookie will be sent.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
-                                  type: string
-                                httpOnly:
-                                  description: HTTPOnly defines whether the cookie
-                                    can be accessed by client-side APIs, such as JavaScript.
-                                  type: boolean
-                                maxAge:
-                                  description: |-
-                                    MaxAge defines the number of seconds until the cookie expires.
-                                    When set to a negative number, the cookie expires immediately.
-                                    When set to zero, the cookie never expires.
-                                  type: integer
-                                name:
-                                  description: Name defines the Cookie name.
-                                  type: string
-                                path:
-                                  description: |-
-                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
-                                    When not provided the cookie will be sent on every request to the domain.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
-                                  type: string
-                                sameSite:
-                                  description: |-
-                                    SameSite defines the same site policy.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-                                  enum:
-                                  - none
-                                  - lax
-                                  - strict
-                                  type: string
-                                secure:
-                                  description: Secure defines whether the cookie can
-                                    only be transmitted over an encrypted connection
-                                    (i.e. HTTPS).
-                                  type: boolean
-                              type: object
-                          type: object
-                        strategy:
-                          description: |-
-                            Strategy defines the load balancing strategy between the servers.
-                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
-                            RoundRobin value is deprecated and supported for backward compatibility.
-                          enum:
-                          - wrr
-                          - p2c
-                          - hrw
-                          - leasttime
-                          - RoundRobin
-                          type: string
-                        weight:
-                          description: |-
-                            Weight defines the weight and should only be specified when Name references a IngressService object
-                            (and to be precise, one that embeds a Weighted Round Robin).
-                          minimum: 0
-                          type: integer
-                      required:
-                      - name
-                      type: object
-                    type: array
-                type: object
-              mirroring:
-                description: Mirroring defines the Mirroring service configuration.
-                properties:
-                  healthCheck:
-                    description: Healthcheck defines health checks for ExternalName
-                      services.
-                    properties:
-                      followRedirects:
-                        description: |-
-                          FollowRedirects defines whether redirects should be followed during the health check calls.
-                          Default: true
-                        type: boolean
-                      headers:
-                        additionalProperties:
-                          type: string
-                        description: Headers defines custom headers to be sent to
-                          the health check endpoint.
-                        type: object
-                      hostname:
-                        description: Hostname defines the value of hostname in the
-                          Host header of the health check request.
-                        type: string
-                      interval:
-                        anyOf:
-                        - type: integer
-                        - type: string
-                        description: |-
-                          Interval defines the frequency of the health check calls for healthy targets.
-                          Default: 30s
-                        x-kubernetes-int-or-string: true
-                      method:
-                        description: Method defines the healthcheck method.
-                        type: string
-                      mode:
-                        description: |-
-                          Mode defines the health check mode.
-                          If defined to grpc, will use the gRPC health check protocol to probe the server.
-                          Default: http
-                        type: string
-                      path:
-                        description: Path defines the server URL path for the health
-                          check endpoint.
-                        type: string
-                      port:
-                        description: Port defines the server URL port for the health
-                          check endpoint.
-                        type: integer
-                      scheme:
-                        description: Scheme replaces the server URL scheme for the
-                          health check endpoint.
-                        type: string
-                      status:
-                        description: Status defines the expected HTTP status code
-                          of the response to the health check request.
-                        type: integer
-                      timeout:
-                        anyOf:
-                        - type: integer
-                        - type: string
-                        description: |-
-                          Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
-                          Default: 5s
-                        x-kubernetes-int-or-string: true
-                      unhealthyInterval:
-                        anyOf:
-                        - type: integer
-                        - type: string
-                        description: |-
-                          UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
-                          When UnhealthyInterval is not defined, it defaults to the Interval value.
-                          Default: 30s
-                        x-kubernetes-int-or-string: true
-                    type: object
-                  kind:
-                    description: Kind defines the kind of the Service.
-                    enum:
-                    - Service
-                    - IngressService
-                    type: string
-                  maxBodySize:
-                    description: |-
-                      MaxBodySize defines the maximum size allowed for the body of the request.
-                      If the body is larger, the request is not mirrored.
-                      Default value is -1, which means unlimited size.
-                    format: int64
-                    type: integer
-                  middlewares:
-                    description: Middlewares defines the list of references to Middleware
-                      resources to apply to the service.
-                    items:
-                      description: MiddlewareRef is a reference to a Middleware resource.
-                      properties:
-                        name:
-                          description: Name defines the name of the referenced Middleware
-                            resource.
-                          type: string
-                        namespace:
-                          description: Namespace defines the namespace of the referenced
-                            Middleware resource.
-                          type: string
-                      required:
-                      - name
-                      type: object
-                    type: array
-                  mirrorBody:
-                    description: |-
-                      MirrorBody defines whether the body of the request should be mirrored.
-                      Default value is true.
-                    type: boolean
-                  mirrors:
-                    description: Mirrors defines the list of mirrors where Traefik
-                      will duplicate the traffic.
-                    items:
-                      description: MirrorService holds the mirror configuration.
-                      properties:
-                        healthCheck:
-                          description: Healthcheck defines health checks for ExternalName
-                            services.
-                          properties:
-                            followRedirects:
-                              description: |-
-                                FollowRedirects defines whether redirects should be followed during the health check calls.
-                                Default: true
-                              type: boolean
-                            headers:
-                              additionalProperties:
-                                type: string
-                              description: Headers defines custom headers to be sent
-                                to the health check endpoint.
-                              type: object
-                            hostname:
-                              description: Hostname defines the value of hostname
-                                in the Host header of the health check request.
-                              type: string
-                            interval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Interval defines the frequency of the health check calls for healthy targets.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                            method:
-                              description: Method defines the healthcheck method.
-                              type: string
-                            mode:
-                              description: |-
-                                Mode defines the health check mode.
-                                If defined to grpc, will use the gRPC health check protocol to probe the server.
-                                Default: http
-                              type: string
-                            path:
-                              description: Path defines the server URL path for the
-                                health check endpoint.
-                              type: string
-                            port:
-                              description: Port defines the server URL port for the
-                                health check endpoint.
-                              type: integer
-                            scheme:
-                              description: Scheme replaces the server URL scheme for
-                                the health check endpoint.
-                              type: string
-                            status:
-                              description: Status defines the expected HTTP status
-                                code of the response to the health check request.
-                              type: integer
-                            timeout:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
-                                Default: 5s
-                              x-kubernetes-int-or-string: true
-                            unhealthyInterval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
-                                When UnhealthyInterval is not defined, it defaults to the Interval value.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                          type: object
-                        kind:
-                          description: Kind defines the kind of the Service.
-                          enum:
-                          - Service
-                          - IngressService
-                          type: string
-                        middlewares:
-                          description: Middlewares defines the list of references
-                            to Middleware resources to apply to the service.
-                          items:
-                            description: MiddlewareRef is a reference to a Middleware
-                              resource.
-                            properties:
-                              name:
-                                description: Name defines the name of the referenced
-                                  Middleware resource.
-                                type: string
-                              namespace:
-                                description: Namespace defines the namespace of the
-                                  referenced Middleware resource.
-                                type: string
-                            required:
-                            - name
-                            type: object
-                          type: array
-                        name:
-                          description: |-
-                            Name defines the name of the referenced Kubernetes Service or IngressService.
-                            The differentiation between the two is specified in the Kind field.
-                          type: string
-                        namespace:
-                          description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or IngressService.
-                          type: string
-                        nativeLB:
-                          description: |-
-                            NativeLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
-                            The Kubernetes Service itself does load-balance to the pods.
-                            By default, NativeLB is false.
-                          type: boolean
-                        nodePortLB:
-                          description: |-
-                            NodePortLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                            It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
-                            By default, NodePortLB is false.
-                          type: boolean
-                        passHostHeader:
-                          description: |-
-                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
-                            By default, passHostHeader is true.
-                          type: boolean
-                        passiveHealthCheck:
-                          description: PassiveHealthCheck defines passive health checks
-                            for ExternalName services.
-                          properties:
-                            failureWindow:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: FailureWindow defines the time window during
-                                which the failed attempts must occur for the server
-                                to be marked as unhealthy. It also defines for how
-                                long the server will be considered unhealthy.
-                              x-kubernetes-int-or-string: true
-                            maxFailedAttempts:
-                              description: MaxFailedAttempts is the number of consecutive
-                                failed attempts allowed within the failure window
-                                before marking the server as unhealthy.
-                              type: integer
-                          type: object
-                        percent:
-                          description: |-
-                            Percent defines the part of the traffic to mirror.
-                            Supported values: 0 to 100.
-                          type: integer
-                        port:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          description: |-
-                            Port defines the port of a Kubernetes Service.
-                            This can be a reference to a named port.
-                          x-kubernetes-int-or-string: true
-                        responseForwarding:
-                          description: ResponseForwarding defines how Traefik forwards
-                            the response from the upstream Kubernetes Service to the
-                            client.
-                          properties:
-                            flushInterval:
-                              description: |-
-                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
-                                A negative value means to flush immediately after each write to the client.
-                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
-                                for such responses, writes are flushed to the client immediately.
-                                Default: 100ms
-                              type: string
-                          type: object
-                        scheme:
-                          description: |-
-                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
-                            It defaults to https when Kubernetes Service port is 443, http otherwise.
-                          type: string
-                        serversTransport:
-                          description: |-
-                            ServersTransport defines the name of ServersTransport resource to use.
-                            It allows to configure the transport between Traefik and your servers.
-                            Can only be used on a Kubernetes Service.
-                          type: string
-                        sticky:
-                          description: |-
-                            Sticky defines the sticky sessions configuration.
-                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
-                          properties:
-                            cookie:
-                              description: Cookie defines the sticky cookie configuration.
-                              properties:
-                                domain:
-                                  description: |-
-                                    Domain defines the host to which the cookie will be sent.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
-                                  type: string
-                                httpOnly:
-                                  description: HTTPOnly defines whether the cookie
-                                    can be accessed by client-side APIs, such as JavaScript.
-                                  type: boolean
-                                maxAge:
-                                  description: |-
-                                    MaxAge defines the number of seconds until the cookie expires.
-                                    When set to a negative number, the cookie expires immediately.
-                                    When set to zero, the cookie never expires.
-                                  type: integer
-                                name:
-                                  description: Name defines the Cookie name.
-                                  type: string
-                                path:
-                                  description: |-
-                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
-                                    When not provided the cookie will be sent on every request to the domain.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
-                                  type: string
-                                sameSite:
-                                  description: |-
-                                    SameSite defines the same site policy.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-                                  enum:
-                                  - none
-                                  - lax
-                                  - strict
-                                  type: string
-                                secure:
-                                  description: Secure defines whether the cookie can
-                                    only be transmitted over an encrypted connection
-                                    (i.e. HTTPS).
-                                  type: boolean
-                              type: object
-                          type: object
-                        strategy:
-                          description: |-
-                            Strategy defines the load balancing strategy between the servers.
-                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
-                            RoundRobin value is deprecated and supported for backward compatibility.
-                          enum:
-                          - wrr
-                          - p2c
-                          - hrw
-                          - leasttime
-                          - RoundRobin
-                          type: string
-                        weight:
-                          description: |-
-                            Weight defines the weight and should only be specified when Name references a IngressService object
-                            (and to be precise, one that embeds a Weighted Round Robin).
-                          minimum: 0
-                          type: integer
-                      required:
-                      - name
-                      type: object
-                    type: array
-                  name:
-                    description: |-
-                      Name defines the name of the referenced Kubernetes Service or IngressService.
-                      The differentiation between the two is specified in the Kind field.
-                    type: string
-                  namespace:
-                    description: Namespace defines the namespace of the referenced
-                      Kubernetes Service or IngressService.
-                    type: string
-                  nativeLB:
-                    description: |-
-                      NativeLB controls, when creating the load-balancer,
-                      whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
-                      The Kubernetes Service itself does load-balance to the pods.
-                      By default, NativeLB is false.
-                    type: boolean
-                  nodePortLB:
-                    description: |-
-                      NodePortLB controls, when creating the load-balancer,
-                      whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                      It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
-                      By default, NodePortLB is false.
-                    type: boolean
-                  passHostHeader:
-                    description: |-
-                      PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
-                      By default, passHostHeader is true.
-                    type: boolean
-                  passiveHealthCheck:
-                    description: PassiveHealthCheck defines passive health checks
-                      for ExternalName services.
-                    properties:
-                      failureWindow:
-                        anyOf:
-                        - type: integer
-                        - type: string
-                        description: FailureWindow defines the time window during
-                          which the failed attempts must occur for the server to be
-                          marked as unhealthy. It also defines for how long the server
-                          will be considered unhealthy.
-                        x-kubernetes-int-or-string: true
-                      maxFailedAttempts:
-                        description: MaxFailedAttempts is the number of consecutive
-                          failed attempts allowed within the failure window before
-                          marking the server as unhealthy.
-                        type: integer
-                    type: object
-                  port:
-                    anyOf:
-                    - type: integer
-                    - type: string
-                    description: |-
-                      Port defines the port of a Kubernetes Service.
-                      This can be a reference to a named port.
-                    x-kubernetes-int-or-string: true
-                  responseForwarding:
-                    description: ResponseForwarding defines how Traefik forwards the
-                      response from the upstream Kubernetes Service to the client.
-                    properties:
-                      flushInterval:
-                        description: |-
-                          FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
-                          A negative value means to flush immediately after each write to the client.
-                          This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
-                          for such responses, writes are flushed to the client immediately.
-                          Default: 100ms
-                        type: string
-                    type: object
-                  scheme:
-                    description: |-
-                      Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
-                      It defaults to https when Kubernetes Service port is 443, http otherwise.
-                    type: string
-                  serversTransport:
-                    description: |-
-                      ServersTransport defines the name of ServersTransport resource to use.
-                      It allows to configure the transport between Traefik and your servers.
-                      Can only be used on a Kubernetes Service.
-                    type: string
-                  sticky:
-                    description: |-
-                      Sticky defines the sticky sessions configuration.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
-                    properties:
-                      cookie:
-                        description: Cookie defines the sticky cookie configuration.
-                        properties:
-                          domain:
-                            description: |-
-                              Domain defines the host to which the cookie will be sent.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
-                            type: string
-                          httpOnly:
-                            description: HTTPOnly defines whether the cookie can be
-                              accessed by client-side APIs, such as JavaScript.
-                            type: boolean
-                          maxAge:
-                            description: |-
-                              MaxAge defines the number of seconds until the cookie expires.
-                              When set to a negative number, the cookie expires immediately.
-                              When set to zero, the cookie never expires.
-                            type: integer
-                          name:
-                            description: Name defines the Cookie name.
-                            type: string
-                          path:
-                            description: |-
-                              Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
-                              When not provided the cookie will be sent on every request to the domain.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
-                            type: string
-                          sameSite:
-                            description: |-
-                              SameSite defines the same site policy.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-                            enum:
-                            - none
-                            - lax
-                            - strict
-                            type: string
-                          secure:
-                            description: Secure defines whether the cookie can only
-                              be transmitted over an encrypted connection (i.e. HTTPS).
-                            type: boolean
-                        type: object
-                    type: object
-                  strategy:
-                    description: |-
-                      Strategy defines the load balancing strategy between the servers.
-                      Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
-                      RoundRobin value is deprecated and supported for backward compatibility.
-                    enum:
-                    - wrr
-                    - p2c
-                    - hrw
-                    - leasttime
-                    - RoundRobin
-                    type: string
-                  weight:
-                    description: |-
-                      Weight defines the weight and should only be specified when Name references a IngressService object
-                      (and to be precise, one that embeds a Weighted Round Robin).
-                    minimum: 0
-                    type: integer
-                required:
-                - name
-                type: object
-              weighted:
-                description: Weighted defines the Weighted Round Robin configuration.
-                properties:
-                  services:
-                    description: Services defines the list of Kubernetes Service and/or
-                      IngressService to load-balance, with weight.
-                    items:
-                      description: Service defines an upstream HTTP service to proxy
-                        traffic to.
-                      properties:
-                        healthCheck:
-                          description: Healthcheck defines health checks for ExternalName
-                            services.
-                          properties:
-                            followRedirects:
-                              description: |-
-                                FollowRedirects defines whether redirects should be followed during the health check calls.
-                                Default: true
-                              type: boolean
-                            headers:
-                              additionalProperties:
-                                type: string
-                              description: Headers defines custom headers to be sent
-                                to the health check endpoint.
-                              type: object
-                            hostname:
-                              description: Hostname defines the value of hostname
-                                in the Host header of the health check request.
-                              type: string
-                            interval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Interval defines the frequency of the health check calls for healthy targets.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                            method:
-                              description: Method defines the healthcheck method.
-                              type: string
-                            mode:
-                              description: |-
-                                Mode defines the health check mode.
-                                If defined to grpc, will use the gRPC health check protocol to probe the server.
-                                Default: http
-                              type: string
-                            path:
-                              description: Path defines the server URL path for the
-                                health check endpoint.
-                              type: string
-                            port:
-                              description: Port defines the server URL port for the
-                                health check endpoint.
-                              type: integer
-                            scheme:
-                              description: Scheme replaces the server URL scheme for
-                                the health check endpoint.
-                              type: string
-                            status:
-                              description: Status defines the expected HTTP status
-                                code of the response to the health check request.
-                              type: integer
-                            timeout:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
-                                Default: 5s
-                              x-kubernetes-int-or-string: true
-                            unhealthyInterval:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: |-
-                                UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
-                                When UnhealthyInterval is not defined, it defaults to the Interval value.
-                                Default: 30s
-                              x-kubernetes-int-or-string: true
-                          type: object
-                        kind:
-                          description: Kind defines the kind of the Service.
-                          enum:
-                          - Service
-                          - IngressService
-                          type: string
-                        middlewares:
-                          description: Middlewares defines the list of references
-                            to Middleware resources to apply to the service.
-                          items:
-                            description: MiddlewareRef is a reference to a Middleware
-                              resource.
-                            properties:
-                              name:
-                                description: Name defines the name of the referenced
-                                  Middleware resource.
-                                type: string
-                              namespace:
-                                description: Namespace defines the namespace of the
-                                  referenced Middleware resource.
-                                type: string
-                            required:
-                            - name
-                            type: object
-                          type: array
-                        name:
-                          description: |-
-                            Name defines the name of the referenced Kubernetes Service or IngressService.
-                            The differentiation between the two is specified in the Kind field.
-                          type: string
-                        namespace:
-                          description: Namespace defines the namespace of the referenced
-                            Kubernetes Service or IngressService.
-                          type: string
-                        nativeLB:
-                          description: |-
-                            NativeLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the pods IPs or if the only child is the Kubernetes Service clusterIP.
-                            The Kubernetes Service itself does load-balance to the pods.
-                            By default, NativeLB is false.
-                          type: boolean
-                        nodePortLB:
-                          description: |-
-                            NodePortLB controls, when creating the load-balancer,
-                            whether the LB's children are directly the nodes internal IPs using the nodePort when the service type is NodePort.
-                            It allows services to be reachable when Traefik runs externally from the Kubernetes cluster but within the same network of the nodes.
-                            By default, NodePortLB is false.
-                          type: boolean
-                        passHostHeader:
-                          description: |-
-                            PassHostHeader defines whether the client Host header is forwarded to the upstream Kubernetes Service.
-                            By default, passHostHeader is true.
-                          type: boolean
-                        passiveHealthCheck:
-                          description: PassiveHealthCheck defines passive health checks
-                            for ExternalName services.
-                          properties:
-                            failureWindow:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: FailureWindow defines the time window during
-                                which the failed attempts must occur for the server
-                                to be marked as unhealthy. It also defines for how
-                                long the server will be considered unhealthy.
-                              x-kubernetes-int-or-string: true
-                            maxFailedAttempts:
-                              description: MaxFailedAttempts is the number of consecutive
-                                failed attempts allowed within the failure window
-                                before marking the server as unhealthy.
-                              type: integer
-                          type: object
-                        port:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          description: |-
-                            Port defines the port of a Kubernetes Service.
-                            This can be a reference to a named port.
-                          x-kubernetes-int-or-string: true
-                        responseForwarding:
-                          description: ResponseForwarding defines how Traefik forwards
-                            the response from the upstream Kubernetes Service to the
-                            client.
-                          properties:
-                            flushInterval:
-                              description: |-
-                                FlushInterval defines the interval, in milliseconds, in between flushes to the client while copying the response body.
-                                A negative value means to flush immediately after each write to the client.
-                                This configuration is ignored when ReverseProxy recognizes a response as a streaming response;
-                                for such responses, writes are flushed to the client immediately.
-                                Default: 100ms
-                              type: string
-                          type: object
-                        scheme:
-                          description: |-
-                            Scheme defines the scheme to use for the request to the upstream Kubernetes Service.
-                            It defaults to https when Kubernetes Service port is 443, http otherwise.
-                          type: string
-                        serversTransport:
-                          description: |-
-                            ServersTransport defines the name of ServersTransport resource to use.
-                            It allows to configure the transport between Traefik and your servers.
-                            Can only be used on a Kubernetes Service.
-                          type: string
-                        sticky:
-                          description: |-
-                            Sticky defines the sticky sessions configuration.
-                            More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/http/load-balancing/service/#sticky-sessions
-                          properties:
-                            cookie:
-                              description: Cookie defines the sticky cookie configuration.
-                              properties:
-                                domain:
-                                  description: |-
-                                    Domain defines the host to which the cookie will be sent.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
-                                  type: string
-                                httpOnly:
-                                  description: HTTPOnly defines whether the cookie
-                                    can be accessed by client-side APIs, such as JavaScript.
-                                  type: boolean
-                                maxAge:
-                                  description: |-
-                                    MaxAge defines the number of seconds until the cookie expires.
-                                    When set to a negative number, the cookie expires immediately.
-                                    When set to zero, the cookie never expires.
-                                  type: integer
-                                name:
-                                  description: Name defines the Cookie name.
-                                  type: string
-                                path:
-                                  description: |-
-                                    Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
-                                    When not provided the cookie will be sent on every request to the domain.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
-                                  type: string
-                                sameSite:
-                                  description: |-
-                                    SameSite defines the same site policy.
-                                    More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-                                  enum:
-                                  - none
-                                  - lax
-                                  - strict
-                                  type: string
-                                secure:
-                                  description: Secure defines whether the cookie can
-                                    only be transmitted over an encrypted connection
-                                    (i.e. HTTPS).
-                                  type: boolean
-                              type: object
-                          type: object
-                        strategy:
-                          description: |-
-                            Strategy defines the load balancing strategy between the servers.
-                            Supported values are: wrr (Weighed round-robin), p2c (Power of two choices), hrw (Highest Random Weight), and leasttime (Least-Time).
-                            RoundRobin value is deprecated and supported for backward compatibility.
-                          enum:
-                          - wrr
-                          - p2c
-                          - hrw
-                          - leasttime
-                          - RoundRobin
-                          type: string
-                        weight:
-                          description: |-
-                            Weight defines the weight and should only be specified when Name references a IngressService object
-                            (and to be precise, one that embeds a Weighted Round Robin).
-                          minimum: 0
-                          type: integer
-                      required:
-                      - name
-                      type: object
-                    type: array
-                  sticky:
-                    description: |-
-                      Sticky defines whether sticky sessions are enabled.
-                      More info: https://doc.hanzo.ai/traefik/v3.6/reference/routing-configuration/kubernetes/crd/http/ingressservice/#stickiness-and-load-balancing
-                    properties:
-                      cookie:
-                        description: Cookie defines the sticky cookie configuration.
-                        properties:
-                          domain:
-                            description: |-
-                              Domain defines the host to which the cookie will be sent.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#domaindomain-value
-                            type: string
-                          httpOnly:
-                            description: HTTPOnly defines whether the cookie can be
-                              accessed by client-side APIs, such as JavaScript.
-                            type: boolean
-                          maxAge:
-                            description: |-
-                              MaxAge defines the number of seconds until the cookie expires.
-                              When set to a negative number, the cookie expires immediately.
-                              When set to zero, the cookie never expires.
-                            type: integer
-                          name:
-                            description: Name defines the Cookie name.
-                            type: string
-                          path:
-                            description: |-
-                              Path defines the path that must exist in the requested URL for the browser to send the Cookie header.
-                              When not provided the cookie will be sent on every request to the domain.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#pathpath-value
-                            type: string
-                          sameSite:
-                            description: |-
-                              SameSite defines the same site policy.
-                              More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
-                            enum:
-                            - none
-                            - lax
-                            - strict
-                            type: string
-                          secure:
-                            description: Secure defines whether the cookie can only
-                              be transmitted over an encrypted connection (i.e. HTTPS).
-                            type: boolean
-                        type: object
-                    type: object
                 type: object
             type: object
         required:

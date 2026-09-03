@@ -1,4 +1,4 @@
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRouteTCP
 metadata:
   name: test.route
@@ -17,7 +17,7 @@ spec:
       serversTransport: cross-ns-st-cross-ns@kubernetescrd
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: ServersTransportTCP
 metadata:
   name: st-cross-ns

@@ -92,17 +92,13 @@ Not branding — renaming these breaks behaviour or breaches a licence:
   would be a dead link, which is worse than the mention.
 
 ### Known remaining leaks (tracked, not yet closed)
-- **Generated CRD manifests** — `docs/content/reference/dynamic-configuration/`
-  still holds `traefik.io_*.yaml`: stale controller-gen output whose
-  *filenames and `description:` text* carry the brand, and which
-  `kubectl explain` surfaces to customers. The Go CRD types they are
-  generated from are already clean (`// IngressRoute is the CRD
-  implementation of a Ingress HTTP Router.`), so this is pure staleness.
-  Note `script/code-gen.sh` globs `hanzo.ai_*.yaml`, which matches nothing
-  — the regeneration pipeline is broken and must be fixed before the
-  dumps can be refreshed. `integration/fixtures/k8s/01-ingress-crd.yml`
-  (the copy that is actually applied) has been hand-corrected to match
-  what a fixed regeneration would emit.
+- **Generated CRD manifests** — `kubernetes-crd-definition-v1.yml` and
+  `integration/fixtures/k8s/01-ingress-crd.yml` are controller-gen output
+  from `hanzoai/v1alpha1`, whose `+groupName` marker is `hanzo.ai`, so
+  `script/code-gen.sh`'s `hanzo.ai_*.yaml` glob matches and the concat step
+  runs. The stale `traefik.io_*.yaml` dumps are deleted. Regenerate the
+  schema alone with the `controller-gen` line from that script; the
+  clientset half still churns headers (below).
 - **Test certificate DN** — `integration/fixtures/acme/ssl/wildcard.crt`
   has `OU=Traefik` in its X.509 subject, documented by
   `integration/fixtures/acme/README.md`. Closing it means regenerating
@@ -135,17 +131,23 @@ the intended behaviour: there is one name for each of these, and it is ours.
   `go build $(go list ./... | grep -v /webui)`.
 - `pkg/muxer/http/Test_addRoute/Host_IPv6`: Go 1.26 broke IPv6 URL parsing
 - `pkg/middlewares/ratelimiter`: Timing-sensitive tests, flaky
-- `pkg/provider/kubernetes/crd` tests panic: `no kind "IngressService" is
-  registered for version "ingress.k8s.io/v1alpha1"` — the CRD Go types use
-  apiGroup `hanzo.ai` (register.go) but several `kubernetes_test.go` fixtures
-  still declare `apiVersion: ingress.k8s.io/v1alpha1`. Group-name drift in the
-  test fixtures; the provider itself builds and runs on `hanzo.ai`.
-- Codegen drift: `script/code-gen.sh` regenerates 130+ files with a copyright
-  header from `boilerplate.go.tmpl` that differs from the committed headers,
-  and `controller-gen` emits group `ingress.k8s.io` (stale `+groupName` marker
-  in `hanzoai/v1alpha1/doc.go`) instead of `hanzo.ai`. Re-running it wholesale
-  produces branding/group noise; hand-apply small generated-code changes and
-  extract only the intended CRD-schema block from a scratch run.
+- `pkg/provider/kubernetes/crd` tests HANG (`TestClientIgnoresHelmOwnedSecrets`
+  first, then every loader test) until the package timeout, on untouched main —
+  measured in a clean worktree. The 132 fixtures now declare `hanzo.ai/v1alpha1`,
+  which register.go registers; what still names the old group is the generated
+  fake clientset (`generated/clientset/versioned/typed/hanzoai/v1alpha1/fake/
+  fake_traefikio_client.go`), so the informer waits on a GVR the fake tracker
+  never serves. The fix is `script/code-gen.sh`'s gen_client step, which also
+  carries the header churn above; land the two together. Not in `hanzo.yml`'s
+  test list, so it stops no build.
+- Codegen header drift: `script/code-gen.sh` rewrites 118 generated files
+  with the header from `boilerplate.go.tmpl` (`2020-2025 Traefik Labs;
+  2025-2026 Hanzo AI Inc`) where the committed files read `2020-2026 Hanzo
+  AI Inc`. The template is the correct one — MIT keeps the upstream notice —
+  so the committed headers want restoring in a commit of their own; until
+  then a wholesale run is noise. Its gen_helpers pass also truncates
+  `kubernetes-crd-definition-v1.yml` to empty if the controller-gen step is
+  skipped, so run the steps by hand, in order.
 
 ## In-process surface (`App`, root package)
 
@@ -208,6 +210,33 @@ Isolation and behavior:
 `staticFiles` serves terminally (never calls `next`), so an attached route's
 backend service is never reached — point it at an empty/placeholder service.
 The `shadow`-tagged test drives the real object-store path against a live S3.
+
+## WAF (`waf` middleware)
+
+`pkg/middlewares/waf` is OWASP Coraza (`corazawaf/coraza/v3`) with the OWASP
+Core Rule Set v4 embedded (`coraza-coreruleset/v4`, an `fs.FS`), reached from
+every provider — file, labels, and the `Middleware` CR — through `dynamic.WAF`.
+Rules load Core Rule Set → `directivesFiles` → `directives`; a configuration
+that loads none is refused at build.
+
+**The engine state is written after every rule, and that order is the
+middleware.** `@coraza.conf-recommended`, the first file the Core Rule Set
+loads, is `SecRuleEngine DetectionOnly` on line 7. Written first, our
+`SecRuleEngine On` was overridden by it and the middleware loaded all of CRS
+and refused nothing — every load-and-serve test green. `detectionOnly` is the
+one place the mode is decided; `TestARulesetCannotDisarmTheFirewall` holds it,
+mutation-checked by moving the directive back ahead of the rules (four tests
+go red).
+
+**A middleware reaches the CRD plane through three files, and `geoBlock` was
+in none of them.** `dynamic.Middleware` (the field), `v1alpha1.MiddlewareSpec`
+(the CR field), and both `zz_generated.deepcopy.go` (or the field is copied
+out of every object the informer hands over), plus the controller-gen schema
+or the apiserver prunes the key. `geoBlock` had the first only, so it worked
+from the file provider and was silently absent from every `Middleware` CR —
+a sanctions control that read as configured. All three carry `geoBlock` and
+`waf` now; `TestEveryMiddlewareFieldSurvivesADeepCopy` is the gate, and it
+fails when either copy is removed.
 
 ## Header Passthrough Behavior (2026-04-13)
 

@@ -1,5 +1,5 @@
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: parent-multi
@@ -13,7 +13,7 @@ spec:
     - match: Host(`api.example.com`) && PathPrefix(`/v2`)
       kind: Rule
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: child-multi-routes

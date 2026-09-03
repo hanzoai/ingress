@@ -21,4 +21,8 @@ on:
 jobs:
   cicd:
     uses: hanzoai/ci/.hanzo/workflows/build.yml@v1
+    with:
+      # spark (arm64) is the runner git.hanzo.ai has; amd64 is cross-built
+      # there through binfmt.
+      runner: '["hanzo-build-linux-arm64"]'
     secrets: inherit

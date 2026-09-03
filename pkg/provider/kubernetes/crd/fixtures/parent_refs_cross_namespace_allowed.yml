@@ -1,5 +1,5 @@
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: parent-cross
@@ -11,7 +11,7 @@ spec:
     - match: Host(`cross.example.com`)
       kind: Rule
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: child-cross-allowed

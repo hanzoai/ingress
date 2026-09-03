@@ -1,5 +1,5 @@
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: sticky-default
@@ -18,7 +18,7 @@ spec:
         port: 8443
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: sticky
@@ -38,7 +38,7 @@ spec:
         port: 8443
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test2.route

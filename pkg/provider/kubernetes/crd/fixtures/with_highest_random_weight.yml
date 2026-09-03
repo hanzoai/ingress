@@ -69,7 +69,7 @@ spec:
     task: whoami2
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: hrw1
@@ -88,7 +88,7 @@ spec:
         weight: 20
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route
