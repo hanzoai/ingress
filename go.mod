@@ -1,6 +1,6 @@
 module github.com/hanzoai/ingress
 
-go 1.26.4
+go 1.26.5
 
 require (
 	github.com/BurntSushi/toml v1.6.0
@@ -30,7 +30,7 @@ require (
 	github.com/hanzoai/ingress-parser v0.2.3
 	github.com/hanzoai/ingress/dynamic/ext v0.0.0-00010101000000-000000000000
 	github.com/hanzoai/yaegi v0.16.2
-	github.com/hanzokv/go/v9 v9.22.0
+	github.com/hanzokv/go/v9 v9.22.1
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/go-retryablehttp v0.7.8
 	github.com/hashicorp/go-version v1.8.0 // indirect
@@ -103,25 +103,20 @@ require (
 
 require (
 	github.com/hanzos3/go v1.0.2
-	github.com/luxfi/log v1.6.0
+	github.com/luxfi/log v1.6.2
 	github.com/luxfi/metric v1.9.0
 	github.com/luxfi/trace v1.4.0
-	github.com/luxfi/zap v1.2.6
+	github.com/luxfi/zap v1.2.9
 	github.com/prometheus/client_golang v1.23.2
-	github.com/zap-proto/http v0.3.1
+	github.com/zap-proto/http v0.3.9
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
-	github.com/dlclark/regexp2/v2 v2.2.1 // indirect
-	github.com/dop251/goja v0.0.0-20260607120635-348e6bea910d // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/evanw/esbuild v0.28.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
-	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
 	github.com/gorilla/rpc v1.2.1 // indirect
 	github.com/grandcat/zeroconf v1.0.0 // indirect
 	github.com/hanzos3/crc64nvme v1.1.2 // indirect
@@ -130,12 +125,13 @@ require (
 	github.com/klauspost/crc32 v1.3.0 // indirect
 	github.com/luxfi/accel v1.2.4 // indirect
 	github.com/luxfi/crypto v1.20.2 // indirect
-	github.com/luxfi/mdns v0.1.1 // indirect
+	github.com/luxfi/mdns v0.2.1 // indirect
 	github.com/luxfi/pq v1.1.2 // indirect
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/shoenig/test v1.7.0 // indirect
+	github.com/zap-proto/fiber/v3 v3.2.1 // indirect
 	github.com/zap-proto/go v1.3.0 // indirect
 )
 
@@ -250,7 +246,6 @@ require (
 	github.com/go-resty/resty/v2 v2.17.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/goccy/go-yaml v1.19.2 // indirect
-	github.com/gofiber/fiber/v3 v3.2.0 // indirect
 	github.com/gofiber/schema v1.7.1 // indirect
 	github.com/gofiber/utils/v2 v2.0.4 // indirect
 	github.com/gofrs/flock v0.13.0 // indirect
@@ -386,7 +381,7 @@ require (
 	github.com/yandex-cloud/go-sdk/v2 v2.56.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	github.com/zap-proto/zip v1.1.0
+	github.com/zap-proto/zip v1.24.3
 	go.mongodb.org/mongo-driver v1.17.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
