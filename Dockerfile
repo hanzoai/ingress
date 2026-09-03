@@ -66,22 +66,54 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     -o /hanzo-ingress ./cmd/ingress
 
 # ---- Stage 3: Runtime ----
-FROM alpine:3.23
 
-RUN apk add --no-cache --no-progress ca-certificates tzdata
+# What the scratch stage copies in place of adduser and mkdir, which it lacks.
+RUN printf 'ingress:x:1000:1000::/:/sbin/nologin\n' > /etc/passwd.ingress && \
+    printf 'ingress:x:1000:\n' > /etc/group.ingress && \
+    mkdir -p /emptytmp && chmod 1777 /emptytmp
+
+# THE IMAGE IS THE BINARY.
+#
+# hanzo-ingress is CGO_ENABLED=0 and statically linked, so it takes nothing from
+# a host. Alpine was supplying three things and none of them survives inspection:
+#
+#   ca-certificates and tzdata are DATA the binary reads, and they copy.
+#   The account is two files the kernel reads to name a uid it already enforces.
+#   libcap-utils existed for ONE line, `setcap cap_net_bind_service=+ep`.
+#
+# THE FILE CAPABILITY IS REDUNDANT AND THAT IS MEASURED, not assumed. The live
+# deployment runs with securityContext capabilities `add: [NET_BIND_SERVICE],
+# drop: [ALL]` — the orchestrator grants the capability to the process, so a
+# capability baked into the file grants nothing it does not already have. The
+# image's own ports are unprivileged anyway (8080/8443, mapped by the Service),
+# which is the arrangement the line below the EXPOSE has always described.
+#
+# The one posture this changes is `docker run` as a non-root user binding :80
+# directly, with no --cap-add. That is not how this is deployed, and the remedy
+# there is --cap-add=NET_BIND_SERVICE rather than a capability in the artifact.
+FROM scratch
 
 LABEL org.opencontainers.image.source="https://github.com/hanzoai/ingress"
 LABEL org.opencontainers.image.title="Hanzo Ingress"
 LABEL org.opencontainers.image.description="Cloud-native reverse proxy and load balancer for Hanzo infrastructure"
 
-RUN apk add --no-cache --no-progress libcap-utils && addgroup -g 1000 ingress && adduser -u 1000 -G ingress -s /sbin/nologin -D ingress
+# Data, read by the binary, executed by nothing.
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+
+# The account. scratch has no adduser, so the two files it would have written are
+# written in the builder and copied.
+COPY --from=builder /etc/passwd.ingress /etc/passwd
+COPY --from=builder /etc/group.ingress /etc/group
+
+# /tmp, owned by the account. The VOLUME below replaces it at run time; this is
+# what the image holds when nothing is mounted, and scratch has no mkdir.
+COPY --from=builder --chown=1000:1000 /emptytmp /tmp
 
 COPY --from=builder /hanzo-ingress /hanzo-ingress
-RUN setcap cap_net_bind_service=+ep /hanzo-ingress
 
 # Bind to unprivileged ports; K8s Service/DaemonSet maps 80->8080, 443->8443
 EXPOSE 8080 8443
 VOLUME ["/tmp"]
-
-USER ingress
+USER 1000:1000
 ENTRYPOINT ["/hanzo-ingress"]
