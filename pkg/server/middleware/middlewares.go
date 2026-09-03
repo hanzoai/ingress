@@ -8,7 +8,6 @@ import (
 	"reflect"
 
 	"github.com/containous/alice"
-	"github.com/rs/zerolog/log"
 	"github.com/hanzoai/ingress/pkg/config/runtime"
 	"github.com/hanzoai/ingress/pkg/middlewares/addprefix"
 	"github.com/hanzoai/ingress/pkg/middlewares/auth"
@@ -39,8 +38,10 @@ import (
 	"github.com/hanzoai/ingress/pkg/middlewares/staticfiles"
 	"github.com/hanzoai/ingress/pkg/middlewares/stripprefix"
 	"github.com/hanzoai/ingress/pkg/middlewares/stripprefixregex"
+	"github.com/hanzoai/ingress/pkg/middlewares/waf"
 	"github.com/hanzoai/ingress/pkg/server/provider"
 	"github.com/hanzoai/ingress/pkg/server/recursion"
+	"github.com/rs/zerolog/log"
 )
 
 // Builder the middleware builder.
@@ -272,6 +273,18 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 		}
 		middleware = func(next http.Handler) (http.Handler, error) {
 			return geoblock.New(ctx, next, *config.GeoBlock, middlewareName)
+		}
+	}
+
+	// WAF (OWASP Coraza, SecLang / OWASP Core Rule Set).
+	// See pkg/middlewares/waf: a configuration that loads no rule is refused
+	// here rather than serving traffic through an empty ruleset.
+	if config.WAF != nil {
+		if middleware != nil {
+			return nil, badConf
+		}
+		middleware = func(next http.Handler) (http.Handler, error) {
+			return waf.New(ctx, next, *config.WAF, middlewareName)
 		}
 	}
 

@@ -104,7 +104,7 @@ spec:
     task: whoami4
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirror1
@@ -126,7 +126,7 @@ spec:
         namespace: bar
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: wrr2
@@ -141,7 +141,7 @@ spec:
         port: 8080
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirror2
@@ -165,7 +165,7 @@ spec:
         namespace: foo
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirror3
@@ -191,7 +191,7 @@ spec:
 
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirror4
@@ -215,7 +215,7 @@ spec:
         namespace: foo
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirrored
@@ -233,7 +233,7 @@ spec:
         namespace: foo
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: wrr1
@@ -254,7 +254,7 @@ spec:
         namespace: bar
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route

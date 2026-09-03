@@ -5,7 +5,7 @@ metadata:
 spec:
   controller: ingress.k8s.io/ingress-controller
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRouteTCP
 metadata:
   name: test.route

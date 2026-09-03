@@ -102,6 +102,8 @@ require (
 )
 
 require (
+	github.com/corazawaf/coraza-coreruleset/v4 v4.25.0
+	github.com/corazawaf/coraza/v3 v3.7.0
 	github.com/hanzos3/go v1.0.2
 	github.com/luxfi/log v1.6.2
 	github.com/luxfi/metric v1.9.0
@@ -115,24 +117,34 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
+	github.com/corazawaf/libinjection-go v0.3.2 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
+	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/gorilla/rpc v1.2.1 // indirect
+	github.com/gotnospirit/makeplural v0.0.0-20180622080156-a5f48d94d976 // indirect
+	github.com/gotnospirit/messageformat v0.0.0-20221001023931-dfe49f1eb092 // indirect
 	github.com/grandcat/zeroconf v1.0.0 // indirect
 	github.com/hanzos3/crc64nvme v1.1.2 // indirect
 	github.com/hanzos3/md5-simd v1.1.3 // indirect
+	github.com/kaptinlin/go-i18n v0.1.4 // indirect
+	github.com/kaptinlin/jsonschema v0.4.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/klauspost/crc32 v1.3.0 // indirect
 	github.com/luxfi/accel v1.2.4 // indirect
 	github.com/luxfi/crypto v1.20.2 // indirect
 	github.com/luxfi/mdns v0.2.1 // indirect
 	github.com/luxfi/pq v1.1.2 // indirect
+	github.com/magefile/mage v1.17.0 // indirect
+	github.com/petar-dambovaliev/aho-corasick v0.0.0-20250424160509-463d218d4745 // indirect
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/shoenig/test v1.7.0 // indirect
+	github.com/valllabh/ocsf-schema-golang v1.0.3 // indirect
 	github.com/zap-proto/fiber/v3 v3.2.1 // indirect
 	github.com/zap-proto/go v1.3.0 // indirect
+	rsc.io/binaryregexp v0.2.0 // indirect
 )
 
 require (

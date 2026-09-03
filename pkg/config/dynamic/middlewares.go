@@ -49,6 +49,7 @@ type Middleware struct {
 	ContentType       *ContentType       `json:"contentType,omitempty" toml:"contentType,omitempty" yaml:"contentType,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 	GrpcWeb           *GrpcWeb           `json:"grpcWeb,omitempty" toml:"grpcWeb,omitempty" yaml:"grpcWeb,omitempty" export:"true"`
 	StaticFiles       *StaticFiles       `json:"staticFiles,omitempty" toml:"staticFiles,omitempty" yaml:"staticFiles,omitempty" export:"true"`
+	WAF               *WAF               `json:"waf,omitempty" toml:"waf,omitempty" yaml:"waf,omitempty" export:"true"`
 
 	Plugin map[string]PluginConf `json:"plugin,omitempty" toml:"plugin,omitempty" yaml:"plugin,omitempty" export:"true"`
 
@@ -961,4 +962,22 @@ type URLRewrite struct {
 	Hostname   *string `json:"hostname,omitempty"`
 	Path       *string `json:"path,omitempty"`
 	PathPrefix *string `json:"pathPrefix,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// WAF holds the web application firewall middleware configuration.
+// The engine is OWASP Coraza and the rule language is ModSecurity SecLang.
+// Rules are applied in the order below, so a later one refines an earlier.
+type WAF struct {
+	// CoreRuleSet loads the embedded OWASP Core Rule Set v4 together with the
+	// recommended engine configuration and the Core Rule Set defaults it reads.
+	CoreRuleSet bool `json:"coreRuleSet,omitempty" toml:"coreRuleSet,omitempty" yaml:"coreRuleSet,omitempty" export:"true"`
+	// DirectivesFiles are SecLang files, loaded in the order given.
+	DirectivesFiles []string `json:"directivesFiles,omitempty" toml:"directivesFiles,omitempty" yaml:"directivesFiles,omitempty" export:"true"`
+	// Directives is SecLang written inline, applied after every file.
+	Directives string `json:"directives,omitempty" toml:"directives,omitempty" yaml:"directives,omitempty" export:"true"`
+	// DetectionOnly logs what each rule matched and refuses nothing, which is
+	// how a ruleset is measured against live traffic before it may refuse.
+	DetectionOnly bool `json:"detectionOnly,omitempty" toml:"detectionOnly,omitempty" yaml:"detectionOnly,omitempty" export:"true"`
 }

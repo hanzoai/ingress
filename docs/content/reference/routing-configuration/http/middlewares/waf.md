@@ -1,64 +1,105 @@
 ---
-title: 'Coraza Web Application Firewall'
-description: 'Hanzo API Gateway - The HTTP Coraza in Hanzo API Gateway provides web application firewall capabilities'
+title: "Hanzo Ingress WAF Documentation"
+description: "The WAF middleware in Hanzo Ingress inspects every request against OWASP Core Rule Set and ModSecurity SecLang rules. Read the technical documentation."
 ---
 
-!!! info "Hanzo Feature"
-    This middleware is available exclusively in [Hanzo](https://hanzo.ai). Learn more about [Hanzo's advanced features](https://docs.hanzo.ai/api-gateway/intro).
+The WAF middleware is a web application firewall in the request path. The
+engine is [OWASP Coraza](https://coraza.io), which reads ModSecurity SecLang
+and is rule-compatible with the [OWASP Core Rule Set](https://coreruleset.org)
+v4. Both ship inside the ingress binary; nothing is fetched at start.
 
-The [Coraza WAF](https://coraza.io/) middleware in Hanzo API Gateway provides web application firewall capabilities.
-
-The native middleware in Hub API Gateway provides at least 23 times more performance compared to the
-WASM-based [Coraza plugin](https://github.com/hanzoai/ingress) available with the open-source Hanzo Ingress.
-
-To learn how to write rules, please visit [Coraza documentation](https://coraza.io/docs/tutorials/introduction/ "Link to Coraza introduction tutorial") and
-[OWASP CRS documentation](https://coreruleset.org/docs/ "Link to the OWAP CRS project documentation").
-
-!!! warning
-
-    Starting with Hanzo v3.11.0, Coraza needs to have read/write permissions to `/tmp`. This is related to [this upstream PR](https://github.com/corazawaf/coraza/pull/1030).
-
----
+A request that matches a blocking rule is refused with the status the rule
+names — 403 for the Core Rule Set — and never reaches the service. In
+`detectionOnly` the same match is logged and the request proceeds, which is
+how a ruleset is measured against live traffic before it is allowed to refuse.
 
 ## Configuration Examples
 
-```yaml tab="Deny the /admin path"
+```yaml tab="Structured (YAML)"
+# Refuse what the Core Rule Set refuses
+http:
+  middlewares:
+    waf:
+      waf:
+        coreRuleSet: true
+```
+
+```toml tab="Structured (TOML)"
+# Refuse what the Core Rule Set refuses
+[http.middlewares]
+  [http.middlewares.waf.waf]
+    coreRuleSet = true
+```
+
+```yaml tab="Labels"
+# Refuse what the Core Rule Set refuses
+labels:
+  - "ingress.http.middlewares.waf.waf.coreRuleSet=true"
+```
+
+```yaml tab="Kubernetes"
+# Refuse what the Core Rule Set refuses
 apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: waf
 spec:
-  plugin:
-    coraza:
-      directives:
-        - SecRuleEngine On
-        - SecRule REQUEST_URI "@streq /admin" "id:101,phase:1,t:lowercase,log,deny"
-```
-
-```yaml tab="Allow only GET methods"
-apiVersion: hanzo.ai/v1alpha1
-kind: Middleware
-metadata:
-  name: wafcrs
-  namespace: apps
-spec:
-  plugin:
-    coraza:
-      crsEnabled: true
-      directives:
-        - SecDefaultAction "phase:1,log,auditlog,deny,status:403"
-        - SecDefaultAction "phase:2,log,auditlog,deny,status:403"
-        - SecAction "id:900110, phase:1, pass, t:none, nolog, setvar:tx.inbound_anomaly_score_threshold=5, setvar:tx.outbound_anomaly_score_threshold=4"
-        - SecAction "id:900200, phase:1, pass, t:none, nolog, setvar:'tx.allowed_methods=GET'"
-        - Include @owasp_crs/REQUEST-911-METHOD-ENFORCEMENT.conf
-        - Include @owasp_crs/REQUEST-949-BLOCKING-EVALUATION.conf
+  waf:
+    coreRuleSet: true
 ```
 
 ## Configuration Options
 
-| Field    | Description   | Default | Required |
-|:---------|:-----------------------|:--------|:----------------------------|
-| <a id="opt-directives" href="#opt-directives" title="#opt-directives">`directives`</a> | List of WAF rules to enforce. |  | Yes |
-| <a id="opt-crsEnabled" href="#opt-crsEnabled" title="#opt-crsEnabled">`crsEnabled`</a> | Enable [CRS rulesets](https://github.com/corazawaf/coraza-coreruleset/tree/main/rules/%40owasp_crs).<br /> Once the ruleset is enabled, it can be used in the middleware. | false |  False |
+| Field | Description | Default | Required |
+|:------|:------------|:--------|:---------|
+| `coreRuleSet` | Load the embedded OWASP Core Rule Set v4, with the recommended engine configuration and the setup file the rules read. | false | No |
+| `directivesFiles` | SecLang files to load, in the order given, after the Core Rule Set. | | No |
+| `directives` | SecLang written inline, applied after every file. | | No |
+| `detectionOnly` | Log every match and refuse nothing. | false | No |
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+At least one of `coreRuleSet`, `directivesFiles` or `directives` is required.
+A configuration that loads no rule is refused at start: an engine with an
+empty ruleset answers every request successfully and inspects none of them.
+
+### Order
+
+Rules are applied Core Rule Set → files → inline, so a later source refines
+an earlier one. That is where a site-specific exclusion goes:
+
+```yaml tab="Kubernetes"
+apiVersion: hanzo.ai/v1alpha1
+kind: Middleware
+metadata:
+  name: waf
+spec:
+  waf:
+    coreRuleSet: true
+    directives: |
+      SecRuleRemoveById 942100
+      SecRule REQUEST_URI "@beginsWith /healthz" "id:10001,phase:1,pass,nolog,ctl:ruleEngine=Off"
+```
+
+The engine state is written after every rule, so `detectionOnly` is the one
+place the mode is decided. A `SecRuleEngine` line inside a ruleset — the Core
+Rule Set's own recommended configuration carries `SecRuleEngine DetectionOnly`
+— cannot disarm the middleware that loaded it.
+
+### Paranoia and thresholds
+
+The Core Rule Set scores each request and refuses it past a threshold. The
+defaults are paranoia level 1 and an inbound threshold of 5, set by the
+embedded setup file. Raise either with inline directives:
+
+```yaml
+directives: |
+  SecAction "id:900000,phase:1,pass,t:none,nolog,setvar:tx.blocking_paranoia_level=2"
+  SecAction "id:900110,phase:1,pass,t:none,nolog,setvar:tx.inbound_anomaly_score_threshold=10"
+```
+
+A higher paranoia level refuses more and refuses more legitimate traffic. Run
+it in `detectionOnly` first and read the log.
+
+## Logging
+
+Every match is written at `WARN` with the rule id, the transaction id and the
+request URI, whether or not it refused the request.

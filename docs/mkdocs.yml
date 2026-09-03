@@ -279,6 +279,7 @@ nav:
               - 'Retry': 'reference/routing-configuration/http/middlewares/retry.md'
               - 'StripPrefix': 'reference/routing-configuration/http/middlewares/stripprefix.md'
               - 'StripPrefixRegex': 'reference/routing-configuration/http/middlewares/stripprefixregex.md'
+              - 'WAF' : 'reference/routing-configuration/http/middlewares/waf.md'
               - '<span class="nav-link-with-icon">WAF</span>' : 'reference/routing-configuration/http/middlewares/waf.md'
           - 'TCP' :
               - 'Routing' :

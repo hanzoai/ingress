@@ -69,7 +69,7 @@ spec:
     task: whoami4
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: wrr2
@@ -83,7 +83,7 @@ spec:
         port: 8080
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: mirror1
@@ -99,7 +99,7 @@ spec:
         port: 8080
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressService
 metadata:
   name: wrr1
@@ -119,7 +119,7 @@ spec:
       weight: 1
 
 ---
-apiVersion: ingress.k8s.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: test.route

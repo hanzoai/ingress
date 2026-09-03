@@ -1,6 +1,6 @@
 // +k8s:deepcopy-gen=package
 
 // Package v1alpha1 is the v1alpha1 version of the API.
-// +groupName=ingress.k8s.io
+// +groupName=hanzo.ai
 // +groupGoName=Ingress
 package v1alpha1
