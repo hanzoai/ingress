@@ -24,5 +24,5 @@ jobs:
     with:
       # spark (arm64) is the runner git.hanzo.ai has; amd64 is cross-built
       # there through binfmt.
-      runner: '["hanzo-build-linux-arm64"]'
+      runner: '["linux-arm64"]'
     secrets: inherit
