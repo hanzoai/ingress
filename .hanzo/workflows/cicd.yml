@@ -20,7 +20,7 @@ on:
   pull_request:
 jobs:
   cicd:
-    uses: hanzoai/ci/.hanzo/workflows/build.yml@v1
+    uses: hanzoai/ci/.github/workflows/build.yml@v1
     with:
       # spark (arm64) is the runner git.hanzo.ai has; amd64 is cross-built
       # there through binfmt.
