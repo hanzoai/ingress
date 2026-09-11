@@ -107,3 +107,42 @@ func TestLocalErrorPage(t *testing.T) {
 		t.Fatalf("local error page: status=%d body=%q", resp.StatusCode, body)
 	}
 }
+
+// TestNosniffTypesAreRegistered proves every extension this plane serves gets a
+// Content-Type. The pairing is what makes it matter: the handler sets
+// `X-Content-Type-Options: nosniff`, so a missing type is not a browser falling
+// back to a guess, it is a browser refusing to render. Go's built-in table stops
+// at the web's first dozen extensions and the rest come from the system
+// mime.types, which the runtime image does not ship — so this passed on a
+// developer's box and failed in production until the types were registered here.
+func TestNosniffTypesAreRegistered(t *testing.T) {
+	dir := t.TempDir()
+	for name, body := range map[string]string{
+		"readme.md":  "# hello\n",
+		"font.woff2": "\x77OF2",
+	} {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	srv := httptest.NewServer(newLocal(t, dynamic.StaticFiles{Root: dir}))
+	defer srv.Close()
+
+	for path, want := range map[string]string{
+		"/readme.md":  "text/markdown",
+		"/font.woff2": "font/woff2",
+	} {
+		resp, err := srv.Client().Get(srv.URL + path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp.Body.Close()
+		if got := resp.Header.Get("Content-Type"); !strings.HasPrefix(got, want) {
+			t.Errorf("%s: Content-Type %q, want %s — with nosniff the browser will not render this", path, got, want)
+		}
+		if resp.Header.Get("X-Content-Type-Options") != "nosniff" {
+			t.Errorf("%s: nosniff missing; this test is only meaningful beside it", path)
+		}
+	}
+}

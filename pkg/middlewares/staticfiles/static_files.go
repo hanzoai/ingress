@@ -22,6 +22,26 @@ import (
 
 const typeName = "StaticFiles"
 
+// Extensions Go's built-in table does not carry. It falls back to the system
+// mime.types, which a distroless image does not ship, so on a developer's box
+// these resolve and in production they come back empty — and this plane sets
+// `nosniff`, so an empty answer means the browser is told the type is unknown
+// and forbidden to guess. Markdown served that way is offered as a download
+// instead of a page; hanzoskills.com publishes a .md twin of every document.
+func init() {
+	for ext, typ := range map[string]string{
+		".md":       "text/markdown; charset=utf-8",
+		".markdown": "text/markdown; charset=utf-8",
+		".woff":     "font/woff",
+		".woff2":    "font/woff2",
+		".ttf":      "font/ttf",
+		".otf":      "font/otf",
+	} {
+		// AddExtensionType only returns an error on a malformed extension.
+		_ = mime.AddExtensionType(ext, typ)
+	}
+}
+
 type dirEntry struct {
 	Name    string
 	Size    int64
