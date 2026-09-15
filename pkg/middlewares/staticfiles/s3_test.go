@@ -85,21 +85,16 @@ func s3Handler(store objectStore, prefix string, cfg dynamic.StaticFiles) *stati
 	if spaIndex == "" {
 		spaIndex = "index.html"
 	}
-	code := http.StatusNotFound
-	if cfg.ErrorPage404 != "" {
-		code = http.StatusOK
-	}
 	return &staticFiles{
-		root:                 &s3FS{store: store, prefix: prefix},
-		enableDirListing:     cfg.EnableDirectoryListing,
-		indexFiles:           indexFiles,
-		spaMode:              cfg.SPAMode,
-		spaIndex:             spaIndex,
-		errorPage404:         cfg.ErrorPage404,
-		cacheControl:         cfg.CacheControl,
-		notFoundResponseCode: code,
-		name:                 "test",
-		next:                 http.NotFoundHandler(),
+		root:             &s3FS{store: store, prefix: prefix},
+		enableDirListing: cfg.EnableDirectoryListing,
+		indexFiles:       indexFiles,
+		spaMode:          cfg.SPAMode,
+		spaIndex:         spaIndex,
+		errorPage404:     cfg.ErrorPage404,
+		cacheControl:     cfg.CacheControl,
+		name:             "test",
+		next:             http.NotFoundHandler(),
 	}
 }
 
@@ -236,8 +231,8 @@ func TestS3ErrorPage(t *testing.T) {
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
-	if !strings.Contains(string(body), "custom not found") {
-		t.Fatalf("error page not served, got %q", body)
+	if resp.StatusCode != http.StatusNotFound || !strings.Contains(string(body), "custom not found") {
+		t.Fatalf("error page: want 404 with the page, got %d %q", resp.StatusCode, body)
 	}
 }
 

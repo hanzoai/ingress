@@ -103,7 +103,7 @@ func TestLocalErrorPage(t *testing.T) {
 	}
 	body, _ := io.ReadAll(resp.Body)
 	resp.Body.Close()
-	if !bytes.Contains(body, []byte("local not found")) {
+	if resp.StatusCode != http.StatusNotFound || !bytes.Contains(body, []byte("local not found")) {
 		t.Fatalf("local error page: status=%d body=%q", resp.StatusCode, body)
 	}
 }

@@ -226,6 +226,78 @@ func TestSPAModeStillFallsBack(t *testing.T) {
 	if status, _, _ := get(t, srv, "/_next/static/chunks/nope.js"); status != http.StatusNotFound {
 		t.Errorf("SPA asset miss = %d, want 404", status)
 	}
+
+	// A dotted client route is a route: ".3" is no media type.
+	if status, _, body := get(t, srv, "/models/glm-9.3"); status != http.StatusOK || !strings.Contains(body, "<title>home</title>") {
+		t.Errorf("SPA dotted route = %d body=%q, want 200 shell", status, truncate(body))
+	}
+
+	// A data file is answered as data, never with the shell.
+	if status, _, body := get(t, srv, "/config.json"); status != http.StatusNotFound || !strings.Contains(body, `"not found"`) {
+		t.Errorf("SPA JSON miss = %d body=%q, want a JSON 404", status, truncate(body))
+	}
+}
+
+// TestMissAnswersByKind pins cloud's Sites contract (apps/sites notFound): a
+// page miss gets the site's 404 page with status 404, a JSON miss a JSON 404, and
+// any other file a bare 404. What decides is the media type the path names, so a
+// dotted route is a page and a missing chunk is never answered with markup.
+func TestMissAnswersByKind(t *testing.T) {
+	root := exportRoot(t)
+	if err := os.MkdirAll(filepath.Join(root, "empty"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	srv := httptest.NewServer(newLocal(t, dynamic.StaticFiles{Root: root, ErrorPage404: "404.html"}))
+	defer srv.Close()
+
+	for _, tc := range []struct {
+		path, want, ctype string
+	}{
+		{"/no-such-route", "<title>gone</title>", "text/html"},
+		{"/models/glm-9.3", "<title>gone</title>", "text/html"},        // dotted route, missing
+		{"/models/llama-3.2-1b-x", "<title>gone</title>", "text/html"}, // ".2-1b-x" is no type
+		{"/empty/", "<title>gone</title>", "text/html"},                // directory, no index
+		{"/data/nope.json", `{"error":"not found","path":"/data/nope.json"}`, "application/json"},
+		{"/_next/static/chunks/nope.js", "404 page not found", "text/plain"},
+		{"/missing.woff2", "404 page not found", "text/plain"},
+		{"/robots.txt", "404 page not found", "text/plain"},
+	} {
+		status, _, body := get(t, srv, tc.path)
+		if status != http.StatusNotFound {
+			t.Errorf("GET %s = %d, want 404", tc.path, status)
+		}
+		if !strings.Contains(body, tc.want) {
+			t.Errorf("GET %s body = %q, want %q", tc.path, truncate(body), tc.want)
+		}
+		resp, err := srv.Client().Head(srv.URL + tc.path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp.Body.Close()
+		if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, tc.ctype) || resp.StatusCode != http.StatusNotFound {
+			t.Errorf("HEAD %s = %d %q, want 404 %s", tc.path, resp.StatusCode, ct, tc.ctype)
+		}
+	}
+
+	// The ladder still wins over the 404 page.
+	if status, _, body := get(t, srv, "/models/glm-5.2"); status != http.StatusOK || !strings.Contains(body, "<title>glm</title>") {
+		t.Errorf("GET /models/glm-5.2 = %d %q, want the page", status, truncate(body))
+	}
+}
+
+// TestMissWithoutErrorPage: no configured page, or a configured page the root
+// does not hold, is a bare 404 and never a 500.
+func TestMissWithoutErrorPage(t *testing.T) {
+	for name, cfg := range map[string]dynamic.StaticFiles{
+		"unset":  {Root: exportRoot(t)},
+		"absent": {Root: exportRoot(t), ErrorPage404: "missing-404.html"},
+	} {
+		srv := httptest.NewServer(newLocal(t, cfg))
+		if status, _, body := get(t, srv, "/no-such-route"); status != http.StatusNotFound || strings.Contains(body, "<title>") {
+			t.Errorf("%s: GET /no-such-route = %d %q, want a bare 404", name, status, truncate(body))
+		}
+		srv.Close()
+	}
 }
 
 func truncate(s string) string {

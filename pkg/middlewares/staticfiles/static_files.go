@@ -2,6 +2,7 @@ package staticfiles
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -13,6 +14,7 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -30,12 +32,14 @@ const typeName = "StaticFiles"
 // instead of a page; hanzoskills.com publishes a .md twin of every document.
 func init() {
 	for ext, typ := range map[string]string{
-		".md":       "text/markdown; charset=utf-8",
-		".markdown": "text/markdown; charset=utf-8",
-		".woff":     "font/woff",
-		".woff2":    "font/woff2",
-		".ttf":      "font/ttf",
-		".otf":      "font/otf",
+		".md":          "text/markdown; charset=utf-8",
+		".markdown":    "text/markdown; charset=utf-8",
+		".woff":        "font/woff",
+		".woff2":       "font/woff2",
+		".ttf":         "font/ttf",
+		".otf":         "font/otf",
+		".map":         "application/json",
+		".webmanifest": "application/manifest+json",
 	} {
 		// AddExtensionType only returns an error on a malformed extension.
 		_ = mime.AddExtensionType(ext, typ)
@@ -51,16 +55,15 @@ type dirEntry struct {
 }
 
 type staticFiles struct {
-	root                 http.FileSystem
-	enableDirListing     bool
-	indexFiles           []string
-	spaMode              bool
-	spaIndex             string
-	errorPage404         string
-	cacheControl         map[string]string
-	notFoundResponseCode int
-	name                 string
-	next                 http.Handler
+	root             http.FileSystem
+	enableDirListing bool
+	indexFiles       []string
+	spaMode          bool
+	spaIndex         string
+	errorPage404     string
+	cacheControl     map[string]string
+	name             string
+	next             http.Handler
 }
 
 // New creates a new static files middleware.
@@ -107,22 +110,16 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 		spaIndex = "index.html"
 	}
 
-	notFoundResponseCode := http.StatusNotFound
-	if config.ErrorPage404 != "" {
-		notFoundResponseCode = http.StatusOK
-	}
-
 	return &staticFiles{
-		root:                 rootFS,
-		enableDirListing:     config.EnableDirectoryListing,
-		indexFiles:           indexFiles,
-		spaMode:              config.SPAMode,
-		spaIndex:             spaIndex,
-		errorPage404:         config.ErrorPage404,
-		cacheControl:         config.CacheControl,
-		notFoundResponseCode: notFoundResponseCode,
-		name:                 name,
-		next:                 next,
+		root:             rootFS,
+		enableDirListing: config.EnableDirectoryListing,
+		indexFiles:       indexFiles,
+		spaMode:          config.SPAMode,
+		spaIndex:         spaIndex,
+		errorPage404:     config.ErrorPage404,
+		cacheControl:     config.CacheControl,
+		name:             name,
+		next:             next,
 	}, nil
 }
 
@@ -145,13 +142,28 @@ func (h *staticFiles) open(ctx context.Context, name string) (http.File, error) 
 	return h.root.Open(name)
 }
 
-// looksLikeAsset reports whether a not-found path should return 404 rather than
-// the SPA shell: true for a concrete file (a non-HTML extension), false for an
-// extensionless client-route navigation. This stops a missing content-hashed
-// asset from being masked by a 200 index.html.
-func looksLikeAsset(p string) bool {
-	ext := strings.ToLower(path.Ext(p))
-	return ext != "" && ext != ".html" && ext != ".htm"
+// kind is what a request names, read from the media type of its path: the same
+// table that types a served file, and the one cloud's Sites plane reads
+// (apps/sites contentType). A dot in a route segment names no type, so
+// "/models/glm-5.2" is a page, not a file with the extension ".2".
+type kind int
+
+const (
+	page  kind = iota // HTML, or a path no media type claims
+	data              // JSON
+	asset             // any other typed file: script, style, image, font
+)
+
+func kindOf(p string) kind {
+	t, _, _ := strings.Cut(mime.TypeByExtension(path.Ext(p)), ";")
+	switch t = strings.TrimSpace(t); {
+	case t == "" || t == "text/html":
+		return page
+	case t == "application/json" || t == "text/json" || strings.HasSuffix(t, "+json"):
+		return data
+	default:
+		return asset
+	}
 }
 
 // pageCandidates returns the files a static export may have written for an
@@ -220,21 +232,10 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			// A prerendered route before any fallback policy: the file exists,
 			// it is just named "pricing.html" rather than "pricing".
 			//
-			// Deliberately NOT gated on looksLikeAsset. That predicate guesses
-			// from the extension, and a URL segment may carry a dot without
-			// being a file: "/models/z-ai/glm-5.2" has path.Ext ".2" and
-			// "/models/meta-llama/llama-3.2-1b-instruct" has ".2-1b-instruct".
-			// Gating here 404d 181 of hanzo.ai's 773 routes — every model page
-			// with a version number in it — while the plain ones worked.
-			//
-			// It does not need the gate. The ladder asks for ONE exact file per
-			// candidate; it never falls back to a shell, so there is nothing for
-			// it to mask something with. A missing chunk looks for
-			// "nope.js.html" and "nope.js/index.html", finds neither, and stays
-			// a bare 404 — the guarantee holds by construction rather than by
-			// guessing what a path means. looksLikeAsset still gates SPA mode
-			// below, which is where it belongs: THAT path serves the shell for
-			// anything, so it is the one that must not answer an asset.
+			// Not gated on kind. The ladder asks for ONE exact file per
+			// candidate and never falls back to a shell, so a missing chunk looks
+			// for "nope.js.html" and "nope.js/index.html", finds neither, and
+			// reaches miss below.
 			for _, candidate := range pageCandidates(upath) {
 				if cf, cd, ok := h.openRegular(r.Context(), candidate); ok {
 					defer cf.Close()
@@ -243,16 +244,11 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			if h.spaMode && !looksLikeAsset(upath) {
+			if h.spaMode && kindOf(upath) == page {
 				h.serveFile(w, r, h.spaIndex)
 				return
 			}
-			if h.errorPage404 != "" {
-				w.WriteHeader(h.notFoundResponseCode)
-				h.serveFile(w, r, h.errorPage404)
-				return
-			}
-			http.NotFound(w, r)
+			h.miss(w, r, upath)
 			return
 		}
 		// An object-store outage is an availability failure, not authorization:
@@ -304,12 +300,7 @@ func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if !h.enableDirListing {
-			if h.errorPage404 != "" {
-				w.WriteHeader(h.notFoundResponseCode)
-				h.serveFile(w, r, h.errorPage404)
-				return
-			}
-			http.NotFound(w, r)
+			h.miss(w, r, upath)
 			return
 		}
 
@@ -405,8 +396,51 @@ func cacheControlHas(m map[string]string, key string) bool {
 	return ok
 }
 
-// serveFile serves a single file (SPA index or 404 page) named relative to the
-// root, through the same origin as everything else — local disk or object store.
+// miss answers a path the root holds nothing for, by what the path names: a page
+// gets the site's 404 page, JSON gets a JSON body, anything else a bare 404. Every
+// answer is status 404, so a missing chunk is never markup and a missing page is
+// never a success. Cloud's Sites plane answers the same way (apps/sites notFound).
+func (h *staticFiles) miss(w http.ResponseWriter, r *http.Request, upath string) {
+	switch kindOf(upath) {
+	case page:
+		if h.errorPage404 != "" && h.notFoundPage(w, r) {
+			return
+		}
+	case data:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.WriteHeader(http.StatusNotFound)
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "not found", "path": upath})
+		return
+	}
+	http.NotFound(w, r)
+}
+
+// notFoundPage writes the configured 404 page with status 404, or reports false
+// when the root holds no such file. No validators: a 404 is not revalidated.
+func (h *staticFiles) notFoundPage(w http.ResponseWriter, r *http.Request) bool {
+	f, d, ok := h.openRegular(r.Context(), "/"+strings.TrimPrefix(h.errorPage404, "/"))
+	if !ok {
+		return false
+	}
+	defer f.Close()
+
+	if t := mime.TypeByExtension(filepath.Ext(d.Name())); t != "" {
+		w.Header().Set("Content-Type", t)
+	}
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("Content-Length", strconv.FormatInt(d.Size(), 10))
+	w.WriteHeader(http.StatusNotFound)
+	if r.Method != http.MethodHead {
+		_, _ = io.Copy(w, f)
+	}
+	return true
+}
+
+// serveFile serves the SPA index named relative to the root, through the same
+// origin as everything else — local disk or object store.
 func (h *staticFiles) serveFile(w http.ResponseWriter, r *http.Request, name string) {
 	f, err := h.open(r.Context(), "/"+strings.TrimPrefix(name, "/"))
 	if err != nil {
