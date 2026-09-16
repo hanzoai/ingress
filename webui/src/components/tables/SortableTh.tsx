@@ -1,6 +1,6 @@
 import { AriaTh, CSS, Flex, Label } from '@traefiklabs/faency'
 import { useCallback, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import SortButton from 'components/buttons/SortButton'
 

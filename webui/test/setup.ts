@@ -6,9 +6,9 @@
 // Must run BEFORE the imports below — Vitest's setupFiles are
 // processed in source order and the mock server captures BASE_PATH
 // at module load.
-;(globalThis as unknown as { window: { APIUrl: string } }).window =
-  (globalThis as unknown as { window?: { APIUrl?: string } }).window || ({} as { APIUrl: string })
-;(globalThis as unknown as { window: { APIUrl: string } }).window.APIUrl = '/v1/ingress'
+const root = globalThis as unknown as { window?: { APIUrl: string } }
+root.window = root.window || ({} as { APIUrl: string })
+root.window.APIUrl = '/v1/ingress'
 
 import '@testing-library/jest-dom'
 import 'vitest-canvas-mock'

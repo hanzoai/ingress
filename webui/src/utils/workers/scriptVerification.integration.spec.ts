@@ -16,7 +16,7 @@ describe('Script Signature Verification - Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     fetchMock = vi.fn()
-    globalThis.fetch = fetchMock
+    vi.stubGlobal('fetch', fetchMock)
   })
 
   it('should verify a valid script with correct signature through real worker', async () => {

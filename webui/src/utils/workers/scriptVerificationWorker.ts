@@ -1,13 +1,14 @@
 // Script verification worker
 // Runs in isolated context for secure verification
 
-import { verify } from '@noble/ed25519'
-import * as ed25519 from '@noble/ed25519'
+import { hashes, verify, type TRet } from '@noble/ed25519'
 import { sha512 } from '@noble/hashes/sha2.js'
 
-// Set up SHA-512 for @noble/ed25519 v3.x
-ed25519.hashes.sha512 = sha512
-ed25519.hashes.sha512Async = (m) => Promise.resolve(sha512(m))
+// sha512 allocates its own buffer, the narrower type @noble/ed25519 asks for.
+const hash = (message: Uint8Array) => sha512(message) as TRet<Uint8Array>
+
+hashes.sha512 = hash
+hashes.sha512Async = (message) => Promise.resolve(hash(message))
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
   try {

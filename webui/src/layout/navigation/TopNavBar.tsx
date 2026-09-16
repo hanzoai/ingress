@@ -11,19 +11,14 @@ import {
   Flex,
   Link,
   Text,
-  Tooltip,
 } from '@traefiklabs/faency'
-import { useContext, useMemo } from 'react'
 import { FiBookOpen, FiChevronLeft, FiGithub, FiHelpCircle } from 'react-icons/fi'
-import { useLocation } from 'react-router-dom'
 
 import ThemeSwitcher from 'components/ThemeSwitcher'
-import { VersionContext } from 'contexts/version'
 import { useRouterReturnTo } from 'hooks/use-href-with-return-to'
 
 const TopNavBarBackLink = () => {
   const { returnTo, returnToLabel } = useRouterReturnTo()
-  const { pathname } = useLocation()
 
   if (!returnTo) return <Box />
 
@@ -40,19 +35,6 @@ const TopNavBarBackLink = () => {
 }
 
 export const TopNav = ({ css }: { css?: CSS }) => {
-  const { version } = useContext(VersionContext)
-
-  const parsedVersion = useMemo(() => {
-    if (!version) {
-      return 'master'
-    }
-    if (version === 'dev') {
-      return 'master'
-    }
-    const matches = version.match(/^(v?\d+\.\d+)/)
-    return matches ? 'v' + matches[1] : 'master'
-  }, [version])
-
   return (
     <Flex as="nav" role="navigation" justify="space-between" align="center" css={{ mb: '$6', ...css }}>
       <TopNavBarBackLink />

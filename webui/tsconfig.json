@@ -25,9 +25,6 @@
     "noImplicitAny": false,
     "types": ["vitest/globals"],
     "paths": {
-      "react": [
-        "./node_modules/@types/react"
-      ],
       "*": [
         "./src/*"
       ]

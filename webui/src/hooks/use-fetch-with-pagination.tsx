@@ -1,5 +1,5 @@
 import { AriaTd, AriaTr } from '@traefiklabs/faency'
-import { stringify } from 'query-string'
+import qs from 'query-string'
 import { ReactNode } from 'react'
 import useSWRInfinite, { SWRInfiniteConfiguration } from 'swr/infinite'
 
@@ -41,7 +41,7 @@ const useFetchWithPagination: useFetchWithPaginationType = (path, opts) => {
   ): string | null => {
     if (previousPageData && (!previousPageData.data?.length || previousPageData.nextPage === 1)) return null
 
-    return `${path}?${stringify({
+    return `${path}?${qs.stringify({
       page: pageIndex + 1,
       per_page: rowsPerPage,
       ...query,

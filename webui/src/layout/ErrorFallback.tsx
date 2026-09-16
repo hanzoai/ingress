@@ -8,7 +8,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
         <Text as="p">Something went wrong:</Text>
       </Box>
       <Box css={{ mb: '$2' }}>
-        <Text variant="red">{error.message}</Text>
+        <Text variant="red">{error instanceof Error ? error.message : String(error)}</Text>
       </Box>
       <Button type="button" onClick={resetErrorBoundary}>
         Try again
