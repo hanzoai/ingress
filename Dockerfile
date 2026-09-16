@@ -18,7 +18,7 @@ FROM --platform=$BUILDPLATFORM golang:1.26.8-alpine AS builder
 # failure instead of a download.
 ENV GOTOOLCHAIN=auto
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git tzdata ca-certificates
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
