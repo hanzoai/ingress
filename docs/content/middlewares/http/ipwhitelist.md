@@ -19,7 +19,7 @@ IPWhiteList limits allowed requests based on the client IP.
 ```yaml tab="Docker"
 # Accepts request from defined IP
 labels:
-  - "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
+  - "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="Kubernetes"
@@ -36,7 +36,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Accepts request from defined IP
-- "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
+- "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="File (YAML)"
@@ -95,8 +95,8 @@ See [ipStrategy.ipv6Subnet](#ipstrategyipv6subnet) for more details.
 ```yaml tab="Docker"
 # Whitelisting Based on `X-Forwarded-For` with `depth=2`
 labels:
-  - "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
-  - "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.depth=2"
+  - "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
+  - "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.depth=2"
 ```
 
 ```yaml tab="Kubernetes"
@@ -116,8 +116,8 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Whitelisting Based on `X-Forwarded-For` with `depth=2`
-- "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
-- "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.depth=2"
+- "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange=127.0.0.1/32, 192.168.1.7"
+- "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.depth=2"
 ```
 
 ```yaml tab="File (YAML)"
@@ -161,8 +161,8 @@ http:
 ```yaml tab="Docker"
 # Exclude from `X-Forwarded-For`
 labels:
-    - "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourceRange=127.0.0.1/32, 192.168.1.0/24"
-    - "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
+    - "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourceRange=127.0.0.1/32, 192.168.1.0/24"
+    - "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="Kubernetes"
@@ -184,8 +184,8 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Exclude from `X-Forwarded-For`
-- "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourceRange=127.0.0.1/32, 192.168.1.0/24"
-- "traefik.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
+- "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.sourceRange=127.0.0.1/32, 192.168.1.0/24"
+- "ingress.http.middlewares.test-ipwhitelist.ipwhitelist.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="File (YAML)"
@@ -233,7 +233,7 @@ This is useful for grouping IPv6 addresses into subnets to prevent bypassing thi
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-ipWhiteList.ipWhiteList.sourcecriterion.ipstrategy.ipv6Subnet=64"
+  - "ingress.http.middlewares.test-ipWhiteList.ipWhiteList.sourcecriterion.ipstrategy.ipv6Subnet=64"
 ```
 
 ```yaml tab="Kubernetes"
@@ -249,7 +249,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-ipWhiteList.ipWhiteList.sourcecriterion.ipstrategy.ipv6Subnet=64"
+- "ingress.http.middlewares.test-ipWhiteList.ipWhiteList.sourcecriterion.ipstrategy.ipv6Subnet=64"
 ```
 
 ```yaml tab="File (YAML)"

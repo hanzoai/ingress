@@ -17,13 +17,13 @@ This can be used with [HEALTHCHECK](https://docs.docker.com/engine/reference/bui
 ### Usage 
 
 ```sh
-traefik healthcheck [command] [flags] [arguments]
+ingress healthcheck [command] [flags] [arguments]
 ```
 
 Example:
 
 ```sh
-$ traefik healthcheck
+$ ingress healthcheck
 OK: http://:8082/ping
 ```
 
@@ -32,7 +32,7 @@ OK: http://:8082/ping
 The `/ping` health-check URL is enabled with the command-line `--ping` or config file option `[ping]`.
 
 The entryPoint where the `/ping` is active can be customized with the `entryPoint` option,
-whose default value is `traefik` (port `8080`).
+whose default value is `ingress` (port `8080`).
 
 | Path    | Method        | Description                                                                                         |
 |---------|---------------|-----------------------------------------------------------------------------------------------------|
@@ -58,7 +58,7 @@ ping: {}
 
 | Field | Description                                               | Default              | Required |
 |:------|:----------------------------------------------------------|:---------------------|:---------|
-| <a id="opt-ping-entryPoint" href="#opt-ping-entryPoint" title="#opt-ping-entryPoint">`ping.entryPoint`</a> | Enables `/ping` on a dedicated EntryPoint. | traefik  | No   |
+| <a id="opt-ping-entryPoint" href="#opt-ping-entryPoint" title="#opt-ping-entryPoint">`ping.entryPoint`</a> | Enables `/ping` on a dedicated EntryPoint. | ingress  | No   |
 | <a id="opt-ping-manualRouting" href="#opt-ping-manualRouting" title="#opt-ping-manualRouting">`ping.manualRouting`</a> | Disables the default internal router in order to allow one to create a custom router for the `ping@internal` service when set to `true`. | false | No   |
 | <a id="opt-ping-terminatingStatusCode" href="#opt-ping-terminatingStatusCode" title="#opt-ping-terminatingStatusCode">`ping.terminatingStatusCode`</a> | Defines the status code for the ping handler during a graceful shut down. See more information [here](#terminatingstatuscode) | 503 | No   |
 

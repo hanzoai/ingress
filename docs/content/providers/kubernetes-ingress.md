@@ -212,18 +212,18 @@ See [label-selectors](https://kubernetes.io/docs/concepts/overview/working-with-
 ```yaml tab="File (YAML)"
 providers:
   kubernetesIngress:
-    labelSelector: "app=traefik"
+    labelSelector: "app=ingress"
     # ...
 ```
 
 ```toml tab="File (TOML)"
 [providers.kubernetesIngress]
-  labelSelector = "app=traefik"
+  labelSelector = "app=ingress"
   # ...
 ```
 
 ```bash tab="CLI"
---providers.kubernetesingress.labelselector="app=traefik"
+--providers.kubernetesingress.labelselector="app=ingress"
 ```
 
 ### `ingressClass`
@@ -233,7 +233,7 @@ _Optional, Default: ""_
 Value of `kubernetes.io/ingress.class` annotation that identifies Ingress objects to be processed.
 
 If the parameter is set, only Ingresses containing an annotation with the same value are processed.
-Otherwise, Ingresses missing the annotation, having an empty value, or the value `traefik` are processed.
+Otherwise, Ingresses missing the annotation, having an empty value, or the value `ingress` are processed.
 
 ??? info "Example"
 
@@ -241,7 +241,7 @@ Otherwise, Ingresses missing the annotation, having an empty value, or the value
     apiVersion: networking.k8s.io/v1
     kind: IngressClass
     metadata:
-      name: traefik-lb
+      name: ingress-lb
     spec:
       controller: hanzo.ai/ingress-controller
     ```
@@ -252,7 +252,7 @@ Otherwise, Ingresses missing the annotation, having an empty value, or the value
     metadata:
       name: example-ingress
     spec:
-      ingressClassName: traefik-lb
+      ingressClassName: ingress-lb
       rules:
       - host: "*.example.com"
         http:
@@ -269,18 +269,18 @@ Otherwise, Ingresses missing the annotation, having an empty value, or the value
 ```yaml tab="File (YAML)"
 providers:
   kubernetesIngress:
-    ingressClass: "traefik-internal"
+    ingressClass: "ingress-internal"
     # ...
 ```
 
 ```toml tab="File (TOML)"
 [providers.kubernetesIngress]
-  ingressClass = "traefik-internal"
+  ingressClass = "ingress-internal"
   # ...
 ```
 
 ```bash tab="CLI"
---providers.kubernetesingress.ingressclass=traefik-internal
+--providers.kubernetesingress.ingressclass=ingress-internal
 ```
 
 ### `disableIngressClassLookup`
@@ -557,4 +557,4 @@ providers:
 To learn more about the various aspects of the Ingress specification that Hanzo Ingress supports,
 many examples of Ingresses definitions are located in the test [examples](https://github.com/hanzoai/ingress/tree/v3.6/pkg/provider/kubernetes/ingress/fixtures) of the Hanzo Ingress repository.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

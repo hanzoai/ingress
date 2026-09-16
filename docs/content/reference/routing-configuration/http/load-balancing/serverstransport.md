@@ -88,14 +88,14 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.services.Service01.loadBalancer.serversTransport=mytransport"
+  - "ingress.http.services.Service01.loadBalancer.serversTransport=mytransport"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.services.Service01.loadBalancer.serversTransport=mytransport"
+    "ingress.http.services.Service01.loadBalancer.serversTransport=mytransport"
   ]
 }
 ```

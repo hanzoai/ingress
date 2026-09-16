@@ -137,22 +137,22 @@ metrics:
 
 #### `prefix`
 
-_Optional, Default="traefik"_
+_Optional, Default="ingress"_
 
 The prefix to use for metrics collection.
 
 ```yaml tab="File (YAML)"
 metrics:
   datadog:
-    prefix: traefik
+    prefix: ingress
 ```
 
 ```toml tab="File (TOML)"
 [metrics]
   [metrics.datadog]
-    prefix = "traefik"
+    prefix = "ingress"
 ```
 
 ```bash tab="CLI"
---metrics.datadog.prefix=traefik
+--metrics.datadog.prefix=ingress
 ```

@@ -19,7 +19,7 @@ This can help services avoid large amounts of data (`multipart/form-data` for ex
 ```yaml tab="Docker & Swarm"
 # Sets the maximum request body to 2MB
 labels:
-  - "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="Kubernetes"
@@ -35,7 +35,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Sets the maximum request body to 2MB
-- "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
+- "ingress.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="File (YAML)"
@@ -66,7 +66,7 @@ If the request exceeds the allowed size, it is not forwarded to the service, and
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="Kubernetes"
@@ -80,7 +80,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
+- "ingress.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="File (YAML)"
@@ -105,7 +105,7 @@ You can configure a threshold (in bytes) from which the request will be buffered
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.limit.buffering.memRequestBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.memRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="Kubernetes"
@@ -119,7 +119,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.limit.buffering.memRequestBodyBytes=2000000"
+- "ingress.http.middlewares.limit.buffering.memRequestBodyBytes=2000000"
 ```
 
 ```yaml tab="File (YAML)"
@@ -146,7 +146,7 @@ If the response exceeds the allowed size, it is not forwarded to the client. The
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.limit.buffering.maxResponseBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.maxResponseBodyBytes=2000000"
 ```
 
 ```yaml tab="Kubernetes"
@@ -160,7 +160,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.limit.buffering.maxResponseBodyBytes=2000000"
+- "ingress.http.middlewares.limit.buffering.maxResponseBodyBytes=2000000"
 ```
 
 ```yaml tab="File (YAML)"
@@ -185,7 +185,7 @@ You can configure a threshold (in bytes) from which the response will be buffere
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.limit.buffering.memResponseBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.memResponseBodyBytes=2000000"
 ```
 
 ```yaml tab="Kubernetes"
@@ -199,7 +199,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.limit.buffering.memResponseBodyBytes=2000000"
+- "ingress.http.middlewares.limit.buffering.memResponseBodyBytes=2000000"
 ```
 
 ```yaml tab="File (YAML)"
@@ -226,7 +226,7 @@ You can have the Buffering middleware replay the request using `retryExpression`
 
     ```yaml tab="Docker & Swarm"
     labels:
-      - "traefik.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 2"
+      - "ingress.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 2"
     ```
 
     ```yaml tab="Kubernetes"
@@ -240,7 +240,7 @@ You can have the Buffering middleware replay the request using `retryExpression`
     ```
 
     ```yaml tab="Consul Catalog"
-    - "traefik.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 2"
+    - "ingress.http.middlewares.limit.buffering.retryExpression=IsNetworkError() && Attempts() < 2"
     ```
 
     ```yaml tab="File (YAML)"

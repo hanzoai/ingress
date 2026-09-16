@@ -23,7 +23,7 @@ which in turn will create the resulting routers, services, handlers, etc.
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     rules:
       - apiGroups:
           - ""
@@ -63,14 +63,14 @@ which in turn will create the resulting routers, services, handlers, etc.
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: traefik-ingress-controller
+      name: ingress-controller
     subjects:
       - kind: ServiceAccount
-        name: traefik-ingress-controller
+        name: ingress-controller
         namespace: default
     ```
 
@@ -107,29 +107,29 @@ which in turn will create the resulting routers, services, handlers, etc.
     apiVersion: v1
     kind: ServiceAccount
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
 
     ---
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: traefik
+      name: ingress
       labels:
-        app: traefik
+        app: ingress
 
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: traefik
+          app: ingress
       template:
         metadata:
           labels:
-            app: traefik
+            app: ingress
         spec:
-          serviceAccountName: traefik-ingress-controller
+          serviceAccountName: ingress-controller
           containers:
-            - name: traefik
+            - name: ingress
               image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --entryPoints.web.address=:80
@@ -142,11 +142,11 @@ which in turn will create the resulting routers, services, handlers, etc.
     apiVersion: v1
     kind: Service
     metadata:
-      name: traefik
+      name: ingress
     spec:
       type: LoadBalancer
       selector:
-        app: traefik
+        app: ingress
       ports:
         - protocol: TCP
           port: 80
@@ -160,19 +160,19 @@ which in turn will create the resulting routers, services, handlers, etc.
     metadata:
       name: whoami
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoami
 
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoami
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoami
         spec:
           containers:
@@ -192,7 +192,7 @@ which in turn will create the resulting routers, services, handlers, etc.
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoami
     ```
 
@@ -485,7 +485,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     rules:
       - apiGroups:
           - ""
@@ -526,14 +526,14 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: traefik-ingress-controller
+      name: ingress-controller
     subjects:
       - kind: ServiceAccount
-        name: traefik-ingress-controller
+        name: ingress-controller
         namespace: default
     ```
 
@@ -570,29 +570,29 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     apiVersion: v1
     kind: ServiceAccount
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
 
     ---
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: traefik
+      name: ingress
       labels:
-        app: traefik
+        app: ingress
 
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: traefik
+          app: ingress
       template:
         metadata:
           labels:
-            app: traefik
+            app: ingress
         spec:
-          serviceAccountName: traefik-ingress-controller
+          serviceAccountName: ingress-controller
           containers:
-            - name: traefik
+            - name: ingress
               image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --entryPoints.websecure.address=:443
@@ -606,11 +606,11 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     apiVersion: v1
     kind: Service
     metadata:
-      name: traefik
+      name: ingress
     spec:
       type: LoadBalancer
       selector:
-        app: traefik
+        app: ingress
       ports:
         - protocol: TCP
           port: 443
@@ -624,19 +624,19 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
     metadata:
       name: whoami
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoami
 
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoami
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoami
         spec:
           containers:
@@ -656,7 +656,7 @@ This way, any Ingress attached to this Entrypoint will have TLS termination by d
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoami
     ```
 
@@ -677,7 +677,7 @@ For more options, please refer to the available [annotations](#on-ingress).
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     rules:
       - apiGroups:
           - ""
@@ -718,14 +718,14 @@ For more options, please refer to the available [annotations](#on-ingress).
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: traefik-ingress-controller
+      name: ingress-controller
     subjects:
       - kind: ServiceAccount
-        name: traefik-ingress-controller
+        name: ingress-controller
         namespace: default
     ```
 
@@ -763,29 +763,29 @@ For more options, please refer to the available [annotations](#on-ingress).
     apiVersion: v1
     kind: ServiceAccount
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
 
     ---
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: traefik
+      name: ingress
       labels:
-        app: traefik
+        app: ingress
 
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: traefik
+          app: ingress
       template:
         metadata:
           labels:
-            app: traefik
+            app: ingress
         spec:
-          serviceAccountName: traefik-ingress-controller
+          serviceAccountName: ingress-controller
           containers:
-            - name: traefik
+            - name: ingress
               image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --entryPoints.websecure.address=:443
@@ -798,11 +798,11 @@ For more options, please refer to the available [annotations](#on-ingress).
     apiVersion: v1
     kind: Service
     metadata:
-      name: traefik
+      name: ingress
     spec:
       type: LoadBalancer
       selector:
-        app: traefik
+        app: ingress
       ports:
         - protocol: TCP
           port: 443
@@ -816,19 +816,19 @@ For more options, please refer to the available [annotations](#on-ingress).
     metadata:
       name: whoami
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoami
 
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoami
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoami
         spec:
           containers:
@@ -848,7 +848,7 @@ For more options, please refer to the available [annotations](#on-ingress).
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoami
     ```
 
@@ -927,7 +927,7 @@ and will connect via TLS automatically.
 
 !!! info
 
-    Please note that by enabling TLS communication between traefik and your pods,
+    Please note that by enabling TLS communication between ingress and your pods,
     you will have to have trusted certificates that have the proper trust chain and IP subject name.
     If this is not an option, you may need to skip TLS certificate verification.
     See the [insecureSkipVerify](../../routing/overview.md#insecureskipverify) setting for more details.
@@ -960,4 +960,4 @@ This will allow users to create a "default router" that will match all unmatched
 
     To do this, use the `ingress.kubernetes.io/router.priority` annotation (as seen in [Annotations on Ingress](#on-ingress)) on your ingresses accordingly.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

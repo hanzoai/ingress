@@ -370,7 +370,7 @@ along with the required environment variables and their [wildcard & root domain 
 Do not hesitate to complete it.
 
 Many lego environment variables can be overridden by their respective `_FILE` counterpart, which should have a filepath to a file that contains the secret as its value.
-For example, `CF_API_EMAIL_FILE=/run/secrets/traefik_cf-api-email` could be used to provide a Cloudflare API email address as a Docker secret named `traefik_cf-api-email`.
+For example, `CF_API_EMAIL_FILE=/run/secrets/ingress_cf-api-email` could be used to provide a Cloudflare API email address as a Docker secret named `ingress_cf-api-email`.
 
 For complete details, refer to your provider's _Additional configuration_ link.
 
@@ -824,11 +824,11 @@ ACME certificates are stored in a JSON file that needs to have a `600` file mode
 In Docker you can mount either the JSON file, or the folder containing it:
 
 ```bash
-docker run -v "/my/host/acme.json:/acme.json" traefik
+docker run -v "/my/host/acme.json:/acme.json" ingress
 ```
 
 ```bash
-docker run -v "/my/host/acme:/etc/traefik/acme" traefik
+docker run -v "/my/host/acme:/etc/ingress/acme" ingress
 ```
 
 !!! warning
@@ -1211,4 +1211,4 @@ If Let's Encrypt is not reachable, the following certificates will apply:
 !!! important
     For new (sub)domains which need Let's Encrypt authentication, the default Hanzo Ingress certificate will be used until Hanzo Ingress is restarted.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

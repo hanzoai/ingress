@@ -141,7 +141,7 @@ metrics:
 
 #### `serviceName`
 
-_Optional, Default="traefik"_
+_Optional, Default="ingress"_
 
 Defines the service name resource attribute.
 

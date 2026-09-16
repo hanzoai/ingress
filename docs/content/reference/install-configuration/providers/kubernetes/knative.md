@@ -139,4 +139,4 @@ providers:
 
 See the dedicated section in [routing](../../../routing-configuration/kubernetes/knative.md).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

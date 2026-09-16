@@ -46,10 +46,10 @@ Expose the dashboard:
 apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
-  name: traefik-dashboard
+  name: ingress-dashboard
 spec:
   routes:
-  - match: Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+  - match: Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
     kind: Rule
     services:
     - name: api@internal
@@ -72,11 +72,11 @@ ingressRoute:
   dashboard:
     enabled: true
     # Custom match rule with host domain
-    matchRule: Host(`traefik.example.com`)
+    matchRule: Host(`ingress.example.com`)
     entryPoints: ["websecure"]
     # Add custom middlewares : authentication and redirection
     middlewares:
-      - name: traefik-dashboard-auth
+      - name: ingress-dashboard-auth
 
 # Create the custom middlewares used by the IngressRoute dashboard (can also be created in another way).
 # /!\ Yes, you need to replace "changeme" password with a better one. /!\
@@ -84,7 +84,7 @@ extraObjects:
   - apiVersion: v1
     kind: Secret
     metadata:
-      name: traefik-dashboard-auth-secret
+      name: ingress-dashboard-auth-secret
     type: kubernetes.io/basic-auth
     stringData:
       username: admin
@@ -93,39 +93,39 @@ extraObjects:
   - apiVersion: hanzo.ai/v1alpha1
     kind: Middleware
     metadata:
-      name: traefik-dashboard-auth
+      name: ingress-dashboard-auth
     spec:
       basicAuth:
-        secret: traefik-dashboard-auth-secret
+        secret: ingress-dashboard-auth-secret
 ```
 
 ```yaml tab="Docker"
 # Dynamic Configuration
 labels:
-  - "traefik.http.routers.dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-  - "traefik.http.routers.dashboard.service=api@internal"
-  - "traefik.http.routers.dashboard.middlewares=auth"
-  - "traefik.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
+  - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+  - "ingress.http.routers.dashboard.service=api@internal"
+  - "ingress.http.routers.dashboard.middlewares=auth"
+  - "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="Swarm"
 # Dynamic Configuration
 deploy:
   labels:
-    - "traefik.http.routers.dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-    - "traefik.http.routers.dashboard.service=api@internal"
-    - "traefik.http.routers.dashboard.middlewares=auth"
-    - "traefik.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
+    - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+    - "ingress.http.routers.dashboard.service=api@internal"
+    - "ingress.http.routers.dashboard.middlewares=auth"
+    - "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
     # Dummy service for Swarm port detection. The port can be any valid integer value.
-    - "traefik.http.services.dummy-svc.loadbalancer.server.port=9999"
+    - "ingress.http.services.dummy-svc.loadbalancer.server.port=9999"
 ```
 
 ```yaml tab="Consul Catalog"
 # Dynamic Configuration
-- "traefik.http.routers.dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-- "traefik.http.routers.dashboard.service=api@internal"
-- "traefik.http.routers.dashboard.middlewares=auth"
-- "traefik.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
+- "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+- "ingress.http.routers.dashboard.service=api@internal"
+- "ingress.http.routers.dashboard.middlewares=auth"
+- "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="File (YAML)"
@@ -133,7 +133,7 @@ deploy:
 http:
   routers:
     dashboard:
-      rule: Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      rule: Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       service: api@internal
       middlewares:
         - auth
@@ -148,7 +148,7 @@ http:
 ```toml tab="File (TOML)"
 # Dynamic Configuration
 [http.routers.my-api]
-  rule = "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+  rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
   service = "api@internal"
   middlewares = ["auth"]
 
@@ -164,7 +164,7 @@ http:
 The API and the dashboard can be configured:
 
 - In the Helm Chart: You can find the options to customize the Hanzo Ingress installation
-enabling the dashboard [here](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/values.yaml#L155).
+enabling the dashboard [here](https://github.com/hanzoai/ingress-helm-chart/blob/master/ingress/values.yaml#L155).
 - In the Hanzo Ingress Static Configuration as described below.
 
 | Field      | Description  | Default | Required |
@@ -174,7 +174,7 @@ enabling the dashboard [here](https://github.com/hanzoai/ingress-helm-chart/blob
 | <a id="opt-api-dashboard" href="#opt-api-dashboard" title="#opt-api-dashboard">`api.dashboard`</a> | Enable dashboard. | false      | No      |
 | <a id="opt-api-debug" href="#opt-api-debug" title="#opt-api-debug">`api.debug`</a> | Enable additional endpoints for debugging and profiling. | false      | No      |
 | <a id="opt-api-disabledashboardad" href="#opt-api-disabledashboardad" title="#opt-api-disabledashboardad">`api.disabledashboardad`</a> | Disable the advertisement from the dashboard. | false      | No      |
-| <a id="opt-api-insecure" href="#opt-api-insecure" title="#opt-api-insecure">`api.insecure`</a> | Enable the API and the dashboard on the entryPoint named traefik.| false      | No      |
+| <a id="opt-api-insecure" href="#opt-api-insecure" title="#opt-api-insecure">`api.insecure`</a> | Enable the API and the dashboard on the entryPoint named ingress.| false      | No      |
 
 ## Endpoints
 
@@ -241,18 +241,18 @@ We recommend using either a *Host-based rule* to match all requests on the desir
 Here are some examples:
 
 ```bash tab="Host Rule"
-# The dashboard can be accessed on http://traefik.example.com/dashboard/
-rule = "Host(`traefik.example.com`)"
+# The dashboard can be accessed on http://ingress.example.com/dashboard/
+rule = "Host(`ingress.example.com`)"
 ```
 
 ```bash tab="Path Prefix Rule"
-# The dashboard can be accessed on http://example.com/dashboard/ or http://traefik.example.com/dashboard/
+# The dashboard can be accessed on http://example.com/dashboard/ or http://ingress.example.com/dashboard/
 rule = "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
 ```
 
 ```bash tab="Combination of Rules"
-# The dashboard can be accessed on http://traefik.example.com/dashboard/
-rule = "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+# The dashboard can be accessed on http://ingress.example.com/dashboard/
+rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

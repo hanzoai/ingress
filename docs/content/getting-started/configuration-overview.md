@@ -50,9 +50,9 @@ Once positioned, this option sets (and resets) all the default values of the sub
 
 ### Configuration File
 
-At startup, Hanzo Ingress searches for install configuration in a file named `traefik.yml` (or `traefik.yaml` or `traefik.toml`) in:
+At startup, Hanzo Ingress searches for install configuration in a file named `ingress.yml` (or `ingress.yaml` or `ingress.toml`) in:
 
-- `/etc/traefik/`
+- `/etc/ingress/`
 - `$XDG_CONFIG_HOME/`
 - `$HOME/.config/`
 - `.` (_the working directory_).
@@ -60,7 +60,7 @@ At startup, Hanzo Ingress searches for install configuration in a file named `tr
 You can override this using the `configFile` argument.
 
 ```bash
-traefik --configFile=foo/bar/myconfigfile.yml
+ingress --configFile=foo/bar/myconfigfile.yml
 ```
 
 ### Arguments
@@ -72,8 +72,8 @@ hanzo-ingress --help
 
 # or
 
-docker run traefik[:version] --help
-# ex: docker run traefik:v3.6 --help
+docker run ingress[:version] --help
+# ex: docker run ingress:v3.6 --help
 ```
 
 Check the [CLI reference](../reference/install-configuration/configuration-options.md "Link to CLI reference overview") for an overview about all available arguments.
@@ -88,4 +88,4 @@ All the configuration options are documented in their related section.
 
 You can browse the available features in the menu, the [providers](../providers/overview.md), or the [routing section](../routing/overview.md) to see them in action.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

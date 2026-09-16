@@ -47,17 +47,17 @@ addInternals = true
 | TLS certificates not after | Gauge |                          | The expiration date of certificates.                               |
 
 ```opentelemetry tab="OpenTelemetry"
-traefik_config_reloads_total
-traefik_config_last_reload_success
-traefik_open_connections
-traefik_tls_certs_not_after
+ingress_config_reloads_total
+ingress_config_last_reload_success
+ingress_open_connections
+ingress_tls_certs_not_after
 ```
 
 ```prom tab="Prometheus"
-traefik_config_reloads_total
-traefik_config_last_reload_success
-traefik_open_connections
-traefik_tls_certs_not_after
+ingress_config_reloads_total
+ingress_config_last_reload_success
+ingress_open_connections
+ingress_tls_certs_not_after
 ```
 
 ```dd tab="Datadog"
@@ -68,14 +68,14 @@ tls.certs.notAfterTimestamp
 ```
 
 ```influxdb tab="InfluxDB2"
-traefik.config.reload.total
-traefik.config.reload.lastSuccessTimestamp
-traefik.open.connections
-traefik.tls.certs.notAfterTimestamp
+ingress.config.reload.total
+ingress.config.reload.lastSuccessTimestamp
+ingress.open.connections
+ingress.tls.certs.notAfterTimestamp
 ```
 
 ```statsd tab="StatsD"
-# Default prefix: "traefik"
+# Default prefix: "ingress"
 {prefix}.config.reload.total
 {prefix}.config.reload.lastSuccessTimestamp
 {prefix}.open.connections
@@ -152,19 +152,19 @@ On top of the official OpenTelemetry semantic conventions, Hanzo Ingress provide
 | Responses bytes total | Count     | `code`, `method`, `protocol`, `entrypoint` | The total size of HTTP responses in bytes handled by an entrypoint. |
 
 ```opentelemetry tab="OpenTelemetry"
-traefik_entrypoint_requests_total
-traefik_entrypoint_requests_tls_total
-traefik_entrypoint_request_duration_seconds
-traefik_entrypoint_requests_bytes_total
-traefik_entrypoint_responses_bytes_total
+ingress_entrypoint_requests_total
+ingress_entrypoint_requests_tls_total
+ingress_entrypoint_request_duration_seconds
+ingress_entrypoint_requests_bytes_total
+ingress_entrypoint_responses_bytes_total
 ```
 
 ```prom tab="Prometheus"
-traefik_entrypoint_requests_total
-traefik_entrypoint_requests_tls_total
-traefik_entrypoint_request_duration_seconds
-traefik_entrypoint_requests_bytes_total
-traefik_entrypoint_responses_bytes_total
+ingress_entrypoint_requests_total
+ingress_entrypoint_requests_tls_total
+ingress_entrypoint_request_duration_seconds
+ingress_entrypoint_requests_bytes_total
+ingress_entrypoint_responses_bytes_total
 ```
 
 ```dd tab="Datadog"
@@ -176,15 +176,15 @@ entrypoint.responses.bytes.total
 ```
 
 ```influxdb tab="InfluxDB2"
-traefik.entrypoint.requests.total
-traefik.entrypoint.requests.tls.total
-traefik.entrypoint.request.duration
-traefik.entrypoint.requests.bytes.total
-traefik.entrypoint.responses.bytes.total
+ingress.entrypoint.requests.total
+ingress.entrypoint.requests.tls.total
+ingress.entrypoint.request.duration
+ingress.entrypoint.requests.bytes.total
+ingress.entrypoint.responses.bytes.total
 ```
 
 ```statsd tab="StatsD"
-# Default prefix: "traefik"
+# Default prefix: "ingress"
 {prefix}.entrypoint.request.total
 {prefix}.entrypoint.request.tls.total
 {prefix}.entrypoint.request.duration
@@ -203,19 +203,19 @@ traefik.entrypoint.responses.bytes.total
 | Responses bytes total | Count     | `code`, `method`, `protocol`, `router`, `service` | The total size of HTTP responses in bytes handled by a router. |
 
 ```opentelemetry tab="OpenTelemetry"
-traefik_router_requests_total
-traefik_router_requests_tls_total
-traefik_router_request_duration_seconds
-traefik_router_requests_bytes_total
-traefik_router_responses_bytes_total
+ingress_router_requests_total
+ingress_router_requests_tls_total
+ingress_router_request_duration_seconds
+ingress_router_requests_bytes_total
+ingress_router_responses_bytes_total
 ```
 
 ```prom tab="Prometheus"
-traefik_router_requests_total
-traefik_router_requests_tls_total
-traefik_router_request_duration_seconds
-traefik_router_requests_bytes_total
-traefik_router_responses_bytes_total
+ingress_router_requests_total
+ingress_router_requests_tls_total
+ingress_router_request_duration_seconds
+ingress_router_requests_bytes_total
+ingress_router_responses_bytes_total
 ```
 
 ```dd tab="Datadog"
@@ -227,15 +227,15 @@ router.responses.bytes.total
 ```
 
 ```influxdb tab="InfluxDB2"
-traefik.router.requests.total
-traefik.router.requests.tls.total
-traefik.router.request.duration
-traefik.router.requests.bytes.total
-traefik.router.responses.bytes.total
+ingress.router.requests.total
+ingress.router.requests.tls.total
+ingress.router.request.duration
+ingress.router.requests.bytes.total
+ingress.router.responses.bytes.total
 ```
 
 ```statsd tab="StatsD"
-# Default prefix: "traefik"
+# Default prefix: "ingress"
 {prefix}.router.request.total
 {prefix}.router.request.tls.total
 {prefix}.router.request.duration
@@ -256,23 +256,23 @@ traefik.router.responses.bytes.total
 | Responses bytes total | Count     | `code`, `method`, `protocol`, `service` | The total size of responses in bytes returned by a service. |
 
 ```opentelemetry tab="OpenTelemetry"
-traefik_service_requests_total
-traefik_service_requests_tls_total
-traefik_service_request_duration_seconds
-traefik_service_retries_total
-traefik_service_server_up
-traefik_service_requests_bytes_total
-traefik_service_responses_bytes_total
+ingress_service_requests_total
+ingress_service_requests_tls_total
+ingress_service_request_duration_seconds
+ingress_service_retries_total
+ingress_service_server_up
+ingress_service_requests_bytes_total
+ingress_service_responses_bytes_total
 ```
 
 ```prom tab="Prometheus"
-traefik_service_requests_total
-traefik_service_requests_tls_total
-traefik_service_request_duration_seconds
-traefik_service_retries_total
-traefik_service_server_up
-traefik_service_requests_bytes_total
-traefik_service_responses_bytes_total
+ingress_service_requests_total
+ingress_service_requests_tls_total
+ingress_service_request_duration_seconds
+ingress_service_retries_total
+ingress_service_server_up
+ingress_service_requests_bytes_total
+ingress_service_responses_bytes_total
 ```
 
 ```dd tab="Datadog"
@@ -286,17 +286,17 @@ service.responses.bytes.total
 ```
 
 ```influxdb tab="InfluxDB2"
-traefik.service.requests.total
-traefik.service.requests.tls.total
-traefik.service.request.duration
-traefik.service.retries.total
-traefik.service.server.up
-traefik.service.requests.bytes.total
-traefik.service.responses.bytes.total
+ingress.service.requests.total
+ingress.service.requests.tls.total
+ingress.service.request.duration
+ingress.service.retries.total
+ingress.service.server.up
+ingress.service.requests.bytes.total
+ingress.service.responses.bytes.total
 ```
 
 ```statsd tab="StatsD"
-# Default prefix: "traefik"
+# Default prefix: "ingress"
 {prefix}.service.request.total
 {prefix}.service.request.tls.total
 {prefix}.service.request.duration

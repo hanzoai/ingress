@@ -27,9 +27,9 @@ You can build the documentation and test it locally (with live reloading), using
 
 ```bash
 $ make docs-serve
-docker build -t traefik-docs -f docs.Dockerfile .
+docker build -t ingress-docs -f docs.Dockerfile .
 # […]
-docker run  --rm -v /home/user/go/github/traefik/traefik:/mkdocs -p 8000:8000 traefik-docs mkdocs serve
+docker run  --rm -v /home/user/go/github/ingress/ingress:/mkdocs -p 8000:8000 ingress-docs mkdocs serve
 # […]
 [I 170828 20:47:48 server:283] Serving on http://0.0.0.0:8000
 [I 170828 20:47:48 handlers:60] Start watching changes
@@ -85,9 +85,9 @@ To check that the documentation meets standard expectations (no dead links, html
 
 ```bash
 $ make docs-verify
-docker build -t traefik-docs-verify ./script/docs-verify-docker-image ## Build Validator image
+docker build -t ingress-docs-verify ./script/docs-verify-docker-image ## Build Validator image
 ...
-docker run --rm -v /home/travis/build/traefik/traefik:/app traefik-docs-verify ## Check for dead links and w3c compliance
+docker run --rm -v /home/travis/build/ingress/ingress:/app ingress-docs-verify ## Check for dead links and w3c compliance
 === Checking HTML content...
 Running ["HtmlCheck", "ImageCheck", "ScriptCheck", "LinkCheck"] on /app/site/basics/index.html on *.html...
 ```

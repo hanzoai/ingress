@@ -25,29 +25,29 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
     apiVersion: v1
     kind: ServiceAccount
     metadata:
-      name: traefik-ingress-controller
+      name: ingress-controller
     
     ---
     kind: Deployment
     apiVersion: apps/v1
     metadata:
-      name: traefik
+      name: ingress
       labels:
-        app: traefik
+        app: ingress
     
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: traefik
+          app: ingress
       template:
         metadata:
           labels:
-            app: traefik
+            app: ingress
         spec:
-          serviceAccountName: traefik-ingress-controller
+          serviceAccountName: ingress-controller
           containers:
-            - name: traefik
+            - name: ingress
               image: ghcr.io/hanzoai/ingress:v3.6
               args:
                 - --log.level=DEBUG
@@ -71,11 +71,11 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
     apiVersion: v1
     kind: Service
     metadata:
-      name: traefik
+      name: ingress
     spec:
       type: LoadBalancer
       selector:
-        app: traefik
+        app: ingress
       ports:
         - protocol: TCP
           port: 80
@@ -94,11 +94,11 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
     apiVersion: v1
     kind: Service
     metadata:
-      name: traefikudp
+      name: ingressudp
     spec:
       type: LoadBalancer
       selector:
-        app: traefik
+        app: ingress
       ports:
         - protocol: UDP
           port: 9000
@@ -163,19 +163,19 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
       name: whoami
       namespace: default
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoami
     
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoami
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoami
         spec:
           containers:
@@ -196,7 +196,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoami
     
     ---
@@ -206,19 +206,19 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
       name: whoamitcp
       namespace: default
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoamitcp
     
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoamitcp
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoamitcp
         spec:
           containers:
@@ -239,7 +239,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
         - protocol: TCP
           port: 8080
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoamitcp
     
     ---
@@ -249,19 +249,19 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
       name: whoamiudp
       namespace: default
       labels:
-        app: traefiklabs
+        app: whoami
         name: whoamiudp
     
     spec:
       replicas: 2
       selector:
         matchLabels:
-          app: traefiklabs
+          app: whoami
           task: whoamiudp
       template:
         metadata:
           labels:
-            app: traefiklabs
+            app: whoami
             task: whoamiudp
         spec:
           containers:
@@ -281,7 +281,7 @@ The Kubernetes Ingress Controller, The Custom Resource Way.
       ports:
         - port: 8080
       selector:
-        app: traefiklabs
+        app: whoami
         task: whoamiudp
     ```
 
@@ -642,7 +642,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app1
     ---
     apiVersion: v1
@@ -656,7 +656,7 @@ More information in the dedicated server [load balancing](../services/index.md#l
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app2
     ```
 
@@ -767,7 +767,7 @@ referencing services in the [`IngressRoute`](#kind-ingressroute) objects, or rec
     The field `kind` allows the following values:
     
     * `Service` (default value): to reference a [Kubernetes Service](https://kubernetes.io/docs/concepts/services-networking/service/)
-    * `IngressService`: to reference another [Traefik Service](../services/index.md)
+    * `IngressService`: to reference another [Ingress Service](../services/index.md)
 
 `IngressService` object allows to use any (valid) combinations of:
 
@@ -849,7 +849,7 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app1
     ---
     apiVersion: v1
@@ -863,7 +863,7 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app2
     ---
     apiVersion: v1
@@ -877,7 +877,7 @@ More information in the dedicated [Weighted Round Robin](../services/index.md#we
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app3
     ```
 
@@ -960,7 +960,7 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app1
     ---
     apiVersion: v1
@@ -974,7 +974,7 @@ More information in the dedicated [mirroring](../services/index.md#mirroring-ser
         - name: http
           port: 80
       selector:
-        app: traefiklabs
+        app: whoami
         task: app2
     ```
 
@@ -2047,4 +2047,4 @@ If the ServersTransportTCP CRD is defined in another provider the cross-provider
 
 For additional information on exposing services with Kubernetes, see the [Kubernetes guide](../../expose/kubernetes/basic.md).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -32,7 +32,7 @@ You can define the install configuration in a file using formats like YAML or TO
 
 ### Configuration Example
 
-```yaml tab="traefik.yml (YAML)"
+```yaml tab="ingress.yml (YAML)"
 entryPoints:
   web:
     address: ":80"
@@ -49,7 +49,7 @@ log:
   level: INFO
 ```
 
-```toml tab="traefik.toml (TOML)"
+```toml tab="ingress.toml (TOML)"
 [entryPoints]
   [entryPoints.web]
     address = ":80"
@@ -69,9 +69,9 @@ log:
 
 ### Configuration File
 
-At startup, Hanzo Ingress searches for install configuration in a file named `traefik.yml` (or `traefik.yaml` or `traefik.toml`) in the following directories:
+At startup, Hanzo Ingress searches for install configuration in a file named `ingress.yml` (or `ingress.yaml` or `ingress.toml`) in the following directories:
 
-- `/etc/traefik/`
+- `/etc/ingress/`
 - `$XDG_CONFIG_HOME/`
 - `$HOME/.config/`
 - `.` (the current working directory).
@@ -79,7 +79,7 @@ At startup, Hanzo Ingress searches for install configuration in a file named `tr
 You can override this behavior using the `configFile` argument like this:
 
 ```bash
-traefik --configFile=foo/bar/myconfigfile.yml
+ingress --configFile=foo/bar/myconfigfile.yml
 ```
 
 ## CLI
@@ -89,7 +89,7 @@ Using the CLI, you can pass install configuration directly as command-line argum
 ### Configuration Example
 
 ```sh tab="CLI"
-traefik \
+ingress \
   --entryPoints.web.address=":80" \
   --entryPoints.websecure.address=":443" \
   --providers.docker \
@@ -99,19 +99,19 @@ traefik \
 
 ## Environment Variables
 
-You can also set the install configuration using environment variables. Each option corresponds to an environment variable prefixed with `TRAEFIK_`.
+You can also set the install configuration using environment variables. Each option corresponds to an environment variable prefixed with `INGRESS_`.
 
 ### Configuration Example
 
 ```sh tab="ENV"
-TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=":80" TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS=":443" TRAEFIK_PROVIDERS_DOCKER=true TRAEFIK_API_DASHBOARD=true TRAEFIK_LOG_LEVEL="INFO" traefik
+INGRESS_ENTRYPOINTS_WEB_ADDRESS=":80" INGRESS_ENTRYPOINTS_WEBSECURE_ADDRESS=":443" INGRESS_PROVIDERS_DOCKER=true INGRESS_API_DASHBOARD=true INGRESS_LOG_LEVEL="INFO" ingress
 ```
 
 ## Helm
 
 When deploying Hanzo Ingress using Helm in a Kubernetes cluster, the install configuration is defined in a `values.yaml` file. 
 
-You can find the official Hanzo Ingress Helm chart on [GitHub](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/VALUES.md)
+You can find the official Hanzo Ingress Helm chart on [GitHub](https://github.com/hanzoai/ingress-helm-chart/blob/master/ingress/VALUES.md)
 
 ### Configuration Example
 
@@ -128,7 +128,7 @@ additionalArguments:
 ```
 
 ```sh tab="Helm Commands"
-helm repo add traefik https://hanzoai.github.io/charts
+helm repo add ingress https://hanzoai.github.io/charts
 helm repo update
-helm install traefik traefik/traefik -f values.yaml
+helm install ingress ingress/ingress -f values.yaml
 ```

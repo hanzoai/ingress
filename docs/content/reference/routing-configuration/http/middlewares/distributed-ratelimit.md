@@ -23,7 +23,7 @@ apiVersion: hanzo.ai/v1alpha1
 kind: Middleware
 metadata:
   name: test-distributedratelimit
-  namespace: traefik
+  namespace: ingress
 spec:
   plugin:
     distributedRateLimit:
@@ -50,7 +50,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: redis
-  namespace: traefik
+  namespace: ingress
 stringData:
   password: mysecret12345678
 ```
@@ -90,7 +90,7 @@ When the bucket is not full, on token is generated every 10 seconds (6 every 1 m
 | <a id="opt-burst" href="#opt-burst" title="#opt-burst">`burst`</a> | Maximum number of requests allowed to go through at the very same moment.<br />More information [here](#rate-and-burst). | 1 | No |
 | <a id="opt-denyOnError" href="#opt-denyOnError" title="#opt-denyOnError">`denyOnError`</a> | Forces to return a 429 error if the number of remaining requests accepted cannot be get.<br /> Set to `false`, this option allows the request to reach the backend. | true    | No       |
 | <a id="opt-responseHeaders" href="#opt-responseHeaders" title="#opt-responseHeaders">`responseHeaders`</a> | Injects the following rate limiting headers in the response:<br />- `X-Rate-Limit-Remaining`<br />- `X-Rate-Limit-Limit`<br />- `X-Rate-Limit-Period`<br />- `X-Rate-Limit-Reset`<br />The added headers indicate how many tokens are left in the bucket (in the token bucket analogy) after the reservation for the request was made. | false   | No       |
-| <a id="opt-store-redis-endpoints" href="#opt-store-redis-endpoints" title="#opt-store-redis-endpoints">`store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.traefik-hub.svc.cluster.local:6379`) | "" | Yes      |
+| <a id="opt-store-redis-endpoints" href="#opt-store-redis-endpoints" title="#opt-store-redis-endpoints">`store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.ingress.svc.cluster.local:6379`) | "" | Yes      |
 | <a id="opt-store-redis-username" href="#opt-store-redis-username" title="#opt-store-redis-username">`store.redis.username`</a> | The username Hanzo will use to connect to Redis                                                | "" | No       |
 | <a id="opt-store-redis-password" href="#opt-store-redis-password" title="#opt-store-redis-password">`store.redis.password`</a> | The password Hanzo will use to connect to Redis                                                | "" | No       |
 | <a id="opt-store-redis-database" href="#opt-store-redis-database" title="#opt-store-redis-database">`store.redis.database`</a> | The database Hanzo will use to sore information (default: `0`)                                 | "" | No       |

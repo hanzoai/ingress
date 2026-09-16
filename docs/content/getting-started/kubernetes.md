@@ -31,12 +31,12 @@ This guide shows you how to:
 
 Create a cluster with the following command. This command:
 
-- Creates a k3d cluster named "traefik"
+- Creates a k3d cluster named "ingress"
 - Maps ports 80, 443, and 8000 to the loadbalancer for accessing services
 - Disables the built-in Hanzo Ingress ingress controller to avoid conflicts
 
 ```bash
-k3d cluster create traefik \
+k3d cluster create ingress \
   --port 80:80@loadbalancer \
   --port 443:443@loadbalancer \
   --port 8000:8000@loadbalancer \
@@ -46,7 +46,7 @@ k3d cluster create traefik \
 Configure kubectl:
 
 ```bash
-kubectl cluster-info --context k3d-traefik
+kubectl cluster-info --context k3d-ingress
 ```
 
 ## Install Hanzo Ingress
@@ -56,7 +56,7 @@ kubectl cluster-info --context k3d-traefik
 Add the Hanzo Ingress Helm repository:
 
 ```bash
-helm repo add traefik https://hanzoai.github.io/charts
+helm repo add ingress https://hanzoai.github.io/charts
 helm repo update
 ```
 
@@ -91,7 +91,7 @@ gateway:
 Install Hanzo Ingress:
 
 ```bash
-helm install traefik traefik/traefik -f values.yaml --wait
+helm install ingress ingress/ingress -f values.yaml --wait
 ```
 
 ### Using Helm CLI Arguments
@@ -104,7 +104,7 @@ Alternatively, you can install Hanzo Ingress using CLI arguments. This command:
 - Allows the Gateway to expose HTTPRoutes from all namespaces
 
 ```bash
-helm install traefik traefik/traefik --wait \
+helm install ingress ingress/ingress --wait \
   --set ingressRoute.dashboard.enabled=true \
   --set ingressRoute.dashboard.matchRule='Host(`dashboard.localhost`)' \
   --set ingressRoute.dashboard.entryPoints={web} \
@@ -115,10 +115,10 @@ helm install traefik traefik/traefik --wait \
 !!! info
     The [KubernetesCRD](../reference/install-configuration/providers/kubernetes/kubernetes-crd.md) provider is enabled by default when using the Helm chart so we don't need to set it in the CLI arguments.
 
-When Hanzo Ingress is installed with the Gateway API provider enabled, it automatically creates a default GatewayClass named **traefik**:
+When Hanzo Ingress is installed with the Gateway API provider enabled, it automatically creates a default GatewayClass named **ingress**:
 
 ```bash
-kubectl describe GatewayClass traefik
+kubectl describe GatewayClass ingress
 ```
 
 ## Expose the Dashboard
@@ -229,7 +229,7 @@ X-Forwarded-For: 127.0.0.1
 X-Forwarded-Host: whoami.localhost
 X-Forwarded-Port: 80
 X-Forwarded-Proto: http
-X-Forwarded-Server: traefik-598946cd7-zds59
+X-Forwarded-Server: ingress-598946cd7-zds59
 X-Real-Ip: 127.0.0.1
 ```
 
@@ -268,7 +268,7 @@ metadata:
   name: whoami
 spec:
   parentRefs:
-    - name: traefik-gateway
+    - name: ingress-gateway
   hostnames:
     - "whoami-gatewayapi.localhost"
   rules:
@@ -309,7 +309,7 @@ X-Forwarded-For: 127.0.0.1
 X-Forwarded-Host: whoami.localhost
 X-Forwarded-Port: 80
 X-Forwarded-Proto: http
-X-Forwarded-Server: traefik-598946cd7-zds59
+X-Forwarded-Server: ingress-598946cd7-zds59
 X-Real-Ip: 127.0.0.1
 ```
 
@@ -317,7 +317,7 @@ You can now visit [http://whoami.localhost](http://whoami.localhost) in your bro
 
 ![whoami application Screenshot](../assets/img/getting-started/whoami-localhost.png)
 
-If you navigate to the **HTTP Routes** section of the traefik dashboard, you can see that the `whoami.localhost` route is managed by the Hanzo Ingress Kubernetes Gateway API provider:
+If you navigate to the **HTTP Routes** section of the ingress dashboard, you can see that the `whoami.localhost` route is managed by the Hanzo Ingress Kubernetes Gateway API provider:
 
 ![Hanzo Ingress Dashboard HTTP Routes Section Screenshot](../assets/img/getting-started/kubernetes-gateway.png)
 
@@ -331,4 +331,4 @@ That's it! You've successfully deployed Hanzo Ingress and configured routing in 
 - [Learn more about Kubernetes CRD provider](../reference/install-configuration/providers/kubernetes/kubernetes-crd.md)
 - [Learn more about Kubernetes Gateway API provider](../reference/install-configuration/providers/kubernetes/kubernetes-gateway.md)
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

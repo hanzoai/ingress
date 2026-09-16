@@ -31,4 +31,4 @@ The experience of implementing a Hanzo Ingress plugin is comparable to writing a
 
 To learn more about Hanzo Ingress plugin creation, please refer to the [developer documentation](https://github.com/hanzoai/ingress).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

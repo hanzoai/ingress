@@ -16,18 +16,18 @@ You can install Hanzo Ingress with the following flavors:
 
 Choose one of the [official Docker images](https://ghcr.io/hanzoai/ingress) and run it with one sample configuration file:
 
-* [YAML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/traefik.sample.yml)
-* [TOML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/traefik.sample.toml)
+* [YAML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/ingress.sample.yml)
+* [TOML](https://raw.githubusercontent.com/hanzoai/ingress/v3.6/ingress.sample.toml)
 
 ```shell
 docker run -d -p 8080:8080 -p 80:80 \
-    -v $PWD/traefik.yml:/etc/traefik/traefik.yml traefik:v3.6
+    -v $PWD/ingress.yml:/etc/ingress/ingress.yml ingress:v3.6
 ```
 
 !!! tip
 
     * Prefer a fixed version than the latest that could be an unexpected version.
-    ex: `traefik:v3.6`
+    ex: `ingress:v3.6`
     * Docker images are based from the [Alpine Linux Official image](https://hub.docker.com/_/alpine).
     * Any orchestrator using docker images can fetch the official Hanzo Ingress docker image.
 
@@ -43,7 +43,7 @@ Ensure that the following requirements are met:
 Add Hanzo AI chart repository to Helm:
 
 ```bash
-helm repo add traefik https://hanzoai.github.io/charts
+helm repo add ingress https://hanzoai.github.io/charts
 ```
 
 You can update the chart repository by running:
@@ -55,7 +55,7 @@ helm repo update
 And install it with the Helm command line:
 
 ```bash
-helm install traefik traefik/traefik
+helm install ingress ingress/ingress
 ```
 
 !!! tip "Helm Features"
@@ -67,10 +67,10 @@ helm install traefik traefik/traefik
     For instance, installing the chart in a dedicated namespace:
 
     ```bash tab="Install in a Dedicated Namespace"
-    kubectl create ns traefik-v2
-    # Install in the namespace "traefik-v2"
-    helm install --namespace=traefik-v2 \
-        traefik traefik/traefik
+    kubectl create ns ingress-v2
+    # Install in the namespace "ingress-v2"
+    helm install --namespace=ingress-v2 \
+        ingress ingress/ingress
     ```
 
 ??? example "Installing with Custom Values"
@@ -79,20 +79,20 @@ helm install traefik traefik/traefik
     as with [any helm chart](https://helm.sh/docs/intro/using_helm/#customizing-the-chart-before-installing).
     {: #helm-custom-values }
 
-    All parameters are documented in the default [`values.yaml`](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/values.yaml).
+    All parameters are documented in the default [`values.yaml`](https://github.com/hanzoai/ingress-helm-chart/blob/master/ingress/values.yaml).
 
     You can also set Hanzo Ingress command line flags using `additionalArguments`.
     Example of installation with logging set to `DEBUG`:
 
     ```bash tab="Using Helm CLI"
-    helm install --namespace=traefik-v2 \
+    helm install --namespace=ingress-v2 \
         --set="additionalArguments={--log.level=DEBUG}" \
-        traefik traefik/traefik
+        ingress ingress/ingress
     ```
 
     ```yml tab="With a custom values file"
     # File custom-values.yml
-    ## Install with "helm install --values=./custom-values.yml traefik traefik/traefik
+    ## Install with "helm install --values=./custom-values.yml ingress ingress/ingress
     additionalArguments:
       - "--log.level=DEBUG"
     ```
@@ -104,32 +104,32 @@ Grab the latest binary from the [releases](https://github.com/hanzoai/ingress/re
 ??? info "Check the integrity of the downloaded file"
 
     ```bash tab="Linux"
-    # Compare this value to the one found in traefik-${traefik_version}_checksums.txt
-    sha256sum ./traefik_${traefik_version}_linux_${arch}.tar.gz
+    # Compare this value to the one found in ingress-${ingress_version}_checksums.txt
+    sha256sum ./ingress_${ingress_version}_linux_${arch}.tar.gz
     ```
 
     ```bash tab="macOS"
-    # Compare this value to the one found in traefik-${traefik_version}_checksums.txt
-    shasum -a256 ./traefik_${traefik_version}_darwin_amd64.tar.gz
+    # Compare this value to the one found in ingress-${ingress_version}_checksums.txt
+    shasum -a256 ./ingress_${ingress_version}_darwin_amd64.tar.gz
     ```
 
     ```powershell tab="Windows PowerShell"
-    # Compare this value to the one found in traefik-${traefik_version}_checksums.txt
-    Get-FileHash ./traefik_${traefik_version}_windows_${arch}.zip -Algorithm SHA256
+    # Compare this value to the one found in ingress-${ingress_version}_checksums.txt
+    Get-FileHash ./ingress_${ingress_version}_windows_${arch}.zip -Algorithm SHA256
     ```
 
 ??? info "Extract the downloaded archive"
 
     ```bash tab="Linux"
-    tar -zxvf traefik_${traefik_version}_linux_${arch}.tar.gz
+    tar -zxvf ingress_${ingress_version}_linux_${arch}.tar.gz
     ```
 
     ```bash tab="macOS"
-    tar -zxvf ./traefik_${traefik_version}_darwin_amd64.tar.gz
+    tar -zxvf ./ingress_${ingress_version}_darwin_amd64.tar.gz
     ```
 
     ```powershell tab="Windows PowerShell"
-    Expand-Archive traefik_${traefik_version}_windows_${arch}.zip
+    Expand-Archive ingress_${ingress_version}_windows_${arch}.zip
     ```
 
 And run it:
@@ -142,4 +142,4 @@ And run it:
 
 All the details are available in the [Contributing Guide](../contributing/building-testing.md)
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -25,14 +25,14 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
 ```
 
 ```json tab="Consul Catalog"
 // Limiting to 10 simultaneous connections
 {
   "Tags" : [
-    "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+    "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
   ]
 }
 

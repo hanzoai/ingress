@@ -61,9 +61,9 @@ tcp:
 ```yaml tab="Labels"
 labels:
   # Create a middleware named `foo-ip-allowlist`
-  - "traefik.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+  - "ingress.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
   # Apply the middleware named `foo-ip-allowlist` to the router named `router1`
-  - "traefik.tcp.routers.router1.middlewares=foo-ip-allowlist@docker"
+  - "ingress.tcp.routers.router1.middlewares=foo-ip-allowlist@docker"
 ```
 
 ```json tab="Consul Catalog" 
@@ -71,9 +71,9 @@ labels:
   //...
   "Tags" : [
     // Create a middleware named `foo-ip-allowlist`
-    "traefik.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7",
+    "ingress.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7",
     // Apply the middleware named `foo-ip-allowlist` to the router named `router1`
-    "traefik.tcp.routers.router1.middlewares=foo-ip-allowlist@consulcatalog"
+    "ingress.tcp.routers.router1.middlewares=foo-ip-allowlist@consulcatalog"
   ]
 }
 

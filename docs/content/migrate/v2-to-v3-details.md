@@ -572,11 +572,11 @@ One should use the `ContentType` middleware to enable the `Content-Type` header 
 
 In v3, the open connections metric has been replaced with a global one because it was erroneously at the HTTP level, and providing misleading information.
 While previously produced at the entryPoint, router, and service levels, it is now replaced with a global metric.
-The equivalent to `traefik_entrypoint_open_connections`, `traefik_router_open_connections` and `traefik_service_open_connections` is now `traefik_open_connections`.
+The equivalent to `ingress_entrypoint_open_connections`, `ingress_router_open_connections` and `ingress_service_open_connections` is now `ingress_open_connections`.
 
 #### Configuration Reload Failures Metrics
 
-In v3, the `traefik_config_reloads_failure_total` and `traefik_config_last_reload_failure` metrics have been suppressed since they could not be implemented.
+In v3, the `ingress_config_reloads_failure_total` and `ingress_config_last_reload_failure` metrics have been suppressed since they could not be implemented.
 
 #### gRPC Metrics
 
@@ -686,7 +686,7 @@ This allows to have heterogeneous router configurations and ease migration.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.routers.test.ruleSyntax=v2"
+  - "ingress.http.routers.test.ruleSyntax=v2"
 ```
 
 ```yaml tab="Kubernetes"
@@ -704,7 +704,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.routers.test.ruleSyntax=v2"
+- "ingress.http.routers.test.ruleSyntax=v2"
 ```
 
 ```yaml tab="File (YAML)"

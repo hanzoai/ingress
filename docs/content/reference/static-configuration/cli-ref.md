@@ -91,7 +91,7 @@ TLS key
 Defines additional resource attributes (key:value).
 
 `--accesslog.otlp.servicename`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+Defines the service name resource attribute. (Default: ```ingress```)
 
 `--api`:  
 Enable api/dashboard. (Default: ```false```)
@@ -109,7 +109,7 @@ Enable additional endpoints for debugging and profiling. (Default: ```false```)
 Disable ad in the dashboard. (Default: ```false```)
 
 `--api.insecure`:  
-Activate API directly on the entryPoint named traefik. (Default: ```false```)
+Activate API directly on the entryPoint named ingress. (Default: ```false```)
 
 `--certificatesresolvers.<name>`:  
 Certificates resolvers configuration. (Default: ```false```)
@@ -442,7 +442,7 @@ Hanzo Ingress log file path. Stdout is used when omitted or empty.
 Hanzo Ingress log format: json | common (Default: ```common```)
 
 `--log.level`:  
-Log level set to traefik logs. (Default: ```ERROR```)
+Log level set to ingress logs. (Default: ```ERROR```)
 
 `--log.maxage`:  
 Maximum number of days to retain old log files based on the timestamp encoded in their filename. (Default: ```0```)
@@ -508,7 +508,7 @@ TLS key
 Defines additional resource attributes (key:value).
 
 `--log.otlp.servicename`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+Defines the service name resource attribute. (Default: ```ingress```)
 
 `--metrics.addinternals`:  
 Enables metrics for internal services (ping, dashboard, etc...). (Default: ```false```)
@@ -529,7 +529,7 @@ Enable metrics on routers. (Default: ```false```)
 Enable metrics on services. (Default: ```true```)
 
 `--metrics.datadog.prefix`:  
-Prefix to use for metrics collection. (Default: ```traefik```)
+Prefix to use for metrics collection. (Default: ```ingress```)
 
 `--metrics.datadog.pushinterval`:  
 Datadog push interval. (Default: ```10```)
@@ -631,7 +631,7 @@ Period between calls to collect a checkpoint. (Default: ```10```)
 Defines additional resource attributes (key:value).
 
 `--metrics.otlp.servicename`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+Defines the service name resource attribute. (Default: ```ingress```)
 
 `--metrics.prometheus`:  
 Prometheus metrics exporter type. (Default: ```false```)
@@ -649,7 +649,7 @@ Enable metrics on services. (Default: ```true```)
 Buckets for latency metrics. (Default: ```0.100000, 0.300000, 1.200000, 5.000000```)
 
 `--metrics.prometheus.entrypoint`:  
-EntryPoint (Default: ```traefik```)
+EntryPoint (Default: ```ingress```)
 
 `--metrics.prometheus.headerlabels.<name>`:  
 Defines the extra labels for the requests_total metrics, and for each of them, the request header containing the value for this label.
@@ -673,7 +673,7 @@ Enable metrics on routers. (Default: ```false```)
 Enable metrics on services. (Default: ```true```)
 
 `--metrics.statsd.prefix`:  
-Prefix to use for metrics collection. (Default: ```traefik```)
+Prefix to use for metrics collection. (Default: ```ingress```)
 
 `--metrics.statsd.pushinterval`:  
 StatsD push interval. (Default: ```10```)
@@ -688,7 +688,7 @@ Defines a map of OCSP responders to replace for querying OCSP servers.
 Enable ping. (Default: ```false```)
 
 `--ping.entrypoint`:  
-EntryPoint (Default: ```traefik```)
+EntryPoint (Default: ```ingress```)
 
 `--ping.manualrouting`:  
 Manual routing (Default: ```false```)
@@ -1021,4 +1021,4 @@ Query params to not redact.
 Sets the rate between 0.0 and 1.0 of requests to trace. (Default: ```1.000000```)
 
 `--tracing.servicename`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+Defines the service name resource attribute. (Default: ```ingress```)

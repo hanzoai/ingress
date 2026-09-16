@@ -15,13 +15,13 @@ The healthcheck command allows you to make a request to the `/ping` endpoint (de
 This can be used with [HEALTHCHECK](https://docs.docker.com/engine/reference/builder/#healthcheck) instruction or any other health check orchestration mechanism.
 
 ```sh
-traefik healthcheck [command] [flags] [arguments]
+ingress healthcheck [command] [flags] [arguments]
 ```
 
 Example:
 
 ```sh
-$ traefik healthcheck
+$ ingress healthcheck
 OK: http://:8082/ping
 ```
 

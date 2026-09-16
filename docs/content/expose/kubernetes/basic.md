@@ -73,7 +73,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway  # This Gateway is automatically created by Hanzo Ingress
+  - name: ingress-gateway  # This Gateway is automatically created by Hanzo Ingress
   hostnames:
   - "whoami.docker.localhost"
   rules:
@@ -152,7 +152,7 @@ X-Forwarded-For: 10.42.0.1
 X-Forwarded-Host: whoami.docker.localhost
 X-Forwarded-Port: 80
 X-Forwarded-Proto: http
-X-Forwarded-Server: traefik-76cbd5b89c-rx5xn
+X-Forwarded-Server: ingress-76cbd5b89c-rx5xn
 X-Real-Ip: 10.42.0.1
 ```
 
@@ -221,7 +221,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway
+  - name: ingress-gateway
   hostnames:
   - "whoami.docker.localhost"
   rules:
@@ -294,7 +294,7 @@ curl -H "Host: whoami.docker.localhost" http://localhost/api
 For the `/api` requests, you should see the response showing "API Service" in the environment variables section, confirming that your path-based routing is working correctly:
 
 ```bash
-{"hostname":"whoami-api-67d97b4868-dvvll","ip":["127.0.0.1","::1","10.42.0.9","fe80::10aa:37ff:fe74:31f2"],"headers":{"Accept":["*/*"],"Accept-Encoding":["gzip"],"User-Agent":["curl/8.7.1"],"X-Forwarded-For":["10.42.0.1"],"X-Forwarded-Host":["whoami.docker.localhost"],"X-Forwarded-Port":["80"],"X-Forwarded-Proto":["http"],"X-Forwarded-Server":["traefik-669c479df8-vkj22"],"X-Real-Ip":["10.42.0.1"]},"url":"/api","host":"whoami.docker.localhost","method":"GET","name":"API Service","remoteAddr":"10.42.0.13:36592"}
+{"hostname":"whoami-api-67d97b4868-dvvll","ip":["127.0.0.1","::1","10.42.0.9","fe80::10aa:37ff:fe74:31f2"],"headers":{"Accept":["*/*"],"Accept-Encoding":["gzip"],"User-Agent":["curl/8.7.1"],"X-Forwarded-For":["10.42.0.1"],"X-Forwarded-Host":["whoami.docker.localhost"],"X-Forwarded-Port":["80"],"X-Forwarded-Proto":["http"],"X-Forwarded-Server":["ingress-669c479df8-vkj22"],"X-Real-Ip":["10.42.0.1"]},"url":"/api","host":"whoami.docker.localhost","method":"GET","name":"API Service","remoteAddr":"10.42.0.13:36592"}
 ```
 
 ## Enable TLS
@@ -355,7 +355,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway
+  - name: ingress-gateway
     sectionName: websecure  # The HTTPS listener
   hostnames:
   - "whoami.docker.localhost"

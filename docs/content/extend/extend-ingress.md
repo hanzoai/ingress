@@ -25,7 +25,7 @@ Hanzo Ingress supports two different plugin systems, each designed for different
 
 ### Yaegi Plugin System
 
-Hanzo Ingress [Yaegi](https://github.com/traefik/yaegi) plugins are developed using the Go language. It is essentially a Go package. Unlike pre-compiled plugins, Yaegi plugins are executed on the fly by Yaegi, a Go interpreter embedded in Hanzo Ingress.
+Hanzo Ingress [Yaegi](https://github.com/hanzoai/yaegi) plugins are developed using the Go language. It is essentially a Go package. Unlike pre-compiled plugins, Yaegi plugins are executed on the fly by Yaegi, a Go interpreter embedded in Hanzo Ingress.
 
 This approach eliminates the need for compilation and a complex toolchain, making plugin development as straightforward as creating web browser extensions. Yaegi plugins support both middleware and provider functionality.
 

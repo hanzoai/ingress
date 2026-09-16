@@ -78,14 +78,14 @@ spec:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.routers.my-router.observability.tracing=false"
+  - "ingress.http.routers.my-router.observability.tracing=false"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.routers.my-router.observability.tracing=false"
+    "ingress.http.routers.my-router.observability.tracing=false"
   ]
 }
 ```

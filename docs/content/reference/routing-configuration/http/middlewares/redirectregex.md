@@ -29,8 +29,8 @@ http:
 # Redirect with domain replacement
 # Note: all dollar signs need to be doubled for escaping.
 labels:
-  - "traefik.http.middlewares.test-redirectregex.redirectregex.regex=^http://localhost/(.*)"
-  - "traefik.http.middlewares.test-redirectregex.redirectregex.replacement=http://mydomain/$${1}"
+  - "ingress.http.middlewares.test-redirectregex.redirectregex.regex=^http://localhost/(.*)"
+  - "ingress.http.middlewares.test-redirectregex.redirectregex.replacement=http://mydomain/$${1}"
 ```
 
 ```json tab="Tags"
@@ -39,8 +39,8 @@ labels:
 {
   // ...
   "Tags" : [
-    "traefik.http.middlewares.test-redirectregex.redirectregex.regex=^http://localhost/(.*)"
-    "traefik.http.middlewares.test-redirectregex.redirectregex.replacement=http://mydomain/$${1}"
+    "ingress.http.middlewares.test-redirectregex.redirectregex.regex=^http://localhost/(.*)"
+    "ingress.http.middlewares.test-redirectregex.redirectregex.replacement=http://mydomain/$${1}"
   ]
 }
 ```
@@ -85,4 +85,4 @@ The `replacement` option defines how to modify the URL to have the new target UR
 
     Care should be taken when defining replacement expand variables: `$1x` is equivalent to `${1x}`, not `${1}x` (see [Regexp.Expand](https://golang.org/pkg/regexp/#Regexp.Expand)), so use `${1}` syntax.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

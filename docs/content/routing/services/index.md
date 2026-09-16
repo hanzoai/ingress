@@ -2518,4 +2518,4 @@ udp:
         address = "private-ip-server-2:8080/"
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

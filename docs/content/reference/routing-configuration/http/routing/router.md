@@ -64,35 +64,35 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.routers.my-router.entrypoints=web,websecure"
-  - "traefik.http.routers.my-router.rule=Host(`example.com`) && Path(`/api`)"
-  - "traefik.http.routers.my-router.priority=10"
-  - "traefik.http.routers.my-router.middlewares=auth,ratelimit"
-  - "traefik.http.routers.my-router.service=my-service"
-  - "traefik.http.routers.my-router.tls.certresolver=letsencrypt"
-  - "traefik.http.routers.my-router.tls.options=modern"
-  - "traefik.http.routers.my-router.tls.domains[0].main=example.com"
-  - "traefik.http.routers.my-router.tls.domains[0].sans=www.example.com"
-  - "traefik.http.routers.my-router.observability.metrics=true"
-  - "traefik.http.routers.my-router.observability.accessLogs=true"
-  - "traefik.http.routers.my-router.observability.tracing=true"
+  - "ingress.http.routers.my-router.entrypoints=web,websecure"
+  - "ingress.http.routers.my-router.rule=Host(`example.com`) && Path(`/api`)"
+  - "ingress.http.routers.my-router.priority=10"
+  - "ingress.http.routers.my-router.middlewares=auth,ratelimit"
+  - "ingress.http.routers.my-router.service=my-service"
+  - "ingress.http.routers.my-router.tls.certresolver=letsencrypt"
+  - "ingress.http.routers.my-router.tls.options=modern"
+  - "ingress.http.routers.my-router.tls.domains[0].main=example.com"
+  - "ingress.http.routers.my-router.tls.domains[0].sans=www.example.com"
+  - "ingress.http.routers.my-router.observability.metrics=true"
+  - "ingress.http.routers.my-router.observability.accessLogs=true"
+  - "ingress.http.routers.my-router.observability.tracing=true"
 ```
 
 ```json tab="Tags"
 {
   "Tags": [
-    "traefik.http.routers.my-router.entrypoints=web,websecure",
-    "traefik.http.routers.my-router.rule=Host(`example.com`) && Path(`/api`)",
-    "traefik.http.routers.my-router.priority=10",
-    "traefik.http.routers.my-router.middlewares=auth,ratelimit",
-    "traefik.http.routers.my-router.service=my-service",
-    "traefik.http.routers.my-router.tls.certresolver=letsencrypt",
-    "traefik.http.routers.my-router.tls.options=modern",
-    "traefik.http.routers.my-router.tls.domains[0].main=example.com",
-    "traefik.http.routers.my-router.tls.domains[0].sans=www.example.com",
-    "traefik.http.routers.my-router.observability.metrics=true",
-    "traefik.http.routers.my-router.observability.accessLogs=true",
-    "traefik.http.routers.my-router.observability.tracing=true",
+    "ingress.http.routers.my-router.entrypoints=web,websecure",
+    "ingress.http.routers.my-router.rule=Host(`example.com`) && Path(`/api`)",
+    "ingress.http.routers.my-router.priority=10",
+    "ingress.http.routers.my-router.middlewares=auth,ratelimit",
+    "ingress.http.routers.my-router.service=my-service",
+    "ingress.http.routers.my-router.tls.certresolver=letsencrypt",
+    "ingress.http.routers.my-router.tls.options=modern",
+    "ingress.http.routers.my-router.tls.domains[0].main=example.com",
+    "ingress.http.routers.my-router.tls.domains[0].sans=www.example.com",
+    "ingress.http.routers.my-router.observability.metrics=true",
+    "ingress.http.routers.my-router.observability.accessLogs=true",
+    "ingress.http.routers.my-router.observability.tracing=true",
   ]
 }
 ```
@@ -118,4 +118,4 @@ labels:
 - The character `@` is not authorized in the router name
 - In provider-specific configurations (Docker, Kubernetes), router names are often auto-generated based on service names and rules
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

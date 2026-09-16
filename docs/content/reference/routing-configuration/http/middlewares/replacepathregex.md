@@ -43,14 +43,14 @@ spec:
 ```yaml tab="Docker & Swarm"
 # Replace path with regex
 labels:
-  - "traefik.http.middlewares.test-replacepathregex.replacepathregex.regex=^/foo/(.*)"
-  - "traefik.http.middlewares.test-replacepathregex.replacepathregex.replacement=/bar/$$1"
+  - "ingress.http.middlewares.test-replacepathregex.replacepathregex.regex=^/foo/(.*)"
+  - "ingress.http.middlewares.test-replacepathregex.replacepathregex.replacement=/bar/$$1"
 ```
 
 ```yaml tab="Consul Catalog"
 # Replace path with regex
-- "traefik.http.middlewares.test-replacepathregex.replacepathregex.regex=^/foo/(.*)"
-- "traefik.http.middlewares.test-replacepathregex.replacepathregex.replacement=/bar/$1"
+- "ingress.http.middlewares.test-replacepathregex.replacepathregex.regex=^/foo/(.*)"
+- "ingress.http.middlewares.test-replacepathregex.replacepathregex.replacement=/bar/$1"
 ```
 
 ## Configuration Options

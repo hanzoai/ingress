@@ -100,7 +100,7 @@ stringData:
 | <a id="opt-session-sameSite" href="#opt-session-sameSite" title="#opt-session-sameSite">`session.sameSite`</a> | Inform browsers how they should handle the session cookie on cross-site requests. <br /> Setting it to `lax` or `strict` can provide some protection against cross-site request forgery attacks ([CSRF](https://developer.mozilla.org/en-US/docs/Glossary/CSRF)). <br /> More information [here](#samesite---accepted-values). | lax | No |
 | <a id="opt-session-httpOnly" href="#opt-session-httpOnly" title="#opt-session-httpOnly">`session.httpOnly`</a> | Forbids JavaScript from accessing the cookie. <br /> For example, through the `Document.cookie` property, the `XMLHttpRequest` API, or the `Request` API. <br /> This mitigates attacks against cross-site scripting ([XSS](https://developer.mozilla.org/en-US/docs/Glossary/XSS)). | true | No |
 | <a id="opt-session-secure" href="#opt-session-secure" title="#opt-session-secure">`session.secure`</a> | Defines whether the session cookie is only sent to the server when a request is made with the `https` scheme. | false | No |
-| <a id="opt-session-store-redis-endpoints" href="#opt-session-store-redis-endpoints" title="#opt-session-store-redis-endpoints">`session.store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.traefik-hub.svc.cluster.local:6379`) | "" | Yes      |
+| <a id="opt-session-store-redis-endpoints" href="#opt-session-store-redis-endpoints" title="#opt-session-store-redis-endpoints">`session.store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.ingress.svc.cluster.local:6379`) | "" | Yes      |
 | <a id="opt-session-store-redis-username" href="#opt-session-store-redis-username" title="#opt-session-store-redis-username">`session.store.redis.username`</a> | The username Hanzo will use to connect to Redis                                                | "" | No       |
 | <a id="opt-session-store-redis-password" href="#opt-session-store-redis-password" title="#opt-session-store-redis-password">`session.store.redis.password`</a> | The password Hanzo will use to connect to Redis                                                | "" | No       |
 | <a id="opt-session-store-redis-database" href="#opt-session-store-redis-database" title="#opt-session-store-redis-database">`session.store.redis.database`</a> | The database Hanzo will use to sore information (default: `0`)                                 | "" | No       |
@@ -112,7 +112,7 @@ stringData:
 | <a id="opt-session-store-redis-sentinel-masterSet" href="#opt-session-store-redis-sentinel-masterSet" title="#opt-session-store-redis-sentinel-masterSet">`session.store.redis.sentinel.masterSet`</a> | Name of the set of main nodes to use for main selection. Required when using Sentinel.               | "" | No       |
 | <a id="opt-session-store-redis-sentinel-username" href="#opt-session-store-redis-sentinel-username" title="#opt-session-store-redis-sentinel-username">`session.store.redis.sentinel.username`</a> | Username to use for sentinel authentication (can be different from `username`)                       | "" | No       |
 | <a id="opt-session-store-redis-sentinel-password" href="#opt-session-store-redis-sentinel-password" title="#opt-session-store-redis-sentinel-password">`session.store.redis.sentinel.password`</a> | Password to use for sentinel authentication (can be different from `password`)                       | "" | No       |
-| <a id="opt-csrf" href="#opt-csrf" title="#opt-csrf">`csrf`</a> | When enabled, a CSRF cookie, named `traefikee-csrf-token`, is bound to the OIDC session to protect service from CSRF attacks. <br /> It is based on the [Signed Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie) implementation as defined by the OWASP Foundation.<br />Moreinformation [here](#csrf). | "" | No |
+| <a id="opt-csrf" href="#opt-csrf" title="#opt-csrf">`csrf`</a> | When enabled, a CSRF cookie, named `ingress-csrf-token`, is bound to the OIDC session to protect service from CSRF attacks. <br /> It is based on the [Signed Double Submit Cookie](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#signed-double-submit-cookie) implementation as defined by the OWASP Foundation.<br />Moreinformation [here](#csrf). | "" | No |
 | <a id="opt-csrf-secure" href="#opt-csrf-secure" title="#opt-csrf-secure">`csrf.secure`</a> | Defines whether the CSRF cookie is only sent to the server when a request is made with the `https` scheme. | false | No |
 | <a id="opt-csrf-headerName" href="#opt-csrf-headerName" title="#opt-csrf-headerName">`csrf.headerName`</a> | Defines the name of the header used to send the CSRF token value received previously in the CSRF cookie. | HanzoIngress-Csrf-Token | No |
 
@@ -404,7 +404,7 @@ spec:
         store:
           redis:
             endpoints:
-              - redis-master.traefik-hub.svc.cluster.local:6379
+              - redis-master.ingress.svc.cluster.local:6379
             password: "urn:k8s:secret:oidc:redisPass"
 ```
 
@@ -427,4 +427,4 @@ This means that a new CSRF token will be generated and sent to the client whenev
 When a request is sent and uses a non-safe method (see [RFC7231#section-4.2.1](https://datatracker.ietf.org/doc/html/rfc7231.html#section-4.2.1)),
 the CSRF token value (extracted from the cookie) have to be sent to the server in the header configured with the [headerName option](#configuration-options).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

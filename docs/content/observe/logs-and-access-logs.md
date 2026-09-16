@@ -137,14 +137,14 @@ spec:
 
 ```bash tab="Labels"
 labels:
-  - "traefik.http.routers.my-router.observability.accesslogs=false"
+  - "ingress.http.routers.my-router.observability.accesslogs=false"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.routers.my-router.observability.accesslogs=false"
+    "ingress.http.routers.my-router.observability.accesslogs=false"
   ]
 }
 ```

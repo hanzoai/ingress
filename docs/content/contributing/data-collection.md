@@ -45,7 +45,7 @@ A log message at startup clearly indicates whether each of those options are ena
 
 ## Version Check (`checkNewVersion`) – Opt-out
 
-Hanzo Ingress periodically contacts `update.traefik.io` to determine whether a newer version is available.
+Hanzo Ingress contacts no version-check endpoint: `CheckNewVersion` is a no-op in this fork.
 When this request is made, Hanzo Ingress shares the **running version** and the **public IP** of the instance.
 The IP is used to build global usage statistics and does not influence the version comparison.
 

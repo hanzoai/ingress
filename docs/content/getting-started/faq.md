@@ -15,7 +15,7 @@ directly reacting to changes from providers over time.
 Notably, a part of the configuration is [static](./configuration-overview.md#the-static-configuration),
 and can be provided by a file on startup, whereas various providers,
 such as the file provider,
-contribute dynamically all along the traefik instance lifetime to its [dynamic configuration](./configuration-overview.md#the-dynamic-configuration) changes.
+contribute dynamically all along the ingress instance lifetime to its [dynamic configuration](./configuration-overview.md#the-dynamic-configuration) changes.
 
 In addition, the configuration englobes concepts such as the EntryPoint which can be seen as a listener on the Transport Layer (TCP),
 as apposed to the Router which is more about the Presentation (TLS) and Application layers (HTTP).
@@ -91,7 +91,7 @@ can handle all the requests when no other router has been matched.
 The example below is a file provider only version (`yaml`) of what this configuration could look like:
 
 ```yaml tab="Static configuration"
-# traefik.yml
+# ingress.yml
 
 entryPoints:
   web:
@@ -218,8 +218,8 @@ The "field not found" error occurs, when an unknown property is encountered in t
 
 One way to check whether a configuration file is well-formed, is to validate it with:
 
-- [JSON Schema of the static configuration](https://json.schemastore.org/traefik-v2.json)
-- [JSON Schema of the dynamic configuration](https://json.schemastore.org/traefik-v2-file-provider.json)
+- [JSON Schema of the static configuration](https://json.schemastore.org/ingress-v2.json)
+- [JSON Schema of the dynamic configuration](https://json.schemastore.org/ingress-v2-file-provider.json)
 
 ## Why are some resources (routers, middlewares, services...) not created/applied?
 
@@ -230,7 +230,7 @@ If found, the error confirms that something went wrong while creating the resour
 and the message should help in figuring out the mistake(s) in the configuration, and how to fix it.
 
 When using the file provider,
-one way to check if the dynamic configuration is well-formed is to validate it with the [JSON Schema of the dynamic configuration](https://json.schemastore.org/traefik-v2-file-provider.json).
+one way to check if the dynamic configuration is well-formed is to validate it with the [JSON Schema of the dynamic configuration](https://json.schemastore.org/ingress-v2-file-provider.json).
 
 ## Why does Let's Encrypt wildcard certificate renewal/generation with DNS challenge fail?
 
@@ -252,4 +252,4 @@ In which case, you should make sure your infrastructure is properly set up for a
 LEGO_DISABLE_CNAME_SUPPORT=true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

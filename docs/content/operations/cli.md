@@ -11,10 +11,10 @@ The Hanzo Ingress Command Line
 ## General
 
 ```bash
-traefik [command] [flags] [arguments]
+ingress [command] [flags] [arguments]
 ```
 
-Use `traefik [command] --help` for help on any command.
+Use `ingress [command] --help` for help on any command.
 
 Commands:
 
@@ -25,10 +25,10 @@ Flag's usage:
 
 ```bash
 # set flag_argument to flag(s)
-traefik [--flag=flag_argument] [-f [flag_argument]]
+ingress [--flag=flag_argument] [-f [flag_argument]]
 
 # set true/false to boolean flag(s)
-traefik [--flag[=true|false| ]] [-f [true|false| ]]
+ingress [--flag[=true|false| ]] [-f [true|false| ]]
 ```
 
 All flags are documented in the [(static configuration) CLI reference](../reference/install-configuration/configuration-options.md).
@@ -49,13 +49,13 @@ or any other health check orchestration mechanism.
 Usage:
 
 ```bash
-traefik healthcheck [command] [flags] [arguments]
+ingress healthcheck [command] [flags] [arguments]
 ```
 
 Example:
 
 ```bash
-$ traefik healthcheck
+$ ingress healthcheck
 OK: http://:8082/ping
 ```
 

@@ -133,22 +133,22 @@ metrics:
 
 #### `prefix`
 
-_Optional, Default="traefik"_
+_Optional, Default="ingress"_
 
 The prefix to use for metrics collection.
 
 ```yaml tab="File (YAML)"
 metrics:
   statsD:
-    prefix: traefik
+    prefix: ingress
 ```
 
 ```toml tab="File (TOML)"
 [metrics]
   [metrics.statsD]
-    prefix = "traefik"
+    prefix = "ingress"
 ```
 
 ```bash tab="CLI"
---metrics.statsd.prefix=traefik
+--metrics.statsd.prefix=ingress
 ```

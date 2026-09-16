@@ -19,7 +19,7 @@ The GrpcWeb middleware converts gRPC Web requests to HTTP/2 gRPC requests before
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-grpcweb.grpcweb.allowOrigins=*"
+  - "ingress.http.middlewares.test-grpcweb.grpcweb.allowOrigins=*"
 ```
 
 ```yaml tab="Kubernetes"
@@ -34,7 +34,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-grpcweb.grpcWeb.allowOrigins=*"
+- "ingress.http.middlewares.test-grpcweb.grpcWeb.allowOrigins=*"
 ```
 
 ```yaml tab="File (YAML)"

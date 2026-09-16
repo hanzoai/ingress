@@ -45,5 +45,5 @@ roleRef:
   name: knative-networking-role
 subjects:
   - kind: ServiceAccount
-    name: traefik-controller
+    name: ingress-controller
     namespace: default

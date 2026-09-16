@@ -25,7 +25,7 @@ tcp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
+  - "ingress.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
 ```
 
 ```json tab="Tags"
@@ -33,7 +33,7 @@ labels:
 {
   //..
   "Tags" : [
-    "traefik.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
+    "ingress.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
   ]
 }
 ```

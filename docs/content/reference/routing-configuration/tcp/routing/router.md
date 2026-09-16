@@ -55,31 +55,31 @@ tcp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tcp.routers.my-tcp-router.entrypoints=tcp-ep,websecure"
-  - "traefik.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)"
-  - "traefik.tcp.routers.my-tcp-router.priority=10"
-  - "traefik.tcp.routers.my-tcp-router.middlewares=tcp-ipallowlist"
-  - "traefik.tcp.routers.my-tcp-router.tls.certresolver=letsencrypt"
-  - "traefik.tcp.routers.my-tcp-router.tls.passthrough=false"
-  - "traefik.tcp.routers.my-tcp-router.tls.options=modern-tls"
-  - "traefik.tcp.routers.my-tcp-router.tls.domains[0].main=example.com"
-  - "traefik.tcp.routers.my-tcp-router.tls.domains[0].sans=www.example.com"
-  - "traefik.tcp.routers.my-tcp-router.service=my-tcp-service"
+  - "ingress.tcp.routers.my-tcp-router.entrypoints=tcp-ep,websecure"
+  - "ingress.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)"
+  - "ingress.tcp.routers.my-tcp-router.priority=10"
+  - "ingress.tcp.routers.my-tcp-router.middlewares=tcp-ipallowlist"
+  - "ingress.tcp.routers.my-tcp-router.tls.certresolver=letsencrypt"
+  - "ingress.tcp.routers.my-tcp-router.tls.passthrough=false"
+  - "ingress.tcp.routers.my-tcp-router.tls.options=modern-tls"
+  - "ingress.tcp.routers.my-tcp-router.tls.domains[0].main=example.com"
+  - "ingress.tcp.routers.my-tcp-router.tls.domains[0].sans=www.example.com"
+  - "ingress.tcp.routers.my-tcp-router.service=my-tcp-service"
 ```
 
 ```json tab="Tags"
 {
   "Tags": [
-    "traefik.tcp.routers.my-tcp-router.entrypoints=tcp-ep,websecure",
-    "traefik.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)",
-    "traefik.tcp.routers.my-tcp-router.priority=10",
-    "traefik.tcp.routers.my-tcp-router.middlewares=tcp-ipallowlist",
-    "traefik.tcp.routers.my-tcp-router.tls.certresolver=letsencrypt",
-    "traefik.tcp.routers.my-tcp-router.tls.passthrough=false",
-    "traefik.tcp.routers.my-tcp-router.tls.options=modern-tls",
-    "traefik.tcp.routers.my-tcp-router.tls.domains[0].main=example.com",
-    "traefik.tcp.routers.my-tcp-router.tls.domains[0].sans=www.example.com",
-    "traefik.tcp.routers.my-tcp-router.service=my-tcp-service"
+    "ingress.tcp.routers.my-tcp-router.entrypoints=tcp-ep,websecure",
+    "ingress.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)",
+    "ingress.tcp.routers.my-tcp-router.priority=10",
+    "ingress.tcp.routers.my-tcp-router.middlewares=tcp-ipallowlist",
+    "ingress.tcp.routers.my-tcp-router.tls.certresolver=letsencrypt",
+    "ingress.tcp.routers.my-tcp-router.tls.passthrough=false",
+    "ingress.tcp.routers.my-tcp-router.tls.options=modern-tls",
+    "ingress.tcp.routers.my-tcp-router.tls.domains[0].main=example.com",
+    "ingress.tcp.routers.my-tcp-router.tls.domains[0].sans=www.example.com",
+    "ingress.tcp.routers.my-tcp-router.service=my-tcp-service"
   ]
 }
 ```
@@ -101,4 +101,4 @@ labels:
 - Router names should be descriptive and follow your naming conventions
 - In provider-specific configurations (Docker, Kubernetes), router names are often auto-generated based on service names and rules
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

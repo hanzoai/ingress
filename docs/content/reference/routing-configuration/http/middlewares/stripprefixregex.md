@@ -28,14 +28,14 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
+  - "ingress.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
 ```
 
 ```yaml tab="Tags"
 {
   //..
   "Tags" : [
-    "traefik.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
+    "ingress.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
   ]
 }
 - 

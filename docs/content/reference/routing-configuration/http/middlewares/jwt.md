@@ -230,4 +230,4 @@ The reference to a Kubernetes secret takes the form of a URN:
 urn:k8s:secret:[name]:[valueKey]
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

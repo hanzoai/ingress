@@ -86,14 +86,14 @@ spec:
 
 ```bash tab="Labels"
 labels:
-  - "traefik.http.routers.my-router.observability.metrics=false"
+  - "ingress.http.routers.my-router.observability.metrics=false"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.routers.my-router.observability.metrics=false"
+    "ingress.http.routers.my-router.observability.metrics=false"
   ]
 }
 ```

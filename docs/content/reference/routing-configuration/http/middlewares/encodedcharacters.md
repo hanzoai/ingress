@@ -12,7 +12,7 @@ When you use this middleware, by default, potentially dangerous encoded characte
 ```yaml tab="Docker & Swarm"
 # Allow encoded slash in the request path.
 labels:
-  - "traefik.http.middlewares.test-encodedchars.encodedcharacters.allowencodedslash=true"
+  - "ingress.http.middlewares.test-encodedchars.encodedcharacters.allowencodedslash=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -28,7 +28,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Allow encoded slash in the request path.
-- "traefik.http.middlewares.test-encodedchars.encodedcharacters.allowencodedslash=true"
+- "ingress.http.middlewares.test-encodedchars.encodedcharacters.allowencodedslash=true"
 ```
 
 ```yaml tab="File (YAML)"

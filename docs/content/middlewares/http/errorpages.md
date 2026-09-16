@@ -19,9 +19,9 @@ The Errors middleware returns a custom page in lieu of the default, according to
 ```yaml tab="Docker & Swarm"
 # Dynamic Custom Error Page for 5XX Status Code
 labels:
-  - "traefik.http.middlewares.test-errors.errors.status=500,501,503,505-599"
-  - "traefik.http.middlewares.test-errors.errors.service=serviceError"
-  - "traefik.http.middlewares.test-errors.errors.query=/{status}.html"
+  - "ingress.http.middlewares.test-errors.errors.status=500,501,503,505-599"
+  - "ingress.http.middlewares.test-errors.errors.service=serviceError"
+  - "ingress.http.middlewares.test-errors.errors.query=/{status}.html"
 ```
 
 ```yaml tab="Kubernetes"
@@ -44,9 +44,9 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Dynamic Custom Error Page for 5XX Status Code excluding 502 and 504
-- "traefik.http.middlewares.test-errors.errors.status=500,501,503,505-599"
-- "traefik.http.middlewares.test-errors.errors.service=serviceError"
-- "traefik.http.middlewares.test-errors.errors.query=/{status}.html"
+- "ingress.http.middlewares.test-errors.errors.status=500,501,503,505-599"
+- "ingress.http.middlewares.test-errors.errors.service=serviceError"
+- "ingress.http.middlewares.test-errors.errors.query=/{status}.html"
 ```
 
 ```yaml tab="File (YAML)"

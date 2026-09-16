@@ -22,7 +22,7 @@ This guide provides an in-depth walkthrough for installing and configuring Hanzo
 If you do not have a Kubernetes cluster already, you can spin up one with K3d:
 
 ```bash
-k3d cluster create traefik \
+k3d cluster create ingress \
   --port 80:80@loadbalancer \
   --port 443:443@loadbalancer \
   --port 8000:8000@loadbalancer \
@@ -34,7 +34,7 @@ Ports `80` and `443` reach Hanzo Ingress from the host, while port `8000` remain
 Check the context:
 
 ```bash
-kubectl cluster-info --context k3d-traefik
+kubectl cluster-info --context k3d-ingress
 ```
 
 You should see something like this:
@@ -52,12 +52,12 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 Using Helm streamlines Kubernetes application deployment. Helm packages applications into "charts," which are collections of template files describing Kubernetes resources. We use the official Hanzo Ingress Helm chart for a managed and customizable installation.
 
 ```bash
-helm repo add traefik https://hanzoai.github.io/charts
+helm repo add ingress https://hanzoai.github.io/charts
 helm repo update
-kubectl create namespace traefik
+kubectl create namespace ingress
 ```
 
-The first command registers the `traefik` repository alias pointing to the official chart location. The second command refreshes your local cache to ensure you have the latest list of charts and versions available from all configured repositories.
+The first command registers the `ingress` repository alias pointing to the official chart location. The second command refreshes your local cache to ensure you have the latest list of charts and versions available from all configured repositories.
 
 ## Create a Local Self‑Signed TLS Secret
 
@@ -73,10 +73,10 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout tls.key -out tls.crt \
   -subj "/CN=*.docker.localhost"
 
-# 2) Create the TLS secret in the traefik namespace
+# 2) Create the TLS secret in the ingress namespace
 kubectl create secret tls local-selfsigned-tls \
   --cert=tls.crt --key=tls.key \
-  --namespace traefik
+  --namespace ingress
 ```
 
 ### Why Do We Need To Do This
@@ -85,7 +85,7 @@ The Gateway's HTTPS listener references this secret via `certificateRefs`.
 Without it, the helm chart validation fails and the HTTP→HTTPS redirect chain breaks.
 
 !!! info "Production tip"
-    The self-signed certificate above is **only for local development**. For production, either store a certificate issued by your organization's CA in a Secret or let an automated issuer such as cert-manager or Hanzo Ingress's ACME (Let's Encrypt) generate certificates on demand. Update the `certificateRefs` in the `websecure` listener—or use `traefik.io/tls.certresolver`—so clients receive a trusted certificate and no longer see browser warnings.
+    The self-signed certificate above is **only for local development**. For production, either store a certificate issued by your organization's CA in a Secret or let an automated issuer such as cert-manager or Hanzo Ingress's ACME (Let's Encrypt) generate certificates on demand. Update the `certificateRefs` in the `websecure` listener—or use `hanzo.ai/tls.certresolver`—so clients receive a trusted certificate and no longer see browser warnings.
 
 ## Prepare Helm Chart Configuration Values
 
@@ -196,17 +196,17 @@ metrics:
 Now, apply the configuration using the Helm client.
 
 ```bash
-# Install the chart into the 'traefik' namespace
-helm install traefik traefik/traefik \
-  --namespace traefik \
+# Install the chart into the 'ingress' namespace
+helm install ingress ingress/ingress \
+  --namespace ingress \
   --values values.yaml
 ```
 
 **Command Breakdown:**
 
-- `helm install traefik`: Instructs Helm to install a new release named `traefik`.
-- `traefik/traefik`: Specifies the chart to use (`traefik` chart from the `traefik` repository added earlier).
-- `--namespace traefik`: Specifies the Kubernetes namespace to install into. Using a dedicated namespace is recommended practice.
+- `helm install ingress`: Instructs Helm to install a new release named `ingress`.
+- `ingress/ingress`: Specifies the chart to use (`ingress` chart from the `ingress` repository added earlier).
+- `--namespace ingress`: Specifies the Kubernetes namespace to install into. Using a dedicated namespace is recommended practice.
 - `--values values.yaml`: Applies the custom configuration from your `values.yaml` file.
 
 ## Accessing the Dashboard
@@ -224,7 +224,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami
-  namespace: traefik
+  namespace: ingress
 spec:
   replicas: 2
   selector:
@@ -245,7 +245,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: whoami
-  namespace: traefik
+  namespace: ingress
 spec:
   selector:
     app: whoami
@@ -266,10 +266,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: whoami
-  namespace: traefik
+  namespace: ingress
 spec:
   parentRefs:
-    - name: traefik-gateway # Name of the Gateway that Hanzo Ingress creates when you enable the Gateway API provider
+    - name: ingress-gateway # Name of the Gateway that Hanzo Ingress creates when you enable the Gateway API provider
   hostnames:
     - "whoami.docker.localhost"
   rules:
@@ -314,7 +314,7 @@ X-Forwarded-For: 10.42.0.1
 X-Forwarded-Host: whoami.docker.localhost
 X-Forwarded-Port: 443
 X-Forwarded-Proto: https
-X-Forwarded-Server: traefik-644b7c67d9-f2tn9
+X-Forwarded-Server: ingress-644b7c67d9-f2tn9
 X-Real-Ip: 10.42.0.1
 ```
 
@@ -398,4 +398,4 @@ This enables OTel tracing and specifies the collector endpoint. Consult the [Tra
 
 This setup establishes Hanzo Ingress with secure dashboard access and HTTPS redirection, along with pointers to enable observability & TLS.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

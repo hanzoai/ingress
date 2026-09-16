@@ -54,22 +54,22 @@ tracing:
 
 #### `serviceName`
 
-_Required, Default="traefik"_
+_Required, Default="ingress"_
 
 Service name used in selected backend.
 
 ```yaml tab="File (YAML)"
 tracing:
-  serviceName: traefik
+  serviceName: ingress
 ```
 
 ```toml tab="File (TOML)"
 [tracing]
-  serviceName = "traefik"
+  serviceName = "ingress"
 ```
 
 ```bash tab="CLI"
---tracing.serviceName=traefik
+--tracing.serviceName=ingress
 ```
 
 #### `sampleRate`

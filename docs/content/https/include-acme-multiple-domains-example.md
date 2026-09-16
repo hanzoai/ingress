@@ -2,11 +2,11 @@
 ```yaml tab="Docker & Swarm"
 ## Dynamic configuration
 labels:
-  - traefik.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
-  - traefik.http.routers.blog.tls=true
-  - traefik.http.routers.blog.tls.certresolver=myresolver
-  - traefik.http.routers.blog.tls.domains[0].main=example.com
-  - traefik.http.routers.blog.tls.domains[0].sans=*.example.org
+  - ingress.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
+  - ingress.http.routers.blog.tls=true
+  - ingress.http.routers.blog.tls.certresolver=myresolver
+  - ingress.http.routers.blog.tls.domains[0].main=example.com
+  - ingress.http.routers.blog.tls.domains[0].sans=*.example.org
 ```
 
 ```yaml tab="Kubernetes"

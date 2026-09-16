@@ -5,8 +5,8 @@
 DOCS_VERIFY_SKIP ?= false
 DOCS_LINT_SKIP ?= false
 
-TRAEFIK_DOCS_BUILD_IMAGE ?= traefik-docs
-TRAEFIK_DOCS_CHECK_IMAGE ?= $(TRAEFIK_DOCS_BUILD_IMAGE)-check
+INGRESS_DOCS_BUILD_IMAGE ?= ingress-docs
+INGRESS_DOCS_CHECK_IMAGE ?= $(INGRESS_DOCS_BUILD_IMAGE)-check
 
 SITE_DIR := $(CURDIR)/site
 
@@ -21,7 +21,7 @@ docs: docs-clean docs-image docs-lint docs-build docs-verify
 # Writer Mode: build and serve docs on http://localhost:8000 with livereload
 .PHONY: docs-serve
 docs-serve: docs-image
-	docker run  $(DOCKER_RUN_DOC_OPTS) $(TRAEFIK_DOCS_BUILD_IMAGE) mkdocs serve -a 0.0.0.0:8000
+	docker run  $(DOCKER_RUN_DOC_OPTS) $(INGRESS_DOCS_BUILD_IMAGE) mkdocs serve -a 0.0.0.0:8000
 
 ## Pull image for doc building
 .PHONY: docs-pull-images
@@ -35,18 +35,18 @@ docs-pull-images:
 # Utilities Targets for each step
 .PHONY: docs-image
 docs-image:
-	docker build -t $(TRAEFIK_DOCS_BUILD_IMAGE) -f docs.Dockerfile ./
+	docker build -t $(INGRESS_DOCS_BUILD_IMAGE) -f docs.Dockerfile ./
 
 .PHONY: docs-build
 docs-build: docs-image
-	docker run $(DOCKER_RUN_DOC_OPTS) $(TRAEFIK_DOCS_BUILD_IMAGE) sh -c "mkdocs build \
+	docker run $(DOCKER_RUN_DOC_OPTS) $(INGRESS_DOCS_BUILD_IMAGE) sh -c "mkdocs build \
 		&& chown -R $(shell id -u):$(shell id -g) ./site"
 
 .PHONY: docs-verify
 docs-verify: docs-build
 ifneq ("$(DOCS_VERIFY_SKIP)", "true")
-	docker build -t $(TRAEFIK_DOCS_CHECK_IMAGE) -f check.Dockerfile ./
-	docker run --rm -v $(CURDIR):/app $(TRAEFIK_DOCS_CHECK_IMAGE) /verify.sh
+	docker build -t $(INGRESS_DOCS_CHECK_IMAGE) -f check.Dockerfile ./
+	docker run --rm -v $(CURDIR):/app $(INGRESS_DOCS_CHECK_IMAGE) /verify.sh
 else
 	echo "DOCS_VERIFY_SKIP is true: no verification done."
 endif
@@ -54,8 +54,8 @@ endif
 .PHONY: docs-lint
 docs-lint:
 ifneq ("$(DOCS_LINT_SKIP)", "true")
-	docker build -t $(TRAEFIK_DOCS_CHECK_IMAGE) -f check.Dockerfile ./
-	docker run --rm -v $(CURDIR):/app $(TRAEFIK_DOCS_CHECK_IMAGE) /lint.sh
+	docker build -t $(INGRESS_DOCS_CHECK_IMAGE) -f check.Dockerfile ./
+	docker run --rm -v $(CURDIR):/app $(INGRESS_DOCS_CHECK_IMAGE) /lint.sh
 else
 	echo "DOCS_LINT_SKIP is true: no linting done."
 endif

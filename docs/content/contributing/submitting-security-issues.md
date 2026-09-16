@@ -13,7 +13,7 @@ You can subscribe via our [GitHub Discussions](https://github.com/hanzoai/ingres
 ## CVE
 
 Reported vulnerabilities can be found on
-[cve.mitre.org](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=traefik).
+[cve.mitre.org](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=ingress).
 
 ## Report a Vulnerability
 

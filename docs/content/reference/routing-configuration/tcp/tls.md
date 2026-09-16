@@ -45,28 +45,28 @@ tcp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tcp.routers.my-tls-router.tls=true"
-  - "traefik.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)"
-  - "traefik.tcp.routers.my-tls-router.service=my-tcp-service"
-  - "traefik.tcp.routers.my-tls-router.tls.passthrough=true"
-  - "traefik.tcp.routers.my-tls-router.tls.options=my-tls-options"
-  - "traefik.tcp.routers.my-tls-router.tls.certResolver=myresolver"
-  - "traefik.tcp.routers.my-tls-router.tls.domains[0].main=example.com"
-  - "traefik.tcp.routers.my-tls-router.tls.domains[0].sans=www.example.com,api.example.com"
+  - "ingress.tcp.routers.my-tls-router.tls=true"
+  - "ingress.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)"
+  - "ingress.tcp.routers.my-tls-router.service=my-tcp-service"
+  - "ingress.tcp.routers.my-tls-router.tls.passthrough=true"
+  - "ingress.tcp.routers.my-tls-router.tls.options=my-tls-options"
+  - "ingress.tcp.routers.my-tls-router.tls.certResolver=myresolver"
+  - "ingress.tcp.routers.my-tls-router.tls.domains[0].main=example.com"
+  - "ingress.tcp.routers.my-tls-router.tls.domains[0].sans=www.example.com,api.example.com"
 ```
 
 ```json tab="Tags"
 {
   //...
   "Tags": [
-    "traefik.tcp.routers.my-tls-router.tls=true"
-    "traefik.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)",
-    "traefik.tcp.routers.my-tls-router.service=my-tcp-service",
-    "traefik.tcp.routers.my-tls-router.tls.passthrough=true",
-    "traefik.tcp.routers.my-tls-router.tls.options=my-tls-options",
-    "traefik.tcp.routers.my-tls-router.tls.certResolver=myresolver",
-    "traefik.tcp.routers.my-tls-router.tls.domains[0].main=example.com",
-    "traefik.tcp.routers.my-tls-router.tls.domains[0].sans=www.example.com,api.example.com"
+    "ingress.tcp.routers.my-tls-router.tls=true"
+    "ingress.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)",
+    "ingress.tcp.routers.my-tls-router.service=my-tcp-service",
+    "ingress.tcp.routers.my-tls-router.tls.passthrough=true",
+    "ingress.tcp.routers.my-tls-router.tls.options=my-tls-options",
+    "ingress.tcp.routers.my-tls-router.tls.certResolver=myresolver",
+    "ingress.tcp.routers.my-tls-router.tls.domains[0].main=example.com",
+    "ingress.tcp.routers.my-tls-router.tls.domains[0].sans=www.example.com,api.example.com"
   ]
 }
 ```
@@ -123,4 +123,4 @@ This provides fine-grained control over certificate generation and takes precede
 
 Every domain must have A/AAAA records pointing to Hanzo Ingress.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

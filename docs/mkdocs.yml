@@ -1,7 +1,7 @@
 site_name: Hanzo Ingress
 site_description: Hanzo Ingress Documentation
 site_author: hanzo.ai
-site_url: https://doc.hanzo.ai/traefik
+site_url: https://doc.hanzo.ai/ingress
 dev_addr: localhost:8000
 
 repo_name: 'GitHub'
@@ -136,7 +136,7 @@ plugins:
         'reference/dynamic-configuration/kubernetes-crd.md': 'reference/routing-configuration/kubernetes/crd/http/ingressroute.md'
         'reference/dynamic-configuration/kubernetes-gateway.md': 'reference/routing-configuration/kubernetes/gateway-api.md'
         ## Plugins
-        'plugins/index.md': "extend/extend-traefik.md"
+        'plugins/index.md': "extend/extend-ingress.md"
         ## Migration
         'migration/v3.md': 'migrate/v3.md'
         'migration/v2-to-v3.md': 'migrate/v2-to-v3.md'
@@ -188,16 +188,16 @@ nav:
       - 'Logs & Access Logs': 'observe/logs-and-access-logs.md'
       - 'Metrics': 'observe/metrics.md'
       - 'Tracing': 'observe/tracing.md'
-  - 'Extend': 'extend/extend-traefik.md'
+  - 'Extend': 'extend/extend-ingress.md'
   - '<span class="nav-link-with-icon">Govern</span>': 'govern/index.md'
   - 'Migrate':
-      - 'Ingress NGINX to Traefik': 'migrate/nginx-to-traefik.md'
-      - 'Traefik v3 minor migrations': 'migrate/v3.md'
-      - 'Traefik v2 to v3':
+      - 'Ingress NGINX to Hanzo Ingress': 'migrate/nginx-to-ingress.md'
+      - 'Ingress v3 minor migrations': 'migrate/v3.md'
+      - 'Ingress v2 to v3':
         - 'Migration guide': 'migrate/v2-to-v3.md'
         - 'Configuration changes for v3': 'migrate/v2-to-v3-details.md'
-      - 'Traefik v2 minor migrations': 'migrate/v2.md'
-      - 'Traefik v1 to v2': 'migrate/v1-to-v2.md'
+      - 'Ingress v2 minor migrations': 'migrate/v2.md'
+      - 'Ingress v1 to v2': 'migrate/v1-to-v2.md'
   - 'Reference':
     - 'Install Configuration':
       - 'Boot Environment': 'reference/install-configuration/boot-environment.md'

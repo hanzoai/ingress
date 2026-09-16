@@ -43,13 +43,13 @@ http:
 ```yaml tab="Labels"
 # Retry 4 times with exponential backoff
 labels:
-  - "traefik.http.middlewares.test-retry.retry.attempts=4"
-  - "traefik.http.middlewares.test-retry.retry.initialinterval=100ms"
-  - "traefik.http.middlewares.test-retry.retry.timeout=60s"
-  - "traefik.http.middlewares.test-retry.retry.maxrequestbodybytes=1024"
-  - "traefik.http.middlewares.test-retry.retry.status=400,500-599"
-  - "traefik.http.middlewares.test-retry.retry.disableretryonnetworkerror=true"
-  - "traefik.http.middlewares.test-retry.retry.retrynonidempotentmethod=true"
+  - "ingress.http.middlewares.test-retry.retry.attempts=4"
+  - "ingress.http.middlewares.test-retry.retry.initialinterval=100ms"
+  - "ingress.http.middlewares.test-retry.retry.timeout=60s"
+  - "ingress.http.middlewares.test-retry.retry.maxrequestbodybytes=1024"
+  - "ingress.http.middlewares.test-retry.retry.status=400,500-599"
+  - "ingress.http.middlewares.test-retry.retry.disableretryonnetworkerror=true"
+  - "ingress.http.middlewares.test-retry.retry.retrynonidempotentmethod=true"
 ```
 
 ```json tab="Tags"
@@ -58,13 +58,13 @@ labels:
 {
   // ...
   "Tags" : [
-    "traefik.http.middlewares.test-retry.retry.attempts=4",
-    "traefik.http.middlewares.test-retry.retry.initialinterval=100ms",
-    "traefik.http.middlewares.test-retry.retry.timeout=60s",
-    "traefik.http.middlewares.test-retry.retry.maxrequestbodybytes=1024",
-    "traefik.http.middlewares.test-retry.retry.status=400,500-599",
-    "traefik.http.middlewares.test-retry.retry.disableretryonnetworkerror=true",
-    "traefik.http.middlewares.test-retry.retry.retrynonidempotentmethod=true"
+    "ingress.http.middlewares.test-retry.retry.attempts=4",
+    "ingress.http.middlewares.test-retry.retry.initialinterval=100ms",
+    "ingress.http.middlewares.test-retry.retry.timeout=60s",
+    "ingress.http.middlewares.test-retry.retry.maxrequestbodybytes=1024",
+    "ingress.http.middlewares.test-retry.retry.status=400,500-599",
+    "ingress.http.middlewares.test-retry.retry.disableretryonnetworkerror=true",
+    "ingress.http.middlewares.test-retry.retry.retrynonidempotentmethod=true"
   ]
 }
 

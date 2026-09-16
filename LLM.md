@@ -105,12 +105,22 @@ Not branding — renaming these breaks behaviour or breaches a licence:
   the cert/key pair with `OU=Ingress` and can only be validated by the
   acme integration suite (Docker + pebble).
 
-### Vendored upstream content (out of scope by nature)
-`docs/content/**` (prose), `CHANGELOG.md`, and `webui/**` (the dashboard
-SPA) are imported upstream material kept for reference. They carry the bulk
-of the remaining occurrences and do not ship in the runtime binary or image.
-Rebranding them makes future upstream syncs harder; do it only as a
-dedicated docs pass.
+### Vendored upstream content
+`docs/content/**` has had its dedicated pass and now names this fork. Most of
+it was not branding but STALENESS: the docs described `TRAEFIK_*` env vars,
+`traefik.http.*` labels, `traefik.ingress.kubernetes.io/` annotations, a
+`.traefik.yml` plugin manifest and `traefik_*` metrics, none of which this
+binary answers to. They read `INGRESS_*`, `ingress.http.*`,
+`ingress.kubernetes.io/`, `.ingress.yml` and `ingress.*` now, which is what
+the code has always done.
+
+`CHANGELOG.md` is deliberately untouched: 6,789 lines of imported release
+history, and rewriting a record of what upstream shipped would falsify it.
+
+`webui/**` keeps `@traefiklabs/faency` — a published third-party package, so
+the import path is an address. `docs/content/assets/img/traefik*` are
+upstream's artwork and stay until we draw our own; renaming the files would
+only hide whose logo it is.
 
 ### Wire protocol (diverges from upstream — intentional)
 - Internal proxy headers are `X-Ingress-Fast-Proxy` and `X-Ingress-Router`.

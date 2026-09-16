@@ -29,7 +29,7 @@ http:
 ```yaml tab="Labels"
 # Replace the path with /foo
 labels:
-  - "traefik.http.middlewares.test-replacepath.replacepath.path=/foo"
+  - "ingress.http.middlewares.test-replacepath.replacepath.path=/foo"
 ```
 
 ```json tab="Tags"
@@ -37,7 +37,7 @@ labels:
 {
   // ...
   "Tags" : [
-    "traefik.http.middlewares.test-replacepath.replacepath.path=/foo"
+    "ingress.http.middlewares.test-replacepath.replacepath.path=/foo"
   ]
 } 
 ```

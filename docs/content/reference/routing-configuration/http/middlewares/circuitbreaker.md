@@ -38,14 +38,14 @@ http:
 ```yaml tab="Labels"
 # Latency Check
 labels:
-  - "traefik.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100"
+  - "ingress.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100"
 ```
 
 ```json tab="Tags"
 {
   //..
   "Tags" : [
-    "traefik.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100"
+    "ingress.http.middlewares.latency-check.circuitbreaker.expression=LatencyAtQuantileMS(50.0) > 100"
   ]
 }
 ```

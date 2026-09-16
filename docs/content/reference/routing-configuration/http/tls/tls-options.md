@@ -12,7 +12,7 @@ The TLS options allow one to configure some parameters of the TLS connection.
     When specifying the `default` option explicitly, make sure not to specify provider namespace as the `default` option does not have one.  
     Conversely, for cross-provider references, for example, when referencing the file provider from a docker label,
     you must specify the provider namespace, for example:  
-    `traefik.http.routers.myrouter.tls.options=myoptions@file`
+    `ingress.http.routers.myrouter.tls.options=myoptions@file`
 
 ### Minimum TLS Version
 
@@ -255,4 +255,4 @@ spec:
   disableSessionTickets: true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

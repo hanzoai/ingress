@@ -206,7 +206,7 @@
   },
   {
     "digestAuth": {
-      "users": ["test:traefik:a2688e031edb4be6a3797f3882655c05", "test2:traefik:518845800f9e2bfb1f1f740ec24f074e"],
+      "users": ["test:ingress:a2688e031edb4be6a3797f3882655c05", "test2:ingress:518845800f9e2bfb1f1f740ec24f074e"],
       "usersFile": "/etc/foo/my/file/path/.htpasswd",
       "realm": "Hello you are here",
       "removeHeader": true,

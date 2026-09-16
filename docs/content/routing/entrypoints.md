@@ -384,7 +384,7 @@ EntryPoints in this list are used (by default) on HTTP and TCP routers that do n
     If at least one EntryPoint has the `AsDefault` option set to `true`,
     then the list of default EntryPoints includes only EntryPoints that have the `AsDefault` option set to `true`.
 
-    Some built-in EntryPoints are always excluded from the list, namely: `traefik`.
+    Some built-in EntryPoints are always excluded from the list, namely: `ingress`.
 
 !!! warning "Only TCP and HTTP"
 
@@ -515,7 +515,7 @@ entryPoints:
 
 ??? info "HTTP/3 uses UDP+TLS"
 
-    As HTTP/3 actually uses UDP, when traefik is configured with a TCP entryPoint on port N with HTTP/3 enabled,
+    As HTTP/3 actually uses UDP, when ingress is configured with a TCP entryPoint on port N with HTTP/3 enabled,
     the underlying HTTP/3 server that is started automatically listens on UDP port N too. As a consequence,
     it means port N cannot be used by another UDP entryPoint.
     Since HTTP/3 requires the use of TLS,
@@ -1615,7 +1615,7 @@ Hanzo Ingress supports [systemd socket activation](https://www.freedesktop.org/s
 When a socket activation file descriptor name matches an EntryPoint name, the corresponding file descriptor will be used as the TCP/UDP listener for the matching EntryPoint.
 
 ```bash
-systemd-socket-activate -l 80 -l 443 --fdname web:websecure  ./traefik --entrypoints.web --entrypoints.websecure
+systemd-socket-activate -l 80 -l 443 --fdname web:websecure  ./ingress --entrypoints.web --entrypoints.websecure
 ```
 
 !!! warning "EntryPoint Address"
@@ -1730,4 +1730,4 @@ entryPoints:
 --entryPoints.foo.observability.tracing=false
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

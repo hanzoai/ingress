@@ -28,7 +28,7 @@ tcp:
 ```yaml tab="Labels"
 # Accepts connections from defined IP
 labels:
-  - "traefik.tcp.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+  - "ingress.tcp.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```json tab="Tags"
@@ -36,7 +36,7 @@ labels:
 {
   //...
   "Tags" : [
-    "traefik.tcp.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"s
+    "ingress.tcp.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"s
   ]
 }
 ```

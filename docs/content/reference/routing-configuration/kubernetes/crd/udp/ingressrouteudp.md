@@ -18,7 +18,7 @@ metadata:
   name: ingressrouteudpfoo
   namespace: apps
 spec:
-  ingressClassName: traefik-lb
+  ingressClassName: ingress-lb
   entryPoints:
     - fooudp  # The entry point where Hanzo Ingress listens for incoming traffic.
   routes:

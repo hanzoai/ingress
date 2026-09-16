@@ -24,7 +24,7 @@ http:
 ```yaml tab="Labels"
 # Enable compression
 labels:
-  - "traefik.http.middlewares.test-compress.compress=true"
+  - "ingress.http.middlewares.test-compress.compress=true"
 ```
 
 ```json tab="Tags"
@@ -32,7 +32,7 @@ labels:
 {
   //...
   "Tags": [
-    "traefik.http.middlewares.test-compress.compress=true"
+    "ingress.http.middlewares.test-compress.compress=true"
   ]
 }
 ```

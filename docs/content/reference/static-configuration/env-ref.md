@@ -3,1022 +3,1022 @@ CODE GENERATED AUTOMATICALLY
 THIS FILE MUST NOT BE EDITED BY HAND
 -->
 
-`TRAEFIK_ACCESSLOG`:  
+`INGRESS_ACCESSLOG`:  
 Access log settings. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_ADDINTERNALS`:  
+`INGRESS_ACCESSLOG_ADDINTERNALS`:  
 Enables access log for internal services (ping, dashboard, etc...). (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_BUFFERINGSIZE`:  
+`INGRESS_ACCESSLOG_BUFFERINGSIZE`:  
 Number of access log lines to process in a buffered way. (Default: ```0```)
 
-`TRAEFIK_ACCESSLOG_FIELDS_DEFAULTMODE`:  
+`INGRESS_ACCESSLOG_FIELDS_DEFAULTMODE`:  
 Default mode for fields: keep | drop (Default: ```keep```)
 
-`TRAEFIK_ACCESSLOG_FIELDS_HEADERS_DEFAULTMODE`:  
+`INGRESS_ACCESSLOG_FIELDS_HEADERS_DEFAULTMODE`:  
 Default mode for fields: keep | drop | redact (Default: ```drop```)
 
-`TRAEFIK_ACCESSLOG_FIELDS_HEADERS_NAMES_<NAME>`:  
+`INGRESS_ACCESSLOG_FIELDS_HEADERS_NAMES_<NAME>`:  
 Override mode for headers
 
-`TRAEFIK_ACCESSLOG_FIELDS_NAMES_<NAME>`:  
+`INGRESS_ACCESSLOG_FIELDS_NAMES_<NAME>`:  
 Override mode for fields
 
-`TRAEFIK_ACCESSLOG_FILEPATH`:  
+`INGRESS_ACCESSLOG_FILEPATH`:  
 Access log file path. Stdout is used when omitted or empty.
 
-`TRAEFIK_ACCESSLOG_FILTERS_MINDURATION`:  
+`INGRESS_ACCESSLOG_FILTERS_MINDURATION`:  
 Keep access logs when request took longer than the specified duration. (Default: ```0```)
 
-`TRAEFIK_ACCESSLOG_FILTERS_RETRYATTEMPTS`:  
+`INGRESS_ACCESSLOG_FILTERS_RETRYATTEMPTS`:  
 Keep access logs when at least one retry happened. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_FILTERS_STATUSCODES`:  
+`INGRESS_ACCESSLOG_FILTERS_STATUSCODES`:  
 Keep access logs with status codes in the specified range.
 
-`TRAEFIK_ACCESSLOG_FORMAT`:  
+`INGRESS_ACCESSLOG_FORMAT`:  
 Access log format: json | common (Default: ```common```)
 
-`TRAEFIK_ACCESSLOG_OTLP`:  
+`INGRESS_ACCESSLOG_OTLP`:  
 Settings for OpenTelemetry. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC`:  
 gRPC configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_ENDPOINT`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_ENDPOINT`:  
 Sets the gRPC endpoint (host:port) of the collector. (Default: ```localhost:4317```)
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_HEADERS_<NAME>`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_INSECURE`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_INSECURE`:  
 Disables client transport security for the exporter. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_TLS_CA`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_TLS_CERT`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_GRPC_TLS_KEY`:  
+`INGRESS_ACCESSLOG_OTLP_GRPC_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP`:  
 HTTP configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_ENDPOINT`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_ENDPOINT`:  
 Sets the HTTP endpoint (scheme://host:port/path) of the collector. (Default: ```https://localhost:4318```)
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_HEADERS_<NAME>`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_TLS_CA`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_TLS_CERT`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_ACCESSLOG_OTLP_HTTP_TLS_KEY`:  
+`INGRESS_ACCESSLOG_OTLP_HTTP_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_ACCESSLOG_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
+`INGRESS_ACCESSLOG_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
 Defines additional resource attributes (key:value).
 
-`TRAEFIK_ACCESSLOG_OTLP_SERVICENAME`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+`INGRESS_ACCESSLOG_OTLP_SERVICENAME`:  
+Defines the service name resource attribute. (Default: ```ingress```)
 
-`TRAEFIK_API`:  
+`INGRESS_API`:  
 Enable api/dashboard. (Default: ```false```)
 
-`TRAEFIK_API_BASEPATH`:  
+`INGRESS_API_BASEPATH`:  
 Defines the base path where the API and Dashboard will be exposed. (Default: ```/```)
 
-`TRAEFIK_API_DASHBOARD`:  
+`INGRESS_API_DASHBOARD`:  
 Activate dashboard. (Default: ```true```)
 
-`TRAEFIK_API_DEBUG`:  
+`INGRESS_API_DEBUG`:  
 Enable additional endpoints for debugging and profiling. (Default: ```false```)
 
-`TRAEFIK_API_DISABLEDASHBOARDAD`:  
+`INGRESS_API_DISABLEDASHBOARDAD`:  
 Disable ad in the dashboard. (Default: ```false```)
 
-`TRAEFIK_API_INSECURE`:  
-Activate API directly on the entryPoint named traefik. (Default: ```false```)
+`INGRESS_API_INSECURE`:  
+Activate API directly on the entryPoint named ingress. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>`:  
 Certificates resolvers configuration. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CACERTIFICATES`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CACERTIFICATES`:  
 Specify the paths to PEM encoded CA Certificates that can be used to authenticate an ACME server with an HTTPS certificate not issued by a CA in the system-wide trusted root list.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CASERVER`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CASERVER`:  
 CA server to use. (Default: ```https://acme-v02.api.letsencrypt.org/directory```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CASERVERNAME`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CASERVERNAME`:  
 Specify the CA server name that can be used to authenticate an ACME server with an HTTPS certificate not issued by a CA in the system-wide trusted root list.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CASYSTEMCERTPOOL`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CASYSTEMCERTPOOL`:  
 Define if the certificates pool must use a copy of the system cert pool. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CERTIFICATESDURATION`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CERTIFICATESDURATION`:  
 Certificates' duration in hours. (Default: ```2160```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CLIENTRESPONSEHEADERTIMEOUT`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CLIENTRESPONSEHEADERTIMEOUT`:  
 Timeout for receiving the response headers when communicating with the ACME server. (Default: ```30```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_CLIENTTIMEOUT`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_CLIENTTIMEOUT`:  
 Timeout for a complete HTTP transaction with the ACME server. (Default: ```120```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DISABLECOMMONNAME`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DISABLECOMMONNAME`:  
 Disable the common name in the CSR. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE`:  
 Activate DNS-01 Challenge. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_DELAYBEFORECHECK`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_DELAYBEFORECHECK`:  
 (Deprecated) Assume DNS propagates after a delay in seconds rather than finding and querying nameservers. (Default: ```0```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_DISABLEPROPAGATIONCHECK`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_DISABLEPROPAGATIONCHECK`:  
 (Deprecated) Disable the DNS propagation checks before notifying ACME that the DNS challenge is ready. [not recommended] (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION`:  
 DNS propagation checks configuration (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DELAYBEFORECHECKS`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DELAYBEFORECHECKS`:  
 Defines the delay before checking the challenge TXT record propagation. (Default: ```0```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DISABLEANSCHECKS`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DISABLEANSCHECKS`:  
 Disables the challenge TXT record propagation checks against authoritative nameservers. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DISABLECHECKS`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_DISABLECHECKS`:  
 Disables the challenge TXT record propagation checks (not recommended). (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_REQUIREALLRNS`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROPAGATION_REQUIREALLRNS`:  
 Requires the challenge TXT record to be propagated to all recursive nameservers. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROVIDER`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_PROVIDER`:  
 Use a DNS-01 based challenge provider rather than HTTPS.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_RESOLVERS`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_DNSCHALLENGE_RESOLVERS`:  
 Use following DNS servers to resolve the FQDN authority.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_EAB_HMACENCODED`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_EAB_HMACENCODED`:  
 Base64 encoded HMAC key from External CA.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_EAB_KID`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_EAB_KID`:  
 Key identifier from External CA.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_EMAIL`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_EMAIL`:  
 Email address used for registration.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_EMAILADDRESSES`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_EMAILADDRESSES`:  
 CSR email addresses to use.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE`:  
 Activate HTTP-01 Challenge. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE_DELAY`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE_DELAY`:  
 Delay between the creation of the challenge and the validation. (Default: ```0```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE_ENTRYPOINT`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_HTTPCHALLENGE_ENTRYPOINT`:  
 HTTP challenge EntryPoint
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_KEYTYPE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_KEYTYPE`:  
 KeyType used for generating certificate private key. Allow value 'EC256', 'EC384', 'RSA2048', 'RSA4096', 'RSA8192'. (Default: ```RSA4096```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_PREFERREDCHAIN`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_PREFERREDCHAIN`:  
 Preferred chain to use.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_PROFILE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_PROFILE`:  
 Certificate profile to use.
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_STORAGE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_STORAGE`:  
 Storage to use. (Default: ```acme.json```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_TLSCHALLENGE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_TLSCHALLENGE`:  
 Activate TLS-ALPN-01 Challenge. (Default: ```false```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_ACME_TLSCHALLENGE_DELAY`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_ACME_TLSCHALLENGE_DELAY`:  
 Delay between the creation of the challenge and the validation. (Default: ```0```)
 
-`TRAEFIK_CERTIFICATESRESOLVERS_<NAME>_TAILSCALE`:  
+`INGRESS_CERTIFICATESRESOLVERS_<NAME>_TAILSCALE`:  
 Enables Tailscale certificate resolution. (Default: ```true```)
 
-`TRAEFIK_CORE_DEFAULTRULESYNTAX`:  
+`INGRESS_CORE_DEFAULTRULESYNTAX`:  
 Defines the rule parser default syntax (v2 or v3) (Default: ```v3```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>`:  
+`INGRESS_ENTRYPOINTS_<NAME>`:  
 Entry points definition. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_ADDRESS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_ADDRESS`:  
 Entry point address.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_ALLOWACMEBYPASS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_ALLOWACMEBYPASS`:  
 Enables handling of ACME TLS and HTTP challenges with custom routers. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_ASDEFAULT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_ASDEFAULT`:  
 Adds this EntryPoint to the list of default EntryPoints to be used on routers that don't have any Entrypoint defined. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_CONNECTION`:  
+`INGRESS_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_CONNECTION`:  
 List of Connection headers that are allowed to pass through the middleware chain before being removed.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_INSECURE`:  
+`INGRESS_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_INSECURE`:  
 Trust all forwarded headers. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_TRUSTEDIPS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_FORWARDEDHEADERS_TRUSTEDIPS`:  
 Trust only forwarded headers from selected IPs.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP`:  
 HTTP configuration.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP2_MAXCONCURRENTSTREAMS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP2_MAXCONCURRENTSTREAMS`:  
 Specifies the number of concurrent streams per connection that each client is allowed to initiate. (Default: ```250```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP3`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP3`:  
 HTTP/3 configuration. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP3_ADVERTISEDPORT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP3_ADVERTISEDPORT`:  
 UDP port to advertise, on which HTTP/3 is available. (Default: ```0```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDBACKSLASH`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDBACKSLASH`:  
 Defines whether requests with encoded back slash characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDHASH`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDHASH`:  
 Defines whether requests with encoded hash characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDNULLCHARACTER`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDNULLCHARACTER`:  
 Defines whether requests with encoded null characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDPERCENT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDPERCENT`:  
 Defines whether requests with encoded percent characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDQUESTIONMARK`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDQUESTIONMARK`:  
 Defines whether requests with encoded question mark characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDSEMICOLON`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDSEMICOLON`:  
 Defines whether requests with encoded semicolon characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDSLASH`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEDCHARACTERS_ALLOWENCODEDSLASH`:  
 Defines whether requests with encoded slash characters in the path are allowed. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_ENCODEQUERYSEMICOLONS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_ENCODEQUERYSEMICOLONS`:  
 Defines whether request query semicolons should be URLEncoded. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_MAXHEADERBYTES`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_MAXHEADERBYTES`:  
 Maximum size of request headers in bytes. (Default: ```1048576```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_MIDDLEWARES`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_MIDDLEWARES`:  
 Default middlewares for the routers linked to the entry point.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_PERMANENT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_PERMANENT`:  
 Applies a permanent redirection. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_PRIORITY`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_PRIORITY`:  
 Priority of the generated router. (Default: ```9223372036854775806```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME`:  
 Scheme used for the redirection. (Default: ```https```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_TO`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_REDIRECTIONS_ENTRYPOINT_TO`:  
 Targeted entry point of the redirection.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_SANITIZEPATH`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_SANITIZEPATH`:  
 Defines whether to enable request path sanitization (removal of /./, /../ and multiple slash sequences). (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS`:  
 Default TLS configuration for the routers linked to the entry point. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS_CERTRESOLVER`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS_CERTRESOLVER`:  
 Default certificate resolver for the routers linked to the entry point.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS`:  
 Default TLS domains for the routers linked to the entry point.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS_n_MAIN`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS_n_MAIN`:  
 Default subject name.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS_n_SANS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS_DOMAINS_n_SANS`:  
 Subject alternative names.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_HTTP_TLS_OPTIONS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_HTTP_TLS_OPTIONS`:  
 Default TLS options for the routers linked to the entry point.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_OBSERVABILITY_ACCESSLOGS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_OBSERVABILITY_ACCESSLOGS`:  
 Enables access-logs for this entryPoint. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_OBSERVABILITY_METRICS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_OBSERVABILITY_METRICS`:  
 Enables metrics for this entryPoint. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_OBSERVABILITY_TRACEVERBOSITY`:  
+`INGRESS_ENTRYPOINTS_<NAME>_OBSERVABILITY_TRACEVERBOSITY`:  
 Defines the tracing verbosity level for this entryPoint. (Default: ```minimal```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_OBSERVABILITY_TRACING`:  
+`INGRESS_ENTRYPOINTS_<NAME>_OBSERVABILITY_TRACING`:  
 Enables tracing for this entryPoint. (Default: ```true```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_PROXYPROTOCOL`:  
+`INGRESS_ENTRYPOINTS_<NAME>_PROXYPROTOCOL`:  
 Proxy-Protocol configuration. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_PROXYPROTOCOL_INSECURE`:  
+`INGRESS_ENTRYPOINTS_<NAME>_PROXYPROTOCOL_INSECURE`:  
 Trust all. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_PROXYPROTOCOL_TRUSTEDIPS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_PROXYPROTOCOL_TRUSTEDIPS`:  
 Trust only selected IPs.
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_REUSEPORT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_REUSEPORT`:  
 Enables EntryPoints from the same or different processes listening on the same TCP/UDP port. (Default: ```false```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_KEEPALIVEMAXREQUESTS`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_KEEPALIVEMAXREQUESTS`:  
 Maximum number of requests before closing a keep-alive connection. (Default: ```0```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_KEEPALIVEMAXTIME`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_KEEPALIVEMAXTIME`:  
 Maximum duration before closing a keep-alive connection. (Default: ```0```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_LIFECYCLE_GRACETIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_LIFECYCLE_GRACETIMEOUT`:  
 Duration to give active requests a chance to finish before Hanzo Ingress stops. (Default: ```10```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_LIFECYCLE_REQUESTACCEPTGRACETIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_LIFECYCLE_REQUESTACCEPTGRACETIMEOUT`:  
 Duration to keep accepting requests before Hanzo Ingress initiates the graceful shutdown procedure. (Default: ```0```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_IDLETIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_IDLETIMEOUT`:  
 IdleTimeout is the maximum amount duration an idle (keep-alive) connection will remain idle before closing itself. If zero, no timeout is set. (Default: ```180```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_READTIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_READTIMEOUT`:  
 ReadTimeout is the maximum duration for reading the entire request, including the body. If zero, no timeout is set. (Default: ```60```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_WRITETIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_TRANSPORT_RESPONDINGTIMEOUTS_WRITETIMEOUT`:  
 WriteTimeout is the maximum duration before timing out writes of the response. If zero, no timeout is set. (Default: ```0```)
 
-`TRAEFIK_ENTRYPOINTS_<NAME>_UDP_TIMEOUT`:  
+`INGRESS_ENTRYPOINTS_<NAME>_UDP_TIMEOUT`:  
 Timeout defines how long to wait on an idle session before releasing the related resources. (Default: ```3```)
 
-`TRAEFIK_EXPERIMENTAL_ABORTONPLUGINFAILURE`:  
+`INGRESS_EXPERIMENTAL_ABORTONPLUGINFAILURE`:  
 Defines whether all plugins must be loaded successfully for Hanzo Ingress to start. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_FASTPROXY`:  
+`INGRESS_EXPERIMENTAL_FASTPROXY`:  
 Enables the FastProxy implementation. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_FASTPROXY_DEBUG`:  
+`INGRESS_EXPERIMENTAL_FASTPROXY_DEBUG`:  
 Enable debug mode for the FastProxy implementation. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_KUBERNETESGATEWAY`:  
+`INGRESS_EXPERIMENTAL_KUBERNETESGATEWAY`:  
 (Deprecated) Allow the Kubernetes gateway api provider usage. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_KUBERNETESINGRESSNGINX`:  
+`INGRESS_EXPERIMENTAL_KUBERNETESINGRESSNGINX`:  
 Allow the Kubernetes Ingress NGINX provider usage. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>`:  
 Local plugins configuration. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>_MODULENAME`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>_MODULENAME`:  
 Plugin's module name.
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS`:  
 Plugin's settings (works only for wasm plugins).
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_ENVS`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_ENVS`:  
 Environment variables to forward to the wasm guest.
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_MOUNTS`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_MOUNTS`:  
 Directory to mount to the wasm guest.
 
-`TRAEFIK_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_USEUNSAFE`:  
+`INGRESS_EXPERIMENTAL_LOCALPLUGINS_<NAME>_SETTINGS_USEUNSAFE`:  
 Allow the plugin to use unsafe and syscall packages. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_OTLPLOGS`:  
+`INGRESS_EXPERIMENTAL_OTLPLOGS`:  
 Enables the OpenTelemetry logs integration. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_MODULENAME`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_MODULENAME`:  
 plugin's module name.
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS`:  
 Plugin's settings (works only for wasm plugins).
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_ENVS`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_ENVS`:  
 Environment variables to forward to the wasm guest.
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_MOUNTS`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_MOUNTS`:  
 Directory to mount to the wasm guest.
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_USEUNSAFE`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_SETTINGS_USEUNSAFE`:  
 Allow the plugin to use unsafe and syscall packages. (Default: ```false```)
 
-`TRAEFIK_EXPERIMENTAL_PLUGINS_<NAME>_VERSION`:  
+`INGRESS_EXPERIMENTAL_PLUGINS_<NAME>_VERSION`:  
 plugin's version.
 
-`TRAEFIK_GLOBAL_CHECKNEWVERSION`:  
+`INGRESS_GLOBAL_CHECKNEWVERSION`:  
 Periodically check if a new version has been released. (Default: ```true```)
 
-`TRAEFIK_GLOBAL_SENDANONYMOUSUSAGE`:  
+`INGRESS_GLOBAL_SENDANONYMOUSUSAGE`:  
 Periodically send anonymous usage statistics. If the option is not specified, it will be disabled by default. (Default: ```false```)
 
-`TRAEFIK_HOSTRESOLVER`:  
+`INGRESS_HOSTRESOLVER`:  
 Enable CNAME Flattening. (Default: ```false```)
 
-`TRAEFIK_HOSTRESOLVER_CNAMEFLATTENING`:  
+`INGRESS_HOSTRESOLVER_CNAMEFLATTENING`:  
 A flag to enable/disable CNAME flattening (Default: ```false```)
 
-`TRAEFIK_HOSTRESOLVER_RESOLVCONFIG`:  
+`INGRESS_HOSTRESOLVER_RESOLVCONFIG`:  
 resolv.conf used for DNS resolving (Default: ```/etc/resolv.conf```)
 
-`TRAEFIK_HOSTRESOLVER_RESOLVDEPTH`:  
+`INGRESS_HOSTRESOLVER_RESOLVDEPTH`:  
 The maximal depth of DNS recursive resolving (Default: ```5```)
 
-`TRAEFIK_LOG`:  
+`INGRESS_LOG`:  
 Hanzo Ingress log settings. (Default: ```false```)
 
-`TRAEFIK_LOG_COMPRESS`:  
+`INGRESS_LOG_COMPRESS`:  
 Determines if the rotated log files should be compressed using gzip. (Default: ```false```)
 
-`TRAEFIK_LOG_FILEPATH`:  
+`INGRESS_LOG_FILEPATH`:  
 Hanzo Ingress log file path. Stdout is used when omitted or empty.
 
-`TRAEFIK_LOG_FORMAT`:  
+`INGRESS_LOG_FORMAT`:  
 Hanzo Ingress log format: json | common (Default: ```common```)
 
-`TRAEFIK_LOG_LEVEL`:  
-Log level set to traefik logs. (Default: ```ERROR```)
+`INGRESS_LOG_LEVEL`:  
+Log level set to ingress logs. (Default: ```ERROR```)
 
-`TRAEFIK_LOG_MAXAGE`:  
+`INGRESS_LOG_MAXAGE`:  
 Maximum number of days to retain old log files based on the timestamp encoded in their filename. (Default: ```0```)
 
-`TRAEFIK_LOG_MAXBACKUPS`:  
+`INGRESS_LOG_MAXBACKUPS`:  
 Maximum number of old log files to retain. (Default: ```0```)
 
-`TRAEFIK_LOG_MAXSIZE`:  
+`INGRESS_LOG_MAXSIZE`:  
 Maximum size in megabytes of the log file before it gets rotated. (Default: ```0```)
 
-`TRAEFIK_LOG_NOCOLOR`:  
+`INGRESS_LOG_NOCOLOR`:  
 When using the 'common' format, disables the colorized output. (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP`:  
+`INGRESS_LOG_OTLP`:  
 Settings for OpenTelemetry. (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_GRPC`:  
+`INGRESS_LOG_OTLP_GRPC`:  
 gRPC configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_GRPC_ENDPOINT`:  
+`INGRESS_LOG_OTLP_GRPC_ENDPOINT`:  
 Sets the gRPC endpoint (host:port) of the collector. (Default: ```localhost:4317```)
 
-`TRAEFIK_LOG_OTLP_GRPC_HEADERS_<NAME>`:  
+`INGRESS_LOG_OTLP_GRPC_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_LOG_OTLP_GRPC_INSECURE`:  
+`INGRESS_LOG_OTLP_GRPC_INSECURE`:  
 Disables client transport security for the exporter. (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_GRPC_TLS_CA`:  
+`INGRESS_LOG_OTLP_GRPC_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_LOG_OTLP_GRPC_TLS_CERT`:  
+`INGRESS_LOG_OTLP_GRPC_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_LOG_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_LOG_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_GRPC_TLS_KEY`:  
+`INGRESS_LOG_OTLP_GRPC_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_LOG_OTLP_HTTP`:  
+`INGRESS_LOG_OTLP_HTTP`:  
 HTTP configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_HTTP_ENDPOINT`:  
+`INGRESS_LOG_OTLP_HTTP_ENDPOINT`:  
 Sets the HTTP endpoint (scheme://host:port/path) of the collector. (Default: ```https://localhost:4318```)
 
-`TRAEFIK_LOG_OTLP_HTTP_HEADERS_<NAME>`:  
+`INGRESS_LOG_OTLP_HTTP_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_LOG_OTLP_HTTP_TLS_CA`:  
+`INGRESS_LOG_OTLP_HTTP_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_LOG_OTLP_HTTP_TLS_CERT`:  
+`INGRESS_LOG_OTLP_HTTP_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_LOG_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_LOG_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_LOG_OTLP_HTTP_TLS_KEY`:  
+`INGRESS_LOG_OTLP_HTTP_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_LOG_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
+`INGRESS_LOG_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
 Defines additional resource attributes (key:value).
 
-`TRAEFIK_LOG_OTLP_SERVICENAME`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+`INGRESS_LOG_OTLP_SERVICENAME`:  
+Defines the service name resource attribute. (Default: ```ingress```)
 
-`TRAEFIK_METRICS_ADDINTERNALS`:  
+`INGRESS_METRICS_ADDINTERNALS`:  
 Enables metrics for internal services (ping, dashboard, etc...). (Default: ```false```)
 
-`TRAEFIK_METRICS_DATADOG`:  
+`INGRESS_METRICS_DATADOG`:  
 Datadog metrics exporter type. (Default: ```false```)
 
-`TRAEFIK_METRICS_DATADOG_ADDENTRYPOINTSLABELS`:  
+`INGRESS_METRICS_DATADOG_ADDENTRYPOINTSLABELS`:  
 Enable metrics on entry points. (Default: ```true```)
 
-`TRAEFIK_METRICS_DATADOG_ADDRESS`:  
+`INGRESS_METRICS_DATADOG_ADDRESS`:  
 Datadog's address. (Default: ```localhost:8125```)
 
-`TRAEFIK_METRICS_DATADOG_ADDROUTERSLABELS`:  
+`INGRESS_METRICS_DATADOG_ADDROUTERSLABELS`:  
 Enable metrics on routers. (Default: ```false```)
 
-`TRAEFIK_METRICS_DATADOG_ADDSERVICESLABELS`:  
+`INGRESS_METRICS_DATADOG_ADDSERVICESLABELS`:  
 Enable metrics on services. (Default: ```true```)
 
-`TRAEFIK_METRICS_DATADOG_PREFIX`:  
-Prefix to use for metrics collection. (Default: ```traefik```)
+`INGRESS_METRICS_DATADOG_PREFIX`:  
+Prefix to use for metrics collection. (Default: ```ingress```)
 
-`TRAEFIK_METRICS_DATADOG_PUSHINTERVAL`:  
+`INGRESS_METRICS_DATADOG_PUSHINTERVAL`:  
 Datadog push interval. (Default: ```10```)
 
-`TRAEFIK_METRICS_INFLUXDB2`:  
+`INGRESS_METRICS_INFLUXDB2`:  
 InfluxDB v2 metrics exporter type. (Default: ```false```)
 
-`TRAEFIK_METRICS_INFLUXDB2_ADDENTRYPOINTSLABELS`:  
+`INGRESS_METRICS_INFLUXDB2_ADDENTRYPOINTSLABELS`:  
 Enable metrics on entry points. (Default: ```true```)
 
-`TRAEFIK_METRICS_INFLUXDB2_ADDITIONALLABELS_<NAME>`:  
+`INGRESS_METRICS_INFLUXDB2_ADDITIONALLABELS_<NAME>`:  
 Additional labels (influxdb tags) on all metrics
 
-`TRAEFIK_METRICS_INFLUXDB2_ADDRESS`:  
+`INGRESS_METRICS_INFLUXDB2_ADDRESS`:  
 InfluxDB v2 address. (Default: ```http://localhost:8086```)
 
-`TRAEFIK_METRICS_INFLUXDB2_ADDROUTERSLABELS`:  
+`INGRESS_METRICS_INFLUXDB2_ADDROUTERSLABELS`:  
 Enable metrics on routers. (Default: ```false```)
 
-`TRAEFIK_METRICS_INFLUXDB2_ADDSERVICESLABELS`:  
+`INGRESS_METRICS_INFLUXDB2_ADDSERVICESLABELS`:  
 Enable metrics on services. (Default: ```true```)
 
-`TRAEFIK_METRICS_INFLUXDB2_BUCKET`:  
+`INGRESS_METRICS_INFLUXDB2_BUCKET`:  
 InfluxDB v2 bucket ID.
 
-`TRAEFIK_METRICS_INFLUXDB2_ORG`:  
+`INGRESS_METRICS_INFLUXDB2_ORG`:  
 InfluxDB v2 org ID.
 
-`TRAEFIK_METRICS_INFLUXDB2_PUSHINTERVAL`:  
+`INGRESS_METRICS_INFLUXDB2_PUSHINTERVAL`:  
 InfluxDB v2 push interval. (Default: ```10```)
 
-`TRAEFIK_METRICS_INFLUXDB2_TOKEN`:  
+`INGRESS_METRICS_INFLUXDB2_TOKEN`:  
 InfluxDB v2 access token.
 
-`TRAEFIK_METRICS_OTLP`:  
+`INGRESS_METRICS_OTLP`:  
 OpenTelemetry metrics exporter type. (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_ADDENTRYPOINTSLABELS`:  
+`INGRESS_METRICS_OTLP_ADDENTRYPOINTSLABELS`:  
 Enable metrics on entry points. (Default: ```true```)
 
-`TRAEFIK_METRICS_OTLP_ADDROUTERSLABELS`:  
+`INGRESS_METRICS_OTLP_ADDROUTERSLABELS`:  
 Enable metrics on routers. (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_ADDSERVICESLABELS`:  
+`INGRESS_METRICS_OTLP_ADDSERVICESLABELS`:  
 Enable metrics on services. (Default: ```true```)
 
-`TRAEFIK_METRICS_OTLP_EXPLICITBOUNDARIES`:  
+`INGRESS_METRICS_OTLP_EXPLICITBOUNDARIES`:  
 Boundaries for latency metrics. (Default: ```0.005000, 0.010000, 0.025000, 0.050000, 0.075000, 0.100000, 0.250000, 0.500000, 0.750000, 1.000000, 2.500000, 5.000000, 7.500000, 10.000000```)
 
-`TRAEFIK_METRICS_OTLP_GRPC`:  
+`INGRESS_METRICS_OTLP_GRPC`:  
 gRPC configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_GRPC_ENDPOINT`:  
+`INGRESS_METRICS_OTLP_GRPC_ENDPOINT`:  
 Sets the gRPC endpoint (host:port) of the collector. (Default: ```localhost:4317```)
 
-`TRAEFIK_METRICS_OTLP_GRPC_HEADERS_<NAME>`:  
+`INGRESS_METRICS_OTLP_GRPC_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_METRICS_OTLP_GRPC_INSECURE`:  
+`INGRESS_METRICS_OTLP_GRPC_INSECURE`:  
 Disables client transport security for the exporter. (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_GRPC_TLS_CA`:  
+`INGRESS_METRICS_OTLP_GRPC_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_METRICS_OTLP_GRPC_TLS_CERT`:  
+`INGRESS_METRICS_OTLP_GRPC_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_METRICS_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_METRICS_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_GRPC_TLS_KEY`:  
+`INGRESS_METRICS_OTLP_GRPC_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_METRICS_OTLP_HTTP`:  
+`INGRESS_METRICS_OTLP_HTTP`:  
 HTTP configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_HTTP_ENDPOINT`:  
+`INGRESS_METRICS_OTLP_HTTP_ENDPOINT`:  
 Sets the HTTP endpoint (scheme://host:port/path) of the collector. (Default: ```https://localhost:4318```)
 
-`TRAEFIK_METRICS_OTLP_HTTP_HEADERS_<NAME>`:  
+`INGRESS_METRICS_OTLP_HTTP_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_METRICS_OTLP_HTTP_TLS_CA`:  
+`INGRESS_METRICS_OTLP_HTTP_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_METRICS_OTLP_HTTP_TLS_CERT`:  
+`INGRESS_METRICS_OTLP_HTTP_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_METRICS_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_METRICS_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_METRICS_OTLP_HTTP_TLS_KEY`:  
+`INGRESS_METRICS_OTLP_HTTP_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_METRICS_OTLP_PUSHINTERVAL`:  
+`INGRESS_METRICS_OTLP_PUSHINTERVAL`:  
 Period between calls to collect a checkpoint. (Default: ```10```)
 
-`TRAEFIK_METRICS_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
+`INGRESS_METRICS_OTLP_RESOURCEATTRIBUTES_<NAME>`:  
 Defines additional resource attributes (key:value).
 
-`TRAEFIK_METRICS_OTLP_SERVICENAME`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+`INGRESS_METRICS_OTLP_SERVICENAME`:  
+Defines the service name resource attribute. (Default: ```ingress```)
 
-`TRAEFIK_METRICS_PROMETHEUS`:  
+`INGRESS_METRICS_PROMETHEUS`:  
 Prometheus metrics exporter type. (Default: ```false```)
 
-`TRAEFIK_METRICS_PROMETHEUS_ADDENTRYPOINTSLABELS`:  
+`INGRESS_METRICS_PROMETHEUS_ADDENTRYPOINTSLABELS`:  
 Enable metrics on entry points. (Default: ```true```)
 
-`TRAEFIK_METRICS_PROMETHEUS_ADDROUTERSLABELS`:  
+`INGRESS_METRICS_PROMETHEUS_ADDROUTERSLABELS`:  
 Enable metrics on routers. (Default: ```false```)
 
-`TRAEFIK_METRICS_PROMETHEUS_ADDSERVICESLABELS`:  
+`INGRESS_METRICS_PROMETHEUS_ADDSERVICESLABELS`:  
 Enable metrics on services. (Default: ```true```)
 
-`TRAEFIK_METRICS_PROMETHEUS_BUCKETS`:  
+`INGRESS_METRICS_PROMETHEUS_BUCKETS`:  
 Buckets for latency metrics. (Default: ```0.100000, 0.300000, 1.200000, 5.000000```)
 
-`TRAEFIK_METRICS_PROMETHEUS_ENTRYPOINT`:  
-EntryPoint (Default: ```traefik```)
+`INGRESS_METRICS_PROMETHEUS_ENTRYPOINT`:  
+EntryPoint (Default: ```ingress```)
 
-`TRAEFIK_METRICS_PROMETHEUS_HEADERLABELS_<NAME>`:  
+`INGRESS_METRICS_PROMETHEUS_HEADERLABELS_<NAME>`:  
 Defines the extra labels for the requests_total metrics, and for each of them, the request header containing the value for this label.
 
-`TRAEFIK_METRICS_PROMETHEUS_MANUALROUTING`:  
+`INGRESS_METRICS_PROMETHEUS_MANUALROUTING`:  
 Manual routing (Default: ```false```)
 
-`TRAEFIK_METRICS_STATSD`:  
+`INGRESS_METRICS_STATSD`:  
 StatsD metrics exporter type. (Default: ```false```)
 
-`TRAEFIK_METRICS_STATSD_ADDENTRYPOINTSLABELS`:  
+`INGRESS_METRICS_STATSD_ADDENTRYPOINTSLABELS`:  
 Enable metrics on entry points. (Default: ```true```)
 
-`TRAEFIK_METRICS_STATSD_ADDRESS`:  
+`INGRESS_METRICS_STATSD_ADDRESS`:  
 StatsD address. (Default: ```localhost:8125```)
 
-`TRAEFIK_METRICS_STATSD_ADDROUTERSLABELS`:  
+`INGRESS_METRICS_STATSD_ADDROUTERSLABELS`:  
 Enable metrics on routers. (Default: ```false```)
 
-`TRAEFIK_METRICS_STATSD_ADDSERVICESLABELS`:  
+`INGRESS_METRICS_STATSD_ADDSERVICESLABELS`:  
 Enable metrics on services. (Default: ```true```)
 
-`TRAEFIK_METRICS_STATSD_PREFIX`:  
-Prefix to use for metrics collection. (Default: ```traefik```)
+`INGRESS_METRICS_STATSD_PREFIX`:  
+Prefix to use for metrics collection. (Default: ```ingress```)
 
-`TRAEFIK_METRICS_STATSD_PUSHINTERVAL`:  
+`INGRESS_METRICS_STATSD_PUSHINTERVAL`:  
 StatsD push interval. (Default: ```10```)
 
-`TRAEFIK_OCSP`:  
+`INGRESS_OCSP`:  
 OCSP configuration. (Default: ```false```)
 
-`TRAEFIK_OCSP_RESPONDEROVERRIDES_<NAME>`:  
+`INGRESS_OCSP_RESPONDEROVERRIDES_<NAME>`:  
 Defines a map of OCSP responders to replace for querying OCSP servers.
 
-`TRAEFIK_PING`:  
+`INGRESS_PING`:  
 Enable ping. (Default: ```false```)
 
-`TRAEFIK_PING_ENTRYPOINT`:  
-EntryPoint (Default: ```traefik```)
+`INGRESS_PING_ENTRYPOINT`:  
+EntryPoint (Default: ```ingress```)
 
-`TRAEFIK_PING_MANUALROUTING`:  
+`INGRESS_PING_MANUALROUTING`:  
 Manual routing (Default: ```false```)
 
-`TRAEFIK_PING_TERMINATINGSTATUSCODE`:  
+`INGRESS_PING_TERMINATINGSTATUSCODE`:  
 Terminating status code (Default: ```503```)
 
-`TRAEFIK_PROVIDERS_FILE_DEBUGLOGGENERATEDTEMPLATE`:  
+`INGRESS_PROVIDERS_FILE_DEBUGLOGGENERATEDTEMPLATE`:  
 Enable debug logging of generated configuration template. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_FILE_DIRECTORY`:  
+`INGRESS_PROVIDERS_FILE_DIRECTORY`:  
 Load dynamic configuration from one or more .yml or .toml files in a directory.
 
-`TRAEFIK_PROVIDERS_FILE_FILENAME`:  
+`INGRESS_PROVIDERS_FILE_FILENAME`:  
 Load dynamic configuration from a file.
 
-`TRAEFIK_PROVIDERS_FILE_WATCH`:  
+`INGRESS_PROVIDERS_FILE_WATCH`:  
 Watch provider. (Default: ```true```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD`:  
 Enable Kubernetes backend with default settings. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_ALLOWCROSSNAMESPACE`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_ALLOWCROSSNAMESPACE`:  
 Allow cross namespace resource reference. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_ALLOWEMPTYSERVICES`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_ALLOWEMPTYSERVICES`:  
 Allow the creation of services without endpoints. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_ALLOWEXTERNALNAMESERVICES`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_ALLOWEXTERNALNAMESERVICES`:  
 Allow ExternalName services. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_CERTAUTHFILEPATH`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_CERTAUTHFILEPATH`:  
 Kubernetes certificate authority file path (not needed for in-cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_DISABLECLUSTERSCOPERESOURCES`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_DISABLECLUSTERSCOPERESOURCES`:  
 Disables the lookup of cluster scope resources (incompatible with IngressClasses and NodePortLB enabled services). (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_ENDPOINT`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_ENDPOINT`:  
 Kubernetes server endpoint (required for external cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_INGRESSCLASS`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_INGRESSCLASS`:  
 Value of kubernetes.io/ingress.class annotation to watch for.
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_LABELSELECTOR`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_LABELSELECTOR`:  
 Kubernetes label selector to use.
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_NAMESPACES`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_NAMESPACES`:  
 Kubernetes namespaces.
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_NATIVELBBYDEFAULT`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_NATIVELBBYDEFAULT`:  
 Defines whether to use Native Kubernetes load-balancing mode by default. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_THROTTLEDURATION`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_THROTTLEDURATION`:  
 Ingress refresh throttle duration (Default: ```0```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESCRD_TOKEN`:  
+`INGRESS_PROVIDERS_KUBERNETESCRD_TOKEN`:  
 Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY`:  
 Enable Kubernetes gateway api provider with default settings. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_CERTAUTHFILEPATH`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_CERTAUTHFILEPATH`:  
 Kubernetes certificate authority file path (not needed for in-cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_ENDPOINT`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_ENDPOINT`:  
 Kubernetes server endpoint (required for external cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_EXPERIMENTALCHANNEL`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_EXPERIMENTALCHANNEL`:  
 Toggles Experimental Channel resources support (TCPRoute, TLSRoute...). (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_LABELSELECTOR`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_LABELSELECTOR`:  
 Kubernetes label selector to select specific GatewayClasses.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_NAMESPACES`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_NAMESPACES`:  
 Kubernetes namespaces.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_NATIVELBBYDEFAULT`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_NATIVELBBYDEFAULT`:  
 Defines whether to use Native Kubernetes load-balancing by default. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_HOSTNAME`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_HOSTNAME`:  
 Hostname used for Kubernetes Gateway status address.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_IP`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_IP`:  
 IP used to set Kubernetes Gateway status address.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE`:  
 Published Kubernetes Service to copy status addresses from.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE_NAME`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE_NAME`:  
 Name of the Kubernetes service.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE_NAMESPACE`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_STATUSADDRESS_SERVICE_NAMESPACE`:  
 Namespace of the Kubernetes service.
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_THROTTLEDURATION`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_THROTTLEDURATION`:  
 Kubernetes refresh throttle duration (Default: ```0```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESGATEWAY_TOKEN`:  
+`INGRESS_PROVIDERS_KUBERNETESGATEWAY_TOKEN`:  
 Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS`:  
 Enable Kubernetes backend with default settings. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX`:  
 Enable Kubernetes Ingress NGINX provider. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_CERTAUTHFILEPATH`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_CERTAUTHFILEPATH`:  
 Kubernetes certificate authority file path (not needed for in-cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_CONTROLLERCLASS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_CONTROLLERCLASS`:  
 Ingress Class Controller value this controller satisfies. (Default: ```k8s.io/ingress-nginx```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_DEFAULTBACKENDSERVICE`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_DEFAULTBACKENDSERVICE`:  
 Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_DISABLESVCEXTERNALNAME`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_DISABLESVCEXTERNALNAME`:  
 Disable support for Services of type ExternalName. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_ENDPOINT`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_ENDPOINT`:  
 Kubernetes server endpoint (required for external cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_INGRESSCLASS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_INGRESSCLASS`:  
 Name of the ingress class this controller satisfies. (Default: ```nginx```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_INGRESSCLASSBYNAME`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_INGRESSCLASSBYNAME`:  
 Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_PUBLISHSERVICE`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_PUBLISHSERVICE`:  
 Service fronting the Ingress controller. Takes the form 'namespace/name'.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_PUBLISHSTATUSADDRESS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_PUBLISHSTATUSADDRESS`:  
 Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_THROTTLEDURATION`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_THROTTLEDURATION`:  
 Ingress refresh throttle duration. (Default: ```0```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_TOKEN`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_TOKEN`:  
 Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHINGRESSWITHOUTCLASS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHINGRESSWITHOUTCLASS`:  
 Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHNAMESPACE`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHNAMESPACE`:  
 Namespace the controller watches for updates to Kubernetes objects. All namespaces are watched if this parameter is left empty.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHNAMESPACESELECTOR`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESSNGINX_WATCHNAMESPACESELECTOR`:  
 Selector selects namespaces the controller watches for updates to Kubernetes objects.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_ALLOWEMPTYSERVICES`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_ALLOWEMPTYSERVICES`:  
 Allow creation of services without endpoints. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_ALLOWEXTERNALNAMESERVICES`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_ALLOWEXTERNALNAMESERVICES`:  
 Allow ExternalName services. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_CERTAUTHFILEPATH`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_CERTAUTHFILEPATH`:  
 Kubernetes certificate authority file path (not needed for in-cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_DISABLECLUSTERSCOPERESOURCES`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_DISABLECLUSTERSCOPERESOURCES`:  
 Disables the lookup of cluster scope resources (incompatible with IngressClasses and NodePortLB enabled services). (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_DISABLEINGRESSCLASSLOOKUP`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_DISABLEINGRESSCLASSLOOKUP`:  
 Disables the lookup of IngressClasses (Deprecated, please use DisableClusterScopeResources). (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_ENDPOINT`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_ENDPOINT`:  
 Kubernetes server endpoint (required for external cluster client).
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_INGRESSCLASS`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_INGRESSCLASS`:  
 Value of kubernetes.io/ingress.class annotation or IngressClass name to watch for.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_HOSTNAME`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_HOSTNAME`:  
 Hostname used for Kubernetes Ingress endpoints.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_IP`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_IP`:  
 IP used for Kubernetes Ingress endpoints.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_PUBLISHEDSERVICE`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_INGRESSENDPOINT_PUBLISHEDSERVICE`:  
 Published Kubernetes Service to copy status from.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_LABELSELECTOR`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_LABELSELECTOR`:  
 Kubernetes Ingress label selector to use.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_NAMESPACES`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_NAMESPACES`:  
 Kubernetes namespaces.
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_NATIVELBBYDEFAULT`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_NATIVELBBYDEFAULT`:  
 Defines whether to use Native Kubernetes load-balancing mode by default. (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_STRICTPREFIXMATCHING`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_STRICTPREFIXMATCHING`:  
 Make prefix matching strictly comply with the Kubernetes Ingress specification (path-element-wise matching instead of character-by-character string matching). (Default: ```false```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_THROTTLEDURATION`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_THROTTLEDURATION`:  
 Ingress refresh throttle duration (Default: ```0```)
 
-`TRAEFIK_PROVIDERS_KUBERNETESINGRESS_TOKEN`:  
+`INGRESS_PROVIDERS_KUBERNETESINGRESS_TOKEN`:  
 Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token.
 
-`TRAEFIK_PROVIDERS_PLUGIN_<NAME>`:  
+`INGRESS_PROVIDERS_PLUGIN_<NAME>`:  
 Plugins configuration.
 
-`TRAEFIK_PROVIDERS_PROVIDERSTHROTTLEDURATION`:  
+`INGRESS_PROVIDERS_PROVIDERSTHROTTLEDURATION`:  
 Backends throttle duration: minimum duration between 2 events from providers before applying a new configuration. It avoids unnecessary reloads if multiples events are sent in a short amount of time. (Default: ```2```)
 
-`TRAEFIK_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_DIALTIMEOUT`:  
+`INGRESS_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_DIALTIMEOUT`:  
 The amount of time to wait until a connection to a backend server can be established. If zero, no timeout exists. (Default: ```30```)
 
-`TRAEFIK_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_IDLECONNTIMEOUT`:  
+`INGRESS_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_IDLECONNTIMEOUT`:  
 The maximum period for which an idle HTTP keep-alive connection will remain open before closing itself (Default: ```90```)
 
-`TRAEFIK_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_RESPONSEHEADERTIMEOUT`:  
+`INGRESS_SERVERSTRANSPORT_FORWARDINGTIMEOUTS_RESPONSEHEADERTIMEOUT`:  
 The amount of time to wait for a server's response headers after fully writing the request (including its body, if any). If zero, no timeout exists. (Default: ```0```)
 
-`TRAEFIK_SERVERSTRANSPORT_INSECURESKIPVERIFY`:  
+`INGRESS_SERVERSTRANSPORT_INSECURESKIPVERIFY`:  
 Disable SSL certificate verification. (Default: ```false```)
 
-`TRAEFIK_SERVERSTRANSPORT_MAXIDLECONNSPERHOST`:  
+`INGRESS_SERVERSTRANSPORT_MAXIDLECONNSPERHOST`:  
 If non-zero, controls the maximum idle (keep-alive) to keep per-host. If zero, DefaultMaxIdleConnsPerHost is used (Default: ```200```)
 
-`TRAEFIK_SERVERSTRANSPORT_ROOTCAS`:  
+`INGRESS_SERVERSTRANSPORT_ROOTCAS`:  
 Add cert file for self-signed certificate.
 
-`TRAEFIK_SERVERSTRANSPORT_SPIFFE`:  
+`INGRESS_SERVERSTRANSPORT_SPIFFE`:  
 Defines the SPIFFE configuration. (Default: ```false```)
 
-`TRAEFIK_SERVERSTRANSPORT_SPIFFE_IDS`:  
+`INGRESS_SERVERSTRANSPORT_SPIFFE_IDS`:  
 Defines the allowed SPIFFE IDs (takes precedence over the SPIFFE TrustDomain).
 
-`TRAEFIK_SERVERSTRANSPORT_SPIFFE_TRUSTDOMAIN`:  
+`INGRESS_SERVERSTRANSPORT_SPIFFE_TRUSTDOMAIN`:  
 Defines the allowed SPIFFE trust domain.
 
-`TRAEFIK_SPIFFE_WORKLOADAPIADDR`:  
+`INGRESS_SPIFFE_WORKLOADAPIADDR`:  
 Defines the workload API address.
 
-`TRAEFIK_TCPSERVERSTRANSPORT_DIALKEEPALIVE`:  
+`INGRESS_TCPSERVERSTRANSPORT_DIALKEEPALIVE`:  
 Defines the interval between keep-alive probes for an active network connection. If zero, keep-alive probes are sent with a default value (currently 15 seconds), if supported by the protocol and operating system. Network protocols or operating systems that do not support keep-alives ignore this field. If negative, keep-alive probes are disabled (Default: ```15```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_DIALTIMEOUT`:  
+`INGRESS_TCPSERVERSTRANSPORT_DIALTIMEOUT`:  
 Defines the amount of time to wait until a connection to a backend server can be established. If zero, no timeout exists. (Default: ```30```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TERMINATIONDELAY`:  
+`INGRESS_TCPSERVERSTRANSPORT_TERMINATIONDELAY`:  
 Defines the delay to wait before fully terminating the connection, after one connected peer has closed its writing capability. (Default: ```0```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS`:  
 Defines the TLS configuration. (Default: ```false```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS_INSECURESKIPVERIFY`:  
 Disables SSL certificate verification. (Default: ```false```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS_ROOTCAS`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS_ROOTCAS`:  
 Defines a list of CA secret used to validate self-signed certificate
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS_SPIFFE`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS_SPIFFE`:  
 Defines the SPIFFE TLS configuration. (Default: ```false```)
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS_SPIFFE_IDS`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS_SPIFFE_IDS`:  
 Defines the allowed SPIFFE IDs (takes precedence over the SPIFFE TrustDomain).
 
-`TRAEFIK_TCPSERVERSTRANSPORT_TLS_SPIFFE_TRUSTDOMAIN`:  
+`INGRESS_TCPSERVERSTRANSPORT_TLS_SPIFFE_TRUSTDOMAIN`:  
 Defines the allowed SPIFFE trust domain.
 
-`TRAEFIK_TRACING`:  
+`INGRESS_TRACING`:  
 Tracing configuration. (Default: ```false```)
 
-`TRAEFIK_TRACING_ADDINTERNALS`:  
+`INGRESS_TRACING_ADDINTERNALS`:  
 Enables tracing for internal services (ping, dashboard, etc...). (Default: ```false```)
 
-`TRAEFIK_TRACING_CAPTUREDREQUESTHEADERS`:  
+`INGRESS_TRACING_CAPTUREDREQUESTHEADERS`:  
 Request headers to add as attributes for server and client spans.
 
-`TRAEFIK_TRACING_CAPTUREDRESPONSEHEADERS`:  
+`INGRESS_TRACING_CAPTUREDRESPONSEHEADERS`:  
 Response headers to add as attributes for server and client spans.
 
-`TRAEFIK_TRACING_GLOBALATTRIBUTES_<NAME>`:  
+`INGRESS_TRACING_GLOBALATTRIBUTES_<NAME>`:  
 (Deprecated) Defines additional resource attributes (key:value).
 
-`TRAEFIK_TRACING_OTLP`:  
+`INGRESS_TRACING_OTLP`:  
 Settings for OpenTelemetry. (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_GRPC`:  
+`INGRESS_TRACING_OTLP_GRPC`:  
 gRPC configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_GRPC_ENDPOINT`:  
+`INGRESS_TRACING_OTLP_GRPC_ENDPOINT`:  
 Sets the gRPC endpoint (host:port) of the collector. (Default: ```localhost:4317```)
 
-`TRAEFIK_TRACING_OTLP_GRPC_HEADERS_<NAME>`:  
+`INGRESS_TRACING_OTLP_GRPC_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_TRACING_OTLP_GRPC_INSECURE`:  
+`INGRESS_TRACING_OTLP_GRPC_INSECURE`:  
 Disables client transport security for the exporter. (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_GRPC_TLS_CA`:  
+`INGRESS_TRACING_OTLP_GRPC_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_TRACING_OTLP_GRPC_TLS_CERT`:  
+`INGRESS_TRACING_OTLP_GRPC_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_TRACING_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_TRACING_OTLP_GRPC_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_GRPC_TLS_KEY`:  
+`INGRESS_TRACING_OTLP_GRPC_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_TRACING_OTLP_HTTP`:  
+`INGRESS_TRACING_OTLP_HTTP`:  
 HTTP configuration for the OpenTelemetry collector. (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_HTTP_ENDPOINT`:  
+`INGRESS_TRACING_OTLP_HTTP_ENDPOINT`:  
 Sets the HTTP endpoint (scheme://host:port/path) of the collector. (Default: ```https://localhost:4318```)
 
-`TRAEFIK_TRACING_OTLP_HTTP_HEADERS_<NAME>`:  
+`INGRESS_TRACING_OTLP_HTTP_HEADERS_<NAME>`:  
 Headers sent with payload.
 
-`TRAEFIK_TRACING_OTLP_HTTP_TLS_CA`:  
+`INGRESS_TRACING_OTLP_HTTP_TLS_CA`:  
 TLS CA
 
-`TRAEFIK_TRACING_OTLP_HTTP_TLS_CERT`:  
+`INGRESS_TRACING_OTLP_HTTP_TLS_CERT`:  
 TLS cert
 
-`TRAEFIK_TRACING_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
+`INGRESS_TRACING_OTLP_HTTP_TLS_INSECURESKIPVERIFY`:  
 TLS insecure skip verify (Default: ```false```)
 
-`TRAEFIK_TRACING_OTLP_HTTP_TLS_KEY`:  
+`INGRESS_TRACING_OTLP_HTTP_TLS_KEY`:  
 TLS key
 
-`TRAEFIK_TRACING_RESOURCEATTRIBUTES_<NAME>`:  
+`INGRESS_TRACING_RESOURCEATTRIBUTES_<NAME>`:  
 Defines additional resource attributes (key:value).
 
-`TRAEFIK_TRACING_SAFEQUERYPARAMS`:  
+`INGRESS_TRACING_SAFEQUERYPARAMS`:  
 Query params to not redact.
 
-`TRAEFIK_TRACING_SAMPLERATE`:  
+`INGRESS_TRACING_SAMPLERATE`:  
 Sets the rate between 0.0 and 1.0 of requests to trace. (Default: ```1.000000```)
 
-`TRAEFIK_TRACING_SERVICENAME`:  
-Defines the service name resource attribute. (Default: ```traefik```)
+`INGRESS_TRACING_SERVICENAME`:  
+Defines the service name resource attribute. (Default: ```ingress```)

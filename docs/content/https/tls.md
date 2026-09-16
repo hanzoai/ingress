@@ -214,9 +214,9 @@ spec:
 ```yaml tab="Docker & Swarm"
 ## Dynamic configuration
 labels:
-  - "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
-  - "traefik.tls.stores.default.defaultgeneratedcert.domain.main=example.org"
-  - "traefik.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
+  - "ingress.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
+  - "ingress.tls.stores.default.defaultgeneratedcert.domain.main=example.org"
+  - "ingress.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
 ```
 
 ## TLS Options
@@ -230,7 +230,7 @@ The TLS options allow one to configure some parameters of the TLS connection.
     When specifying the `default` option explicitly, make sure not to specify provider namespace as the `default` option does not have one.  
     Conversely, for cross-provider references, for example, when referencing the file provider from a docker label,
     you must specify the provider namespace, for example:  
-    `traefik.http.routers.myrouter.tls.options=myoptions@file`
+    `ingress.http.routers.myrouter.tls.options=myoptions@file`
 
 !!! important "TLSOption in Kubernetes"
 
@@ -587,4 +587,4 @@ spec:
   disableSessionTickets: true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -47,11 +47,11 @@ http:
 ```yaml tab="Labels"
 # Dynamic Custom Error Page for 5XX Status Code
 labels:
-  - "traefik.http.middlewares.test-errors.errors.status=500,501,503,505-599"
-  - "traefik.http.middlewares.test-errors.errors.statusRewrites.418=404"
-  - "traefik.http.middlewares.test-errors.errors.statusRewrites.502-504=500"
-  - "traefik.http.middlewares.test-errors.errors.service=error-handler-service"
-  - "traefik.http.middlewares.test-errors.errors.query=/{status}.html"
+  - "ingress.http.middlewares.test-errors.errors.status=500,501,503,505-599"
+  - "ingress.http.middlewares.test-errors.errors.statusRewrites.418=404"
+  - "ingress.http.middlewares.test-errors.errors.statusRewrites.502-504=500"
+  - "ingress.http.middlewares.test-errors.errors.service=error-handler-service"
+  - "ingress.http.middlewares.test-errors.errors.query=/{status}.html"
 ```
 
 ```json tab="Tags"
@@ -59,11 +59,11 @@ labels:
 {
   // ...
   "Tags": [
-    "traefik.http.middlewares.test-errors.errors.status=500,501,503,505-599",
-    "traefik.http.middlewares.test-errors.errors.statusRewrites.418=404",
-    "traefik.http.middlewares.test-errors.errors.statusRewrites.502-504=500",
-    "traefik.http.middlewares.test-errors.errors.service=error-handler-service",
-    "traefik.http.middlewares.test-errors.errors.query=/{status}.html"
+    "ingress.http.middlewares.test-errors.errors.status=500,501,503,505-599",
+    "ingress.http.middlewares.test-errors.errors.statusRewrites.418=404",
+    "ingress.http.middlewares.test-errors.errors.statusRewrites.502-504=500",
+    "ingress.http.middlewares.test-errors.errors.service=error-handler-service",
+    "ingress.http.middlewares.test-errors.errors.query=/{status}.html"
   ]
 
 }

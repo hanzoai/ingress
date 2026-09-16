@@ -9,7 +9,7 @@ To proactively prevent services from being overwhelmed with high load, the numbe
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
+  - "ingress.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
 ```
 
 ```yaml tab="Kubernetes"
@@ -24,7 +24,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Limiting to 10 simultaneous connections
-- "traefik.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
+- "ingress.tcp.middlewares.test-inflightconn.inflightconn.amount=10"
 ```
 
 ```yaml tab="File (YAML)"

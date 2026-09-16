@@ -28,9 +28,9 @@ whoami:
   image: hanzoai/whoami
   labels:
     # Create a middleware named `foo-add-prefix`
-    - "traefik.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"
+    - "ingress.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"
     # Apply the middleware named `foo-add-prefix` to the router named `router1`
-    - "traefik.http.routers.router1.middlewares=foo-add-prefix@docker"
+    - "ingress.http.routers.router1.middlewares=foo-add-prefix@docker"
 ```
 
 ```yaml tab="IngressRoute"
@@ -59,9 +59,9 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Create a middleware named `foo-add-prefix`
-- "traefik.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"
+- "ingress.http.middlewares.foo-add-prefix.addprefix.prefix=/foo"
 # Apply the middleware named `foo-add-prefix` to the router named `router1`
-- "traefik.http.routers.router1.middlewares=foo-add-prefix@consulcatalog"
+- "ingress.http.routers.router1.middlewares=foo-add-prefix@consulcatalog"
 ```
 
 ```yaml tab="File (YAML)"
@@ -112,4 +112,4 @@ A list of HTTP middlewares can be found [here](http/overview.md).
 
 A list of TCP middlewares can be found [here](tcp/overview.md).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

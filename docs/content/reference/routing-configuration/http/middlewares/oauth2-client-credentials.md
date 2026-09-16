@@ -61,7 +61,7 @@ stringData:
 | <a id="opt-clientSecret" href="#opt-clientSecret" title="#opt-clientSecret">`clientSecret`</a> | Defines the unique client secret for an account on the OpenID Connect provider, must be set when the `clientID` option is set.<br />More information [here](#storing-secret-values-in-kubernetes-secrets). | ""      | Yes       |
 | <a id="opt-forwardHeaders" href="#opt-forwardHeaders" title="#opt-forwardHeaders">`forwardHeaders`</a> | Defines the HTTP headers to add to requests and populates them with values extracted from the access token claims returned by the authorization server. <br /> Claims to be forwarded that are not found in the JWT result in empty headers. <br /> The `forwardHeaders` option can only be used with JWT-formatted token. | []      | No       |
 | <a id="opt-store-keyPrefix" href="#opt-store-keyPrefix" title="#opt-store-keyPrefix">`store.keyPrefix`</a> | Defines the prefix of the key for the entries that store the sessions. | ""      | No       |
-| <a id="opt-store-redis-endpoints" href="#opt-store-redis-endpoints" title="#opt-store-redis-endpoints">`store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.traefik-hub.svc.cluster.local:6379`) | "" | Yes      |
+| <a id="opt-store-redis-endpoints" href="#opt-store-redis-endpoints" title="#opt-store-redis-endpoints">`store.redis.endpoints`</a> | Endpoints of the Redis instances to connect to (example: `redis.ingress.svc.cluster.local:6379`) | "" | Yes      |
 | <a id="opt-store-redis-username" href="#opt-store-redis-username" title="#opt-store-redis-username">`store.redis.username`</a> | The username Hanzo will use to connect to Redis          | "" | No       |
 | <a id="opt-store-redis-password" href="#opt-store-redis-password" title="#opt-store-redis-password">`store.redis.password`</a> | The password Hanzo will use to connect to Redis    | "" | No       |
 | <a id="opt-store-redis-database" href="#opt-store-redis-database" title="#opt-store-redis-database">`store.redis.database`</a> | The database Hanzo will use to sore information (default: `0`)                                 | "" | No       |
@@ -252,4 +252,4 @@ The following Redis modes are supported:
 
 For more information about Redis, we recommend the [official Redis documentation](https://redis.io/docs/ "Link to official Redis documentation").
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -51,29 +51,29 @@ And then define a routing configuration on Hanzo Ingress itself with the
     However, you can also use "path prefix" rule or any combination or rules.
 
     ```bash tab="Host Rule"
-    # Matches http://traefik.example.com, http://traefik.example.com/api
-    # or http://traefik.example.com/hello
-    rule = "Host(`traefik.example.com`)"
+    # Matches http://ingress.example.com, http://ingress.example.com/api
+    # or http://ingress.example.com/hello
+    rule = "Host(`ingress.example.com`)"
     ```
 
     ```bash tab="Path Prefix Rule"
-    # Matches http://api.traefik.example.com/api or http://example.com/api
-    # but does not match http://api.traefik.example.com/hello
+    # Matches http://api.ingress.example.com/api or http://example.com/api
+    # but does not match http://api.ingress.example.com/hello
     rule = "PathPrefix(`/api`)"
     ```
 
     ```bash tab="Combination of Rules"
-    # Matches http://traefik.example.com/api or http://traefik.example.com/dashboard
-    # but does not match http://traefik.example.com/hello
-    rule = "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+    # Matches http://ingress.example.com/api or http://ingress.example.com/dashboard
+    # but does not match http://ingress.example.com/hello
+    rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
     ```
 
 ### `insecure`
 
-Enable the API in `insecure` mode, which means that the API will be available directly on the entryPoint named `traefik`, on path `/api`.
+Enable the API in `insecure` mode, which means that the API will be available directly on the entryPoint named `ingress`, on path `/api`.
 
 !!! info
-    If the entryPoint named `traefik` is not configured, it will be automatically created on port 8080.
+    If the entryPoint named `ingress` is not configured, it will be automatically created on port 8080.
 
 ```yaml tab="File (YAML)"
 api:
@@ -142,7 +142,7 @@ All the following endpoints must be accessed with a `GET` HTTP request.
     To control pagination, use the `page` and `per_page` query parameters.
 
     ```bash
-    curl https://traefik.example.com:8080/api/http/routers?page=2&per_page=20
+    curl https://ingress.example.com:8080/api/http/routers?page=2&per_page=20
     ```
 
 | Path                           | Description                                                                                         |
@@ -176,4 +176,4 @@ All the following endpoints must be accessed with a `GET` HTTP request.
 | `/debug/pprof/symbol`          | See the [pprof Symbol](https://golang.org/pkg/net/http/pprof/#Symbol) Go documentation.             |
 | `/debug/pprof/trace`           | See the [pprof Trace](https://golang.org/pkg/net/http/pprof/#Trace) Go documentation.               |
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

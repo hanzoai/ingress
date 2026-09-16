@@ -28,8 +28,8 @@ The RedirectScheme middleware redirects the request if the request scheme is dif
 ```yaml tab="Docker & Swarm"
 # Redirect to https
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -47,8 +47,8 @@ spec:
 ```yaml tab="Consul Catalog"
 # Redirect to https
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -79,7 +79,7 @@ Set the `permanent` option to `true` to apply a permanent redirection.
 # Redirect to https
 labels:
   # ...
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -98,7 +98,7 @@ spec:
 # Redirect to https
 labels:
   # ...
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -126,7 +126,7 @@ The `scheme` option defines the scheme of the new URL.
 ```yaml tab="Docker & Swarm"
 # Redirect to https
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
 ```
 
 ```yaml tab="Kubernetes"
@@ -143,7 +143,7 @@ spec:
 ```yaml tab="Consul Catalog"
 # Redirect to https
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
 ```
 
 ```yaml tab="File (YAML)"
@@ -170,7 +170,7 @@ The `port` option defines the port of the new URL.
 # Redirect to https
 labels:
   # ...
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.port=443"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.port=443"
 ```
 
 ```yaml tab="Kubernetes"
@@ -189,7 +189,7 @@ spec:
 # Redirect to https
 labels:
   # ...
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.port=443"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.port=443"
 ```
 
 ```yaml tab="File (YAML)"

@@ -57,7 +57,7 @@ spec:
       forwardUsername: true
       forwardUsernameHeader: Custom-Username-Header-Name
       wwwAuthenticateHeader: true
-      wwwAuthenticateHeaderRealm: traefikee
+      wwwAuthenticateHeaderRealm: ingress
 ```
 
 ## Configuration Options
@@ -102,4 +102,4 @@ and a `bindPassword`, then the middleware runs in search mode. In this mode, a s
 issued to the LDAP server before trying to bind. If result of this search returns only 1 record,
 it tries to issue a bind request with this record, otherwise it aborts a `401 Unauthorized` status code.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

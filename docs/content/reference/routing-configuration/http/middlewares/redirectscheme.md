@@ -37,8 +37,8 @@ http:
 ```yaml tab="Labels"
 # Redirect to https
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
 ```
 
 ```json tab="Tags"
@@ -46,8 +46,8 @@ labels:
 {
   // ...
   "Tags": [
-    "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-    "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+    "ingress.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+    "ingress.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
   ]
 }
 

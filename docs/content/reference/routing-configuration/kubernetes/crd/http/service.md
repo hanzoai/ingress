@@ -360,7 +360,7 @@ spec:
     - name: http
       port: 80
   selector:
-    app: traefiklabs
+    app: whoami
     task: app1
 ---
 apiVersion: v1
@@ -374,7 +374,7 @@ spec:
     - name: http
       port: 80
   selector:
-    app: traefiklabs
+    app: whoami
     task: app2
 ```
 

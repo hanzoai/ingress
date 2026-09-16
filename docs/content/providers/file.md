@@ -62,7 +62,7 @@ It supports providing configuration through a [single configuration file](#filen
             users:
             - test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/
             - test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0
-            usersFile: etc/traefik/.htpasswd
+            usersFile: etc/ingress/.htpasswd
 
       # Add the service
       services:
@@ -89,7 +89,7 @@ It supports providing configuration through a [single configuration file](#filen
         [http.middlewares.my-basic-auth.basicAuth]
           users = ["test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/",
                     "test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"]
-          usersFile = "etc/traefik/.htpasswd"
+          usersFile = "etc/ingress/.htpasswd"
 
       # Add the service
       [http.services]
@@ -240,8 +240,8 @@ To illustrate, it is possible to easily define multiple routers, services, and T
     tls:
       certificates:
       {{ range $i, $e := until 10 }}
-      - certFile: "/etc/traefik/cert-{{ $e }}.pem"
-        keyFile: "/etc/traefik/cert-{{ $e }}.key"
+      - certFile: "/etc/ingress/cert-{{ $e }}.pem"
+        keyFile: "/etc/ingress/cert-{{ $e }}.key"
         store:
         - "my-store-foo-{{ $e }}"
         - "my-store-bar-{{ $e }}"
@@ -280,8 +280,8 @@ To illustrate, it is possible to easily define multiple routers, services, and T
 
     {{ range $i, $e := until 10 }}
     [[tls.certificates]]
-      certFile = "/etc/traefik/cert-{{ $e }}.pem"
-      keyFile = "/etc/traefik/cert-{{ $e }}.key"
+      certFile = "/etc/ingress/cert-{{ $e }}.pem"
+      keyFile = "/etc/ingress/cert-{{ $e }}.key"
       stores = ["my-store-foo-{{ $e }}", "my-store-bar-{{ $e }}"]
     {{ end }}
 
@@ -292,4 +292,4 @@ To illustrate, it is possible to easily define multiple routers, services, and T
     {{ end }}
     ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

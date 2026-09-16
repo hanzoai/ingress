@@ -16,4 +16,4 @@ The Certificates resolvers are defined in the static configuration.
     Defining a certificate resolver does not imply that routers are going to use it automatically.
     Each router or entrypoint that is meant to use the resolver must explicitly reference it.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

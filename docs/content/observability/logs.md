@@ -25,18 +25,18 @@ When `filePath` is specified, Hanzo Ingress will write logs only to that file (n
 ```yaml tab="File (YAML)"
 # Writing Logs to a File
 log:
-  filePath: "/path/to/traefik.log"
+  filePath: "/path/to/ingress.log"
 ```
 
 ```toml tab="File (TOML)"
 # Writing Logs to a File
 [log]
-  filePath = "/path/to/traefik.log"
+  filePath = "/path/to/ingress.log"
 ```
 
 ```bash tab="CLI"
 # Writing Logs to a File
---log.filePath=/path/to/traefik.log
+--log.filePath=/path/to/ingress.log
 ```
 
 #### `format`
@@ -59,7 +59,7 @@ log:
 
 ```bash tab="CLI"
 # Writing Logs to a File, in JSON
---log.filePath=/path/to/traefik.log
+--log.filePath=/path/to/ingress.log
 --log.format=json
 ```
 
@@ -222,7 +222,7 @@ log:
 
 ### `serviceName`
 
-_Optional, Default="traefik"_
+_Optional, Default="ingress"_
 
 Defines the service name resource attribute.
 
@@ -644,4 +644,4 @@ log:
 --log.otlp.grpc.tls.insecureSkipVerify=true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

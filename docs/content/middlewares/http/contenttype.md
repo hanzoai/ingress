@@ -21,7 +21,7 @@ when it is not set by the backend.
 ```yaml tab="Docker & Swarm"
 # Enable auto-detection
 labels:
-  - "traefik.http.middlewares.autodetect.contenttype=true"
+  - "ingress.http.middlewares.autodetect.contenttype=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -36,7 +36,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Enable auto-detection
-- "traefik.http.middlewares.autodetect.contenttype=true"
+- "ingress.http.middlewares.autodetect.contenttype=true"
 ```
 
 ```yaml tab="File (YAML)"

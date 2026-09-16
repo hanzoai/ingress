@@ -78,23 +78,23 @@ http:
 # In addition, a burst of 200 requests is allowed.
 # Redis distributed rate limiting is configured with all available options.
 labels:
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.average=100"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.period=1s"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.burst=200"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.endpoints=redis-primary.example.com:6379,redis-replica.example.com:6379"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.username=ratelimit-user"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.password=secure-password"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.db=2"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.poolSize=50"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.minIdleConns=10"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.maxActiveConns=200"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.readTimeout=3s"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.writeTimeout=3s"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.dialTimeout=5s"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.ca=/etc/ssl/redis-ca.crt"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.cert=/etc/ssl/redis-client.crt"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.key=/etc/ssl/redis-client.key"
-  - "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.insecureSkipVerify=false"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.average=100"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.period=1s"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.burst=200"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.endpoints=redis-primary.example.com:6379,redis-replica.example.com:6379"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.username=ratelimit-user"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.password=secure-password"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.db=2"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.poolSize=50"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.minIdleConns=10"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.maxActiveConns=200"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.readTimeout=3s"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.writeTimeout=3s"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.dialTimeout=5s"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.ca=/etc/ssl/redis-ca.crt"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.cert=/etc/ssl/redis-client.crt"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.key=/etc/ssl/redis-client.key"
+  - "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.insecureSkipVerify=false"
 ```
 
 ```json tab="Tags"
@@ -103,23 +103,23 @@ labels:
 // Redis distributed rate limiting is configured with all available options.
 {
   "Tags": [
-    "traefik.http.middlewares.test-ratelimit.ratelimit.average=100",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.period=1s",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.burst=200",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.endpoints=redis-primary.example.com:6379,redis-replica.example.com:6379",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.username=ratelimit-user",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.password=secure-password",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.db=2",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.poolSize=50",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.minIdleConns=10",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.maxActiveConns=200",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.readTimeout=3s",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.writeTimeout=3s",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.dialTimeout=5s",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.ca=/etc/ssl/redis-ca.crt",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.cert=/etc/ssl/redis-client.crt",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.key=/etc/ssl/redis-client.key",
-    "traefik.http.middlewares.test-ratelimit.ratelimit.redis.tls.insecureSkipVerify=false"
+    "ingress.http.middlewares.test-ratelimit.ratelimit.average=100",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.period=1s",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.burst=200",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.endpoints=redis-primary.example.com:6379,redis-replica.example.com:6379",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.username=ratelimit-user",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.password=secure-password",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.db=2",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.poolSize=50",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.minIdleConns=10",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.maxActiveConns=200",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.readTimeout=3s",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.writeTimeout=3s",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.dialTimeout=5s",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.ca=/etc/ssl/redis-ca.crt",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.cert=/etc/ssl/redis-client.crt",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.key=/etc/ssl/redis-client.key",
+    "ingress.http.middlewares.test-ratelimit.ratelimit.redis.tls.insecureSkipVerify=false"
   ]
 }
 ```

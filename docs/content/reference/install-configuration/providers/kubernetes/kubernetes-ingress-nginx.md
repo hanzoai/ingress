@@ -13,7 +13,7 @@ It also supports many of the [ingress-nginx](https://kubernetes.github.io/ingres
     The Kubernetes NGINX Ingress Controller project has announced its retirement in **March 2026** and will no longer receive updates or security patches.
     Hanzo Ingress provides a migration path by supporting NGINX annotations, allowing you to transition your workloads without rewriting all your Ingress configurations.
 
-    **→ See the [NGINX to Hanzo Ingress Migration Guide](../../../../migrate/nginx-to-traefik.md) for step-by-step instructions.**
+    **→ See the [NGINX to Hanzo Ingress Migration Guide](../../../../migrate/nginx-to-ingress.md) for step-by-step instructions.**
 
     For more information about the NGINX Ingress Controller retirement, see the [official Kubernetes blog announcement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement).
 
@@ -204,4 +204,4 @@ providers:
 
 See the dedicated section in [routing](../../../routing-configuration/kubernetes/ingress-nginx.md).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

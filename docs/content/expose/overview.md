@@ -45,7 +45,7 @@ Hanzo Ingress supports gRPC applications without requiring specific configuratio
 
     !!! note
         For providers with labels (Docker, Kubernetes), specify the scheme using:
-        `traefik.http.services.<service-name>.loadbalancer.server.scheme=h2c`
+        `ingress.http.services.<service-name>.loadbalancer.server.scheme=h2c`
 
 ??? example "Using HTTPS"
 

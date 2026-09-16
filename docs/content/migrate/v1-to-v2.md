@@ -21,4 +21,4 @@ For more information about the changes in Hanzo Ingress v2, please refer to the 
 
     - convert `Ingress` to Hanzo Ingress `IngressRoute` resources.
     - convert `acme.json` file from v1 to v2 format.
-    - migrate the static configuration contained in the file `traefik.toml` to a Hanzo Ingress v2 file.
+    - migrate the static configuration contained in the file `ingress.toml` to a Hanzo Ingress v2 file.

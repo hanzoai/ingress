@@ -15,7 +15,7 @@ The AddPrefix middleware updates the path of a request before forwarding it.
 ```yaml tab="Docker & Swarm"
 # Prefixing with /foo
 labels:
-  - "traefik.http.middlewares.add-foo.addprefix.prefix=/foo"
+  - "ingress.http.middlewares.add-foo.addprefix.prefix=/foo"
 ```
 
 ```yaml tab="Kubernetes"
@@ -31,7 +31,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Prefixing with /foo
-- "traefik.http.middlewares.add-foo.addprefix.prefix=/foo"
+- "ingress.http.middlewares.add-foo.addprefix.prefix=/foo"
 ```
 
 ```yaml tab="File (YAML)"

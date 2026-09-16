@@ -57,4 +57,4 @@ You no longer need to create and synchronize configuration files cluttered with 
     Hanzo Ingress is able to use your cluster API to discover the services and read the attached information.
     In Hanzo Ingress, these connectors are called [providers](../providers/overview.md "Link to overview about Hanzo Ingress providers") because they *provide* the configuration to Hanzo Ingress.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

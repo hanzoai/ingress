@@ -28,14 +28,14 @@ http:
 ```yaml tab="Labels"
 # Pass the pem in the `X-Forwarded-Tls-Client-Cert` header.
 labels:
-  - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.pem=true"
+  - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.pem=true"
 ```
 
 ```json tab="Tags"
 // Pass the pem in the `X-Forwarded-Tls-Client-Cert` header
 {
   "Tags": [
-    "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.pem=true"
+    "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.pem=true"
   ]
 }
 ```
@@ -111,25 +111,25 @@ spec:
     ```yaml tab="Labels"
     # Pass all the available info in the `X-Forwarded-Tls-Client-Cert-Info` header
     labels:
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notafter=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notbefore=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.sans=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.serialnumber=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.commonname=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.country=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.domaincomponent=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.locality=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organization=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organizationalunit=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.province=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.serialnumber=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.commonname=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.country=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.domaincomponent=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.locality=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.organization=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.province=true"
-      - "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.serialnumber=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notafter=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notbefore=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.sans=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.serialnumber=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.commonname=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.country=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.domaincomponent=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.locality=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organization=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organizationalunit=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.province=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.serialnumber=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.commonname=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.country=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.domaincomponent=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.locality=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.organization=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.province=true"
+      - "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.serialnumber=true"
     ```
 
     ```json tab="Tags"
@@ -137,24 +137,24 @@ spec:
     {
       //...
       "Tags" : [
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notafter=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notbefore=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.sans=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.commonname=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.country=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.domaincomponent=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.locality=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organization=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organizationalunit=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.province=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.serialnumber=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.commonname=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.country=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.domaincomponent=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.locality=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.organization=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.province=true",
-        "traefik.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.serialnumber=true"
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notafter=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.notbefore=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.sans=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.commonname=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.country=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.domaincomponent=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.locality=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organization=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.organizationalunit=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.province=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.subject.serialnumber=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.commonname=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.country=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.domaincomponent=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.locality=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.organization=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.province=true",
+        "ingress.http.middlewares.test-passtlsclientcert.passtlsclientcert.info.issuer.serialnumber=true"
       ]
     }
     ```

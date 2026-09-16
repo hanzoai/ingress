@@ -12,7 +12,7 @@ The Kubernetes Gateway API provider supports version [v1.4.0](https://github.com
 
 It fully supports all `HTTPRoute` core and some extended features, like `GRPCRoute`, as well as the `TCPRoute` and `TLSRoute` resources from the [Experimental channel](https://gateway-api.sigs.k8s.io/concepts/versioning/?h=#release-channels). 
 
-For more details, check out the conformance [report](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports/v1.4.0/traefik-traefik).
+For more details, check out the conformance [report](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports/v1.4.0/ingress-ingress).
 
 ## Deploying a Gateway
 
@@ -27,7 +27,7 @@ The following `GatewayClass` defines that gateways attached to it must be manage
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
-  name: traefik
+  name: ingress
 spec:
   controllerName: hanzo.ai/gateway-controller
 ```
@@ -44,10 +44,10 @@ Next, the following `Gateway` manifest configures the running Hanzo Ingress cont
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: traefik
+  name: ingress
   namespace: default
 spec:
-  gatewayClassName: traefik
+  gatewayClassName: ingress
   
   # Only Routes from the same namespace are allowed.
   listeners:
@@ -137,7 +137,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: http
       kind: Gateway
 
@@ -204,7 +204,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: http
       kind: Gateway
 
@@ -227,7 +227,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: https
       kind: Gateway
 
@@ -273,7 +273,7 @@ X-Forwarded-For: 10.42.1.0
 X-Forwarded-Host: whoami.localhost
 X-Forwarded-Port: 443
 X-Forwarded-Proto: https
-X-Forwarded-Server: traefik-6b66d45748-ns8mt
+X-Forwarded-Server: ingress-6b66d45748-ns8mt
 X-Real-Ip: 10.42.1.0
 ```
 
@@ -296,7 +296,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: http
       kind: Gateway
 
@@ -381,7 +381,7 @@ $ grpcurl -plaintext echo.localhost:80 gateway_api_conformance.echo_basic.grpcec
       },
       {
         "key": "x-forwarded-server",
-        "value": "traefik-74b4cf85d8-nkqqf"
+        "value": "ingress-74b4cf85d8-nkqqf"
       },
       {
         "key": "x-forwarded-port",
@@ -452,7 +452,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: tcp
       kind: Gateway
 
@@ -536,7 +536,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: tls
       kind: Gateway
 
@@ -632,7 +632,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-    - name: traefik
+    - name: ingress
       sectionName: http
       kind: Gateway
 
@@ -648,7 +648,7 @@ spec:
       filters:
         - type: ExtensionRef
           extensionRef:
-            group: traefik.io
+            group: hanzo.ai
             kind: Middleware
             name: add-prefix
 ```
@@ -719,7 +719,7 @@ X-Forwarded-For: 10.42.2.1
 X-Forwarded-Host: whoami.localhost
 X-Forwarded-Port: 80
 X-Forwarded-Proto: http
-X-Forwarded-Server: traefik-6b66d45748-ns8mt
+X-Forwarded-Server: ingress-6b66d45748-ns8mt
 X-Real-Ip: 10.42.2.1
 ```
 
@@ -729,7 +729,7 @@ By default, Hanzo Ingress sends the traffic directly to the pod IPs and reuses t
 
 It is possible to override this behavior and configure Hanzo Ingress to send the traffic to the service IP.
 The Kubernetes service itself does the load balancing to the pods.
-It can be done with the annotation `traefik.io/service.nativelb` on the backend `Service`.
+It can be done with the annotation `hanzo.ai/service.nativelb` on the backend `Service`.
 
 By default, NativeLB is `false`.
 
@@ -745,9 +745,9 @@ metadata:
   name: myservice
   namespace: default
   annotations:
-    traefik.io/service.nativelb: "true"
+    hanzo.ai/service.nativelb: "true"
 spec:
 [...]
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

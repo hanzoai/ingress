@@ -43,16 +43,16 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.testHeader.headers.customrequestheaders.X-Script-Name=test"
-  - "traefik.http.middlewares.testHeader.headers.customresponseheaders.X-Custom-Response-Header=value"
+  - "ingress.http.middlewares.testHeader.headers.customrequestheaders.X-Script-Name=test"
+  - "ingress.http.middlewares.testHeader.headers.customresponseheaders.X-Custom-Response-Header=value"
 ```
 
 ```json tab="Tags"
 {
   //...
   "Tags": [
-    "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test",
-    "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header=value"
+    "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test",
+    "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header=value"
   ]
 }
 
@@ -100,17 +100,17 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
-  - "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
-  - "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
+  - "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
+  - "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
+  - "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
 ```
 
 ```json tab="Tags"
 {
   "Tags" : [
-    "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test",
-    "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header=",
-    "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
+    "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test",
+    "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header=",
+    "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
   ]
 }
 ```
@@ -152,15 +152,15 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.testHeader.headers.framedeny=true"
-  - "traefik.http.middlewares.testHeader.headers.browserxssfilter=true"
+  - "ingress.http.middlewares.testHeader.headers.framedeny=true"
+  - "ingress.http.middlewares.testHeader.headers.browserxssfilter=true"
 ```
 
 ```json tab="Tags"
 {
   "Tags" : [
-    "traefik.http.middlewares.testheader.headers.framedeny=true",
-    "traefik.http.middlewares.testheader.headers.browserxssfilter=true"
+    "ingress.http.middlewares.testheader.headers.framedeny=true",
+    "ingress.http.middlewares.testheader.headers.browserxssfilter=true"
   ]
 }
 
@@ -215,21 +215,21 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100"
-  - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolmaxage=100"
+  - "ingress.http.middlewares.testheader.headers.addvaryheader=true"
 ```
 
 ```json tab="Tags"
 {
   "Tags" : [
-    "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT",
-     "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*",
-    "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org",
-    "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100",
-    "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+    "ingress.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT",
+     "ingress.http.middlewares.testheader.headers.accesscontrolallowheaders=*",
+    "ingress.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org",
+    "ingress.http.middlewares.testheader.headers.accesscontrolmaxage=100",
+    "ingress.http.middlewares.testheader.headers.addvaryheader=true"
   ]
 }
 ```
@@ -323,4 +323,4 @@ It allows all origins that contain any match of a regular expression in the `acc
 
     When defining a regular expression within YAML, any escaped character needs to be escaped twice: `example\.com` needs to be written as `example\\.com`.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

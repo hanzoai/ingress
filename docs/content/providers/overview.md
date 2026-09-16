@@ -78,7 +78,7 @@ For the list of the providers names, see the [supported providers](#supported-pr
 
       labels:
         # Attach add-foo-prefix@file middleware (declared in file)
-        - "traefik.http.routers.my-container.middlewares=add-foo-prefix@file"
+        - "ingress.http.routers.my-container.middlewares=add-foo-prefix@file"
     ```
 
     ```yaml tab="IngressRoute"

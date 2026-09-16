@@ -14,7 +14,7 @@ See the [Let's Encrypt](../../../install-configuration/tls/certificate-resolvers
 
 ### User defined
 
-To add / remove TLS certificates, even when Hanzo Ingress is already running, their definition can be added to the [dynamic configuration](../../dynamic-configuration-methods.md#providing-dynamic-routing-configuration-to-traefik), in the `[[tls.certificates]]` section:
+To add / remove TLS certificates, even when Hanzo Ingress is already running, their definition can be added to the [dynamic configuration](../../dynamic-configuration-methods.md#providing-dynamic-routing-configuration-to-ingress), in the `[[tls.certificates]]` section:
 
 ```yaml tab="Structured (YAML)"
 tls:
@@ -157,20 +157,20 @@ tls:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
-  - "traefik.tls.stores.default.defaultgeneratedcert.domain.main=example.org"
-  - "traefik.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
+  - "ingress.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
+  - "ingress.tls.stores.default.defaultgeneratedcert.domain.main=example.org"
+  - "ingress.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
 ```
 
 ```json tab="Tags"
 {
   "Name": "default",
   "Tags": [
-    "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver",
-    "traefik.tls.stores.default.defaultgeneratedcert.domain.main=example.org",
-    "traefik.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
+    "ingress.tls.stores.default.defaultgeneratedcert.resolver=myresolver",
+    "ingress.tls.stores.default.defaultgeneratedcert.domain.main=example.org",
+    "ingress.tls.stores.default.defaultgeneratedcert.domain.sans=foo.example.org, bar.example.org"
   ]
 }
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

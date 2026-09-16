@@ -49,4 +49,4 @@ Middlewares that use the same protocol can be combined into chains to fit every 
 
 Please take a look at the community-contributed plugins in the [plugin catalog](https://github.com/hanzoai/ingress).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -72,7 +72,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway
+  - name: ingress-gateway
     sectionName: websecure
   hostnames:
   - "whoami.docker.localhost"
@@ -84,12 +84,12 @@ spec:
     filters:
     - type: ExtensionRef
       extensionRef:  # Headers Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: secure-headers
     - type: ExtensionRef
       extensionRef: # IP AllowList Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: ip-allowlist
     backendRefs:
@@ -102,12 +102,12 @@ spec:
     filters:
     - type: ExtensionRef
       extensionRef:  # Headers Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: secure-headers
     - type: ExtensionRef
       extensionRef: # IP AllowList Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: ip-allowlist
     backendRefs:
@@ -207,7 +207,7 @@ additionalArguments:
 Update your Hanzo Ingress installation with this configuration:
 
 ```bash
-helm upgrade traefik traefik/traefik -n traefik --reuse-values -f values.yaml
+helm upgrade ingress ingress/ingress -n ingress --reuse-values -f values.yaml
 ```
 
 Update your IngressRoute with the Let's Encrypt certificate:
@@ -273,7 +273,7 @@ spec:
       - http01:
           gatewayHTTPRoute:
             parentRefs:
-              - name: traefik
+              - name: ingress
                 namespace: default
                 kind: Gateway
 ---
@@ -306,10 +306,10 @@ Now, update your Gateway to use the generated certificate:
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: traefik-gateway
+  name: ingress-gateway
   namespace: default
 spec:
-  gatewayClassName: traefik
+  gatewayClassName: ingress
   listeners:
   - name: web
     port: 80
@@ -401,7 +401,7 @@ metadata:
   namespace: default
 spec:
   parentRefs:
-  - name: traefik-gateway
+  - name: ingress-gateway
     sectionName: websecure
   hostnames:
   - "whoami.docker.localhost"
@@ -413,12 +413,12 @@ spec:
     filters:
     - type: ExtensionRef
       extensionRef:  # Headers Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: secure-headers
     - type: ExtensionRef
       extensionRef: # IP AllowList Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: ip-allowlist
     backendRefs:
@@ -429,18 +429,18 @@ spec:
         type: PathPrefix
         value: /
     backendRefs:
-    - group: traefik.io          # <── tell Gateway this is a IngressService
+    - group: hanzo.ai          # <── tell Gateway this is a IngressService
       kind: IngressService
       name: whoami-sticky
     filters:
     - type: ExtensionRef
       extensionRef:  # Headers Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: secure-headers
     - type: ExtensionRef
       extensionRef: # IP AllowList Middleware Definition
-        group: traefik.io
+        group: hanzo.ai
         kind: Middleware
         name: ip-allowlist
     backendRefs:

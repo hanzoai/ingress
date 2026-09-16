@@ -24,8 +24,8 @@ The Retry middleware has an optional configuration to enable an exponential back
 ```yaml tab="Docker & Swarm"
 # Retry 4 times with exponential backoff
 labels:
-  - "traefik.http.middlewares.test-retry.retry.attempts=4"
-  - "traefik.http.middlewares.test-retry.retry.initialinterval=100ms"
+  - "ingress.http.middlewares.test-retry.retry.attempts=4"
+  - "ingress.http.middlewares.test-retry.retry.initialinterval=100ms"
 ```
 
 ```yaml tab="Kubernetes"
@@ -42,8 +42,8 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Retry 4 times with exponential backoff
-- "traefik.http.middlewares.test-retry.retry.attempts=4"
-- "traefik.http.middlewares.test-retry.retry.initialinterval=100ms"
+- "ingress.http.middlewares.test-retry.retry.attempts=4"
+- "ingress.http.middlewares.test-retry.retry.initialinterval=100ms"
 ```
 
 ```yaml tab="File (YAML)"

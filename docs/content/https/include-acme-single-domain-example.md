@@ -2,19 +2,19 @@
 ```yaml tab="Docker & Swarm"
 ## Dynamic configuration
 labels:
-  - traefik.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
-  - traefik.http.routers.blog.tls=true
-  - traefik.http.routers.blog.tls.certresolver=myresolver
+  - ingress.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
+  - ingress.http.routers.blog.tls=true
+  - ingress.http.routers.blog.tls.certresolver=myresolver
 ```
 
 ```yaml tab="Docker (Swarm)"
 ## Dynamic configuration
 deploy:
   labels:
-    - traefik.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
-    - traefik.http.routers.blog.tls=true
-    - traefik.http.routers.blog.tls.certresolver=myresolver
-    - traefik.http.services.blog-svc.loadbalancer.server.port=8080"
+    - ingress.http.routers.blog.rule=Host(`example.com`) && Path(`/blog`)
+    - ingress.http.routers.blog.tls=true
+    - ingress.http.routers.blog.tls.certresolver=myresolver
+    - ingress.http.services.blog-svc.loadbalancer.server.port=8080"
 ```
 
 ```yaml tab="Kubernetes"

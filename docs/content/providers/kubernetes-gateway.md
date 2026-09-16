@@ -12,7 +12,7 @@ This provider supports Standard version [v1.4.0](https://github.com/kubernetes-s
 
 It fully supports all HTTP core and some extended features, as well as the `TCPRoute` and `TLSRoute` resources from the [Experimental channel](https://gateway-api.sigs.k8s.io/concepts/versioning/?h=#release-channels).
 
-For more details, check out the conformance [report](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports/v1.4.0/traefik-traefik).
+For more details, check out the conformance [report](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports/v1.4.0/ingress-ingress).
 
 ## Requirements
 
@@ -20,8 +20,8 @@ For more details, check out the conformance [report](https://github.com/kubernet
 
 !!! info "Helm Chart"
 
-    When using the Hanzo Ingress [Helm Chart](../getting-started/install-traefik.md#use-the-helm-chart), the CRDs (Custom Resource Definitions) and RBAC (Role-Based Access Control) are automatically managed for you.
-    The only remaining task is to enable the `kubernetesGateway` in the chart [values](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/values.yaml#L323).
+    When using the Hanzo Ingress [Helm Chart](../getting-started/install-ingress.md#use-the-helm-chart), the CRDs (Custom Resource Definitions) and RBAC (Role-Based Access Control) are automatically managed for you.
+    The only remaining task is to enable the `kubernetesGateway` in the chart [values](https://github.com/hanzoai/ingress-helm-chart/blob/master/ingress/values.yaml#L323).
 
 1. Install/update the Kubernetes Gateway API CRDs.
 
@@ -290,18 +290,18 @@ See [label-selectors](https://kubernetes.io/docs/concepts/overview/working-with-
 ```yaml tab="File (YAML)"
 providers:
   kubernetesGateway:
-    labelSelector: "app=traefik"
+    labelSelector: "app=ingress"
     # ...
 ```
 
 ```toml tab="File (TOML)"
 [providers.kubernetesGateway]
-  labelSelector = "app=traefik"
+  labelSelector = "app=ingress"
   # ...
 ```
 
 ```bash tab="CLI"
---providers.kubernetesgateway.labelselector="app=traefik"
+--providers.kubernetesgateway.labelselector="app=ingress"
 ```
 
 ### `nativeLBByDefault`
@@ -309,7 +309,7 @@ providers:
 _Optional, Default: false_
 
 Defines whether to use Native Kubernetes load-balancing mode by default.
-For more information, please check out the `traefik.io/service.nativelb` [service annotation documentation](../routing/providers/kubernetes-gateway.md#native-load-balancing).
+For more information, please check out the `hanzo.ai/service.nativelb` [service annotation documentation](../routing/providers/kubernetes-gateway.md#native-load-balancing).
 
 ```yaml tab="File (YAML)"
 providers:
@@ -357,4 +357,4 @@ providers:
 --providers.kubernetesgateway.throttleDuration=10s
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

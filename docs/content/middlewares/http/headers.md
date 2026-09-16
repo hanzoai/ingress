@@ -20,8 +20,8 @@ The following example adds the `X-Script-Name` header to the proxied request and
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.testHeader.headers.customrequestheaders.X-Script-Name=test"
-  - "traefik.http.middlewares.testHeader.headers.customresponseheaders.X-Custom-Response-Header=value"
+  - "ingress.http.middlewares.testHeader.headers.customrequestheaders.X-Script-Name=test"
+  - "ingress.http.middlewares.testHeader.headers.customresponseheaders.X-Custom-Response-Header=value"
 ```
 
 ```yaml tab="Kubernetes"
@@ -38,8 +38,8 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
-- "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header=value"
+- "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
+- "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header=value"
 ```
 
 ```yaml tab="File (YAML)"
@@ -69,9 +69,9 @@ and responses are stripped of their `X-Custom-Response-Header` header.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
-  - "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
-  - "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
+  - "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
+  - "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
+  - "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
 ```
 
 ```yaml tab="Kubernetes"
@@ -89,9 +89,9 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
-- "traefik.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
-- "traefik.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
+- "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Script-Name=test"
+- "ingress.http.middlewares.testheader.headers.customrequestheaders.X-Custom-Request-Header="
+- "ingress.http.middlewares.testheader.headers.customresponseheaders.X-Custom-Response-Header="
 ```
 
 ```yaml tab="File (YAML)"
@@ -123,8 +123,8 @@ This functionality makes it possible to easily use security features by adding h
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.testHeader.headers.framedeny=true"
-  - "traefik.http.middlewares.testHeader.headers.browserxssfilter=true"
+  - "ingress.http.middlewares.testHeader.headers.framedeny=true"
+  - "ingress.http.middlewares.testHeader.headers.browserxssfilter=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -139,8 +139,8 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.testheader.headers.framedeny=true"
-- "traefik.http.middlewares.testheader.headers.browserxssfilter=true"
+- "ingress.http.middlewares.testheader.headers.framedeny=true"
+- "ingress.http.middlewares.testheader.headers.browserxssfilter=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -170,11 +170,11 @@ and should not be used as is for production.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
-  - "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100"
-  - "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
+  - "ingress.http.middlewares.testheader.headers.accesscontrolmaxage=100"
+  - "ingress.http.middlewares.testheader.headers.addvaryheader=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -198,11 +198,11 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-- "traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
-- "traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
-- "traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100"
-- "traefik.http.middlewares.testheader.headers.addvaryheader=true"
+- "ingress.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+- "ingress.http.middlewares.testheader.headers.accesscontrolallowheaders=*"
+- "ingress.http.middlewares.testheader.headers.accesscontrolalloworiginlist=https://foo.bar.org,https://example.org"
+- "ingress.http.middlewares.testheader.headers.accesscontrolmaxage=100"
+- "ingress.http.middlewares.testheader.headers.addvaryheader=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -422,4 +422,4 @@ Set `isDevelopment` to `true` when developing to mitigate the unwanted effects o
 Usually testing takes place using HTTP, not HTTPS, and on `localhost`, not your production domain.
 If you would like your development environment to mimic production with complete Host blocking, SSL redirects, and STS headers, leave this as `false`.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

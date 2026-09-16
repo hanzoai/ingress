@@ -14,7 +14,7 @@ Remove the matching prefixes from the URL path.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
+  - "ingress.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
 ```
 
 ```yaml tab="Kubernetes"
@@ -29,7 +29,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
+- "ingress.http.middlewares.test-stripprefixregex.stripprefixregex.regex=/foo/[a-z0-9]+/[0-9]+/"
 ```
 
 ```yaml tab="File (YAML)"

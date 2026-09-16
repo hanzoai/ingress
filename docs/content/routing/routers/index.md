@@ -250,10 +250,10 @@ The table below lists all the available matchers:
     The following rule matches requests where:
 
     - either host is `example.com` OR,
-    - host is `example.org` AND path is NOT `/traefik`
+    - host is `example.org` AND path is NOT `/ingress`
 
     ```yaml
-    Host(`example.com`) || (Host(`example.org`) && !Path(`/traefik`))
+    Host(`example.com`) || (Host(`example.org`) && !Path(`/ingress`))
     ```
 
 #### Header and HeaderRegexp
@@ -459,10 +459,10 @@ Negative priority values are supported.
     http:
       routers:
         Router-1:
-          rule: "HostRegexp(`[a-z]+\.traefik\.com`)"
+          rule: "HostRegexp(`[a-z]+\.ingress\.com`)"
           # ...
         Router-2:
-          rule: "Host(`foobar.traefik.com`)"
+          rule: "Host(`foobar.example.com`)"
           # ...
     ```
 
@@ -470,19 +470,19 @@ Negative priority values are supported.
     ## Dynamic configuration
     [http.routers]
       [http.routers.Router-1]
-        rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+        rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
         # ...
       [http.routers.Router-2]
-        rule = "Host(`foobar.traefik.com`)"
+        rule = "Host(`foobar.example.com`)"
         # ...
     ```
 
-    In this case, all requests with host `foobar.traefik.com` will be routed through `Router-1` instead of `Router-2`.
+    In this case, all requests with host `foobar.example.com` will be routed through `Router-1` instead of `Router-2`.
 
     | Name     | Rule                                     | Priority |
     |----------|------------------------------------------|----------|
-    | Router-1 | ```HostRegexp(`[a-z]+\.traefik\.com`)``` | 34       |
-    | Router-2 | ```Host(`foobar.traefik.com`)```         | 26       |
+    | Router-1 | ```HostRegexp(`[a-z]+\.ingress\.com`)``` | 34       |
+    | Router-2 | ```Host(`foobar.example.com`)```         | 26       |
 
     The previous table shows that `Router-1` has a higher priority than `Router-2`.
 
@@ -495,13 +495,13 @@ Negative priority values are supported.
     http:
       routers:
         Router-1:
-          rule: "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+          rule: "HostRegexp(`[a-z]+\\.ingress\\.com`)"
           entryPoints:
           - "web"
           service: service-1
           priority: 1
         Router-2:
-          rule: "Host(`foobar.traefik.com`)"
+          rule: "Host(`foobar.example.com`)"
           entryPoints:
           - "web"
           priority: 2
@@ -512,18 +512,18 @@ Negative priority values are supported.
     ## Dynamic configuration
     [http.routers]
       [http.routers.Router-1]
-        rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+        rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
         entryPoints = ["web"]
         service = "service-1"
         priority = 1
       [http.routers.Router-2]
-        rule = "Host(`foobar.traefik.com`)"
+        rule = "Host(`foobar.example.com`)"
         entryPoints = ["web"]
         priority = 2
         service = "service-2"
     ```
 
-    In this configuration, the priority is configured to allow `Router-2` to handle requests with the `foobar.traefik.com` host.
+    In this configuration, the priority is configured to allow `Router-2` to handle requests with the `foobar.example.com` host.
 
 ### RuleSyntax
 
@@ -543,10 +543,10 @@ By default, the `defaultRuleSyntax` static option is `v3`, meaning that the defa
     http:
       routers:
         Router-v3:
-          rule: HostRegexp(`[a-z]+\\.traefik\\.com`)
+          rule: HostRegexp(`[a-z]+\\.ingress\\.com`)
           ruleSyntax: v3
         Router-v2:
-          rule: HostRegexp(`{subdomain:[a-z]+}.traefik.com`)
+          rule: HostRegexp(`{subdomain:[a-z]+}.ingress.com`)
           ruleSyntax: v2
     ```
 
@@ -554,10 +554,10 @@ By default, the `defaultRuleSyntax` static option is `v3`, meaning that the defa
     ## Dynamic configuration
     [http.routers]
       [http.routers.Router-v3]
-        rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+        rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
         ruleSyntax = v3
       [http.routers.Router-v2]
-        rule = "HostRegexp(`{subdomain:[a-z]+}.traefik.com`)"
+        rule = "HostRegexp(`{subdomain:[a-z]+}.ingress.com`)"
         ruleSyntax = v2
     ```
 
@@ -571,12 +571,12 @@ By default, the `defaultRuleSyntax` static option is `v3`, meaning that the defa
     spec:
       routes:
         # route v3
-        - match: HostRegexp(`[a-z]+\\.traefik\\.com`)
+        - match: HostRegexp(`[a-z]+\\.ingress\\.com`)
           syntax: v3
           kind: Rule
 
         # route v2
-        - match: HostRegexp(`{subdomain:[a-z]+}.traefik.com`)
+        - match: HostRegexp(`{subdomain:[a-z]+}.ingress.com`)
           syntax: v2
           kind: Rule
     ```
@@ -1792,4 +1792,4 @@ Services are the target for the router.
 
 !!! important "UDP routers can only target UDP services (and not HTTP or TCP services)."
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

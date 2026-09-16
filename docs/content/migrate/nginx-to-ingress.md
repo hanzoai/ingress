@@ -157,21 +157,21 @@ Install Hanzo Ingress with the Kubernetes Ingress NGINX provider enabled. Both c
 ### Add Hanzo Ingress Helm Repository
 
 ```bash
-helm repo add traefik https://hanzoai.github.io/charts
+helm repo add ingress https://hanzoai.github.io/charts
 helm repo update
 ```
 
 ### Install Hanzo Ingress
 
 ```bash
-helm upgrade --install traefik traefik/traefik \
-  --namespace traefik --create-namespace \
+helm upgrade --install ingress ingress/ingress \
+  --namespace ingress --create-namespace \
   --set providers.kubernetesIngressNginx.enabled=true
 ```
 
-Or using a [values file](https://github.com/hanzoai/ingress-helm-chart/blob/master/traefik/VALUES.md) for more configuration:
+Or using a [values file](https://github.com/hanzoai/ingress-helm-chart/blob/master/ingress/VALUES.md) for more configuration:
 
-```yaml tab="traefik-values.yaml"
+```yaml tab="ingress-values.yaml"
 ...
 providers:
   kubernetesIngressNginx:
@@ -180,9 +180,9 @@ providers:
 ```
 
 ```bash
-helm upgrade --install traefik traefik/traefik \
-  --namespace traefik --create-namespace \
-  --values traefik-values.yaml
+helm upgrade --install ingress ingress/ingress \
+  --namespace ingress --create-namespace \
+  --values ingress-values.yaml
 ```
 
 ### Verify Both Controllers Are Running
@@ -192,11 +192,11 @@ helm upgrade --install traefik traefik/traefik \
 kubectl get pods -n ingress-nginx
 
 # Check Hanzo Ingress pods
-kubectl get pods -n traefik
+kubectl get pods -n ingress
 
 # Check both services have LoadBalancer IPs
 kubectl get svc -n ingress-nginx ingress-nginx-controller
-kubectl get svc -n traefik traefik
+kubectl get svc -n ingress ingress
 ```
 
 At this point, both NGINX and Hanzo Ingress are running and can serve the same Ingress resources. Traffic is still flowing only through NGINX since DNS points to the NGINX LoadBalancer.
@@ -214,18 +214,18 @@ Get Hanzo Ingress's LoadBalancer IP and use `--resolve` to test without changing
 ```bash
 # Get LoadBalancer IPs
 NGINX_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
-TRAEFIK_IP=$(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
-echo -e "Nginx IP: $NGINX_IP\nIngress IP: $TRAEFIK_IP"
+INGRESS_IP=$(kubectl get svc -n ingress ingress -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
+echo -e "Nginx IP: $NGINX_IP\nIngress IP: $INGRESS_IP"
 
 # Test HTTP for both
 FQDN=myapp.example.com
 # Observe HTTPS redirections:
 curl --connect-to "${FQDN}:80:${NGINX_IP}:80" "http://${FQDN}" -D -
-curl --connect-to "${FQDN}:80:${TRAEFIK_IP}:80" "http://${FQDN}" -D - # note X-Forwarded-Server which should be traefik
+curl --connect-to "${FQDN}:80:${INGRESS_IP}:80" "http://${FQDN}" -D - # note X-Forwarded-Server which should be ingress
 
 # Test HTTPS
 curl --connect-to "${FQDN}:443:${NGINX_IP}:443" "https://${FQDN}"
-curl --connect-to "${FQDN}:443:${TRAEFIK_IP}:443" "https://${FQDN}"
+curl --connect-to "${FQDN}:443:${INGRESS_IP}:443" "https://${FQDN}"
 ```
 
 !!! warning "TLS Certificates During Migration"
@@ -244,7 +244,7 @@ curl --connect-to "${FQDN}:443:${TRAEFIK_IP}:443" "https://${FQDN}"
 Check Hanzo Ingress logs to confirm it discovered your Ingress resources:
 
 ```bash
-kubectl logs -n traefik deployment/traefik | grep -i "ingress"
+kubectl logs -n ingress deployment/ingress | grep -i "ingress"
 ```
 
 ---
@@ -264,7 +264,7 @@ Add the Hanzo Ingress LoadBalancer IP to your DNS records alongside NGINX. This 
 echo $(kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
 
 # Hanzo Ingress LoadBalancer
-echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
+echo $(kubectl get svc -n ingress ingress -o go-template='{{ $ing := index .status.loadBalancer.ingress 0 }}{{ if $ing.ip }}{{ $ing.ip }}{{ else }}{{ $ing.hostname }}{{ end }}')
 ```
 
 **Progressive DNS migration:**
@@ -285,10 +285,10 @@ echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .stat
 
     **Recommended approach for ExternalDNS:**
 
-    1. **[Install Hanzo Ingress](#step-1-install-traefik-alongside-nginx) with `publishService` disabled**:
+    1. **[Install Hanzo Ingress](#step-1-install-ingress-alongside-nginx) with `publishService` disabled**:
 
         ```yaml
-        # traefik-values.yaml
+        # ingress-values.yaml
         providers:
           kubernetesIngressNginx:
             enabled: true
@@ -296,7 +296,7 @@ echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .stat
               enabled: false  # Disable to prevent status updates
         ```
 
-    2. **Test Hanzo Ingress** using [port-forward](#step-2-verify-traefik-is-handling-traffic) or a separate test hostname
+    2. **Test Hanzo Ingress** using [port-forward](#step-2-verify-ingress-is-handling-traffic) or a separate test hostname
 
     3. **Switch DNS via NGINX** - Configure NGINX to publish Hanzo Ingress's service address:
 
@@ -304,14 +304,14 @@ echo $(kubectl get svc -n traefik traefik -o go-template='{{ $ing := index .stat
         # nginx-values.yaml
         controller:
           publishService:
-            pathOverride: "traefik/traefik"  # Points to Hanzo Ingress's service
+            pathOverride: "ingress/ingress"  # Points to Hanzo Ingress's service
         ```
 
         This makes NGINX update the Ingress status with Hanzo Ingress's LoadBalancer IP, causing ExternalDNS to point traffic to Hanzo Ingress.
 
     4. **Verify traffic flows through Hanzo Ingress** - At this point, you can still rollback by removing the `pathOverride`
 
-    5. **[Enable `publishService` on Hanzo Ingress](#step-1-install-traefik-alongside-nginx)** and [uninstall NGINX](#step-5-uninstall-nginx-ingress-controller)
+    5. **[Enable `publishService` on Hanzo Ingress](#step-1-install-ingress-alongside-nginx)** and [uninstall NGINX](#step-5-uninstall-nginx-ingress-controller)
 
 ### Option B: External Load Balancer with Weighted Traffic
 
@@ -379,7 +379,7 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $in
     # Note the AllocationId (eipalloc-xxx) for each EIP
     ```
 
-    **Update `traefik-values.yaml`:**
+    **Update `ingress-values.yaml`:**
 
     ```yaml
     service:
@@ -404,7 +404,7 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $in
       --query "[?ipAddress=='<your-ip>'].name" -o tsv
     ```
 
-    **Update `traefik-values.yaml`:**
+    **Update `ingress-values.yaml`:**
 
     ```yaml
     service:
@@ -429,10 +429,10 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller -o go-template='{{ $in
     gcloud compute addresses list
 
     # Or reserve a new regional static IP (must be in the same region as your GKE cluster)
-    gcloud compute addresses create traefik-ip --region <your-cluster-region>
+    gcloud compute addresses create ingress-ip --region <your-cluster-region>
     ```
 
-    **Update `traefik-values.yaml`:**
+    **Update `ingress-values.yaml`:**
 
     ```yaml
     service:
@@ -455,18 +455,18 @@ Once DNS is pointing to Hanzo Ingress and your values are configured with the ta
 
 ```bash
 # Ensure Hanzo Ingress is already receiving traffic via its current LoadBalancer
-kubectl get svc -n traefik traefik
+kubectl get svc -n ingress ingress
 
 # Delete NGINX LoadBalancer service to release the IP
 kubectl delete svc -n ingress-nginx ingress-nginx-controller
 
 # Upgrade Hanzo Ingress to claim the released IP
-helm upgrade traefik traefik/traefik \
-  --namespace traefik \
-  --values traefik-values.yaml
+helm upgrade ingress ingress/ingress \
+  --namespace ingress \
+  --values ingress-values.yaml
 
 # Verify Hanzo Ingress now has the old NGINX IP
-kubectl get svc -n traefik traefik
+kubectl get svc -n ingress ingress
 ```
 
 !!! tip "Zero Downtime During Helm Upgrade"
@@ -474,7 +474,7 @@ kubectl get svc -n traefik traefik
     The Helm upgrade only restarts the Hanzo Ingress pod, not the LoadBalancer service. Hanzo Ingress uses a `RollingUpdate` deployment strategy by default, so the new pod starts before the old one terminates. For additional safety, configure high availability:
 
     ```yaml
-    # In traefik-values.yaml
+    # In ingress-values.yaml
     deployment:
       replicas: 2
 
@@ -484,8 +484,8 @@ kubectl get svc -n traefik traefik
         requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app.kubernetes.io/name: traefik
-                app.kubernetes.io/instance: traefik
+                app.kubernetes.io/name: ingress
+                app.kubernetes.io/instance: ingress
             topologyKey: kubernetes.io/hostname
 
     # Ensure at least one pod is always available during disruptions
@@ -610,7 +610,7 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
     kubectl get ingressclass nginx
 
     # Check Hanzo Ingress provider configuration
-    kubectl logs -n traefik deployment/traefik | grep -i "nginx\|ingress"
+    kubectl logs -n ingress deployment/ingress | grep -i "nginx\|ingress"
 
     # Verify Ingress has correct ingressClassName
     kubectl get ingress <name> -o yaml | grep ingressClassName
@@ -640,10 +640,10 @@ Refer to the [dedicated documentation](../reference/install-configuration/api-da
 
     ```bash
       # Check service status
-      kubectl describe svc -n traefik traefik
+      kubectl describe svc -n ingress ingress
 
       # Check for events
-      kubectl get events -n traefik --sort-by='.lastTimestamp'
+      kubectl get events -n ingress --sort-by='.lastTimestamp'
     ```
 
 ---

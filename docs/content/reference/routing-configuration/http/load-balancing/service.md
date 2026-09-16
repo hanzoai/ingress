@@ -77,37 +77,37 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.services.my-service.loadBalancer.strategy=wrr"
-  - "traefik.http.services.my-service.loadBalancer.servers[0].url=http://private-ip-server-1/"
-  - "traefik.http.services.my-service.loadBalancer.servers[0].weight=2"
-  - "traefik.http.services.my-service.loadBalancer.servers[0].preservePath=true"
-  - "traefik.http.services.my-service.loadBalancer.sticky.cookie.name=sticky-cookie"
-  - "traefik.http.services.my-service.loadBalancer.healthcheck.path=/health"
-  - "traefik.http.services.my-service.loadBalancer.healthcheck.interval=10s"
-  - "traefik.http.services.my-service.loadBalancer.healthcheck.timeout=3s"
-  - "traefik.http.services.my-service.loadBalancer.passiveHealthcheck.failureWindow=3s"
-  - "traefik.http.services.my-service.loadBalancer.passiveHealthcheck.maxFailedAttempts=3"
-  - "traefik.http.services.my-service.loadBalancer.passHostHeader=true"
-  - "traefik.http.services.my-service.loadBalancer.serversTransport=customTransport@file"
-  - "traefik.http.services.my-service.loadBalancer.responseForwarding.flushInterval=150ms"
+  - "ingress.http.services.my-service.loadBalancer.strategy=wrr"
+  - "ingress.http.services.my-service.loadBalancer.servers[0].url=http://private-ip-server-1/"
+  - "ingress.http.services.my-service.loadBalancer.servers[0].weight=2"
+  - "ingress.http.services.my-service.loadBalancer.servers[0].preservePath=true"
+  - "ingress.http.services.my-service.loadBalancer.sticky.cookie.name=sticky-cookie"
+  - "ingress.http.services.my-service.loadBalancer.healthcheck.path=/health"
+  - "ingress.http.services.my-service.loadBalancer.healthcheck.interval=10s"
+  - "ingress.http.services.my-service.loadBalancer.healthcheck.timeout=3s"
+  - "ingress.http.services.my-service.loadBalancer.passiveHealthcheck.failureWindow=3s"
+  - "ingress.http.services.my-service.loadBalancer.passiveHealthcheck.maxFailedAttempts=3"
+  - "ingress.http.services.my-service.loadBalancer.passHostHeader=true"
+  - "ingress.http.services.my-service.loadBalancer.serversTransport=customTransport@file"
+  - "ingress.http.services.my-service.loadBalancer.responseForwarding.flushInterval=150ms"
 ```
 
 ```json tab="Tags"
 {
   "Tags": [
-    "traefik.http.services.my-service.loadBalancer.strategy=wrr",
-    "traefik.http.services.my-service.loadBalancer.servers[0].url=http://private-ip-server-1/",
-    "traefik.http.services.my-service.loadBalancer.servers[0].weight=2",
-    "traefik.http.services.my-service.loadBalancer.servers[0].preservePath=true",
-    "traefik.http.services.my-service.loadBalancer.sticky.cookie.name=sticky-cookie",
-    "traefik.http.services.my-service.loadBalancer.healthcheck.path=/health",
-    "traefik.http.services.my-service.loadBalancer.healthcheck.interval=10s",
-    "traefik.http.services.my-service.loadBalancer.healthcheck.timeout=3s",
-    "traefik.http.services.my-service.loadBalancer.passiveHealthcheck.failureWindow=3s",
-    "traefik.http.services.my-service.loadBalancer.passiveHealthcheck.maxFailedAttempts=3",
-    "traefik.http.services.my-service.loadBalancer.passHostHeader=true",
-    "traefik.http.services.my-service.loadBalancer.serversTransport=customTransport@file",
-    "traefik.http.services.my-service.loadBalancer.responseForwarding.flushInterval=150ms"
+    "ingress.http.services.my-service.loadBalancer.strategy=wrr",
+    "ingress.http.services.my-service.loadBalancer.servers[0].url=http://private-ip-server-1/",
+    "ingress.http.services.my-service.loadBalancer.servers[0].weight=2",
+    "ingress.http.services.my-service.loadBalancer.servers[0].preservePath=true",
+    "ingress.http.services.my-service.loadBalancer.sticky.cookie.name=sticky-cookie",
+    "ingress.http.services.my-service.loadBalancer.healthcheck.path=/health",
+    "ingress.http.services.my-service.loadBalancer.healthcheck.interval=10s",
+    "ingress.http.services.my-service.loadBalancer.healthcheck.timeout=3s",
+    "ingress.http.services.my-service.loadBalancer.passiveHealthcheck.failureWindow=3s",
+    "ingress.http.services.my-service.loadBalancer.passiveHealthcheck.maxFailedAttempts=3",
+    "ingress.http.services.my-service.loadBalancer.passHostHeader=true",
+    "ingress.http.services.my-service.loadBalancer.serversTransport=customTransport@file",
+    "ingress.http.services.my-service.loadBalancer.responseForwarding.flushInterval=150ms"
   ]
 }
 ```

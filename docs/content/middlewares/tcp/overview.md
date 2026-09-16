@@ -17,9 +17,9 @@ whoami:
   image: hanzoai/whoami
   labels:
     # Create a middleware named `foo-ip-allowlist`
-    - "traefik.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+    - "ingress.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
     # Apply the middleware named `foo-ip-allowlist` to the router named `router1`
-    - "traefik.tcp.routers.router1.middlewares=foo-ip-allowlist@docker"
+    - "ingress.tcp.routers.router1.middlewares=foo-ip-allowlist@docker"
 ```
 
 ```yaml tab="IngressRoute"
@@ -50,9 +50,9 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Create a middleware named `foo-ip-allowlist`
-- "traefik.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+- "ingress.tcp.middlewares.foo-ip-allowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
 # Apply the middleware named `foo-ip-allowlist` to the router named `router1`
-- "traefik.tcp.routers.router1.middlewares=foo-ip-allowlist@consulcatalog"
+- "ingress.tcp.routers.router1.middlewares=foo-ip-allowlist@consulcatalog"
 ```
 
 ```toml tab="File (TOML)"

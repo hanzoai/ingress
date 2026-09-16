@@ -29,7 +29,7 @@ http:
 ```yaml tab="Labels"
 # Enable auto-detection
 labels:
-  - "traefik.http.middlewares.autodetect.contenttype=true"
+  - "ingress.http.middlewares.autodetect.contenttype=true"
 ```
 
 ```json tab="Tags"
@@ -37,7 +37,7 @@ labels:
 {
   // ...
   "Tags": [
-    "traefik.http.middlewares.autodetect.contenttype=true"
+    "ingress.http.middlewares.autodetect.contenttype=true"
   ]
 }
 ```

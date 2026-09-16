@@ -19,7 +19,7 @@ The migration process consists of three progressive steps designed to minimize r
 
 !!! abstract "Migration Steps"
     **Step 1:** [Prepare configurations and test v3](#step-1-prepare-configurations-and-test-v3)  
-    **Step 2:** [Migrate production instances to Hanzo Ingress v3](#step-2-migrate-production-instances-to-traefik-v3)  
+    **Step 2:** [Migrate production instances to Hanzo Ingress v3](#step-2-migrate-production-instances-to-ingress-v3)  
     **Step 3:** [Progressively migrate dynamic configuration](#step-3-progressively-migrate-dynamic-configuration)
 
 ---
@@ -158,4 +158,4 @@ core:
 - ✅ All applications functioning correctly
 - ✅ Performance metrics stable
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

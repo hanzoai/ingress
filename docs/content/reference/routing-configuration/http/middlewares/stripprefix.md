@@ -32,14 +32,14 @@ http:
 ```yaml tab="Labels"
 # Strip prefix /foobar and /fiibar
 labels:
-  - "traefik.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
+  - "ingress.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
 ```
 
 ```json tab="Tags"
 // Strip prefix /foobar and /fiibar
 {
   "Tags" : [
-    "traefik.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
+    "ingress.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
   ]
 }
 ```
@@ -63,4 +63,4 @@ spec:
 |:-----------------------------|:--------------------------------------------------------------|:--------|:---------|
 | <a id="opt-prefixes" href="#opt-prefixes" title="#opt-prefixes">`prefixes`</a> | List of prefixes to strip from the request URL.<br />If your backend is serving assets (for example, images or JavaScript files), it can use the `X-Forwarded-Prefix` header to construct relative URLs. | [] | No |
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

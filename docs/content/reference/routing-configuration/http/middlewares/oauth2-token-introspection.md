@@ -206,4 +206,4 @@ stringData:
     -----END EC PRIVATE KEY-----
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

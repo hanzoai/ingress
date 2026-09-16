@@ -33,7 +33,7 @@ that appears in the allowlist; the controller swaps the transport based
 on the backend address.
 
 ```yaml
-apiVersion: traefik.io/v1alpha1
+apiVersion: hanzo.ai/v1alpha1
 kind: IngressRoute
 metadata:
   name: gateway

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: traefik-controller
+  name: ingress-controller
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: traefik
+  name: ingress
 
 spec:
   replicas: 1
@@ -21,10 +21,10 @@ spec:
         app: ingress-lb
 
     spec:
-      serviceAccountName: traefik-controller
+      serviceAccountName: ingress-controller
       containers:
-        - name: traefik
-          image: traefik:v3.6
+        - name: ingress
+          image: ingress:v3.6
           args:
             - --entryPoints.web.address=:80
             - --entryPoints.websecure.address=:443
@@ -42,7 +42,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: traefik
+  name: ingress
 
 spec:
   type: LoadBalancer

@@ -70,14 +70,14 @@ tcp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tcp.services.Service01.loadBalancer.serversTransport=mytransport"
+  - "ingress.tcp.services.Service01.loadBalancer.serversTransport=mytransport"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.tcp.services.Service01.loadBalancer.serversTransport=mytransport"
+    "ingress.tcp.services.Service01.loadBalancer.serversTransport=mytransport"
   ]
 }
 ```

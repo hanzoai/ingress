@@ -16,7 +16,7 @@ The activation of compression, and the compression method choice rely (among oth
 ```yaml tab="Docker & Swarm"
 # Enable compression
 labels:
-  - "traefik.http.middlewares.test-compress.compress=true"
+  - "ingress.http.middlewares.test-compress.compress=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -31,7 +31,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Enable compression
-- "traefik.http.middlewares.test-compress.compress=true"
+- "ingress.http.middlewares.test-compress.compress=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -86,7 +86,7 @@ Content types are compared in a case-insensitive, whitespace-ignored manner.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-compress.compress.excludedcontenttypes=text/event-stream"
+  - "ingress.http.middlewares.test-compress.compress.excludedcontenttypes=text/event-stream"
 ```
 
 ```yaml tab="Kubernetes"
@@ -101,7 +101,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-compress.compress.excludedcontenttypes=text/event-stream"
+- "ingress.http.middlewares.test-compress.compress.excludedcontenttypes=text/event-stream"
 ```
 
 ```yaml tab="File (YAML)"
@@ -135,7 +135,7 @@ Content types are compared in a case-insensitive, whitespace-ignored manner.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-compress.compress.includedcontenttypes=application/json,text/html,text/plain"
+  - "ingress.http.middlewares.test-compress.compress.includedcontenttypes=application/json,text/html,text/plain"
 ```
 
 ```yaml tab="Kubernetes"
@@ -152,7 +152,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-compress.compress.includedcontenttypes=application/json,text/html,text/plain"
+- "ingress.http.middlewares.test-compress.compress.includedcontenttypes=application/json,text/html,text/plain"
 ```
 
 ```yaml tab="File (YAML)"
@@ -188,7 +188,7 @@ When chunked data is sent to the client on flush, it will be compressed by defau
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-compress.compress.minresponsebodybytes=1200"
+  - "ingress.http.middlewares.test-compress.compress.minresponsebodybytes=1200"
 ```
 
 ```yaml tab="Kubernetes"
@@ -202,7 +202,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-compress.compress.minresponsebodybytes=1200"
+- "ingress.http.middlewares.test-compress.compress.minresponsebodybytes=1200"
 ```
 
 ```yaml tab="File (YAML)"
@@ -229,7 +229,7 @@ There is no fallback on the `defaultEncoding` when the header value is empty or 
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-compress.compress.defaultEncoding=gzip"
+  - "ingress.http.middlewares.test-compress.compress.defaultEncoding=gzip"
 ```
 
 ```yaml tab="Kubernetes"
@@ -243,7 +243,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-compress.compress.defaultEncoding=gzip"
+- "ingress.http.middlewares.test-compress.compress.defaultEncoding=gzip"
 ```
 
 ```yaml tab="File (YAML)"
@@ -270,7 +270,7 @@ The order of the list also sets the priority, the top entry has the highest prio
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-compress.compress.encodings=zstd,br"
+  - "ingress.http.middlewares.test-compress.compress.encodings=zstd,br"
 ```
 
 ```yaml tab="Kubernetes"
@@ -286,7 +286,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-compress.compress.encodings=zstd,br"
+- "ingress.http.middlewares.test-compress.compress.encodings=zstd,br"
 ```
 
 ```yaml tab="File (YAML)"

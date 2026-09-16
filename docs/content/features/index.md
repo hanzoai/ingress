@@ -31,7 +31,7 @@ The Hanzo Ingress ecosystem offers multiple products designed to meet different 
 | Canary Deployments | ✓ | ✓ | ✓ |
 | Let's Encrypt | ✓ | ✓ | ✓ |
 | **Plugin Ecosystem** | | | |
-| [Plugin Support](https://github.com/hanzoai/ingress) ([Go](https://github.com/traefik/yaegi), [WASM](https://webassembly.org/)) | ✓ | ✓ | ✓ |
+| [Plugin Support](https://github.com/hanzoai/ingress) ([Go](https://github.com/hanzoai/yaegi), [WASM](https://webassembly.org/)) | ✓ | ✓ | ✓ |
 | **Deployment & Operations** | | | |
 | Hybrid cloud, multi-cloud & on-prem compatible | ✓ | ✓ | ✓ |
 | Per-cluster dashboard | ✓ | ✓ | ✓ |

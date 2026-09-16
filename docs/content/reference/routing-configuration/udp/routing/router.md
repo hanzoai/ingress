@@ -34,15 +34,15 @@ udp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.udp.routers.my-udp-router.entrypoints=udp-ep,dns"
-  - "traefik.udp.routers.my-udp-router.service=my-udp-service"
+  - "ingress.udp.routers.my-udp-router.entrypoints=udp-ep,dns"
+  - "ingress.udp.routers.my-udp-router.service=my-udp-service"
 ```
 
 ```json tab="Tags"
 {
   "Tags": [
-    "traefik.udp.routers.my-udp-router.entrypoints=udp-ep,dns",
-    "traefik.udp.routers.my-udp-router.service=my-udp-service"
+    "ingress.udp.routers.my-udp-router.entrypoints=udp-ep,dns",
+    "ingress.udp.routers.my-udp-router.service=my-udp-service"
   ]
 }
 ```

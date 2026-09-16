@@ -28,14 +28,14 @@ http:
 ```yaml tab="Labels"
 # Forward authentication to example.com
 labels:
-  - "traefik.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
+  - "ingress.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
 ```
 
 ```json tab="Tags"
 // Forward authentication to example.com
 {
   "Tags" : [
-    "traefik.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
+    "ingress.http.middlewares.test-auth.forwardauth.address=https://example.com/auth"
   ]
 }
 ```
@@ -140,4 +140,4 @@ The following request properties are provided to the forward-auth target endpoin
 | <a id="opt-Request-URI" href="#opt-Request-URI" title="#opt-Request-URI">Request URI</a> | `X-Forwarded-Uri`        |
 | <a id="opt-Source-IP-Address" href="#opt-Source-IP-Address" title="#opt-Source-IP-Address">Source IP-Address</a> | `X-Forwarded-For`        |
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

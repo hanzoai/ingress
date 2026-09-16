@@ -14,7 +14,7 @@ To proactively prevent services from being overwhelmed with high load, the numbe
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
 ```
 
 ```yaml tab="Kubernetes"
@@ -29,7 +29,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Limiting to 10 simultaneous connections
-- "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
 ```
 
 ```yaml tab="File (YAML)"
@@ -57,7 +57,7 @@ The middleware responds with `HTTP 429 Too Many Requests` if there are already `
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
 ```
 
 ```yaml tab="Kubernetes"
@@ -72,7 +72,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Limiting to 10 simultaneous connections
-- "traefik.http.middlewares.test-inflightreq.inflightreq.amount=10"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.amount=10"
 ```
 
 ```yaml tab="File (YAML)"
@@ -125,7 +125,7 @@ See [ipStrategy.ipv6Subnet](#ipstrategyipv6subnet) for more details.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.depth=2"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.depth=2"
 ```
 
 ```yaml tab="Kubernetes"
@@ -141,7 +141,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.depth=2"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.depth=2"
 ```
 
 ```yaml tab="File (YAML)"
@@ -179,7 +179,7 @@ http:
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="Kubernetes"
@@ -197,7 +197,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.excludedips=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```yaml tab="File (YAML)"
@@ -240,7 +240,7 @@ This is useful for grouping IPv6 addresses into subnets to prevent bypassing thi
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.ipv6Subnet=64"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.ipv6Subnet=64"
 ```
 
 ```yaml tab="Kubernetes"
@@ -256,7 +256,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.ipv6Subnet=64"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.ipstrategy.ipv6Subnet=64"
 ```
 
 ```yaml tab="File (YAML)"
@@ -282,7 +282,7 @@ Name of the header used to group incoming requests.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requestheadername=username"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requestheadername=username"
 ```
 
 ```yaml tab="Kubernetes"
@@ -297,7 +297,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requestheadername=username"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requestheadername=username"
 ```
 
 ```yaml tab="File (YAML)"
@@ -322,7 +322,7 @@ Whether to consider the request host as the source.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requesthost=true"
+  - "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requesthost=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -337,7 +337,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requesthost=true"
+- "ingress.http.middlewares.test-inflightreq.inflightreq.sourcecriterion.requesthost=true"
 ```
 
 ```yaml tab="File (YAML)"

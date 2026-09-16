@@ -78,7 +78,7 @@ additionalArguments:
 
 !!! tip 
 
-      In the Helm Chart, the entryPoints `web` (port 80), `websecure` (port 443), `traefik` (port 8080) and `metrics` (port 9100) are created by default.
+      In the Helm Chart, the entryPoints `web` (port 80), `websecure` (port 443), `ingress` (port 8080) and `metrics` (port 9100) are created by default.
       The entryPoints `web`, `websecure` are exposed by default using a Service.
 
       The default behaviors can be overridden in the Helm Chart.
@@ -141,7 +141,7 @@ If at least one entryPoint has the `asDefault` option set to `true`,
 then the list of default entryPoints includes only entryPoints that have the
 `asDefault` option set to `true`.
 
-Some built-in entryPoints are always excluded from the list, namely: `traefik`.
+Some built-in entryPoints are always excluded from the list, namely: `ingress`.
 
 The `asDefault` option has no effect on UDP entryPoints.
 When a UDP router does not define the entryPoints option, it is attached to all

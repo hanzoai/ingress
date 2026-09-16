@@ -26,7 +26,7 @@ http:
 ```yaml tab="Labels"
 # Prefixing with /foo
 labels:
-  - "traefik.http.middlewares.add-foo.addprefix.prefix=/foo"
+  - "ingress.http.middlewares.add-foo.addprefix.prefix=/foo"
 ```
 
 ```json tab="Tags"
@@ -34,7 +34,7 @@ labels:
 {
   // ...
   "Tags": [
-    "traefik.http.middlewares.add-foo.addprefix.prefix=/foo"
+    "ingress.http.middlewares.add-foo.addprefix.prefix=/foo"
   ]
 }
 ```

@@ -19,7 +19,7 @@ Remove the specified prefixes from the URL path.
 ```yaml tab="Docker & Swarm"
 # Strip prefix /foobar and /fiibar
 labels:
-  - "traefik.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
+  - "ingress.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
 ```
 
 ```yaml tab="Kubernetes"
@@ -37,7 +37,7 @@ spec:
 
 ```yaml tab="Consul Catalog"
 # Strip prefix /foobar and /fiibar
-- "traefik.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
+- "ingress.http.middlewares.test-stripprefix.stripprefix.prefixes=/foobar,/fiibar"
 ```
 
 ```yaml tab="File (YAML)"
@@ -113,8 +113,8 @@ The `forceSlash` option ensures the resulting stripped path is not the empty str
 
 ```yaml tab="Docker"
 labels:
-  - "traefik.http.middlewares.example.stripprefix.prefixes=/foobar"
-  - "traefik.http.middlewares.example.stripprefix.forceSlash=false"
+  - "ingress.http.middlewares.example.stripprefix.prefixes=/foobar"
+  - "ingress.http.middlewares.example.stripprefix.forceSlash=false"
 ```
 
 ```yaml tab="Kubernetes"
@@ -146,4 +146,4 @@ http:
     forceSlash = false
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

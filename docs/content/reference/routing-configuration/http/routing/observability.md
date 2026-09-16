@@ -56,24 +56,24 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.routers.my-router.rule=Path(`/foo`)"
-  - "traefik.http.routers.my-router.service=service-foo"
-  - "traefik.http.routers.my-router.observability.metrics=false"
-  - "traefik.http.routers.my-router.observability.accessLogs=false"
-  - "traefik.http.routers.my-router.observability.tracing=false"
-  - "traefik.http.routers.my-router.observability.traceVerbosity=detailed"
+  - "ingress.http.routers.my-router.rule=Path(`/foo`)"
+  - "ingress.http.routers.my-router.service=service-foo"
+  - "ingress.http.routers.my-router.observability.metrics=false"
+  - "ingress.http.routers.my-router.observability.accessLogs=false"
+  - "ingress.http.routers.my-router.observability.tracing=false"
+  - "ingress.http.routers.my-router.observability.traceVerbosity=detailed"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.routers.my-router.rule=Path(`/foo`)",
-    "traefik.http.routers.my-router.service=service-foo",
-    "traefik.http.routers.my-router.observability.metrics=false",
-    "traefik.http.routers.my-router.observability.accessLogs=false",
-    "traefik.http.routers.my-router.observability.tracing=false",
-    "traefik.http.routers.my-router.observability.traceVerbosity=detailed"
+    "ingress.http.routers.my-router.rule=Path(`/foo`)",
+    "ingress.http.routers.my-router.service=service-foo",
+    "ingress.http.routers.my-router.observability.metrics=false",
+    "ingress.http.routers.my-router.observability.accessLogs=false",
+    "ingress.http.routers.my-router.observability.tracing=false",
+    "ingress.http.routers.my-router.observability.traceVerbosity=detailed"
   ]
 }
 ```

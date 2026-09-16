@@ -87,7 +87,7 @@ your-container:
 
   labels:
     # Attach add-foo-prefix@file middleware (declared in file)
-    - "traefik.http.routers.my-container.middlewares=add-foo-prefix@file"
+    - "ingress.http.routers.my-container.middlewares=add-foo-prefix@file"
 ```
 
 ```yaml tab="IngressRoute"
@@ -123,4 +123,4 @@ metadata:
 spec:
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

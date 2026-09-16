@@ -57,7 +57,7 @@ http:
         users:
         - test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/
         - test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0
-        usersFile: etc/traefik/.htpasswd
+        usersFile: etc/ingress/.htpasswd
 
   # Add the service
   services:
@@ -84,7 +84,7 @@ http:
     [http.middlewares.my-basic-auth.basicAuth]
       users = ["test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/",
                 "test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"]
-      usersFile = "etc/traefik/.htpasswd"
+      usersFile = "etc/ingress/.htpasswd"
 
   # Add the service
   [http.services]
@@ -121,4 +121,4 @@ http:
     As it is very difficult to listen to all file system notifications, Hanzo Ingress uses [fsnotify](https://github.com/fsnotify/fsnotify).
     If using a directory with a mounted directory does not fix your issue, please check your file system compatibility with fsnotify.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

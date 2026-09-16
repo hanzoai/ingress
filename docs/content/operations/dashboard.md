@@ -66,22 +66,22 @@ As underlined in the [documentation for the `api.dashboard` option](./api.md#das
 the [router rule](../routing/routers/index.md#rule) defined for Hanzo Ingress must match
 the path prefixes `/api` and `/dashboard`.
 
-We recommend using a "Host Based rule" as ```Host(`traefik.example.com`)``` to match everything on the host domain,
+We recommend using a "Host Based rule" as ```Host(`ingress.example.com`)``` to match everything on the host domain,
 or to make sure that the defined rule captures both prefixes:
 
 ```bash tab="Host Rule"
-# The dashboard can be accessed on http://traefik.example.com/dashboard/
-rule = "Host(`traefik.example.com`)"
+# The dashboard can be accessed on http://ingress.example.com/dashboard/
+rule = "Host(`ingress.example.com`)"
 ```
 
 ```bash tab="Path Prefix Rule"
-# The dashboard can be accessed on http://example.com/dashboard/ or http://traefik.example.com/dashboard/
+# The dashboard can be accessed on http://example.com/dashboard/ or http://ingress.example.com/dashboard/
 rule = "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
 ```
 
 ```bash tab="Combination of Rules"
-# The dashboard can be accessed on http://traefik.example.com/dashboard/
-rule = "Host(`traefik.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+# The dashboard can be accessed on http://ingress.example.com/dashboard/
+rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
 ```
 
 ??? example "Dashboard Dynamic Configuration Examples"
@@ -98,24 +98,24 @@ However, it is possible to configure this base path:
 ```yaml tab="File (YAML)"
 api:
   # Customizes the base path:
-  # - Serving API under `/traefik/api`
-  # - Serving Dashboard under `/traefik/dashboard`
-  basePath: /traefik
+  # - Serving API under `/ingress/api`
+  # - Serving Dashboard under `/ingress/dashboard`
+  basePath: /ingress
 ```
 
 ```toml tab="File (TOML)"
 [api]
   # Customizes the base path:
-  # - Serving API under `/traefik/api`
-  # - Serving Dashboard under `/traefik/dashboard`
-  basePath = "/traefik"
+  # - Serving API under `/ingress/api`
+  # - Serving Dashboard under `/ingress/dashboard`
+  basePath = "/ingress"
 ```
 
 ```bash tab="CLI"
 # Customizes the base path:
-# - Serving API under `/traefik/api`
-# - Serving Dashboard under `/traefik/dashboard`
---api.basePath=/traefik
+# - Serving API under `/ingress/api`
+# - Serving Dashboard under `/ingress/dashboard`
+--api.basePath=/ingress
 ```
 
 ??? example "Dashboard Under Custom Path Dynamic Configuration Examples"
@@ -125,7 +125,7 @@ api:
 
 !!! warning "Please note that this mode is incompatible with the [custom API base path option](#custom-api-base-path)."
 
-When _insecure_ mode is enabled, one can access the dashboard on the `traefik` port (default: `8080`) of the Hanzo Ingress instance,
+When _insecure_ mode is enabled, one can access the dashboard on the `ingress` port (default: `8080`) of the Hanzo Ingress instance,
 at the following URL: `http://<Ingress IP>:8080/dashboard/` (trailing slash is mandatory).
 
 This mode is **not** recommended because it does not allow security features.
@@ -168,4 +168,4 @@ api:
 --api.dashboard=false
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

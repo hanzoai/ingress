@@ -305,7 +305,7 @@ Example utilizing Docker Compose:
 
 ```yaml
 services:
-  traefik:
+  ingress:
     image: ghcr.io/hanzoai/ingress:v3.6
     environment:
       - TZ=US/Alaska
@@ -357,7 +357,7 @@ accesslog:
 
 ### `serviceName`
 
-_Optional, Default="traefik"_
+_Optional, Default="ingress"_
 
 Defines the service name resource attribute.
 
@@ -779,4 +779,4 @@ accesslog:
 --accesslog.otlp.grpc.tls.insecureSkipVerify=true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

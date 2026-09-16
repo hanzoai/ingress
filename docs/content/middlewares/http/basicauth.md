@@ -21,7 +21,7 @@ The BasicAuth middleware grants access to services to authorized users only.
 #
 # Also note that dollar signs should NOT be doubled when they are not being evaluated (e.g. Ansible docker_container module).
 labels:
-  - "traefik.http.middlewares.test-auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
+  - "ingress.http.middlewares.test-auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="Kubernetes"
@@ -36,7 +36,7 @@ spec:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
+- "ingress.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="File (YAML)"
@@ -95,7 +95,7 @@ The `users` option is an array of authorized users. Each user must be declared u
 #
 # Also note that dollar signs should NOT be doubled when they not evaluated (e.g. Ansible docker_container module).
 labels:
-  - "traefik.http.middlewares.test-auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
+  - "ingress.http.middlewares.test-auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="Kubernetes"
@@ -140,7 +140,7 @@ data:
 
 ```yaml tab="Consul Catalog"
 # Declaring the user list
-- "traefik.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
+- "ingress.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
 ```
 
 ```yaml tab="File (YAML)"
@@ -177,7 +177,7 @@ The file content is a list of `name:hashed-password`.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-auth.basicauth.usersfile=/path/to/my/usersfile"
+  - "ingress.http.middlewares.test-auth.basicauth.usersfile=/path/to/my/usersfile"
 ```
 
 ```yaml tab="Kubernetes"
@@ -203,7 +203,7 @@ data:
 ```
 
 ```yaml tab="Consul Catalog"
-- "traefik.http.middlewares.test-auth.basicauth.usersfile=/path/to/my/usersfile"
+- "ingress.http.middlewares.test-auth.basicauth.usersfile=/path/to/my/usersfile"
 ```
 
 ```yaml tab="File (YAML)"
@@ -229,11 +229,11 @@ http:
 
 ### `realm`
 
-You can customize the realm for the authentication with the `realm` option. The default value is `traefik`.
+You can customize the realm for the authentication with the `realm` option. The default value is `ingress`.
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-auth.basicauth.realm=MyRealm"
+  - "ingress.http.middlewares.test-auth.basicauth.realm=MyRealm"
 ```
 
 ```yaml tab="Kubernetes"
@@ -247,7 +247,7 @@ spec:
 ```
 
 ```json tab="Consul Catalog"
-- "traefik.http.middlewares.test-auth.basicauth.realm=MyRealm"
+- "ingress.http.middlewares.test-auth.basicauth.realm=MyRealm"
 ```
 
 ```yaml tab="File (YAML)"
@@ -270,7 +270,7 @@ You can define a header field to store the authenticated user using the `headerF
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.my-auth.basicauth.headerField=X-WebAuth-User"
+  - "ingress.http.middlewares.my-auth.basicauth.headerField=X-WebAuth-User"
 ```
 
 ```yaml tab="Kubernetes"
@@ -285,7 +285,7 @@ spec:
 ```
 
 ```json tab="Consul Catalog"
-- "traefik.http.middlewares.my-auth.basicauth.headerField=X-WebAuth-User"
+- "ingress.http.middlewares.my-auth.basicauth.headerField=X-WebAuth-User"
 ```
 
 ```yaml tab="File (YAML)"
@@ -309,7 +309,7 @@ Set the `removeHeader` option to `true` to remove the authorization header befor
 
 ```yaml tab="Docker & Swarm"
 labels:
-  - "traefik.http.middlewares.test-auth.basicauth.removeheader=true"
+  - "ingress.http.middlewares.test-auth.basicauth.removeheader=true"
 ```
 
 ```yaml tab="Kubernetes"
@@ -323,7 +323,7 @@ spec:
 ```
 
 ```json tab="Consul Catalog"
-- "traefik.http.middlewares.test-auth.basicauth.removeheader=true"
+- "ingress.http.middlewares.test-auth.basicauth.removeheader=true"
 ```
 
 ```yaml tab="File (YAML)"
@@ -340,4 +340,4 @@ http:
     removeHeader = true
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

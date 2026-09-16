@@ -67,8 +67,8 @@ To illustrate, it is possible to easily define multiple routers, services, and T
     tls:
       certificates:
       {{ range $i, $e := until 10 }}
-      - certFile: "/etc/traefik/cert-{{ $e }}.pem"
-        keyFile: "/etc/traefik/cert-{{ $e }}.key"
+      - certFile: "/etc/ingress/cert-{{ $e }}.pem"
+        keyFile: "/etc/ingress/cert-{{ $e }}.key"
         store:
         - "my-store-foo-{{ $e }}"
         - "my-store-bar-{{ $e }}"
@@ -107,8 +107,8 @@ To illustrate, it is possible to easily define multiple routers, services, and T
 
     {{ range $i, $e := until 10 }}
     [[tls.certificates]]
-      certFile = "/etc/traefik/cert-{{ $e }}.pem"
-      keyFile = "/etc/traefik/cert-{{ $e }}.key"
+      certFile = "/etc/ingress/cert-{{ $e }}.pem"
+      keyFile = "/etc/ingress/cert-{{ $e }}.key"
       stores = ["my-store-foo-{{ $e }}", "my-store-bar-{{ $e }}"]
     {{ end }}
 

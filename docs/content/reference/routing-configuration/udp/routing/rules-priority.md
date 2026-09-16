@@ -56,14 +56,14 @@ udp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.udp.routers.Router-1.service=service-1"
+  - "ingress.udp.routers.Router-1.service=service-1"
 ```
 
 ```json tab="Tags"
 {
   //...
   "Tags": [
-    "traefik.udp.routers.Router-1.service=service-1"
+    "ingress.udp.routers.Router-1.service=service-1"
   ]
 }
 ```
@@ -90,16 +90,16 @@ udp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.udp.routers.Router-1.entryPoints=streaming"
-  - "traefik.udp.routers.Router-1.service=service-1"
+  - "ingress.udp.routers.Router-1.entryPoints=streaming"
+  - "ingress.udp.routers.Router-1.service=service-1"
 ```
 
 ```json tab="Tags"
 {
   //...
   "Tags": [
-    "traefik.udp.routers.Router-1.entryPoints=streaming",
-    "traefik.udp.routers.Router-1.service=service-1"
+    "ingress.udp.routers.Router-1.entryPoints=streaming",
+    "ingress.udp.routers.Router-1.service=service-1"
   ]
 }
 ```
@@ -109,4 +109,4 @@ labels:
     There must be one (and only one) UDP [service](../service.md) referenced per UDP router.
     Services are the target for the router.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

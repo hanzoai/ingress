@@ -21,7 +21,7 @@ metadata:
   namespace: apps
 
 spec:
-  ingressClassName: traefik-lb
+  ingressClassName: ingress-lb
   entryPoints:
     - web
   parentRefs:

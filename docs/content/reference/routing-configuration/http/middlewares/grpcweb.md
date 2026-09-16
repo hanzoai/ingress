@@ -29,14 +29,14 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.middlewares.test-grpcweb.grpcweb.allowOrigins=*"
+  - "ingress.http.middlewares.test-grpcweb.grpcweb.allowOrigins=*"
 ```
 
 ```json tab="Tags"
 {
   //...
   "Tags" : [
-    "traefik.http.middlewares.test-grpcweb.grpcWeb.allowOrigins=*"
+    "ingress.http.middlewares.test-grpcweb.grpcWeb.allowOrigins=*"
   ]
 }
 ```

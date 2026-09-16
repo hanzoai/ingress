@@ -130,10 +130,10 @@ The configuration below uses the [File Provider (Structured)](../../../install-c
 http:
   routers:
     Router-v3:
-      rule: HostRegexp(`[a-z]+\\.traefik\\.com`)
+      rule: HostRegexp(`[a-z]+\\.ingress\\.com`)
       ruleSyntax: v3
     Router-v2:
-      rule: HostRegexp(`{subdomain:[a-z]+}.traefik.com`)
+      rule: HostRegexp(`{subdomain:[a-z]+}.ingress.com`)
       ruleSyntax: v2
 ```
 
@@ -141,29 +141,29 @@ http:
 ## Dynamic configuration
 [http.routers]
   [http.routers.Router-v3]
-    rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+    rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
     ruleSyntax = v3
   [http.routers.Router-v2]
-    rule = "HostRegexp(`{subdomain:[a-z]+}.traefik.com`)"
+    rule = "HostRegexp(`{subdomain:[a-z]+}.ingress.com`)"
     ruleSyntax = v2
 ```
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.routers.Router-v3.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)"
-  - "traefik.http.routers.Router-v3.ruleSyntax=v3"
-  - "traefik.http.routers.Router-v2.rule=HostRegexp(`{subdomain:[a-z]+}.traefik.com`)"
-  - "traefik.http.routers.Router-v2.ruleSyntax=v2"
+  - "ingress.http.routers.Router-v3.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)"
+  - "ingress.http.routers.Router-v3.ruleSyntax=v3"
+  - "ingress.http.routers.Router-v2.rule=HostRegexp(`{subdomain:[a-z]+}.ingress.com`)"
+  - "ingress.http.routers.Router-v2.ruleSyntax=v2"
 ```
 
 ```json tab="Tags"
 {
   // ...
   "Tags": [
-    "traefik.http.routers.Router-v3.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)",
-    "traefik.http.routers.Router-v3.ruleSyntax=v3"
-    "traefik.http.routers.Router-v2.rule=HostRegexp(`{subdomain:[a-z]+}.traefik.com`)",
-    "traefik.http.routers.Router-v2.ruleSyntax=v2"
+    "ingress.http.routers.Router-v3.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)",
+    "ingress.http.routers.Router-v3.ruleSyntax=v3"
+    "ingress.http.routers.Router-v2.rule=HostRegexp(`{subdomain:[a-z]+}.ingress.com`)",
+    "ingress.http.routers.Router-v2.ruleSyntax=v2"
   ]
 },
 ```
@@ -176,45 +176,45 @@ labels:
     http:
       routers:
         Router-1:
-          rule: "HostRegexp(`[a-z]+\.traefik\.com`)"
+          rule: "HostRegexp(`[a-z]+\.ingress\.com`)"
           # ...
         Router-2:
-          rule: "Host(`foobar.traefik.com`)"
+          rule: "Host(`foobar.example.com`)"
           # ...
     ```
 
     ```toml tab="Structured (TOML)"
     [http.routers]
       [http.routers.Router-1]
-        rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+        rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
         # ...
       [http.routers.Router-2]
-        rule = "Host(`foobar.traefik.com`)"
+        rule = "Host(`foobar.example.com`)"
         # ...
     ```
 
     ```yaml tab="Labels"
     labels:
-      - "traefik.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)"
-      - "traefik.http.routers.Router-2.rule=Host(`foobar.traefik.com`)"
+      - "ingress.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)"
+      - "ingress.http.routers.Router-2.rule=Host(`foobar.example.com`)"
     ```
 
     ```json tab="Tags"
     {
         // ...
         "Tags": [
-          "traefik.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)",
-          "traefik.http.routers.Router-2.rule=Host(`foobar.traefik.com`)"
+          "ingress.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)",
+          "ingress.http.routers.Router-2.rule=Host(`foobar.example.com`)"
         ]
       }
     ```
 
-    In this case, all requests with host `foobar.traefik.com` will be routed through `Router-1` instead of `Router-2`.
+    In this case, all requests with host `foobar.example.com` will be routed through `Router-1` instead of `Router-2`.
 
     | Name     | Rule                                     | Priority |
     |----------|------------------------------------------|----------|
-    | <a id="opt-Router-1" href="#opt-Router-1" title="#opt-Router-1">Router-1</a> | ```HostRegexp(`[a-z]+\.traefik\.com`)``` | 34       |
-    | <a id="opt-Router-2" href="#opt-Router-2" title="#opt-Router-2">Router-2</a> | ```Host(`foobar.traefik.com`)```         | 26       |
+    | <a id="opt-Router-1" href="#opt-Router-1" title="#opt-Router-1">Router-1</a> | ```HostRegexp(`[a-z]+\.ingress\.com`)``` | 34       |
+    | <a id="opt-Router-2" href="#opt-Router-2" title="#opt-Router-2">Router-2</a> | ```Host(`foobar.example.com`)```         | 26       |
 
     The previous table shows that `Router-1` has a higher priority than `Router-2`.
 
@@ -239,13 +239,13 @@ Hanzo Ingress reserves a range of priorities for its internal routers, the maxim
 http:
   routers:
     Router-1:
-      rule: "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+      rule: "HostRegexp(`[a-z]+\\.ingress\\.com`)"
       entryPoints:
       - "web"
       service: service-1
       priority: 1
     Router-2:
-      rule: "Host(`foobar.traefik.com`)"
+      rule: "Host(`foobar.example.com`)"
       entryPoints:
       - "web"
       priority: 2
@@ -256,12 +256,12 @@ http:
 ## Dynamic configuration
 [http.routers]
   [http.routers.Router-1]
-    rule = "HostRegexp(`[a-z]+\\.traefik\\.com`)"
+    rule = "HostRegexp(`[a-z]+\\.ingress\\.com`)"
     entryPoints = ["web"]
     service = "service-1"
     priority = 1
   [http.routers.Router-2]
-    rule = "Host(`foobar.traefik.com`)"
+    rule = "Host(`foobar.example.com`)"
     entryPoints = ["web"]
     priority = 2
     service = "service-2"
@@ -269,30 +269,30 @@ http:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)"
-  - "traefik.http.routers.Router-1.entryPoints=web"
-  - "traefik.http.routers.Router-1.service=service-1"
-  - "traefik.http.routers.Router-1.priority=1"
-  - "traefik.http.routers.Router-2.rule=Host(`foobar.traefik.com`)"
-  - "traefik.http.routers.Router-2.entryPoints=web"
-  - "traefik.http.routers.Router-2.service=service-2"
-  - "traefik.http.routers.Router-2.priority=2"
+  - "ingress.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)"
+  - "ingress.http.routers.Router-1.entryPoints=web"
+  - "ingress.http.routers.Router-1.service=service-1"
+  - "ingress.http.routers.Router-1.priority=1"
+  - "ingress.http.routers.Router-2.rule=Host(`foobar.example.com`)"
+  - "ingress.http.routers.Router-2.entryPoints=web"
+  - "ingress.http.routers.Router-2.service=service-2"
+  - "ingress.http.routers.Router-2.priority=2"
 ```
 
 ```json tab="Tags"
   {
     // ...
     "Tags": [
-      "traefik.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.traefik\\.com`)",
-      "traefik.http.routers.Router-1.entryPoints=web",
-      "traefik.http.routers.Router-1.service=service-1",
-      "traefik.http.routers.Router-1.priority=1"
-      "traefik.http.routers.Router-2.rule=Host(`foobar.traefik.com`)",
-      "traefik.http.routers.Router-2.entryPoints=web",
-      "traefik.http.routers.Router-2.service=service-2",
-      "traefik.http.routers.Router-2.priority=2"
+      "ingress.http.routers.Router-1.rule=HostRegexp(`[a-z]+\\.ingress\\.com`)",
+      "ingress.http.routers.Router-1.entryPoints=web",
+      "ingress.http.routers.Router-1.service=service-1",
+      "ingress.http.routers.Router-1.priority=1"
+      "ingress.http.routers.Router-2.rule=Host(`foobar.example.com`)",
+      "ingress.http.routers.Router-2.entryPoints=web",
+      "ingress.http.routers.Router-2.service=service-2",
+      "ingress.http.routers.Router-2.priority=2"
     ]
   }
 ```
 
-In the example above, the priority is configured to allow `Router-2` to handle requests with the `foobar.traefik.com` host.
+In the example above, the priority is configured to allow `Router-2` to handle requests with the `foobar.example.com` host.

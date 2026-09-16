@@ -30,7 +30,7 @@ http:
 ```yaml tab="Labels"
 # Sets the maximum request body to 2MB
 labels:
-  - "traefik.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
+  - "ingress.http.middlewares.limit.buffering.maxRequestBodyBytes=2000000"
 ```
 
 ```json tab="Tags"
@@ -38,7 +38,7 @@ labels:
 {
   // ...
   "Tags": [
-    "traefik.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
+    "ingress.http.middlewares.test-auth.basicauth.users=test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/,test2:$apr1$d9hr9HBB$4HxwgUir3HP4EsggP/QNo0"
   ]
 }
 ```

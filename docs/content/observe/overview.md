@@ -77,4 +77,4 @@ additionalArguments:
 !!! note
     A router with its own observability configuration will override the global default.
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -28,14 +28,14 @@ http:
 ```yaml tab="Labels"
 # Accepts request from defined IP
 labels:
-  - "traefik.http.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+  - "ingress.http.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
 ```
 
 ```json tab="Tags"
 // Accepts request from defined IP
 {
   "Tags" : [
-    "traefik.http.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
+    "ingress.http.middlewares.test-ipallowlist.ipallowlist.sourcerange=127.0.0.1/32, 192.168.1.7"
   ]
 }
 ```

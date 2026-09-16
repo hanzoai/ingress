@@ -22,7 +22,7 @@ the Hanzo Ingress engineering team developed a [Custom Resource Definition](http
 
     * Add/update **all** the Hanzo Ingress resources [definitions](../reference/dynamic-configuration/kubernetes-crd.md#definitions)
     * Add/update the [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) for the Hanzo Ingress custom resources
-    * Use [Helm Chart](../getting-started/install-traefik.md#use-the-helm-chart) or use a custom Hanzo Ingress Deployment
+    * Use [Helm Chart](../getting-started/install-ingress.md#use-the-helm-chart) or use a custom Hanzo Ingress Deployment
         * Enable the kubernetesCRD provider
         * Apply the needed kubernetesCRD provider [configuration](#provider-configuration)
     * Add all necessary Hanzo Ingress custom [resources](../reference/dynamic-configuration/kubernetes-crd.md#resources)
@@ -195,18 +195,18 @@ See [label-selectors](https://kubernetes.io/docs/concepts/overview/working-with-
 ```yaml tab="File (YAML)"
 providers:
   kubernetesCRD:
-    labelSelector: "app=traefik"
+    labelSelector: "app=ingress"
     # ...
 ```
 
 ```toml tab="File (TOML)"
 [providers.kubernetesCRD]
-  labelSelector = "app=traefik"
+  labelSelector = "app=ingress"
   # ...
 ```
 
 ```bash tab="CLI"
---providers.kubernetescrd.labelselector="app=traefik"
+--providers.kubernetescrd.labelselector="app=ingress"
 ```
 
 ### `ingressClass`
@@ -216,23 +216,23 @@ _Optional, Default: ""_
 Value of `kubernetes.io/ingress.class` annotation that identifies resource objects to be processed.
 
 If the parameter is set, only resources containing an annotation with the same value are processed.
-Otherwise, resources missing the annotation, having an empty value, or the value `traefik` are processed.
+Otherwise, resources missing the annotation, having an empty value, or the value `ingress` are processed.
 
 ```yaml tab="File (YAML)"
 providers:
   kubernetesCRD:
-    ingressClass: "traefik-internal"
+    ingressClass: "ingress-internal"
     # ...
 ```
 
 ```toml tab="File (TOML)"
 [providers.kubernetesCRD]
-  ingressClass = "traefik-internal"
+  ingressClass = "ingress-internal"
   # ...
 ```
 
 ```bash tab="CLI"
---providers.kubernetescrd.ingressclass=traefik-internal
+--providers.kubernetescrd.ingressclass=ingress-internal
 ```
 
 ### `throttleDuration`
@@ -365,4 +365,4 @@ providers:
 
 For additional information on exposing services with Kubernetes, refer to the [Kubernetes guide](../expose/kubernetes/basic.md).
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

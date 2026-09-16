@@ -50,25 +50,25 @@ tcp:
 
 ```yaml tab="Labels"
 labels:
-  - "traefik.tcp.services.my-service.loadBalancer.servers[0].address=xx.xx.xx.xx:xx"
-  - "traefik.tcp.services.my-service.loadBalancer.servers[1].address=xx.xx.xx.xx:xx"
-  - "traefik.tcp.services.my-service.loadBalancer.healthCheck.send=PING"
-  - "traefik.tcp.services.my-service.loadBalancer.healthCheck.expect=PONG"
-  - "traefik.tcp.services.my-service.loadBalancer.healthCheck.interval=10s"
-  - "traefik.tcp.services.my-service.loadBalancer.healthCheck.timeout=3s"
-  - "traefik.tcp.services.my-service.loadBalancer.serversTransport=customTransport@file"
+  - "ingress.tcp.services.my-service.loadBalancer.servers[0].address=xx.xx.xx.xx:xx"
+  - "ingress.tcp.services.my-service.loadBalancer.servers[1].address=xx.xx.xx.xx:xx"
+  - "ingress.tcp.services.my-service.loadBalancer.healthCheck.send=PING"
+  - "ingress.tcp.services.my-service.loadBalancer.healthCheck.expect=PONG"
+  - "ingress.tcp.services.my-service.loadBalancer.healthCheck.interval=10s"
+  - "ingress.tcp.services.my-service.loadBalancer.healthCheck.timeout=3s"
+  - "ingress.tcp.services.my-service.loadBalancer.serversTransport=customTransport@file"
 ```
 
 ```json tab="Tags"
 {
   "Tags": [
-    "traefik.tcp.services.my-service.loadBalancer.servers[0].address=xx.xx.xx.xx:xx",
-    "traefik.tcp.services.my-service.loadBalancer.servers[1].address=xx.xx.xx.xx:xx",
-    "traefik.tcp.services.my-service.loadBalancer.healthCheck.send=PING",
-    "traefik.tcp.services.my-service.loadBalancer.healthCheck.expect=PONG",
-    "traefik.tcp.services.my-service.loadBalancer.healthCheck.interval=10s",
-    "traefik.tcp.services.my-service.loadBalancer.healthCheck.timeout=3s",
-    "traefik.tcp.services.my-service.loadBalancer.serversTransport=customTransport@file"
+    "ingress.tcp.services.my-service.loadBalancer.servers[0].address=xx.xx.xx.xx:xx",
+    "ingress.tcp.services.my-service.loadBalancer.servers[1].address=xx.xx.xx.xx:xx",
+    "ingress.tcp.services.my-service.loadBalancer.healthCheck.send=PING",
+    "ingress.tcp.services.my-service.loadBalancer.healthCheck.expect=PONG",
+    "ingress.tcp.services.my-service.loadBalancer.healthCheck.interval=10s",
+    "ingress.tcp.services.my-service.loadBalancer.healthCheck.timeout=3s",
+    "ingress.tcp.services.my-service.loadBalancer.serversTransport=customTransport@file"
   ]
 }
 ```

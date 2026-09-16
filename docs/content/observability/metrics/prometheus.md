@@ -115,7 +115,7 @@ metrics:
 
 #### `entryPoint`
 
-_Optional, Default=traefik_
+_Optional, Default=ingress_
 
 Entry point used to expose metrics.
 
@@ -226,7 +226,7 @@ curl -H "User-Agent: foobar" http://localhost
 The following metric is produced :
 
 ```bash
-traefik_entrypoint_requests_total{code="200",entrypoint="web",method="GET",protocol="http",useragent="foobar"} 1
+ingress_entrypoint_requests_total{code="200",entrypoint="web",method="GET",protocol="http",useragent="foobar"} 1
 ```
 
 !!! info "`Host` header value"

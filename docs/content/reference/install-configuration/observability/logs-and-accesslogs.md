@@ -101,7 +101,7 @@ log:
 
 | Field                                  | Description                                                                                                                            | Default                          | Required |
 |:---------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|:---------|
-| <a id="opt-log-otlp-serviceName" href="#opt-log-otlp-serviceName" title="#opt-log-otlp-serviceName">`log.otlp.serviceName`</a> | Service name used in selected backend.                                                                                                 | "traefik"                        | No       |
+| <a id="opt-log-otlp-serviceName" href="#opt-log-otlp-serviceName" title="#opt-log-otlp-serviceName">`log.otlp.serviceName`</a> | Service name used in selected backend.                                                                                                 | "ingress"                        | No       |
 | <a id="opt-log-otlp-resourceAttributes" href="#opt-log-otlp-resourceAttributes" title="#opt-log-otlp-resourceAttributes">`log.otlp.resourceAttributes`</a> | Defines additional resource attributes to be sent to the collector.  See [resourceAttributes](#resourceattributes) for details.                                                                    | []                               | No       |
 | <a id="opt-log-otlp-http" href="#opt-log-otlp-http" title="#opt-log-otlp-http">`log.otlp.http`</a> | This instructs the exporter to send logs to the OpenTelemetry Collector using HTTP.                                                    |                                  | No       |
 | <a id="opt-log-otlp-http-endpoint" href="#opt-log-otlp-http-endpoint" title="#opt-log-otlp-http-endpoint">`log.otlp.http.endpoint`</a> | The endpoint of the OpenTelemetry Collector. (format=`<scheme>://<host>:<port><path>`)                                                 | `https://localhost:4318/v1/logs` | No       |
@@ -218,7 +218,7 @@ The section below describes how to configure Hanzo Ingress access logs using the
 |:-----------|:--------------------------|:--------|:---------|
 | <a id="opt-accesslog-filePath" href="#opt-accesslog-filePath" title="#opt-accesslog-filePath">`accesslog.filePath`</a> | By default, the access logs are written to the standard output.<br />You can configure a file path instead using the `filePath` option.|  | No      |
 | <a id="opt-accesslog-dualOutput" href="#opt-accesslog-dualOutput" title="#opt-accesslog-dualOutput">`accesslog.dualOutput`</a> | Force Stdio logging, even if OTLP is configured. By default, Stdio logging is disabled when OTLP is enabled for performance reasons. | false      | No      |
-| <a id="opt-accesslog-format" href="#opt-accesslog-format" title="#opt-accesslog-format">`accesslog.format`</a> | By default, logs are written using the Hanzo Ingress Common Log Format (CLF).<br />Available formats: [`common`](#traefik-clf-format-fields) (extended CLF), [`genericCLF`](#generic-clf-format-fields) (standard CLF compatible with analyzers), or [`json`](#json-format-fields).<br />If the given format is unsupported, the default (`common`) is used instead. | "common" | No      |
+| <a id="opt-accesslog-format" href="#opt-accesslog-format" title="#opt-accesslog-format">`accesslog.format`</a> | By default, logs are written using the Hanzo Ingress Common Log Format (CLF).<br />Available formats: [`common`](#ingress-clf-format-fields) (extended CLF), [`genericCLF`](#generic-clf-format-fields) (standard CLF compatible with analyzers), or [`json`](#json-format-fields).<br />If the given format is unsupported, the default (`common`) is used instead. | "common" | No      |
 | <a id="opt-accesslog-bufferingSize" href="#opt-accesslog-bufferingSize" title="#opt-accesslog-bufferingSize">`accesslog.bufferingSize`</a> | To write the logs in an asynchronous fashion, specify a  `bufferingSize` option.<br />This option represents the number of log lines Hanzo Ingress will keep in memory before writing them to the selected output.<br />In some cases, this option can greatly help performances.| 0 | No      |
 | <a id="opt-accesslog-addInternals" href="#opt-accesslog-addInternals" title="#opt-accesslog-addInternals">`accesslog.addInternals`</a> | Enables access logs for internal resources (e.g.: `ping@internal`). | false  | No      |
 | <a id="opt-accesslog-filters-statusCodes" href="#opt-accesslog-filters-statusCodes" title="#opt-accesslog-filters-statusCodes">`accesslog.filters.statusCodes`</a> | Limit the access logs to requests with a status codes in the specified range. | [ ]      | No      |
@@ -288,7 +288,7 @@ accesslog:
 
 | Field                                        | Description                                                                                                                            | Default                          | Required |
 |:---------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|:---------|
-| <a id="opt-accesslog-otlp-serviceName" href="#opt-accesslog-otlp-serviceName" title="#opt-accesslog-otlp-serviceName">`accesslog.otlp.serviceName`</a> | Defines the service name resource attribute.                                                                                           | "traefik"                        | No       |
+| <a id="opt-accesslog-otlp-serviceName" href="#opt-accesslog-otlp-serviceName" title="#opt-accesslog-otlp-serviceName">`accesslog.otlp.serviceName`</a> | Defines the service name resource attribute.                                                                                           | "ingress"                        | No       |
 | <a id="opt-accesslog-otlp-resourceAttributes" href="#opt-accesslog-otlp-resourceAttributes" title="#opt-accesslog-otlp-resourceAttributes">`accesslog.otlp.resourceAttributes`</a> | Defines additional resource attributes to be sent to the collector. See [resourceAttributes](#resourceattributes_1) for details.       | []                               | No       |
 | <a id="opt-accesslog-otlp-http" href="#opt-accesslog-otlp-http" title="#opt-accesslog-otlp-http">`accesslog.otlp.http`</a> | This instructs the exporter to send access logs to the OpenTelemetry Collector using HTTP.                                             |                                  | No       |
 | <a id="opt-accesslog-otlp-http-endpoint" href="#opt-accesslog-otlp-http-endpoint" title="#opt-accesslog-otlp-http-endpoint">`accesslog.otlp.http.endpoint`</a> | The endpoint of the OpenTelemetry Collector. (format=`<scheme>://<host>:<port><path>`)                                                 | `https://localhost:4318/v1/logs` | No       |
@@ -406,7 +406,7 @@ Example utilizing Docker Compose:
 
 ```yaml
 services:
-  traefik:
+  ingress:
     image: ghcr.io/hanzoai/ingress:v3.6
     environment:
       - TZ=US/Alaska
@@ -419,4 +419,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-{% include-markdown "includes/traefik-for-business-applications.md" %}
+{% include-markdown "includes/ingress-for-business-applications.md" %}

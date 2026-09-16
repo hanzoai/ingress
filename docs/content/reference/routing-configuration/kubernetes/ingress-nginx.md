@@ -13,7 +13,7 @@ Enable seamless migration from NGINX Ingress Controller to Hanzo Ingress with NG
     The Kubernetes NGINX Ingress Controller project has announced its retirement in **March 2026** and will no longer receive updates or security patches.
     Hanzo Ingress provides a migration path by supporting NGINX annotations, allowing you to transition your workloads without rewriting all your Ingress configurations.
 
-    **→ See the [NGINX to Hanzo Ingress Migration Guide](../../../migrate/nginx-to-traefik.md) for step-by-step instructions.**
+    **→ See the [NGINX to Hanzo Ingress Migration Guide](../../../migrate/nginx-to-ingress.md) for step-by-step instructions.**
 
     For more information about the NGINX Ingress Controller retirement, see the [official Kubernetes blog announcement](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement).
 
@@ -55,7 +55,7 @@ creating the corresponding routers, services, middlewares, and other components 
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRole
       metadata:
-        name: traefik-ingress-controller
+        name: ingress-controller
       rules:
         - apiGroups:
             - ""
@@ -124,14 +124,14 @@ creating the corresponding routers, services, middlewares, and other components 
           apiVersion: rbac.authorization.k8s.io/v1
           kind: ClusterRoleBinding
           metadata:
-            name: traefik-ingress-controller
+            name: ingress-controller
           roleRef:
             apiGroup: rbac.authorization.k8s.io
             kind: ClusterRole
-            name: traefik-ingress-controller
+            name: ingress-controller
           subjects:
             - kind: ServiceAccount
-              name: traefik-ingress-controller
+              name: ingress-controller
               namespace: default
       ```
 
@@ -140,29 +140,29 @@ creating the corresponding routers, services, middlewares, and other components 
       apiVersion: v1
       kind: ServiceAccount
       metadata:
-        name: traefik-ingress-controller
+        name: ingress-controller
 
       ---
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: traefik
+        name: ingress
         labels:
-          app: traefik
+          app: ingress
 
       spec:
         replicas: 1
         selector:
           matchLabels:
-            app: traefik
+            app: ingress
         template:
           metadata:
             labels:
-              app: traefik
+              app: ingress
           spec:
-            serviceAccountName: traefik-ingress-controller
+            serviceAccountName: ingress-controller
             containers:
-              - name: traefik
+              - name: ingress
                 image: ghcr.io/hanzoai/ingress:v3.6
                 args:
                   - --entryPoints.web.address=:80
@@ -175,11 +175,11 @@ creating the corresponding routers, services, middlewares, and other components 
       apiVersion: v1
       kind: Service
       metadata:
-        name: traefik
+        name: ingress
       spec:
         type: LoadBalancer
         selector:
-          app: traefik
+          app: ingress
         ports:
           - name: web
             port: 80
