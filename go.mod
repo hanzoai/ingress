@@ -1,6 +1,6 @@
 module github.com/hanzoai/ingress
 
-go 1.26.8
+go 1.27.1
 
 require (
 	github.com/BurntSushi/toml v1.6.0
