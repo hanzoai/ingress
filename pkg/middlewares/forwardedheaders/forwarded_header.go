@@ -52,8 +52,11 @@ var (
 	proxyClaimPrefixes = []string{"x-forwarded-", "cf-", "x-appengine-"}
 	proxyClaims        = []string{
 		"x-real-ip", "x-forwarded", "forwarded", "forwarded-for",
-		"true-client-ip", "x-client-ip", "x-cluster-client-ip",
+		"true-client-ip", "client-ip", "x-client-ip", "x-cluster-client-ip",
 		"fastly-client-ip", "x-original-forwarded-for",
+		"proxy-client-ip", "wl-proxy-client-ip", "x-proxyuser-ip",
+		"x-originating-ip", "x-remote-ip", "x-remote-addr",
+		"x-envoy-external-address",
 	}
 )
 
