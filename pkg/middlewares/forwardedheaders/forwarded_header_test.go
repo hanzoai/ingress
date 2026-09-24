@@ -4,6 +4,8 @@ import (
 	"crypto/tls"
 	"net/http"
 	"net/http/httptest"
+	"net/http/httputil"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -765,5 +767,119 @@ func TestConnection(t *testing.T) {
 
 			assert.Equal(t, test.expected, req.Header)
 		})
+	}
+}
+
+// A proxy's claim about the client survives only from a trusted peer. From any
+// other peer — a host on the LAN reaching the entrypoint around the CDN — the
+// claim is the client describing itself, and it must not reach the backend.
+func TestProxyClaims(t *testing.T) {
+	cloudflare := []string{"173.245.48.0/20"}
+
+	claims := map[string]string{
+		"CF-Connecting-IP":         "203.0.113.7",
+		"CF-Connecting-IPv6":       "2001:db8::7",
+		"CF-IPCountry":             "NZ",
+		"CF-IPCity":                "Auckland",
+		"CF-Visitor":               `{"scheme":"https"}`,
+		"cf_connecting_ip":         "203.0.113.8",
+		"True-Client-IP":           "192.0.2.5",
+		"X-Real-IP":                "192.0.2.6",
+		"X-Client-IP":              "192.0.2.7",
+		"X-Cluster-Client-IP":      "192.0.2.8",
+		"Fastly-Client-IP":         "192.0.2.9",
+		"Forwarded":                "for=192.0.2.10",
+		"Forwarded-For":            "192.0.2.11",
+		"X-Forwarded":              "for=192.0.2.12",
+		"X-Original-Forwarded-For": "192.0.2.13",
+		"X-Forwarded-For":          "198.51.100.9",
+		"X_Forwarded_For":          "198.51.100.10",
+		"X-Forwarded-Country":      "NZ",
+		"X-Forwarded-User":         "admin",
+		"X-AppEngine-Country":      "NZ",
+	}
+
+	testCases := []struct {
+		desc       string
+		insecure   bool
+		remoteAddr string
+		kept       bool
+	}{
+		{desc: "LAN host", remoteAddr: "10.0.0.132:51000"},
+		{desc: "LAN public address", remoteAddr: "174.160.143.53:51000"},
+		{desc: "loopback", remoteAddr: "127.0.0.1:51000"},
+		{desc: "IPv4-mapped LAN host", remoteAddr: "[::ffff:10.0.0.132]:51000"},
+		{desc: "unparseable peer", remoteAddr: "not-an-address"},
+		{desc: "Cloudflare", remoteAddr: "173.245.48.10:51000", kept: true},
+		{desc: "insecure", insecure: true, remoteAddr: "10.0.0.132:51000", kept: true},
+	}
+
+	for _, test := range testCases {
+		t.Run(test.desc, func(t *testing.T) {
+			t.Parallel()
+
+			req := httptest.NewRequest(http.MethodGet, "https://api.hanzo.ai/v1/x", nil)
+			req.RemoteAddr = test.remoteAddr
+			for k, v := range claims {
+				req.Header.Add(k, v)
+			}
+			req.Header.Set("Authorization", "Bearer keep")
+			req.Header.Set("Cfg-Version", "keep")
+
+			m, err := NewXForwarded(test.insecure, cloudflare, nil, false,
+				http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {}))
+			require.NoError(t, err)
+			m.ServeHTTP(nil, req)
+
+			for k, v := range claims {
+				got := req.Header.Get(k)
+				switch {
+				case test.kept:
+					assert.Equal(t, v, got, k)
+				case http.CanonicalHeaderKey(k) == xRealIP:
+					// Rewritten to the peer, never the client's value.
+					assert.NotEqual(t, v, got, k)
+				default:
+					assert.Empty(t, got, k)
+				}
+			}
+			// Not claims: an unrelated header, and one that only shares a prefix.
+			assert.Equal(t, "Bearer keep", req.Header.Get("Authorization"))
+			assert.Equal(t, "keep", req.Header.Get("Cfg-Version"))
+		})
+	}
+}
+
+// What the backend receives through a real listener and reverse proxy: a LAN
+// client's claims are gone and X-Forwarded-For is the socket peer alone.
+func TestProxyClaimsOnTheWire(t *testing.T) {
+	var got http.Header
+	backend := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+		got = r.Header.Clone()
+	}))
+	t.Cleanup(backend.Close)
+
+	target, err := url.Parse(backend.URL)
+	require.NoError(t, err)
+	m, err := NewXForwarded(false, []string{"173.245.48.0/20"}, nil, false, httputil.NewSingleHostReverseProxy(target))
+	require.NoError(t, err)
+	edge := httptest.NewServer(m)
+	t.Cleanup(edge.Close)
+
+	req, err := http.NewRequest(http.MethodGet, edge.URL+"/v1/x", nil)
+	require.NoError(t, err)
+	req.Header.Set("CF-Connecting-IP", "203.0.113.7")
+	req.Header.Set("CF-IPCountry", "NZ")
+	req.Header.Set("X-Forwarded-For", "198.51.100.9")
+	req.Header.Set("True-Client-IP", "192.0.2.5")
+	req.Header.Set("Forwarded", "for=192.0.2.8")
+	res, err := http.DefaultClient.Do(req)
+	require.NoError(t, err)
+	require.NoError(t, res.Body.Close())
+
+	assert.Equal(t, "127.0.0.1", got.Get("X-Forwarded-For"))
+	assert.Equal(t, "127.0.0.1", got.Get("X-Real-Ip"))
+	for _, h := range []string{"CF-Connecting-IP", "CF-IPCountry", "True-Client-IP", "Forwarded"} {
+		assert.Empty(t, got.Get(h), h)
 	}
 }

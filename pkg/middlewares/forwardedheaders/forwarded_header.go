@@ -43,10 +43,40 @@ var xHeaders = []string{
 	xRealIP,
 }
 
+// Headers in which a proxy states who or where the client is. Beyond the
+// X-Forwarded set this edge writes itself, they are what edges in front of one
+// write: Cloudflare's namespace (CF-Connecting-IP, CF-IPCountry, ...), App
+// Engine's location headers, RFC 7239 Forwarded, and the client-address aliases
+// that IP-resolution libraries consult. Only a trusted peer may send one.
+var (
+	proxyClaimPrefixes = []string{"x-forwarded-", "cf-", "x-appengine-"}
+	proxyClaims        = []string{
+		"x-real-ip", "x-forwarded", "forwarded", "forwarded-for",
+		"true-client-ip", "x-client-ip", "x-cluster-client-ip",
+		"fastly-client-ip", "x-original-forwarded-for",
+	}
+)
+
+// isProxyClaim reports whether a request header is a proxy's statement about
+// the client. The name is compared case-folded with '_' read as '-', because
+// CGI and WSGI map CF_Connecting_IP and CF-Connecting-IP to the same
+// HTTP_CF_CONNECTING_IP: both spellings are the one claim.
+func isProxyClaim(name string) bool {
+	n := strings.ToLower(strings.ReplaceAll(name, "_", "-"))
+	for _, p := range proxyClaimPrefixes {
+		if strings.HasPrefix(n, p) {
+			return true
+		}
+	}
+	return slices.Contains(proxyClaims, n)
+}
+
 // XForwarded is an HTTP handler wrapper that sets the X-Forwarded headers,
 // and other relevant headers for a reverse-proxy.
-// Unless insecure is set,
-// it first removes all the existing values for those headers if the remote address is not one of the trusted ones.
+// Unless insecure is set, it first removes every proxy claim about the client
+// ([isProxyClaim]) if the remote address is not one of the trusted ones: from
+// any other peer such a header is the client describing itself, and a backend
+// keying a rate limit or a country rule on it would key it on the caller's choice.
 type XForwarded struct {
 	insecure               bool
 	trustedIPs             []string
@@ -140,8 +170,10 @@ func forwardedPort(req *http.Request) string {
 // ServeHTTP implements http.Handler.
 func (x *XForwarded) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !x.insecure && !x.isTrustedIP(r.RemoteAddr) {
-		for _, h := range xHeaders {
-			unsafeHeader(r.Header).Del(h)
+		for name := range r.Header {
+			if isProxyClaim(name) {
+				delete(r.Header, name)
+			}
 		}
 	}
 
