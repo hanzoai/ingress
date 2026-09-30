@@ -46,31 +46,31 @@ And then define a routing configuration on Hanzo Ingress itself with the
 
 --8<-- "content/operations/include-api-examples.md"
 
-??? warning "The router's [rule](../routing/routers/index.md#rule) must catch requests for the URI path `/api`"
+??? warning "The router's [rule](../routing/routers/index.md#rule) must catch requests for the URI path `/v1/ingress`"
     Using an "Host" rule is recommended, by catching all the incoming traffic on this host domain to the API.
     However, you can also use "path prefix" rule or any combination or rules.
 
     ```bash tab="Host Rule"
-    # Matches http://ingress.example.com, http://ingress.example.com/api
+    # Matches http://ingress.example.com, http://ingress.example.com/v1/ingress
     # or http://ingress.example.com/hello
     rule = "Host(`ingress.example.com`)"
     ```
 
     ```bash tab="Path Prefix Rule"
-    # Matches http://api.ingress.example.com/api or http://example.com/api
+    # Matches http://api.ingress.example.com/v1/ingress or http://example.com/v1/ingress
     # but does not match http://api.ingress.example.com/hello
-    rule = "PathPrefix(`/api`)"
+    rule = "PathPrefix(`/v1/ingress`)"
     ```
 
     ```bash tab="Combination of Rules"
-    # Matches http://ingress.example.com/api or http://ingress.example.com/dashboard
+    # Matches http://ingress.example.com/v1/ingress or http://ingress.example.com/dashboard
     # but does not match http://ingress.example.com/hello
-    rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+    rule = "Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
     ```
 
 ### `insecure`
 
-Enable the API in `insecure` mode, which means that the API will be available directly on the entryPoint named `ingress`, on path `/api`.
+Enable the API in `insecure` mode, which means that the API will be available directly on the entryPoint named `ingress`, on path `/v1/ingress`.
 
 !!! info
     If the entryPoint named `ingress` is not configured, it will be automatically created on port 8080.
@@ -109,7 +109,7 @@ api:
 --api.dashboard=true
 ```
 
-!!! warning "With Dashboard enabled, the router [rule](../routing/routers/index.md#rule) must catch requests for both `/api` and `/dashboard`"
+!!! warning "With Dashboard enabled, the router [rule](../routing/routers/index.md#rule) must catch requests for both `/v1/ingress` and `/dashboard`"
     Please check the [Dashboard documentation](./dashboard.md#dashboard-router-rule) to learn more about this and to get examples.
 
 ### `debug`
@@ -142,38 +142,38 @@ All the following endpoints must be accessed with a `GET` HTTP request.
     To control pagination, use the `page` and `per_page` query parameters.
 
     ```bash
-    curl https://ingress.example.com:8080/api/http/routers?page=2&per_page=20
+    curl https://ingress.example.com:8080/v1/ingress/http/routers?page=2&per_page=20
     ```
 
-| Path                           | Description                                                                                         |
-|--------------------------------|-----------------------------------------------------------------------------------------------------|
-| `/api/http/routers`            | Lists all the HTTP routers information.                                                             |
-| `/api/http/routers/{name}`     | Returns the information of the HTTP router specified by `name`.                                     |
-| `/api/http/services`           | Lists all the HTTP services information.                                                            |
-| `/api/http/services/{name}`    | Returns the information of the HTTP service specified by `name`.                                    |
-| `/api/http/middlewares`        | Lists all the HTTP middlewares information.                                                         |
-| `/api/http/middlewares/{name}` | Returns the information of the HTTP middleware specified by `name`.                                 |
-| `/api/tcp/routers`             | Lists all the TCP routers information.                                                              |
-| `/api/tcp/routers/{name}`      | Returns the information of the TCP router specified by `name`.                                      |
-| `/api/tcp/services`            | Lists all the TCP services information.                                                             |
-| `/api/tcp/services/{name}`     | Returns the information of the TCP service specified by `name`.                                     |
-| `/api/tcp/middlewares`         | Lists all the TCP middlewares information.                                                          |
-| `/api/tcp/middlewares/{name}`  | Returns the information of the TCP middleware specified by `name`.                                  |
-| `/api/udp/routers`             | Lists all the UDP routers information.                                                              |
-| `/api/udp/routers/{name}`      | Returns the information of the UDP router specified by `name`.                                      |
-| `/api/udp/services`            | Lists all the UDP services information.                                                             |
-| `/api/udp/services/{name}`     | Returns the information of the UDP service specified by `name`.                                     |
-| `/api/entrypoints`             | Lists all the entry points information.                                                             |
-| `/api/entrypoints/{name}`      | Returns the information of the entry point specified by `name`.                                     |
-| `/api/overview`                | Returns statistic information about http and tcp as well as enabled features and providers.         |
-| `/api/support-dump`            | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
-| `/api/rawdata`                 | Returns information about dynamic configurations, errors, status and dependency relations.          |
-| `/api/version`                 | Returns information about Hanzo Ingress version.                                                          |
-| `/debug/vars`                  | See the [expvar](https://golang.org/pkg/expvar/) Go documentation.                                  |
-| `/debug/pprof/`                | See the [pprof Index](https://golang.org/pkg/net/http/pprof/#Index) Go documentation.               |
-| `/debug/pprof/cmdline`         | See the [pprof Cmdline](https://golang.org/pkg/net/http/pprof/#Cmdline) Go documentation.           |
-| `/debug/pprof/profile`         | See the [pprof Profile](https://golang.org/pkg/net/http/pprof/#Profile) Go documentation.           |
-| `/debug/pprof/symbol`          | See the [pprof Symbol](https://golang.org/pkg/net/http/pprof/#Symbol) Go documentation.             |
-| `/debug/pprof/trace`           | See the [pprof Trace](https://golang.org/pkg/net/http/pprof/#Trace) Go documentation.               |
+| Path                                    | Description                                                                                         |
+|-----------------------------------------|-----------------------------------------------------------------------------------------------------|
+| `/v1/ingress/http/routers`              | Lists all the HTTP routers information.                                                             |
+| `/v1/ingress/http/routers/{name}`       | Returns the information of the HTTP router specified by `name`.                                     |
+| `/v1/ingress/http/services`             | Lists all the HTTP services information.                                                            |
+| `/v1/ingress/http/services/{name}`      | Returns the information of the HTTP service specified by `name`.                                    |
+| `/v1/ingress/http/middlewares`          | Lists all the HTTP middlewares information.                                                         |
+| `/v1/ingress/http/middlewares/{name}`   | Returns the information of the HTTP middleware specified by `name`.                                 |
+| `/v1/ingress/tcp/routers`               | Lists all the TCP routers information.                                                              |
+| `/v1/ingress/tcp/routers/{name}`        | Returns the information of the TCP router specified by `name`.                                      |
+| `/v1/ingress/tcp/services`              | Lists all the TCP services information.                                                             |
+| `/v1/ingress/tcp/services/{name}`       | Returns the information of the TCP service specified by `name`.                                     |
+| `/v1/ingress/tcp/middlewares`           | Lists all the TCP middlewares information.                                                          |
+| `/v1/ingress/tcp/middlewares/{name}`    | Returns the information of the TCP middleware specified by `name`.                                  |
+| `/v1/ingress/udp/routers`               | Lists all the UDP routers information.                                                              |
+| `/v1/ingress/udp/routers/{name}`        | Returns the information of the UDP router specified by `name`.                                      |
+| `/v1/ingress/udp/services`              | Lists all the UDP services information.                                                             |
+| `/v1/ingress/udp/services/{name}`       | Returns the information of the UDP service specified by `name`.                                     |
+| `/v1/ingress/entrypoints`               | Lists all the entry points information.                                                             |
+| `/v1/ingress/entrypoints/{name}`        | Returns the information of the entry point specified by `name`.                                     |
+| `/v1/ingress/overview`                  | Returns statistic information about http and tcp as well as enabled features and providers.         |
+| `/v1/ingress/support-dump`              | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
+| `/v1/ingress/rawdata`                   | Returns information about dynamic configurations, errors, status and dependency relations.          |
+| `/v1/ingress/version`                   | Returns information about Hanzo Ingress version.                                                    |
+| `/debug/vars`                           | See the [expvar](https://golang.org/pkg/expvar/) Go documentation.                                  |
+| `/debug/pprof/`                         | See the [pprof Index](https://golang.org/pkg/net/http/pprof/#Index) Go documentation.               |
+| `/debug/pprof/cmdline`                  | See the [pprof Cmdline](https://golang.org/pkg/net/http/pprof/#Cmdline) Go documentation.           |
+| `/debug/pprof/profile`                  | See the [pprof Profile](https://golang.org/pkg/net/http/pprof/#Profile) Go documentation.           |
+| `/debug/pprof/symbol`                   | See the [pprof Symbol](https://golang.org/pkg/net/http/pprof/#Symbol) Go documentation.             |
+| `/debug/pprof/trace`                    | See the [pprof Trace](https://golang.org/pkg/net/http/pprof/#Trace) Go documentation.               |
 
 {% include-markdown "includes/ingress-for-business-applications.md" %}

@@ -49,7 +49,7 @@ metadata:
   name: ingress-dashboard
 spec:
   routes:
-  - match: Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+  - match: Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))
     kind: Rule
     services:
     - name: api@internal
@@ -102,7 +102,7 @@ extraObjects:
 ```yaml tab="Docker"
 # Dynamic Configuration
 labels:
-  - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+  - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
   - "ingress.http.routers.dashboard.service=api@internal"
   - "ingress.http.routers.dashboard.middlewares=auth"
   - "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
@@ -112,7 +112,7 @@ labels:
 # Dynamic Configuration
 deploy:
   labels:
-    - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+    - "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
     - "ingress.http.routers.dashboard.service=api@internal"
     - "ingress.http.routers.dashboard.middlewares=auth"
     - "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
@@ -122,7 +122,7 @@ deploy:
 
 ```yaml tab="Consul Catalog"
 # Dynamic Configuration
-- "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+- "ingress.http.routers.dashboard.rule=Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
 - "ingress.http.routers.dashboard.service=api@internal"
 - "ingress.http.routers.dashboard.middlewares=auth"
 - "ingress.http.middlewares.auth.basicauth.users=test:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/,test2:$$apr1$$d9hr9HBB$$4HxwgUir3HP4EsggP/QNo0"
@@ -133,7 +133,7 @@ deploy:
 http:
   routers:
     dashboard:
-      rule: Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      rule: Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))
       service: api@internal
       middlewares:
         - auth
@@ -148,7 +148,7 @@ http:
 ```toml tab="File (TOML)"
 # Dynamic Configuration
 [http.routers.my-api]
-  rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+  rule = "Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
   service = "api@internal"
   middlewares = ["auth"]
 
@@ -182,28 +182,28 @@ All the following endpoints must be accessed with a `GET` HTTP request.
 
 | Path                           | Description                                                                                 |
 |--------------------------------|---------------------------------------------------------------------------------------------|
-| <a id="opt-apihttprouters" href="#opt-apihttprouters" title="#opt-apihttprouters">`/api/http/routers`</a> | Lists all the HTTP routers information.                                                     |
-| <a id="opt-apihttproutersname" href="#opt-apihttproutersname" title="#opt-apihttproutersname">`/api/http/routers/{name}`</a> | Returns the information of the HTTP router specified by `name`.                             |
-| <a id="opt-apihttpservices" href="#opt-apihttpservices" title="#opt-apihttpservices">`/api/http/services`</a> | Lists all the HTTP services information.                                                    |
-| <a id="opt-apihttpservicesname" href="#opt-apihttpservicesname" title="#opt-apihttpservicesname">`/api/http/services/{name}`</a> | Returns the information of the HTTP service specified by `name`.                            |
-| <a id="opt-apihttpmiddlewares" href="#opt-apihttpmiddlewares" title="#opt-apihttpmiddlewares">`/api/http/middlewares`</a> | Lists all the HTTP middlewares information.                                                 |
-| <a id="opt-apihttpmiddlewaresname" href="#opt-apihttpmiddlewaresname" title="#opt-apihttpmiddlewaresname">`/api/http/middlewares/{name}`</a> | Returns the information of the HTTP middleware specified by `name`.                         |
-| <a id="opt-apitcprouters" href="#opt-apitcprouters" title="#opt-apitcprouters">`/api/tcp/routers`</a> | Lists all the TCP routers information.                                                      |
-| <a id="opt-apitcproutersname" href="#opt-apitcproutersname" title="#opt-apitcproutersname">`/api/tcp/routers/{name}`</a> | Returns the information of the TCP router specified by `name`.                              |
-| <a id="opt-apitcpservices" href="#opt-apitcpservices" title="#opt-apitcpservices">`/api/tcp/services`</a> | Lists all the TCP services information.                                                     |
-| <a id="opt-apitcpservicesname" href="#opt-apitcpservicesname" title="#opt-apitcpservicesname">`/api/tcp/services/{name}`</a> | Returns the information of the TCP service specified by `name`.                             |
-| <a id="opt-apitcpmiddlewares" href="#opt-apitcpmiddlewares" title="#opt-apitcpmiddlewares">`/api/tcp/middlewares`</a> | Lists all the TCP middlewares information.                                                  |
-| <a id="opt-apitcpmiddlewaresname" href="#opt-apitcpmiddlewaresname" title="#opt-apitcpmiddlewaresname">`/api/tcp/middlewares/{name}`</a> | Returns the information of the TCP middleware specified by `name`.                          |
-| <a id="opt-apiudprouters" href="#opt-apiudprouters" title="#opt-apiudprouters">`/api/udp/routers`</a> | Lists all the UDP routers information.                                                      |
-| <a id="opt-apiudproutersname" href="#opt-apiudproutersname" title="#opt-apiudproutersname">`/api/udp/routers/{name}`</a> | Returns the information of the UDP router specified by `name`.                              |
-| <a id="opt-apiudpservices" href="#opt-apiudpservices" title="#opt-apiudpservices">`/api/udp/services`</a> | Lists all the UDP services information.                                                     |
-| <a id="opt-apiudpservicesname" href="#opt-apiudpservicesname" title="#opt-apiudpservicesname">`/api/udp/services/{name}`</a> | Returns the information of the UDP service specified by `name`.                             |
-| <a id="opt-apientrypoints" href="#opt-apientrypoints" title="#opt-apientrypoints">`/api/entrypoints`</a> | Lists all the entry points information.                                                     |
-| <a id="opt-apientrypointsname" href="#opt-apientrypointsname" title="#opt-apientrypointsname">`/api/entrypoints/{name}`</a> | Returns the information of the entry point specified by `name`.                             |
-| <a id="opt-apioverview" href="#opt-apioverview" title="#opt-apioverview">`/api/overview`</a> | Returns statistic information about HTTP, TCP and about enabled features and providers. |
-| <a id="opt-apisupport-dump" href="#opt-apisupport-dump" title="#opt-apisupport-dump">`/api/support-dump`</a> | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
-| <a id="opt-apirawdata" href="#opt-apirawdata" title="#opt-apirawdata">`/api/rawdata`</a> | Returns information about dynamic configurations, errors, status and dependency relations.  |
-| <a id="opt-apiversion" href="#opt-apiversion" title="#opt-apiversion">`/api/version`</a> | Returns information about Hanzo Ingress version.                                                  |
+| <a id="opt-apihttprouters" href="#opt-apihttprouters" title="#opt-apihttprouters">`/v1/ingress/http/routers`</a> | Lists all the HTTP routers information.                                                     |
+| <a id="opt-apihttproutersname" href="#opt-apihttproutersname" title="#opt-apihttproutersname">`/v1/ingress/http/routers/{name}`</a> | Returns the information of the HTTP router specified by `name`.                             |
+| <a id="opt-apihttpservices" href="#opt-apihttpservices" title="#opt-apihttpservices">`/v1/ingress/http/services`</a> | Lists all the HTTP services information.                                                    |
+| <a id="opt-apihttpservicesname" href="#opt-apihttpservicesname" title="#opt-apihttpservicesname">`/v1/ingress/http/services/{name}`</a> | Returns the information of the HTTP service specified by `name`.                            |
+| <a id="opt-apihttpmiddlewares" href="#opt-apihttpmiddlewares" title="#opt-apihttpmiddlewares">`/v1/ingress/http/middlewares`</a> | Lists all the HTTP middlewares information.                                                 |
+| <a id="opt-apihttpmiddlewaresname" href="#opt-apihttpmiddlewaresname" title="#opt-apihttpmiddlewaresname">`/v1/ingress/http/middlewares/{name}`</a> | Returns the information of the HTTP middleware specified by `name`.                         |
+| <a id="opt-apitcprouters" href="#opt-apitcprouters" title="#opt-apitcprouters">`/v1/ingress/tcp/routers`</a> | Lists all the TCP routers information.                                                      |
+| <a id="opt-apitcproutersname" href="#opt-apitcproutersname" title="#opt-apitcproutersname">`/v1/ingress/tcp/routers/{name}`</a> | Returns the information of the TCP router specified by `name`.                              |
+| <a id="opt-apitcpservices" href="#opt-apitcpservices" title="#opt-apitcpservices">`/v1/ingress/tcp/services`</a> | Lists all the TCP services information.                                                     |
+| <a id="opt-apitcpservicesname" href="#opt-apitcpservicesname" title="#opt-apitcpservicesname">`/v1/ingress/tcp/services/{name}`</a> | Returns the information of the TCP service specified by `name`.                             |
+| <a id="opt-apitcpmiddlewares" href="#opt-apitcpmiddlewares" title="#opt-apitcpmiddlewares">`/v1/ingress/tcp/middlewares`</a> | Lists all the TCP middlewares information.                                                  |
+| <a id="opt-apitcpmiddlewaresname" href="#opt-apitcpmiddlewaresname" title="#opt-apitcpmiddlewaresname">`/v1/ingress/tcp/middlewares/{name}`</a> | Returns the information of the TCP middleware specified by `name`.                          |
+| <a id="opt-apiudprouters" href="#opt-apiudprouters" title="#opt-apiudprouters">`/v1/ingress/udp/routers`</a> | Lists all the UDP routers information.                                                      |
+| <a id="opt-apiudproutersname" href="#opt-apiudproutersname" title="#opt-apiudproutersname">`/v1/ingress/udp/routers/{name}`</a> | Returns the information of the UDP router specified by `name`.                              |
+| <a id="opt-apiudpservices" href="#opt-apiudpservices" title="#opt-apiudpservices">`/v1/ingress/udp/services`</a> | Lists all the UDP services information.                                                     |
+| <a id="opt-apiudpservicesname" href="#opt-apiudpservicesname" title="#opt-apiudpservicesname">`/v1/ingress/udp/services/{name}`</a> | Returns the information of the UDP service specified by `name`.                             |
+| <a id="opt-apientrypoints" href="#opt-apientrypoints" title="#opt-apientrypoints">`/v1/ingress/entrypoints`</a> | Lists all the entry points information.                                                     |
+| <a id="opt-apientrypointsname" href="#opt-apientrypointsname" title="#opt-apientrypointsname">`/v1/ingress/entrypoints/{name}`</a> | Returns the information of the entry point specified by `name`.                             |
+| <a id="opt-apioverview" href="#opt-apioverview" title="#opt-apioverview">`/v1/ingress/overview`</a> | Returns statistic information about HTTP, TCP and about enabled features and providers. |
+| <a id="opt-apisupport-dump" href="#opt-apisupport-dump" title="#opt-apisupport-dump">`/v1/ingress/support-dump`</a> | Returns an archive that contains the anonymized static configuration and the runtime configuration. |
+| <a id="opt-apirawdata" href="#opt-apirawdata" title="#opt-apirawdata">`/v1/ingress/rawdata`</a> | Returns information about dynamic configurations, errors, status and dependency relations.  |
+| <a id="opt-apiversion" href="#opt-apiversion" title="#opt-apiversion">`/v1/ingress/version`</a> | Returns information about Hanzo Ingress version.                                                  |
 | <a id="opt-debugvars" href="#opt-debugvars" title="#opt-debugvars">`/debug/vars`</a> | See the [expvar](https://golang.org/pkg/expvar/) Go documentation.                          |
 | <a id="opt-debugpprof" href="#opt-debugpprof" title="#opt-debugpprof">`/debug/pprof/`</a> | See the [pprof Index](https://golang.org/pkg/net/http/pprof/#Index) Go documentation.       |
 | <a id="opt-debugpprofcmdline" href="#opt-debugpprofcmdline" title="#opt-debugpprofcmdline">`/debug/pprof/cmdline`</a> | See the [pprof Cmdline](https://golang.org/pkg/net/http/pprof/#Cmdline) Go documentation.   |
@@ -236,7 +236,7 @@ This involves setting up a router attached to the service `api@internal`, which 
 
 ### Dashboard Router Rule
 
-To ensure proper access to the dashboard, the [router rule](../../routing/routers/index.md#rule) you define must match requests intended for the `/api` and `/dashboard` paths. 
+To ensure proper access to the dashboard, the [router rule](../../routing/routers/index.md#rule) you define must match requests intended for the `/v1/ingress` and `/dashboard` paths. 
 We recommend using either a *Host-based rule* to match all requests on the desired domain or explicitly defining a rule that includes both path prefixes. 
 Here are some examples:
 
@@ -247,12 +247,12 @@ rule = "Host(`ingress.example.com`)"
 
 ```bash tab="Path Prefix Rule"
 # The dashboard can be accessed on http://example.com/dashboard/ or http://ingress.example.com/dashboard/
-rule = "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+rule = "PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`)"
 ```
 
 ```bash tab="Combination of Rules"
 # The dashboard can be accessed on http://ingress.example.com/dashboard/
-rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+rule = "Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
 ```
 
 {% include-markdown "includes/ingress-for-business-applications.md" %}

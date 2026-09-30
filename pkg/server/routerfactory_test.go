@@ -219,7 +219,7 @@ func TestInternalServices(t *testing.T) {
 			th.WithRouter("foo",
 				th.WithEntryPoints("web"),
 				th.WithServiceName("api@internal"),
-				th.WithRule("PathPrefix(`/api`)")),
+				th.WithRule("PathPrefix(`/v1/ingress`)")),
 		),
 	)
 

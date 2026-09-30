@@ -1253,7 +1253,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 			childRefs: []string{"child1"},
 			routers: map[string]*dynamic.Router{
 				"child1": {
-					Rule:    "Path(`/api`)",
+					Rule:    "Path(`/v1`)",
 					Service: "child1-service",
 				},
 			},
@@ -1268,7 +1268,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 				path       string
 				statusCode int
 			}{
-				{path: "/api", statusCode: http.StatusOK},
+				{path: "/v1", statusCode: http.StatusOK},
 				{path: "/unknown", statusCode: http.StatusNotFound},
 			},
 		},
@@ -1277,7 +1277,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 			childRefs: []string{"child1", "child2"},
 			routers: map[string]*dynamic.Router{
 				"child1": {
-					Rule:    "Path(`/api`)",
+					Rule:    "Path(`/v1`)",
 					Service: "child1-service",
 				},
 				"child2": {
@@ -1301,7 +1301,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 				path       string
 				statusCode int
 			}{
-				{path: "/api", statusCode: http.StatusOK},
+				{path: "/v1", statusCode: http.StatusOK},
 				{path: "/web", statusCode: http.StatusOK},
 				{path: "/unknown", statusCode: http.StatusNotFound},
 			},
@@ -1311,7 +1311,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 			childRefs: []string{"child1"},
 			routers: map[string]*dynamic.Router{
 				"child1": {
-					Rule:        "Path(`/api`)",
+					Rule:        "Path(`/v1`)",
 					Service:     "child1-service",
 					Middlewares: []string{"test-middleware"},
 				},
@@ -1334,7 +1334,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 				path       string
 				statusCode int
 			}{
-				{path: "/api", statusCode: http.StatusOK},
+				{path: "/v1", statusCode: http.StatusOK},
 				{path: "/unknown", statusCode: http.StatusNotFound},
 			},
 		},
@@ -1343,16 +1343,16 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 			childRefs: []string{"intermediate"},
 			routers: map[string]*dynamic.Router{
 				"intermediate": {
-					Rule: "PathPrefix(`/api`)",
+					Rule: "PathPrefix(`/v1`)",
 					// No service - this will have its own children
 				},
 				"leaf1": {
-					Rule:       "Path(`/api/v1`)",
+					Rule:       "Path(`/v1/a`)",
 					Service:    "leaf1-service",
 					ParentRefs: []string{"intermediate"},
 				},
 				"leaf2": {
-					Rule:       "Path(`/api/v2`)",
+					Rule:       "Path(`/v1/b`)",
 					Service:    "leaf2-service",
 					ParentRefs: []string{"intermediate"},
 				},
@@ -1373,8 +1373,8 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 				path       string
 				statusCode int
 			}{
-				{path: "/api/v1", statusCode: http.StatusOK},
-				{path: "/api/v2", statusCode: http.StatusOK},
+				{path: "/v1/a", statusCode: http.StatusOK},
+				{path: "/v1/b", statusCode: http.StatusOK},
 				{path: "/unknown", statusCode: http.StatusNotFound},
 			},
 		},
@@ -1383,7 +1383,7 @@ func TestManager_buildChildRoutersMuxer(t *testing.T) {
 			childRefs: []string{"child1", "child2"},
 			routers: map[string]*dynamic.Router{
 				"child1": {
-					Rule:       "Path(`/api`)",
+					Rule:       "Path(`/v1`)",
 					Service:    "child1-service",
 					ParentRefs: []string{"parent"},
 					TLS:        &dynamic.RouterTLSConfig{}, // Invalid: non-root router cannot have TLS
@@ -1500,17 +1500,17 @@ func TestManager_buildHTTPHandler_WithChildRouters(t *testing.T) {
 			desc: "router with child routers",
 			router: &runtime.RouterInfo{
 				Router: &dynamic.Router{
-					Rule: "PathPrefix(`/api`)",
+					Rule: "PathPrefix(`/v1`)",
 				},
 				ChildRefs: []string{"child1", "child2"},
 			},
 			childRouters: map[string]*dynamic.Router{
 				"child1": {
-					Rule:    "Path(`/api/v1`)",
+					Rule:    "Path(`/v1/a`)",
 					Service: "child1-service",
 				},
 				"child2": {
-					Rule:    "Path(`/api/v2`)",
+					Rule:    "Path(`/v1/b`)",
 					Service: "child2-service",
 				},
 			},
@@ -1537,7 +1537,7 @@ func TestManager_buildHTTPHandler_WithChildRouters(t *testing.T) {
 			desc: "router with service (normal case)",
 			router: &runtime.RouterInfo{
 				Router: &dynamic.Router{
-					Rule:    "PathPrefix(`/api`)",
+					Rule:    "PathPrefix(`/v1`)",
 					Service: "main-service",
 				},
 			},
@@ -1557,7 +1557,7 @@ func TestManager_buildHTTPHandler_WithChildRouters(t *testing.T) {
 			desc: "router with neither service nor child routers - error",
 			router: &runtime.RouterInfo{
 				Router: &dynamic.Router{
-					Rule: "PathPrefix(`/api`)",
+					Rule: "PathPrefix(`/v1`)",
 				},
 			},
 			expectedError: "router must have either a service or child routers",
@@ -1566,7 +1566,7 @@ func TestManager_buildHTTPHandler_WithChildRouters(t *testing.T) {
 			desc: "router with child routers but missing child - error",
 			router: &runtime.RouterInfo{
 				Router: &dynamic.Router{
-					Rule: "PathPrefix(`/api`)",
+					Rule: "PathPrefix(`/v1`)",
 				},
 				ChildRefs: []string{"nonexistent"},
 			},
@@ -1576,19 +1576,19 @@ func TestManager_buildHTTPHandler_WithChildRouters(t *testing.T) {
 			desc: "router with all children having errors - returns empty muxer error",
 			router: &runtime.RouterInfo{
 				Router: &dynamic.Router{
-					Rule: "PathPrefix(`/api`)",
+					Rule: "PathPrefix(`/v1`)",
 				},
 				ChildRefs: []string{"child1", "child2"},
 			},
 			childRouters: map[string]*dynamic.Router{
 				"child1": {
-					Rule:       "Path(`/api/v1`)",
+					Rule:       "Path(`/v1/a`)",
 					Service:    "child1-service",
 					ParentRefs: []string{"parent"},
 					TLS:        &dynamic.RouterTLSConfig{}, // Invalid for non-root
 				},
 				"child2": {
-					Rule:       "Path(`/api/v2`)",
+					Rule:       "Path(`/v1/b`)",
 					Service:    "child2-service",
 					ParentRefs: []string{"parent"},
 					TLS:        &dynamic.RouterTLSConfig{}, // Invalid for non-root
@@ -1685,15 +1685,15 @@ func TestManager_BuildHandlers_WithChildRouters(t *testing.T) {
 			routers: map[string]*dynamic.Router{
 				"parent": {
 					EntryPoints: []string{"web"},
-					Rule:        "PathPrefix(`/api`)",
+					Rule:        "PathPrefix(`/v1`)",
 				},
 				"child1": {
-					Rule:       "Path(`/api/v1`)",
+					Rule:       "Path(`/v1/a`)",
 					Service:    "child1-service",
 					ParentRefs: []string{"parent"},
 				},
 				"child2": {
-					Rule:       "Path(`/api/v2`)",
+					Rule:       "Path(`/v1/b`)",
 					Service:    "child2-service",
 					ParentRefs: []string{"parent"},
 				},
@@ -1722,14 +1722,14 @@ func TestManager_BuildHandlers_WithChildRouters(t *testing.T) {
 			routers: map[string]*dynamic.Router{
 				"api-parent": {
 					EntryPoints: []string{"web"},
-					Rule:        "PathPrefix(`/api`)",
+					Rule:        "PathPrefix(`/v1`)",
 				},
 				"web-parent": {
 					EntryPoints: []string{"web"},
 					Rule:        "PathPrefix(`/web`)",
 				},
 				"api-child": {
-					Rule:       "Path(`/api/v1`)",
+					Rule:       "Path(`/v1/a`)",
 					Service:    "api-service",
 					ParentRefs: []string{"api-parent"},
 				},

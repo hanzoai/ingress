@@ -64,7 +64,7 @@ to allow defining:
 
 As underlined in the [documentation for the `api.dashboard` option](./api.md#dashboard),
 the [router rule](../routing/routers/index.md#rule) defined for Hanzo Ingress must match
-the path prefixes `/api` and `/dashboard`.
+the path prefixes `/v1/ingress` and `/dashboard`.
 
 We recommend using a "Host Based rule" as ```Host(`ingress.example.com`)``` to match everything on the host domain,
 or to make sure that the defined rule captures both prefixes:
@@ -76,12 +76,12 @@ rule = "Host(`ingress.example.com`)"
 
 ```bash tab="Path Prefix Rule"
 # The dashboard can be accessed on http://example.com/dashboard/ or http://ingress.example.com/dashboard/
-rule = "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+rule = "PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`)"
 ```
 
 ```bash tab="Combination of Rules"
 # The dashboard can be accessed on http://ingress.example.com/dashboard/
-rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+rule = "Host(`ingress.example.com`) && (PathPrefix(`/v1/ingress`) || PathPrefix(`/dashboard`))"
 ```
 
 ??? example "Dashboard Dynamic Configuration Examples"
@@ -90,7 +90,7 @@ rule = "Host(`ingress.example.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashb
 ### Custom API Base Path
 
 As shown above, by default Hanzo Ingress exposes its API and Dashboard under the `/` base path,
-which means that respectively the API is served under the `/api` path,
+which means that respectively the API is served under the `/v1/ingress` path,
 and the dashboard under the `/dashboard` path.
 
 However, it is possible to configure this base path:
@@ -98,7 +98,7 @@ However, it is possible to configure this base path:
 ```yaml tab="File (YAML)"
 api:
   # Customizes the base path:
-  # - Serving API under `/ingress/api`
+  # - Serving API under `/ingress/v1/ingress`
   # - Serving Dashboard under `/ingress/dashboard`
   basePath: /ingress
 ```
@@ -106,14 +106,14 @@ api:
 ```toml tab="File (TOML)"
 [api]
   # Customizes the base path:
-  # - Serving API under `/ingress/api`
+  # - Serving API under `/ingress/v1/ingress`
   # - Serving Dashboard under `/ingress/dashboard`
   basePath = "/ingress"
 ```
 
 ```bash tab="CLI"
 # Customizes the base path:
-# - Serving API under `/ingress/api`
+# - Serving API under `/ingress/v1/ingress`
 # - Serving Dashboard under `/ingress/dashboard`
 --api.basePath=/ingress
 ```
