@@ -159,6 +159,13 @@ the intended behaviour: there is one name for each of these, and it is ours.
   `kubernetes-crd-definition-v1.yml` to empty if the controller-gen step is
   skipped, so run the steps by hand, in order.
 
+## Admin API lives at `/v1/ingress/*`
+
+The API handler (`pkg/api/handler.go`, `pkg/version`) serves only
+`/v1/ingress/...`; the dashboard is told the same base. `pkg/api/apiprefix_test.go`
+fails if any route is registered under `/api`, and asserts the old spellings
+404 while `/v1/ingress/...` answers 200. CI runs `./pkg/api/...` (hanzo.yml).
+
 ## In-process surface (`App`, root package)
 
 `app.go` builds the small surface a co-resident binary needs — `GET
