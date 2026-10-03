@@ -425,9 +425,11 @@ func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, name string, d fs.F
 		w.Header().Set("Cache-Control", h.cacheControl["*"])
 	case ext == ".html" || ext == ".htm":
 		// The shell references content-hashed assets; served stale it would pin
-		// clients to an old asset graph. Revalidate every time (cheap: the ETag
-		// / Last-Modified below answers 304 when unchanged).
-		w.Header().Set("Cache-Control", "no-cache")
+		// clients to an old asset graph, so a browser revalidates every time
+		// (cheap: the ETag / Last-Modified below answers 304 when unchanged). A
+		// shared cache may hold it for a minute: sites publish in place and are
+		// not purged, so that minute is the longest a publish waits at the edge.
+		w.Header().Set("Cache-Control", htmlCacheControl)
 	default:
 		w.Header().Set("Cache-Control", "max-age=86400")
 	}
@@ -449,6 +451,11 @@ func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, name string, d fs.F
 
 	w.Header().Set("Last-Modified", d.ModTime().UTC().Format(http.TimeFormat))
 }
+
+// htmlCacheControl is a page's policy: revalidated by browsers, held for a
+// minute by a shared cache that is told to keep pages (Cloudflare holds none
+// unless a cache rule names the host).
+const htmlCacheControl = "public, max-age=0, s-maxage=60"
 
 func cacheControlHas(m map[string]string, key string) bool {
 	_, ok := m[key]

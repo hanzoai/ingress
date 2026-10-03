@@ -496,8 +496,9 @@ func TestS3SPAAssetMiss404(t *testing.T) {
 	}
 }
 
-// TestS3CacheControlDefaults proves the SPA shell is never cached stale
-// (no-cache) while other assets keep the long default.
+// TestS3CacheControlDefaults proves the SPA shell is revalidated by browsers
+// and held a minute at most by a shared cache, while other assets keep the
+// long default.
 func TestS3CacheControlDefaults(t *testing.T) {
 	store := newMapStore(map[string][]byte{
 		"cd/index.html": []byte("<html></html>"),
@@ -509,8 +510,8 @@ func TestS3CacheControlDefaults(t *testing.T) {
 	// index.html served directly (not via the root redirect).
 	resp, _ := srv.Client().Get(srv.URL + "/index.html")
 	resp.Body.Close()
-	if got := resp.Header.Get("Cache-Control"); got != "no-cache" {
-		t.Fatalf("index.html Cache-Control = %q, want no-cache", got)
+	if got := resp.Header.Get("Cache-Control"); got != htmlCacheControl {
+		t.Fatalf("index.html Cache-Control = %q, want %q", got, htmlCacheControl)
 	}
 	resp2, _ := srv.Client().Get(srv.URL + "/app.js")
 	resp2.Body.Close()
