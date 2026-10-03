@@ -10,7 +10,9 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	s3 "github.com/hanzos3/go"
@@ -181,6 +183,14 @@ func (f *s3File) Close() error {
 	return f.rc.Close()
 }
 
+// brotli is the object's encoded twin when the cache holds one.
+func (f *s3File) brotli() []byte {
+	if e, ok := f.rc.(encoded); ok {
+		return e.brotli()
+	}
+	return nil
+}
+
 // s3Dir is a directory (prefix) exposed as an http.File. Only Stat and Readdir
 // are meaningful; Read/Seek exist to satisfy http.File and are never reached
 // because the handler branches on IsDir first.
@@ -310,15 +320,44 @@ func newObjectFS(root string) (*s3FS, error) {
 	}
 
 	endpoint = strings.TrimPrefix(strings.TrimPrefix(endpoint, "https://"), "http://")
-	client, err := s3.New(endpoint, &s3.Options{
-		Creds:        credentials.NewStaticV4(accessKey, secretKey, ""),
-		Secure:       os.Getenv("S3_USE_SSL") == "true",
-		Region:       region,
-		BucketLookup: s3.BucketLookupPath,
-	})
+	client, err := clientFor(endpoint, region, accessKey, secretKey, os.Getenv("S3_USE_SSL") == "true")
 	if err != nil {
 		return nil, fmt.Errorf("s3 client: %w", err)
 	}
 
-	return &s3FS{store: &minioStore{client: client, bucket: bucket}, prefix: prefix}, nil
+	store := &cachedStore{objectStore: &minioStore{client: client, bucket: bucket}, bucket: bucket, cache: objects}
+	return &s3FS{store: store, prefix: prefix}, nil
+}
+
+// clients holds one client per store configuration, so every site rides one
+// pool of kept-alive connections instead of each middleware dialing its own.
+var (
+	clientsMu sync.Mutex
+	clients   = map[string]*s3.Client{}
+)
+
+func clientFor(endpoint, region, accessKey, secretKey string, secure bool) (*s3.Client, error) {
+	id := strings.Join([]string{endpoint, region, accessKey, secretKey, strconv.FormatBool(secure)}, "\x00")
+	clientsMu.Lock()
+	defer clientsMu.Unlock()
+	if c, ok := clients[id]; ok {
+		return c, nil
+	}
+	tr, err := s3.DefaultTransport(secure)
+	if err != nil {
+		return nil, err
+	}
+	tr.MaxIdleConnsPerHost = 64
+	c, err := s3.New(endpoint, &s3.Options{
+		Creds:        credentials.NewStaticV4(accessKey, secretKey, ""),
+		Secure:       secure,
+		Region:       region,
+		BucketLookup: s3.BucketLookupPath,
+		Transport:    tr,
+	})
+	if err != nil {
+		return nil, err
+	}
+	clients[id] = c
+	return c, nil
 }

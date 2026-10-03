@@ -1,6 +1,7 @@
 package staticfiles
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -211,13 +212,54 @@ func (h *staticFiles) openRegular(ctx context.Context, name string) (http.File, 
 // the extension, then the body through ServeContent so Range and conditional
 // requests keep working.
 func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.File, d fs.FileInfo) {
-	h.setCacheHeaders(w, d)
+	h.setCacheHeaders(w, r.URL.Path, d)
 
 	if contentType := mime.TypeByExtension(filepath.Ext(d.Name())); contentType != "" {
 		w.Header().Set("Content-Type", contentType)
 	}
 
+	if e, ok := f.(encoded); ok {
+		if br := e.brotli(); br != nil {
+			// Both representations name what they vary on, so no cache between
+			// here and the reader hands one to a client that asked for the other.
+			w.Header().Add("Vary", "Accept-Encoding")
+			// A range names bytes of the identity representation; it is answered
+			// from that one.
+			if r.Header.Get("Range") == "" && acceptsBrotli(r.Header.Get("Accept-Encoding")) {
+				w.Header().Set("Content-Encoding", "br")
+				// A strong validator names one representation (RFC 9110 8.8.3).
+				if tag := w.Header().Get("ETag"); tag != "" {
+					w.Header().Set("ETag", strings.TrimSuffix(tag, `"`)+`-br"`)
+				}
+				w.Header().Set("Content-Length", strconv.Itoa(len(br)))
+				http.ServeContent(w, r, d.Name(), d.ModTime(), bytes.NewReader(br))
+				return
+			}
+		}
+	}
+
 	http.ServeContent(w, r, d.Name(), d.ModTime(), f.(io.ReadSeeker))
+}
+
+// encoded is a file that also holds its bytes brotli-encoded, as the object
+// cache's files do.
+type encoded interface{ brotli() []byte }
+
+// acceptsBrotli reports whether an Accept-Encoding value names br with a weight
+// above zero.
+func acceptsBrotli(header string) bool {
+	for _, part := range strings.Split(header, ",") {
+		coding, params, _ := strings.Cut(part, ";")
+		if !strings.EqualFold(strings.TrimSpace(coding), "br") {
+			continue
+		}
+		if q, ok := strings.CutPrefix(strings.TrimSpace(params), "q="); ok {
+			w, err := strconv.ParseFloat(strings.TrimSpace(q), 64)
+			return err == nil && w > 0
+		}
+		return true
+	}
+	return false
 }
 
 func (h *staticFiles) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -356,12 +398,16 @@ func (h *staticFiles) serveDirectoryListing(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, d fs.FileInfo) {
+func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, name string, d fs.FileInfo) {
 	ext := filepath.Ext(d.Name())
 
 	switch {
 	case cacheControlHas(h.cacheControl, ext):
 		w.Header().Set("Cache-Control", h.cacheControl[ext])
+	case strings.Contains(name, "/_next/static/") && kindOf(name) != page:
+		// Next names every file it writes here by its content, so a new build is
+		// a new URL and this one never changes, whatever its extension.
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 	case cacheControlHas(h.cacheControl, "*"):
 		w.Header().Set("Cache-Control", h.cacheControl["*"])
 	case ext == ".html" || ext == ".htm":
@@ -455,15 +501,7 @@ func (h *staticFiles) serveFile(w http.ResponseWriter, r *http.Request, name str
 		return
 	}
 
-	h.setCacheHeaders(w, d)
-
-	ext := filepath.Ext(d.Name())
-	contentType := mime.TypeByExtension(ext)
-	if contentType != "" {
-		w.Header().Set("Content-Type", contentType)
-	}
-
-	http.ServeContent(w, r, d.Name(), d.ModTime(), f)
+	h.serveOpen(w, r, f, d)
 }
 
 func localRedirect(w http.ResponseWriter, r *http.Request, newPath string) {
