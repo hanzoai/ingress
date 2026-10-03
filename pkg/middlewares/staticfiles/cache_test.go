@@ -114,7 +114,7 @@ func cachedServer(t *testing.T, store objectStore, c *objectCache, cfg dynamic.S
 
 func testCache(limit, max int64) (*objectCache, *clock) {
 	clk := &clock{t: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
-	c := newObjectCache(limit, 1<<20, max, time.Second)
+	c := newObjectCache(limit, 1<<20, max, storeConns, time.Second)
 	c.now = clk.now
 	return c, clk
 }
@@ -655,5 +655,56 @@ func TestCacheEncodersBounded(t *testing.T) {
 	waitEncoded(t, c, e.id)
 	if c.get(e.id).br == nil {
 		t.Fatal("the retried encoding did not land")
+	}
+}
+
+// TestCacheFillsBounded: with every fill slot taken, a cold object streams and
+// holds no bytes; once a slot is free, the refresh after fresh reads it.
+func TestCacheFillsBounded(t *testing.T) {
+	store := newLiveStore(map[string][]byte{"org/site/a.css": []byte("a{color:red}")})
+	c, clk := testCache(1<<20, 1<<20)
+	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
+	for range cap(c.fills) {
+		c.fills <- struct{}{}
+	}
+
+	if _, got := body(t, srv, "/a.css"); got != "a{color:red}" {
+		t.Fatalf("streamed body = %q", got)
+	}
+	if e := c.get("sites/org/site/a.css"); e == nil || e.body != nil {
+		t.Fatal("a fill ran with no free slot")
+	}
+	for range cap(c.fills) {
+		<-c.fills
+	}
+	clk.advance(2 * time.Second)
+	body(t, srv, "/a.css")
+	opens := store.opens.Load()
+	body(t, srv, "/a.css")
+	if store.opens.Load() != opens {
+		t.Fatal("the object was not held once a slot was free")
+	}
+}
+
+// TestCacheEncodingSurvivesRevalidation: an unchanged object revalidated while
+// its encoding runs still gets its twin.
+func TestCacheEncodingSurvivesRevalidation(t *testing.T) {
+	c, _ := testCache(1<<20, 1<<20)
+	e := &cacheEntry{id: "sites/org/site/a.js", info: objectInfo{etag: "x", size: 4096}, body: bytes.Repeat([]byte("var a=1;"), 512)}
+	c.put(e)
+	again := *e
+	again.checked = time.Now()
+	c.put(&again)
+	c.land(e, []byte("br"))
+	if got := c.get(e.id); string(got.br) != "br" || !got.tried {
+		t.Fatal("the encoding was dropped by a revalidation of the same version")
+	}
+
+	moved := *c.get(e.id)
+	moved.info.etag, moved.body, moved.br, moved.tried = "y", bytes.Repeat([]byte("b"), 4096), nil, false
+	c.put(&moved)
+	c.land(e, []byte("old"))
+	if got := c.get(e.id); got.br != nil || got.tried {
+		t.Fatal("an encoding of the old version landed on the new one")
 	}
 }

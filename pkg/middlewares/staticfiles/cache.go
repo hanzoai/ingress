@@ -42,7 +42,7 @@ const (
 // objects is the cache every object-store root in the process shares: one bound
 // for the process, and a configuration reload, which rebuilds every middleware,
 // keeps what it holds.
-var objects = newObjectCache(cacheBytes, missBytes, cacheObjectMax, cacheFresh)
+var objects = newObjectCache(cacheBytes, missBytes, cacheObjectMax, storeConns, cacheFresh)
 
 // objectCache holds objects as last read from the store, least recently used
 // first out. An entry checked within fresh is served from memory; an older one
@@ -66,6 +66,10 @@ type objectCache struct {
 	// finds no free slot is not queued; the next request for the object tries
 	// again.
 	encoders chan struct{}
+	// fills bounds the reads into the cache running at once, at the store
+	// client's pool of kept-alive connections. A refresh that finds none free
+	// holds no bytes, and its request streams, as for an object over max.
+	fills chan struct{}
 }
 
 // cacheEntry is one object as last read, or the fact that it was absent. It is
@@ -74,7 +78,7 @@ type cacheEntry struct {
 	id      string
 	info    objectInfo
 	missing bool
-	body    []byte // nil when the object is larger than max, or its read failed
+	body    []byte // nil when the object is larger than max, or was not read
 	br      []byte // body brotli-encoded, once that has run and paid off
 	tried   bool   // the encoding ran, whether or not it paid off
 	checked time.Time
@@ -89,7 +93,7 @@ func (e *cacheEntry) class() int {
 	return 0
 }
 
-func newObjectCache(limit, missLimit, objectMax int64, fresh time.Duration) *objectCache {
+func newObjectCache(limit, missLimit, objectMax int64, fills int, fresh time.Duration) *objectCache {
 	return &objectCache{
 		max: objectMax, fresh: fresh, now: time.Now,
 		index:    map[string]*list.Element{},
@@ -97,6 +101,7 @@ func newObjectCache(limit, missLimit, objectMax int64, fresh time.Duration) *obj
 		limits:   [2]int64{limit, missLimit},
 		pending:  map[string]bool{},
 		encoders: make(chan struct{}, max(1, runtime.GOMAXPROCS(0)/2)),
+		fills:    make(chan struct{}, fills),
 	}
 }
 
@@ -130,6 +135,33 @@ func (c *objectCache) swap(old, e *cacheEntry) bool {
 	return true
 }
 
+// land attaches an encoding to the entry for e's id while that entry still holds
+// the bytes that were encoded, however often it was revalidated meanwhile.
+func (c *objectCache) land(e *cacheEntry, br []byte) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	el, ok := c.index[e.id]
+	if !ok {
+		return
+	}
+	cur := el.Value.(*cacheEntry)
+	if cur.tried || cur.missing || !sameVersion(cur.info, e.info) || !sameBytes(cur.body, e.body) {
+		return
+	}
+	done := *cur
+	done.br, done.tried = br, true
+	c.putLocked(&done)
+}
+
+func sameVersion(a, b objectInfo) bool {
+	return a.etag == b.etag && a.size == b.size && a.modTime.Equal(b.modTime)
+}
+
+// sameBytes reports whether a and b are one held body, not equal contents.
+func sameBytes(a, b []byte) bool {
+	return len(a) == len(b) && (len(a) == 0 || &a[0] == &b[0])
+}
+
 func (c *objectCache) putLocked(e *cacheEntry) {
 	if el, ok := c.index[e.id]; ok {
 		old := el.Value.(*cacheEntry)
@@ -149,16 +181,14 @@ func (c *objectCache) putLocked(e *cacheEntry) {
 }
 
 // encode brotli-encodes e's body in the background when a slot is free, and
-// stores the result while e is still current. A request never waits on it: the
-// object is sent as it is until its twin exists.
+// lands the result on whatever entry still holds those bytes. A request never
+// waits on it: the object is sent as it is until its twin exists.
 func (c *objectCache) encode(e *cacheEntry, key string) {
 	if e.tried || e.body == nil {
 		return
 	}
 	if len(e.body) < 1024 || !compressible(key) {
-		done := *e
-		done.tried = true
-		c.swap(e, &done)
+		c.land(e, nil)
 		return
 	}
 	c.mu.Lock()
@@ -177,12 +207,11 @@ func (c *objectCache) encode(e *cacheEntry, key string) {
 
 	go func() {
 		defer func() { <-c.encoders }()
-		done := *e
-		done.br, done.tried = brotliOf(e.body), true
+		br := brotliOf(e.body)
 		c.mu.Lock()
 		delete(c.pending, e.id)
 		c.mu.Unlock()
-		c.swap(e, &done)
+		c.land(e, br)
 	}()
 }
 
@@ -271,20 +300,24 @@ func (s *cachedStore) refresh(id, key string, old *cacheEntry) (*cacheEntry, err
 	}
 
 	held := old != nil && !old.missing && (old.body != nil || info.size > s.cache.max)
-	if held && old.info.etag == info.etag && old.info.size == info.size && old.info.modTime.Equal(info.modTime) {
+	if held && sameVersion(old.info, info) {
 		e := *old
 		e.info, e.checked = info, now
 		s.cache.put(&e)
 		return &e, nil
 	}
 
+	// The bytes are read when a fill slot is free. Without one, or when the read
+	// fails (changed, gone or unreadable since the HEAD), the entry holds no
+	// bytes: requests stream from the store until a refresh after fresh reads
+	// them.
 	e := &cacheEntry{id: id, info: info, checked: now}
 	if info.size <= s.cache.max {
-		if e.body = s.read(ctx, key, info); e.body == nil {
-			// Changed, gone or unreadable between the HEAD and the read. Hold
-			// nothing fresh: this request streams from the store, the next asks
-			// again.
-			e.checked = time.Time{}
+		select {
+		case s.cache.fills <- struct{}{}:
+			e.body = s.read(ctx, key, info)
+			<-s.cache.fills
+		default:
 		}
 	}
 	s.cache.put(e)
@@ -301,8 +334,12 @@ func (s *cachedStore) read(ctx context.Context, key string, info objectInfo) []b
 		return nil
 	}
 	defer rc.Close()
-	body, err := io.ReadAll(io.LimitReader(rc, info.size+1))
-	if err != nil || int64(len(body)) != info.size {
+	body := make([]byte, info.size)
+	if _, err := io.ReadFull(rc, body); err != nil {
+		return nil
+	}
+	var more [1]byte
+	if n, _ := io.ReadFull(rc, more[:]); n != 0 {
 		return nil
 	}
 	return body

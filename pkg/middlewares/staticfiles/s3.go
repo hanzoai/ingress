@@ -336,6 +336,10 @@ func newObjectFS(root string) (*s3FS, error) {
 	return &s3FS{store: store, prefix: prefix}, nil
 }
 
+// storeConns is the store client's pool of kept-alive connections, and so also
+// how many reads into the object cache run at once.
+const storeConns = 64
+
 // clients holds one client per store configuration, so every site rides one
 // pool of kept-alive connections instead of each middleware dialing its own.
 var (
@@ -354,7 +358,7 @@ func clientFor(endpoint, region, accessKey, secretKey string, secure bool) (*s3.
 	if err != nil {
 		return nil, err
 	}
-	tr.MaxIdleConnsPerHost = 64
+	tr.MaxIdleConnsPerHost = storeConns
 	c, err := s3.New(endpoint, &s3.Options{
 		Creds:        credentials.NewStaticV4(accessKey, secretKey, ""),
 		Secure:       secure,
