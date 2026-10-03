@@ -41,7 +41,7 @@ func (m *mapStore) stat(_ context.Context, key string) (objectInfo, error) {
 	return objectInfo{key: key, size: int64(len(b)), modTime: m.mod, etag: etagOf(b)}, nil
 }
 
-func (m *mapStore) open(_ context.Context, key string) (readSeekCloser, error) {
+func (m *mapStore) open(_ context.Context, key, _ string) (readSeekCloser, error) {
 	b, ok := m.objects[key]
 	if !ok {
 		return nil, fs.ErrNotExist
@@ -403,7 +403,7 @@ type ctxStore struct {
 }
 
 func (c *ctxStore) stat(ctx context.Context, k string) (objectInfo, error) { return c.statFn(ctx, k) }
-func (c *ctxStore) open(ctx context.Context, k string) (readSeekCloser, error) {
+func (c *ctxStore) open(ctx context.Context, k, _ string) (readSeekCloser, error) {
 	return c.openFn(ctx, k)
 }
 func (c *ctxStore) list(ctx context.Context, k string) ([]objectInfo, error) { return c.listFn(ctx, k) }

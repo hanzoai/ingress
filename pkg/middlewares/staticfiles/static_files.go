@@ -226,13 +226,11 @@ func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.F
 			// A range names bytes of the identity representation; it is answered
 			// from that one.
 			if r.Header.Get("Range") == "" && acceptsBrotli(r.Header.Get("Accept-Encoding")) {
-				w.Header().Set("Content-Encoding", "br")
 				// A strong validator names one representation (RFC 9110 8.8.3).
 				if tag := w.Header().Get("ETag"); tag != "" {
 					w.Header().Set("ETag", strings.TrimSuffix(tag, `"`)+`-br"`)
 				}
-				w.Header().Set("Content-Length", strconv.Itoa(len(br)))
-				http.ServeContent(w, r, d.Name(), d.ModTime(), bytes.NewReader(br))
+				http.ServeContent(brotliWriter{w}, r, d.Name(), d.ModTime(), bytes.NewReader(br))
 				return
 			}
 		}
@@ -245,6 +243,21 @@ func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.F
 // cache's files do.
 type encoded interface{ brotli() []byte }
 
+// brotliWriter labels a 200 as the brotli representation. ServeContent is left
+// to set Content-Length (it does only while Content-Encoding is unset) and to
+// answer 304 and 412 as itself, so the label goes on at the status line, on
+// success only. Ranges are answered from the identity bytes, so this one offers
+// none.
+type brotliWriter struct{ http.ResponseWriter }
+
+func (w brotliWriter) WriteHeader(code int) {
+	if code == http.StatusOK {
+		w.Header().Set("Content-Encoding", "br")
+		w.Header().Del("Accept-Ranges")
+	}
+	w.ResponseWriter.WriteHeader(code)
+}
+
 // acceptsBrotli reports whether an Accept-Encoding value names br with a weight
 // above zero.
 func acceptsBrotli(header string) bool {
@@ -253,7 +266,7 @@ func acceptsBrotli(header string) bool {
 		if !strings.EqualFold(strings.TrimSpace(coding), "br") {
 			continue
 		}
-		if q, ok := strings.CutPrefix(strings.TrimSpace(params), "q="); ok {
+		if q, ok := strings.CutPrefix(strings.ToLower(strings.TrimSpace(params)), "q="); ok {
 			w, err := strconv.ParseFloat(strings.TrimSpace(q), 64)
 			return err == nil && w > 0
 		}

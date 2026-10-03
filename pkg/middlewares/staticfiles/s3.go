@@ -70,8 +70,9 @@ type readSeekCloser interface {
 type objectStore interface {
 	// stat returns object metadata, or fs.ErrNotExist when the key is absent.
 	stat(ctx context.Context, key string) (objectInfo, error)
-	// open returns a bounded, seekable stream for the object.
-	open(ctx context.Context, key string) (readSeekCloser, error)
+	// open returns a bounded, seekable stream for the object. A non-empty etag
+	// is the version the read must return (If-Match); any other fails it.
+	open(ctx context.Context, key, etag string) (readSeekCloser, error)
 	// list returns the immediate children of a prefix (one directory level).
 	list(ctx context.Context, prefix string) ([]objectInfo, error)
 }
@@ -143,7 +144,7 @@ func (s *s3FS) openCtx(ctx context.Context, name string) (http.File, error) {
 	// with an objectServeTimeout backstop, and is cancelled in Close — so a
 	// disconnected or slow client frees the upstream connection promptly.
 	octx, ocancel := context.WithTimeout(ctx, objectServeTimeout)
-	rc, err := s.store.open(octx, key)
+	rc, err := s.store.open(octx, key, "")
 	if err != nil {
 		ocancel()
 		return nil, mapOpenErr(name, err)
@@ -242,8 +243,14 @@ func (m *minioStore) stat(ctx context.Context, key string) (objectInfo, error) {
 	return objectInfo{key: key, size: oi.Size, modTime: oi.LastModified, etag: oi.ETag}, nil
 }
 
-func (m *minioStore) open(ctx context.Context, key string) (readSeekCloser, error) {
-	obj, err := m.client.GetObject(ctx, m.bucket, key, s3.GetObjectOptions{})
+func (m *minioStore) open(ctx context.Context, key, etag string) (readSeekCloser, error) {
+	var opts s3.GetObjectOptions
+	if etag != "" {
+		if err := opts.SetMatchETag(etag); err != nil {
+			return nil, err
+		}
+	}
+	obj, err := m.client.GetObject(ctx, m.bucket, key, opts)
 	if err != nil {
 		return nil, classifyStoreErr(err)
 	}

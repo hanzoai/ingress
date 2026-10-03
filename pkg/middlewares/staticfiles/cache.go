@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"math/bits"
 	"mime"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -19,8 +21,11 @@ import (
 )
 
 const (
-	// cacheBytes bounds what the process holds, across every site.
+	// cacheBytes bounds the objects the process holds, across every site.
 	cacheBytes = 256 << 20
+	// missBytes bounds the absences it holds, apart from the objects, so a flood
+	// of requests for paths that do not exist cannot push a single object out.
+	missBytes = 4 << 20
 	// cacheObjectMax is the largest object held. A larger one streams from the
 	// store on every request, as it did before the cache.
 	cacheObjectMax = 2 << 20
@@ -28,32 +33,39 @@ const (
 	// publish in place (cloud apps/projects writes <org>/<slug>/ and keeps the
 	// keys), so it is also the longest a publish waits to be served.
 	cacheFresh = time.Second
-	// entryOverhead is charged per entry on top of its bytes, so a stream of
-	// distinct misses is bounded like everything else.
+	// entryOverhead is charged per entry on top of its bytes.
 	entryOverhead = 256
+	// brotliQuality trades ratio for time; the encoding runs once per version.
+	brotliQuality = 5
 )
 
 // objects is the cache every object-store root in the process shares: one bound
 // for the process, and a configuration reload, which rebuilds every middleware,
 // keeps what it holds.
-var objects = newObjectCache(cacheBytes, cacheObjectMax, cacheFresh)
+var objects = newObjectCache(cacheBytes, missBytes, cacheObjectMax, cacheFresh)
 
 // objectCache holds objects as last read from the store, least recently used
 // first out. An entry checked within fresh is served from memory; an older one
 // costs one HEAD, and its bytes are read again only when the ETag moved. Absence
-// is held the same way, so the page ladder's probes ("pricing" before
-// "pricing.html") stop costing a round trip each.
+// is held the same way, in its own bound, so the page ladder's probes ("pricing"
+// before "pricing.html") stop costing a round trip each.
 type objectCache struct {
-	limit, max int64
-	fresh      time.Duration
-	now        func() time.Time
+	max   int64
+	fresh time.Duration
+	now   func() time.Time
 
-	mu    sync.Mutex
-	lru   *list.List // of *cacheEntry, most recent first
-	index map[string]*list.Element
-	bytes int64
+	mu      sync.Mutex
+	index   map[string]*list.Element
+	lists   [2]*list.List // held objects, held absences; most recent first
+	bytes   [2]int64
+	limits  [2]int64
+	pending map[string]bool // ids being encoded
 
 	flight singleflight.Group
+	// encoders bounds the brotli encodings running at once. An encoding that
+	// finds no free slot is not queued; the next request for the object tries
+	// again.
+	encoders chan struct{}
 }
 
 // cacheEntry is one object as last read, or the fact that it was absent. It is
@@ -63,14 +75,29 @@ type cacheEntry struct {
 	info    objectInfo
 	missing bool
 	body    []byte // nil when the object is larger than max, or its read failed
-	br      []byte // body brotli-encoded, when its type compresses
+	br      []byte // body brotli-encoded, once that has run and paid off
+	tried   bool   // the encoding ran, whether or not it paid off
 	checked time.Time
 }
 
 func (e *cacheEntry) cost() int64 { return int64(len(e.id)+len(e.body)+len(e.br)) + entryOverhead }
 
-func newObjectCache(limit, max int64, fresh time.Duration) *objectCache {
-	return &objectCache{limit: limit, max: max, fresh: fresh, now: time.Now, lru: list.New(), index: map[string]*list.Element{}}
+func (e *cacheEntry) class() int {
+	if e.missing {
+		return 1
+	}
+	return 0
+}
+
+func newObjectCache(limit, missLimit, objectMax int64, fresh time.Duration) *objectCache {
+	return &objectCache{
+		max: objectMax, fresh: fresh, now: time.Now,
+		index:    map[string]*list.Element{},
+		lists:    [2]*list.List{list.New(), list.New()},
+		limits:   [2]int64{limit, missLimit},
+		pending:  map[string]bool{},
+		encoders: make(chan struct{}, max(1, runtime.GOMAXPROCS(0)/2)),
+	}
 }
 
 func (c *objectCache) get(id string) *cacheEntry {
@@ -80,28 +107,83 @@ func (c *objectCache) get(id string) *cacheEntry {
 	if !ok {
 		return nil
 	}
-	c.lru.MoveToFront(el)
-	return el.Value.(*cacheEntry)
+	e := el.Value.(*cacheEntry)
+	c.lists[e.class()].MoveToFront(el)
+	return e
 }
 
 func (c *objectCache) put(e *cacheEntry) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	c.putLocked(e)
+}
+
+// swap stores e only while old is still the entry for its id, so a late writer
+// never replaces a newer answer.
+func (c *objectCache) swap(old, e *cacheEntry) bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if el, ok := c.index[e.id]; !ok || el.Value.(*cacheEntry) != old {
+		return false
+	}
+	c.putLocked(e)
+	return true
+}
+
+func (c *objectCache) putLocked(e *cacheEntry) {
 	if el, ok := c.index[e.id]; ok {
-		c.bytes -= el.Value.(*cacheEntry).cost()
-		el.Value = e
-		c.lru.MoveToFront(el)
-	} else {
-		c.index[e.id] = c.lru.PushFront(e)
-	}
-	c.bytes += e.cost()
-	for c.bytes > c.limit {
-		el := c.lru.Back()
 		old := el.Value.(*cacheEntry)
-		c.lru.Remove(el)
-		delete(c.index, old.id)
-		c.bytes -= old.cost()
+		c.lists[old.class()].Remove(el)
+		c.bytes[old.class()] -= old.cost()
 	}
+	k := e.class()
+	c.index[e.id] = c.lists[k].PushFront(e)
+	c.bytes[k] += e.cost()
+	for c.bytes[k] > c.limits[k] {
+		el := c.lists[k].Back()
+		old := el.Value.(*cacheEntry)
+		c.lists[k].Remove(el)
+		delete(c.index, old.id)
+		c.bytes[k] -= old.cost()
+	}
+}
+
+// encode brotli-encodes e's body in the background when a slot is free, and
+// stores the result while e is still current. A request never waits on it: the
+// object is sent as it is until its twin exists.
+func (c *objectCache) encode(e *cacheEntry, key string) {
+	if e.tried || e.body == nil {
+		return
+	}
+	if len(e.body) < 1024 || !compressible(key) {
+		done := *e
+		done.tried = true
+		c.swap(e, &done)
+		return
+	}
+	c.mu.Lock()
+	if c.pending[e.id] {
+		c.mu.Unlock()
+		return
+	}
+	select {
+	case c.encoders <- struct{}{}:
+	default:
+		c.mu.Unlock()
+		return
+	}
+	c.pending[e.id] = true
+	c.mu.Unlock()
+
+	go func() {
+		defer func() { <-c.encoders }()
+		done := *e
+		done.br, done.tried = brotliOf(e.body), true
+		c.mu.Lock()
+		delete(c.pending, e.id)
+		c.mu.Unlock()
+		c.swap(e, &done)
+	}()
 }
 
 // cachedStore is an objectStore answered from an objectCache where it can. s3FS
@@ -120,14 +202,15 @@ func (s *cachedStore) stat(ctx context.Context, key string) (objectInfo, error) 
 	return e.info, nil
 }
 
-func (s *cachedStore) open(ctx context.Context, key string) (readSeekCloser, error) {
+func (s *cachedStore) open(ctx context.Context, key, etag string) (readSeekCloser, error) {
 	e, err := s.entry(ctx, key)
 	if err != nil {
 		return nil, err
 	}
 	if e.body == nil {
-		return s.objectStore.open(ctx, key)
+		return s.objectStore.open(ctx, key, etag)
 	}
+	s.cache.encode(e, key)
 	return &cachedBody{Reader: bytes.NewReader(e.body), br: e.br}, nil
 }
 
@@ -153,7 +236,7 @@ func (s *cachedStore) entry(ctx context.Context, key string) (*cacheEntry, error
 				// again once per fresh rather than once per request.
 				held := *old
 				held.checked = s.cache.now()
-				s.cache.put(&held)
+				s.cache.swap(old, &held)
 				e = &held
 			}
 		}
@@ -171,6 +254,11 @@ func (s *cachedStore) refresh(id, key string, old *cacheEntry) (*cacheEntry, err
 	ctx, cancel := context.WithTimeout(context.Background(), metadataTimeout)
 	defer cancel()
 
+	// The newest entry, not the one the first waiter saw: an encoding may have
+	// landed since.
+	if cur := s.cache.get(id); cur != nil {
+		old = cur
+	}
 	now := s.cache.now()
 	info, err := s.objectStore.stat(ctx, key)
 	switch {
@@ -182,7 +270,8 @@ func (s *cachedStore) refresh(id, key string, old *cacheEntry) (*cacheEntry, err
 		return nil, err
 	}
 
-	if old != nil && !old.missing && old.info.etag == info.etag && old.info.size == info.size && old.info.modTime.Equal(info.modTime) {
+	held := old != nil && !old.missing && (old.body != nil || info.size > s.cache.max)
+	if held && old.info.etag == info.etag && old.info.size == info.size && old.info.modTime.Equal(info.modTime) {
 		e := *old
 		e.info, e.checked = info, now
 		s.cache.put(&e)
@@ -191,41 +280,43 @@ func (s *cachedStore) refresh(id, key string, old *cacheEntry) (*cacheEntry, err
 
 	e := &cacheEntry{id: id, info: info, checked: now}
 	if info.size <= s.cache.max {
-		if e.body = s.read(ctx, key, info.size); e.body == nil {
-			// Overwritten or gone between the HEAD and the read. Hold nothing
-			// fresh: this request streams from the store, the next asks again.
+		if e.body = s.read(ctx, key, info); e.body == nil {
+			// Changed, gone or unreadable between the HEAD and the read. Hold
+			// nothing fresh: this request streams from the store, the next asks
+			// again.
 			e.checked = time.Time{}
 		}
-		e.br = encode(key, e.body)
 	}
 	s.cache.put(e)
 	return e, nil
 }
 
-// read returns the object's bytes, or nil when they are not the size the HEAD
-// reported or cannot be read.
-func (s *cachedStore) read(ctx context.Context, key string, size int64) []byte {
-	rc, err := s.objectStore.open(ctx, key)
+// read returns the bytes of exactly the version the HEAD saw: the read carries
+// its ETag as If-Match, so a store answering from an older copy fails the read
+// instead of filing old bytes under the new version. nil when that, or the size,
+// does not hold.
+func (s *cachedStore) read(ctx context.Context, key string, info objectInfo) []byte {
+	rc, err := s.objectStore.open(ctx, key, info.etag)
 	if err != nil {
 		return nil
 	}
 	defer rc.Close()
-	body, err := io.ReadAll(io.LimitReader(rc, size+1))
-	if err != nil || int64(len(body)) != size {
+	body, err := io.ReadAll(io.LimitReader(rc, info.size+1))
+	if err != nil || int64(len(body)) != info.size {
 		return nil
 	}
 	return body
 }
 
-// encode returns body brotli-encoded when its type is text and the encoding
-// saves a tenth or more, else nil. It runs once per object version, not per
-// request.
-func encode(key string, body []byte) []byte {
-	if len(body) < 1024 || !compressible(key) {
-		return nil
-	}
+// brotliOf returns body brotli-encoded when that saves a tenth or more, else
+// nil. The window is sized to the body, which is what bounds the encoder's
+// memory to a small multiple of the input.
+func brotliOf(body []byte) []byte {
 	var buf bytes.Buffer
-	w := brotli.NewWriterLevel(&buf, brotli.DefaultCompression)
+	w := brotli.NewWriterOptions(&buf, brotli.WriterOptions{
+		Quality: brotliQuality,
+		LGWin:   min(max(bits.Len(uint(len(body)-1)), 10), 24),
+	})
 	if _, err := w.Write(body); err != nil {
 		return nil
 	}

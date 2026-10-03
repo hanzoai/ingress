@@ -26,13 +26,15 @@ type liveStore struct {
 	objects map[string][]byte
 	mods    map[string]time.Time
 	down    bool
-	gate    chan struct{} // when set, stat waits on it
+	gate    chan struct{}     // when set, stat waits on it
+	lag     map[string][]byte // what the next read of a key returns instead, once
+	fail    map[string]int    // reads of a key that fail before one succeeds
 
 	stats, opens atomic.Int64
 }
 
 func newLiveStore(objs map[string][]byte) *liveStore {
-	s := &liveStore{objects: map[string][]byte{}, mods: map[string]time.Time{}}
+	s := &liveStore{objects: map[string][]byte{}, mods: map[string]time.Time{}, lag: map[string][]byte{}, fail: map[string]int{}}
 	for k, v := range objs {
 		s.publish(k, v)
 	}
@@ -64,13 +66,26 @@ func (s *liveStore) stat(_ context.Context, key string) (objectInfo, error) {
 	return objectInfo{key: key, size: int64(len(b)), modTime: s.mods[key], etag: etagOf(b)}, nil
 }
 
-func (s *liveStore) open(_ context.Context, key string) (readSeekCloser, error) {
+// open honors If-Match the way S3 does: a read whose version is not etag fails
+// with 412, even when the bytes come from a copy one write behind.
+func (s *liveStore) open(_ context.Context, key, etag string) (readSeekCloser, error) {
 	s.opens.Add(1)
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if s.fail[key] > 0 {
+		s.fail[key]--
+		return nil, fmt.Errorf("%w: reset by peer", errObjectStoreUnavailable)
+	}
 	b, ok := s.objects[key]
+	if old, behind := s.lag[key]; behind {
+		delete(s.lag, key)
+		b, ok = old, true
+	}
 	if !ok {
 		return nil, fs.ErrNotExist
+	}
+	if etag != "" && etagOf(b) != etag {
+		return nil, errors.New("412 PreconditionFailed")
 	}
 	return nopSeekCloser{bytes.NewReader(b)}, nil
 }
@@ -99,7 +114,7 @@ func cachedServer(t *testing.T, store objectStore, c *objectCache, cfg dynamic.S
 
 func testCache(limit, max int64) (*objectCache, *clock) {
 	clk := &clock{t: time.Date(2026, 10, 3, 0, 0, 0, 0, time.UTC)}
-	c := newObjectCache(limit, max, time.Second)
+	c := newObjectCache(limit, 1<<20, max, time.Second)
 	c.now = clk.now
 	return c, clk
 }
@@ -281,11 +296,11 @@ func TestCacheBound(t *testing.T) {
 		}
 		c.get("sites/k02-padding-xx")
 	}
-	if c.bytes > c.limit {
-		t.Fatalf("held %d bytes over a limit of %d", c.bytes, c.limit)
+	if c.bytes[0] > c.limits[0] {
+		t.Fatalf("held %d bytes over a limit of %d", c.bytes[0], c.limits[0])
 	}
-	if len(c.index) != c.lru.Len() {
-		t.Fatalf("index holds %d, list %d", len(c.index), c.lru.Len())
+	if len(c.index) != c.lists[0].Len()+c.lists[1].Len() {
+		t.Fatalf("index holds %d, lists %d", len(c.index), c.lists[0].Len()+c.lists[1].Len())
 	}
 	if c.get("sites/k02-padding-xx") == nil {
 		t.Fatal("the most recently read entry was evicted")
@@ -302,11 +317,11 @@ func TestCacheBound(t *testing.T) {
 	// Replacing an entry charges the difference, not both.
 	c.put(&cacheEntry{id: "sites/k09-padding-xx", body: make([]byte, 10)})
 	var sum int64
-	for el := c.lru.Front(); el != nil; el = el.Next() {
+	for el := c.lists[0].Front(); el != nil; el = el.Next() {
 		sum += el.Value.(*cacheEntry).cost()
 	}
-	if sum != c.bytes {
-		t.Fatalf("accounted %d bytes, entries cost %d", c.bytes, sum)
+	if sum != c.bytes[0] {
+		t.Fatalf("accounted %d bytes, entries cost %d", c.bytes[0], sum)
 	}
 }
 
@@ -388,6 +403,13 @@ func TestCacheBrotli(t *testing.T) {
 	c, _ := testCache(1<<20, 1<<20)
 	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
 
+	// The first request is never kept waiting on the encoding: it is answered
+	// as identity, and the twin is made behind it.
+	if resp, got := body(t, srv, "/", "Accept-Encoding", "br"); resp.Header.Get("Content-Encoding") != "" || got != string(page) {
+		t.Fatalf("first request = %q encoded, want identity", resp.Header.Get("Content-Encoding"))
+	}
+	waitEncoded(t, c, "sites/org/site/index.html")
+
 	resp, enc := body(t, srv, "/", "Accept-Encoding", "gzip, deflate, br")
 	if resp.Header.Get("Content-Encoding") != "br" {
 		t.Fatalf("Content-Encoding = %q, want br", resp.Header.Get("Content-Encoding"))
@@ -443,6 +465,7 @@ func TestAcceptsBrotli(t *testing.T) {
 		"br;q=0":               false,
 		"br; q=0.0, gzip":      false,
 		"brotli":               false,
+		"br;Q=0":               false,
 	} {
 		if got := acceptsBrotli(header); got != want {
 			t.Errorf("acceptsBrotli(%q) = %v, want %v", header, got, want)
@@ -496,5 +519,141 @@ func TestObjectFSSharesClient(t *testing.T) {
 	cb := b.store.(*cachedStore).objectStore.(*minioStore).client
 	if ca != cb {
 		t.Fatal("two roots on one store built two clients")
+	}
+}
+
+// waitEncoded waits for the background encoding of id to land.
+func waitEncoded(t *testing.T, c *objectCache, id string) {
+	t.Helper()
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		if e := c.get(id); e != nil && e.tried {
+			return
+		}
+		time.Sleep(time.Millisecond)
+	}
+	t.Fatalf("%s was never encoded", id)
+}
+
+// TestCacheMissFloodKeepsObjects: absences have their own bound, so requests
+// for any number of paths that do not exist push out no object.
+func TestCacheMissFloodKeepsObjects(t *testing.T) {
+	store := newLiveStore(map[string][]byte{"org/site/index.html": []byte("<title>kept</title>")})
+	c, _ := testCache(1<<20, 1<<20)
+	c.limits[1] = 64 * (entryOverhead + 64)
+	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
+
+	body(t, srv, "/")
+	for i := range 500 {
+		if resp, _ := body(t, srv, fmt.Sprintf("/nothing-%d", i)); resp.StatusCode != 404 {
+			t.Fatalf("GET /nothing-%d = %d", i, resp.StatusCode)
+		}
+	}
+	if c.bytes[1] > c.limits[1] {
+		t.Fatalf("absences hold %d bytes over their limit of %d", c.bytes[1], c.limits[1])
+	}
+	stats := store.stats.Load()
+	if _, got := body(t, srv, "/"); got != "<title>kept</title>" || store.stats.Load() != stats {
+		t.Fatal("a miss flood pushed the held page out")
+	}
+}
+
+// TestCacheReadMatchesHead: a read answered from a copy one write behind fails
+// its If-Match, so old bytes are never filed under the new version, and the
+// next request after fresh serves the new build.
+func TestCacheReadMatchesHead(t *testing.T) {
+	a := []byte("<html>build A " + strings.Repeat("a", 2000) + "</html>")
+	b := []byte("<html>build B " + strings.Repeat("b", 2000) + "</html>")
+	store := newLiveStore(map[string][]byte{"org/site/index.html": a})
+	c, clk := testCache(1<<20, 1<<20)
+	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
+
+	body(t, srv, "/index.html")
+	store.publish("org/site/index.html", b)
+	store.mu.Lock()
+	store.lag["org/site/index.html"] = a
+	store.mu.Unlock()
+	clk.advance(2 * time.Second)
+	body(t, srv, "/index.html")
+	clk.advance(2 * time.Second)
+	if _, got := body(t, srv, "/index.html"); got != string(b) {
+		t.Fatal("after one stale read the old build is still served")
+	}
+	if e := c.get("sites/org/site/index.html"); e == nil || !bytes.Equal(e.body, b) || e.info.etag != etagOf(b) {
+		t.Fatal("the held entry is not build B under B's ETag")
+	}
+}
+
+// TestCacheFailedReadIsReadAgain: a read that failed once is retried, and
+// once it lands the object is held like any other.
+func TestCacheFailedReadIsReadAgain(t *testing.T) {
+	page := []byte("<html>" + strings.Repeat("p", 4000) + "</html>")
+	store := newLiveStore(map[string][]byte{"org/site/index.html": page})
+	store.fail["org/site/index.html"] = 1
+	c, clk := testCache(1<<20, 1<<20)
+	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
+
+	body(t, srv, "/index.html")
+	clk.advance(2 * time.Second)
+	body(t, srv, "/index.html")
+	opens := store.opens.Load()
+	for range 10 {
+		if _, got := body(t, srv, "/index.html"); got != string(page) {
+			t.Fatal("wrong body")
+		}
+	}
+	if d := store.opens.Load() - opens; d != 0 {
+		t.Fatalf("10 requests after the read recovered cost %d reads, want 0", d)
+	}
+}
+
+// TestCacheBrotliPreconditionFailed: a failed precondition on the brotli
+// representation is a whole 412, not a body promised and never sent.
+func TestCacheBrotliPreconditionFailed(t *testing.T) {
+	page := []byte("<!doctype html>" + strings.Repeat("<p>hanzo</p>", 400))
+	store := newLiveStore(map[string][]byte{"org/site/index.html": page})
+	c, _ := testCache(1<<20, 1<<20)
+	srv := cachedServer(t, store, c, dynamic.StaticFiles{})
+	body(t, srv, "/")
+	waitEncoded(t, c, "sites/org/site/index.html")
+
+	for _, h := range [][]string{
+		{"Accept-Encoding", "br", "If-Match", `"nope"`},
+		{"Accept-Encoding", "br", "If-Unmodified-Since", "Mon, 01 Jan 2001 00:00:00 GMT"},
+	} {
+		resp, got := body(t, srv, "/", h...)
+		if resp.StatusCode != http.StatusPreconditionFailed {
+			t.Fatalf("%v = %d, want 412", h, resp.StatusCode)
+		}
+		if resp.Header.Get("Content-Encoding") != "" {
+			t.Fatalf("%v: a 412 labelled %q", h, resp.Header.Get("Content-Encoding"))
+		}
+		if cl := resp.Header.Get("Content-Length"); cl != "" && cl != fmt.Sprint(len(got)) {
+			t.Fatalf("%v: Content-Length %s for a %d-byte body", h, cl, len(got))
+		}
+	}
+	if resp, _ := body(t, srv, "/", "Accept-Encoding", "br"); resp.Header.Get("Accept-Ranges") != "" {
+		t.Fatalf("the brotli representation offers ranges: %q", resp.Header.Get("Accept-Ranges"))
+	}
+}
+
+// TestCacheEncodersBounded: encodings beyond the free slots are skipped, not
+// queued, and the next request for the object tries again.
+func TestCacheEncodersBounded(t *testing.T) {
+	c, _ := testCache(1<<20, 1<<20)
+	for range cap(c.encoders) {
+		c.encoders <- struct{}{}
+	}
+	e := &cacheEntry{id: "sites/org/site/a.js", info: objectInfo{etag: "x"}, body: bytes.Repeat([]byte("var a=1;"), 512)}
+	c.put(e)
+	c.encode(e, "org/site/a.js")
+	if len(c.pending) != 0 || c.get(e.id).tried {
+		t.Fatal("an encoding started with no free slot")
+	}
+	<-c.encoders
+	c.encode(c.get(e.id), "org/site/a.js")
+	waitEncoded(t, c, e.id)
+	if c.get(e.id).br == nil {
+		t.Fatal("the retried encoding did not land")
 	}
 }
