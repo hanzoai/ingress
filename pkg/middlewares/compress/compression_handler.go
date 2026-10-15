@@ -226,9 +226,7 @@ func (r *responseWriter) Write(p []byte) (int, error) {
 
 	// If we detect a contentEncoding, we know we are never going to compress.
 	if r.rw.Header().Get(contentEncoding) != "" {
-		r.compressionDisabled = true
-		r.rw.WriteHeader(r.statusCode)
-		return r.rw.Write(p)
+		return r.pass(p)
 	}
 
 	// Disable compression according to user wishes in excludedContentTypes or includedContentTypes.
@@ -237,9 +235,7 @@ func (r *responseWriter) Write(p []byte) (int, error) {
 		// To align the behavior with the klauspost handler for Gzip,
 		// if the MIME type is not parsable the compression is disabled.
 		if err != nil {
-			r.compressionDisabled = true
-			r.rw.WriteHeader(r.statusCode)
-			return r.rw.Write(p)
+			return r.pass(p)
 		}
 
 		if len(r.includedContentTypes) > 0 {
@@ -251,17 +247,13 @@ func (r *responseWriter) Write(p []byte) (int, error) {
 				}
 			}
 			if !found {
-				r.compressionDisabled = true
-				r.rw.WriteHeader(r.statusCode)
-				return r.rw.Write(p)
+				return r.pass(p)
 			}
 		}
 
 		for _, excludedContentType := range r.excludedContentTypes {
 			if excludedContentType.equals(mediaType, params) {
-				r.compressionDisabled = true
-				r.rw.WriteHeader(r.statusCode)
-				return r.rw.Write(p)
+				return r.pass(p)
 			}
 		}
 	}
@@ -305,6 +297,16 @@ func (r *responseWriter) Write(p []byte) (int, error) {
 
 	// Now that we emptied the buffer, we can actually write the given bytes.
 	return r.compressionWriter.Write(p)
+}
+
+// pass sends the held status and the body as the backend wrote it, for good:
+// this response is not compressed. The status is marked sent, so close does not
+// send it a second time.
+func (r *responseWriter) pass(p []byte) (int, error) {
+	r.compressionDisabled = true
+	r.rw.WriteHeader(r.statusCode)
+	r.headersSent = true
+	return r.rw.Write(p)
 }
 
 // Flush flushes data to the appropriate underlying writer(s), although it does
