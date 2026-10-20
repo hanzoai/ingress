@@ -63,8 +63,25 @@ type staticFiles struct {
 	spaIndex         string
 	errorPage404     string
 	cacheControl     map[string]string
+	cacheTag         string
 	name             string
 	next             http.Handler
+}
+
+// siteTag is the edge cache-tag of the Sites plane site an object root serves:
+// `site-<org>-<slug>` for a root `s3://<bucket>/<org>/<slug>`, the tag cloud
+// purges when that site publishes (hanzo-inc/cloud apps/sites CacheTag), and ""
+// for any other root.
+//
+// Without it the purge flushes nothing: a page the edge holds carries no tag,
+// so a publish waited out the page's s-maxage at the edge after every object
+// was already in the store.
+func siteTag(prefix string) string {
+	org, slug, ok := strings.Cut(prefix, "/")
+	if !ok || org == "" || slug == "" || strings.Contains(slug, "/") {
+		return ""
+	}
+	return "site-" + org + "-" + slug
 }
 
 // New creates a new static files middleware.
@@ -82,7 +99,9 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 	// anything else is a local path. Both are served through the same handler
 	// via http.FileSystem, so only the origin differs.
 	var rootFS http.FileSystem
-	if _, _, ok := parseObjectRoot(root); ok {
+	var tag string
+	if _, prefix, ok := parseObjectRoot(root); ok {
+		tag = siteTag(prefix)
 		fsys, err := newObjectFS(root)
 		if err != nil {
 			return nil, err
@@ -119,6 +138,7 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 		spaIndex:         spaIndex,
 		errorPage404:     config.ErrorPage404,
 		cacheControl:     config.CacheControl,
+		cacheTag:         tag,
 		name:             name,
 		next:             next,
 	}, nil
@@ -213,6 +233,12 @@ func (h *staticFiles) openRegular(ctx context.Context, name string) (http.File, 
 // requests keep working.
 func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.File, d fs.FileInfo) {
 	h.setCacheHeaders(w, r.URL.Path, d)
+	// Pages only: they are what a publish replaces in place. A content-hashed
+	// asset never changes under its name, so purging it would only send every
+	// reader's next request for it back to the origin.
+	if h.cacheTag != "" && kindOf(d.Name()) == page {
+		w.Header().Set("Cache-Tag", h.cacheTag)
+	}
 
 	if contentType := mime.TypeByExtension(filepath.Ext(d.Name())); contentType != "" {
 		w.Header().Set("Content-Type", contentType)
@@ -427,8 +453,9 @@ func (h *staticFiles) setCacheHeaders(w http.ResponseWriter, name string, d fs.F
 		// The shell references content-hashed assets; served stale it would pin
 		// clients to an old asset graph, so a browser revalidates every time
 		// (cheap: the ETag / Last-Modified below answers 304 when unchanged). A
-		// shared cache may hold it for a minute: sites publish in place and are
-		// not purged, so that minute is the longest a publish waits at the edge.
+		// shared cache may hold it for a minute. A Sites plane page carries its
+		// site's cache-tag (serveOpen), which cloud purges when the site
+		// publishes; the minute bounds a page whose purge did not arrive.
 		w.Header().Set("Cache-Control", htmlCacheControl)
 	default:
 		w.Header().Set("Cache-Control", "max-age=86400")

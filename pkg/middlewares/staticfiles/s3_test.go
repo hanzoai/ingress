@@ -93,6 +93,7 @@ func s3Handler(store objectStore, prefix string, cfg dynamic.StaticFiles) *stati
 		spaIndex:         spaIndex,
 		errorPage404:     cfg.ErrorPage404,
 		cacheControl:     cfg.CacheControl,
+		cacheTag:         siteTag(prefix),
 		name:             "test",
 		next:             http.NotFoundHandler(),
 	}
@@ -517,5 +518,50 @@ func TestS3CacheControlDefaults(t *testing.T) {
 	resp2.Body.Close()
 	if got := resp2.Header.Get("Cache-Control"); got != "max-age=86400" {
 		t.Fatalf("app.js Cache-Control = %q, want max-age=86400", got)
+	}
+}
+
+// A page of a Sites plane root carries the tag cloud purges when the site
+// publishes; an asset carries none, and neither does a root of any other shape.
+func TestS3PageCarriesTheSiteTag(t *testing.T) {
+	store := newMapStore(map[string][]byte{
+		"hanzo/hanzo-ai/index.html":        []byte("<html></html>"),
+		"hanzo/hanzo-ai/about.html":        []byte("<html>about</html>"),
+		"hanzo/hanzo-ai/_next/static/a.js": []byte("x"),
+		"hanzo/hanzo-ai/data.json":         []byte("{}"),
+	})
+	srv := httptest.NewServer(s3Handler(store, "hanzo/hanzo-ai", dynamic.StaticFiles{}))
+	defer srv.Close()
+
+	for path, want := range map[string]string{
+		"/":                  "site-hanzo-hanzo-ai",
+		"/about":             "site-hanzo-hanzo-ai",
+		"/about.html":        "site-hanzo-hanzo-ai",
+		"/_next/static/a.js": "",
+		"/data.json":         "",
+	} {
+		resp, err := srv.Client().Get(srv.URL + path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			t.Fatalf("%s: status %d", path, resp.StatusCode)
+		}
+		if got := resp.Header.Get("Cache-Tag"); got != want {
+			t.Errorf("%s: Cache-Tag = %q, want %q", path, got, want)
+		}
+	}
+
+	for prefix, want := range map[string]string{
+		"hanzo/hanzo-ai": "site-hanzo-hanzo-ai",
+		"lux/foundation": "site-lux-foundation",
+		"hanzo-ai":       "",
+		"a/b/c":          "",
+		"":               "",
+	} {
+		if got := siteTag(prefix); got != want {
+			t.Errorf("siteTag(%q) = %q, want %q", prefix, got, want)
+		}
 	}
 }
