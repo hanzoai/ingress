@@ -397,6 +397,7 @@
         spaMode = true
         spaIndex = "foobar"
         errorPage404 = "foobar"
+        tag = "foobar"
         [http.middlewares.Middleware25.staticFiles.cacheControl]
           name0 = "foobar"
           name1 = "foobar"

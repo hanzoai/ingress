@@ -192,6 +192,21 @@ func (f *s3File) brotli() []byte {
 	return nil
 }
 
+// placement and place reach the cache's record of where the page takes the
+// event tag; a streamed object has none.
+func (f *s3File) placement() (int64, bool) {
+	if p, ok := f.rc.(placed); ok {
+		return p.placement()
+	}
+	return 0, false
+}
+
+func (f *s3File) place(at int64) {
+	if p, ok := f.rc.(placed); ok {
+		p.place(at)
+	}
+}
+
 // s3Dir is a directory (prefix) exposed as an http.File. Only Stat and Readdir
 // are meaningful; Read/Seek exist to satisfy http.File and are never reached
 // because the handler branches on IsDir first.

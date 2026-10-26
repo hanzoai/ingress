@@ -1484,6 +1484,12 @@ spec:
                     description: SPAMode redirects all not-found requests to a single
                       page.
                     type: boolean
+                  tag:
+                    description: |-
+                      Tag is the site's publishable event key (pk-...). Each HTML page served
+                      then loads Hanzo's event tag with it, placed at the end of the page's head.
+                      A key that is not one is logged, and pages are served without the tag.
+                    type: string
                 type: object
               stripPrefix:
                 description: |-

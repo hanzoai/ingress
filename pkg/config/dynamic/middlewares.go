@@ -96,6 +96,10 @@ type StaticFiles struct {
 	SPAIndex string `json:"spaIndex,omitempty" toml:"spaIndex,omitempty" yaml:"spaIndex,omitempty" export:"true"`
 	// ErrorPage404 is the path to a custom 404 error page relative to root.
 	ErrorPage404 string `json:"errorPage404,omitempty" toml:"errorPage404,omitempty" yaml:"errorPage404,omitempty" export:"true"`
+	// Tag is the site's publishable event key (pk-...). Each HTML page served
+	// then loads Hanzo's event tag with it, placed at the end of the page's head.
+	// A key that is not one is logged, and pages are served without the tag.
+	Tag string `json:"tag,omitempty" toml:"tag,omitempty" yaml:"tag,omitempty" export:"true"`
 	// CacheControl maps file extensions to Cache-Control header values.
 	CacheControl map[string]string `json:"cacheControl,omitempty" toml:"cacheControl,omitempty" yaml:"cacheControl,omitempty" export:"true"`
 }

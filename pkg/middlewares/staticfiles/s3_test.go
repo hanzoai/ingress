@@ -85,6 +85,7 @@ func s3Handler(store objectStore, prefix string, cfg dynamic.StaticFiles) *stati
 	if spaIndex == "" {
 		spaIndex = "index.html"
 	}
+	event, eventSum := eventOf(cfg.Tag)
 	return &staticFiles{
 		root:             &s3FS{store: store, prefix: prefix},
 		enableDirListing: cfg.EnableDirectoryListing,
@@ -92,6 +93,8 @@ func s3Handler(store objectStore, prefix string, cfg dynamic.StaticFiles) *stati
 		spaMode:          cfg.SPAMode,
 		spaIndex:         spaIndex,
 		errorPage404:     cfg.ErrorPage404,
+		event:            event,
+		eventSum:         eventSum,
 		cacheControl:     cfg.CacheControl,
 		cacheTag:         siteTag(prefix),
 		name:             "test",

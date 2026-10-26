@@ -204,7 +204,7 @@ the only difference between an SPA site and a plain static site.
 The object store is defined **only** by the ingress environment — one shared
 store for the whole fleet: `S3_ENDPOINT`, `S3_REGION`, and credentials from
 `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`. A `Middleware` carries only `root`
-(+`spaMode`/`spaIndex`/index/cache/404); it can neither point the ingress
+(+`spaMode`/`spaIndex`/index/cache/404/`tag`); it can neither point the ingress
 credential at another host nor leak a secret into the dynamic-config plane. The
 middleware build **fails closed** on an empty prefix (`s3://cdn` would expose
 the whole bucket), a missing endpoint, or missing credentials.
@@ -223,6 +223,21 @@ Isolation and behavior:
   content-type is derived from the file extension (S3 metadata is not trusted).
 - Object reads are bound to the request context, so a client disconnect cancels
   the upstream read (5-minute backstop remains).
+- `tag` is a site's publishable key (`pk-` + 16 to 128 of `[A-Za-z0-9_-]`); with
+  it every HTML page loads `api.hanzo.ai/v1/event/tag.js`, rendered in Go, so
+  no operator markup reaches a page. A bad key is logged and the site serves
+  untagged: refusing the build would take the host down. Placement is the
+  tokenizer's (`tag.go` `locate`, WHATWG "in head"): before the real `</head>`,
+  or before whatever opens the body when the page leaves it out; never inside a
+  script, style, title, comment, attribute or template. A page with a `<script
+  src>` of exactly that URL, no place in its head, a UTF-16 byte order mark,
+  `<svg>`/`<math>` inside a template, or over 2 MiB is served as it is. The offset is read once per object version and kept on the cache entry
+  (`settle`), and the page is spliced from the file (`splice`) rather than
+  copied, so a 304, HEAD or range of a tagged page the cache holds costs what
+  an untagged one does; one the cache does not hold is scanned per request. Its ETag is the file's plus `sha256("v1\x00"+tag)` (bump `eventRule`
+  when the rules change); it sends no Last-Modified, goes as identity (the
+  brotli twin holds the file's bytes), and a read that fails while placing is a
+  500, never a short body under a full length.
 
 `staticFiles` serves terminally (never calls `next`), so an attached route's
 backend service is never reached — point it at an empty/placeholder service.

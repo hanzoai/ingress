@@ -62,6 +62,8 @@ type staticFiles struct {
 	spaMode          bool
 	spaIndex         string
 	errorPage404     string
+	event            []byte
+	eventSum         string
 	cacheControl     map[string]string
 	cacheTag         string
 	name             string
@@ -130,6 +132,13 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 		spaIndex = "index.html"
 	}
 
+	// A bad key is an operator's mistake on one site, and refusing the build would
+	// take the whole host down with it; the pages go out without the tag.
+	event, eventSum := eventOf(config.Tag)
+	if config.Tag != "" && event == nil {
+		logger.Error().Msg("tag is not a publishable key (pk-...); serving pages without the event tag")
+	}
+
 	return &staticFiles{
 		root:             rootFS,
 		enableDirListing: config.EnableDirectoryListing,
@@ -137,6 +146,8 @@ func New(ctx context.Context, next http.Handler, config dynamic.StaticFiles, nam
 		spaMode:          config.SPAMode,
 		spaIndex:         spaIndex,
 		errorPage404:     config.ErrorPage404,
+		event:            event,
+		eventSum:         eventSum,
 		cacheControl:     config.CacheControl,
 		cacheTag:         tag,
 		name:             name,
@@ -232,6 +243,12 @@ func (h *staticFiles) openRegular(ctx context.Context, name string) (http.File, 
 // the extension, then the body through ServeContent so Range and conditional
 // requests keep working.
 func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.File, d fs.FileInfo) {
+	spliced, err := h.tagged(f, d)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	h.setCacheHeaders(w, r.URL.Path, d)
 	// Pages only: they are what a publish replaces in place. A content-hashed
 	// asset never changes under its name, so purging it would only send every
@@ -242,6 +259,21 @@ func (h *staticFiles) serveOpen(w http.ResponseWriter, r *http.Request, f http.F
 
 	if contentType := mime.TypeByExtension(filepath.Ext(d.Name())); contentType != "" {
 		w.Header().Set("Content-Type", contentType)
+	}
+
+	if spliced != nil {
+		// The page is not the file, so neither is its validator. Its bytes are the
+		// file's version and the tag's, so an ETag naming both stays strong, and
+		// If-None-Match, Range and If-Range answer from the page without reading
+		// it. The file's time cannot say when the tag changed, so no date is sent
+		// or compared. The encoded twin holds the file's bytes; the page goes as
+		// identity.
+		if tag := w.Header().Get("ETag"); tag != "" {
+			w.Header().Set("ETag", strings.TrimSuffix(tag, `"`)+"-"+h.eventSum+`"`)
+		}
+		w.Header().Del("Last-Modified")
+		http.ServeContent(w, r, d.Name(), time.Time{}, spliced)
+		return
 	}
 
 	if e, ok := f.(encoded); ok {
@@ -519,15 +551,25 @@ func (h *staticFiles) notFoundPage(w http.ResponseWriter, r *http.Request) bool 
 	}
 	defer f.Close()
 
+	spliced, err := h.tagged(f, d)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return true
+	}
+	body, size := io.Reader(f), d.Size()
+	if spliced != nil {
+		body, size = spliced, spliced.len()
+	}
+
 	if t := mime.TypeByExtension(filepath.Ext(d.Name())); t != "" {
 		w.Header().Set("Content-Type", t)
 	}
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
-	w.Header().Set("Content-Length", strconv.FormatInt(d.Size(), 10))
+	w.Header().Set("Content-Length", strconv.FormatInt(size, 10))
 	w.WriteHeader(http.StatusNotFound)
 	if r.Method != http.MethodHead {
-		_, _ = io.Copy(w, f)
+		_, _ = io.Copy(w, body)
 	}
 	return true
 }

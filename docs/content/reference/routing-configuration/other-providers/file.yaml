@@ -457,6 +457,7 @@ http:
         spaMode: true
         spaIndex: foobar
         errorPage404: foobar
+        tag: foobar
         cacheControl:
           name0: foobar
           name1: foobar

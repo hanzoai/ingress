@@ -81,6 +81,8 @@ type cacheEntry struct {
 	body    []byte // nil when the object is larger than max, or was not read
 	br      []byte // body brotli-encoded, once that has run and paid off
 	tried   bool   // the encoding ran, whether or not it paid off
+	at      int64  // where the page takes the event tag (locate), once placed
+	placed  bool
 	checked time.Time
 }
 
@@ -135,9 +137,32 @@ func (c *objectCache) swap(old, e *cacheEntry) bool {
 	return true
 }
 
-// land attaches an encoding to the entry for e's id while that entry still holds
-// the bytes that were encoded, however often it was revalidated meanwhile.
+// land attaches an encoding to the entry for e's id.
 func (c *objectCache) land(e *cacheEntry, br []byte) {
+	c.amend(e, func(d *cacheEntry) bool {
+		if d.tried {
+			return false
+		}
+		d.br, d.tried = br, true
+		return true
+	})
+}
+
+// settle records where the page in e's bytes takes the event tag, so it is read
+// for that once per version.
+func (c *objectCache) settle(e *cacheEntry, at int64) {
+	c.amend(e, func(d *cacheEntry) bool {
+		if d.placed {
+			return false
+		}
+		d.at, d.placed = at, true
+		return true
+	})
+}
+
+// amend stores a changed copy of the entry for e's id while that entry still
+// holds e's bytes, however often it was revalidated meanwhile.
+func (c *objectCache) amend(e *cacheEntry, change func(*cacheEntry) bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	el, ok := c.index[e.id]
@@ -145,12 +170,13 @@ func (c *objectCache) land(e *cacheEntry, br []byte) {
 		return
 	}
 	cur := el.Value.(*cacheEntry)
-	if cur.tried || cur.missing || !sameVersion(cur.info, e.info) || !sameBytes(cur.body, e.body) {
+	if cur.missing || !sameVersion(cur.info, e.info) || !sameBytes(cur.body, e.body) {
 		return
 	}
 	done := *cur
-	done.br, done.tried = br, true
-	c.putLocked(&done)
+	if change(&done) {
+		c.putLocked(&done)
+	}
 }
 
 func sameVersion(a, b objectInfo) bool {
@@ -240,7 +266,7 @@ func (s *cachedStore) open(ctx context.Context, key, etag string) (readSeekClose
 		return s.objectStore.open(ctx, key, etag)
 	}
 	s.cache.encode(e, key)
-	return &cachedBody{Reader: bytes.NewReader(e.body), br: e.br}, nil
+	return &cachedBody{Reader: bytes.NewReader(e.body), e: e, cache: s.cache}, nil
 }
 
 // entry is key's current entry: from memory when it was checked within fresh,
@@ -376,11 +402,15 @@ func compressible(key string) bool {
 	return false
 }
 
-// cachedBody is a held object's bytes as a stream, with its encoded twin.
+// cachedBody is a held object's bytes as a stream, with what the cache keeps
+// beside them: the encoded twin and where the page takes the event tag.
 type cachedBody struct {
 	*bytes.Reader
-	br []byte
+	e     *cacheEntry
+	cache *objectCache
 }
 
-func (*cachedBody) Close() error     { return nil }
-func (b *cachedBody) brotli() []byte { return b.br }
+func (*cachedBody) Close() error               { return nil }
+func (b *cachedBody) brotli() []byte           { return b.e.br }
+func (b *cachedBody) placement() (int64, bool) { return b.e.at, b.e.placed }
+func (b *cachedBody) place(at int64)           { b.cache.settle(b.e, at) }
