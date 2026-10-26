@@ -277,6 +277,10 @@ func TestMissAnswersByKind(t *testing.T) {
 		if ct := resp.Header.Get("Content-Type"); !strings.HasPrefix(ct, tc.ctype) || resp.StatusCode != http.StatusNotFound {
 			t.Errorf("HEAD %s = %d %q, want 404 %s", tc.path, resp.StatusCode, ct, tc.ctype)
 		}
+		// No cache may keep a 404: a chunk asked for mid-publish must load once it lands.
+		if cc := resp.Header.Get("Cache-Control"); cc != "no-store" {
+			t.Errorf("HEAD %s Cache-Control = %q, want no-store", tc.path, cc)
+		}
 	}
 
 	// The ladder still wins over the 404 page.

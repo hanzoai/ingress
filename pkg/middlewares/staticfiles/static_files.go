@@ -525,7 +525,12 @@ func cacheControlHas(m map[string]string, key string) bool {
 // gets the site's 404 page, JSON gets a JSON body, anything else a bare 404. Every
 // answer is status 404, so a missing chunk is never markup and a missing page is
 // never a success. Cloud's Sites plane answers the same way (apps/sites notFound).
+//
+// Every 404 is no-store. A 404 that says nothing is given a browser lifetime by
+// the CDN, and a chunk asked for while a publish is still uploading would then
+// stay missing in that browser for hours after it lands.
 func (h *staticFiles) miss(w http.ResponseWriter, r *http.Request, upath string) {
+	w.Header().Set("Cache-Control", "no-store")
 	switch kindOf(upath) {
 	case page:
 		if h.errorPage404 != "" && h.notFoundPage(w, r) {
@@ -533,7 +538,6 @@ func (h *staticFiles) miss(w http.ResponseWriter, r *http.Request, upath string)
 		}
 	case data:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.WriteHeader(http.StatusNotFound)
 		_ = json.NewEncoder(w).Encode(map[string]string{"error": "not found", "path": upath})
@@ -564,7 +568,7 @@ func (h *staticFiles) notFoundPage(w http.ResponseWriter, r *http.Request) bool 
 	if t := mime.TypeByExtension(filepath.Ext(d.Name())); t != "" {
 		w.Header().Set("Content-Type", t)
 	}
-	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Content-Length", strconv.FormatInt(size, 10))
 	w.WriteHeader(http.StatusNotFound)

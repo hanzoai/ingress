@@ -498,7 +498,7 @@ func TestTagFailedRead(t *testing.T) {
 		if resp.StatusCode != http.StatusInternalServerError || resp.Header.Get("Content-Length") != "" && resp.Header.Get("Content-Length") != fmt.Sprint(len(got)) {
 			t.Errorf("GET %s = %d, Content-Length %s for %d bytes; want a 500", p, resp.StatusCode, resp.Header.Get("Content-Length"), len(got))
 		}
-		if resp.Header.Get("ETag") != "" || resp.Header.Get("Cache-Control") != "" {
+		if cc := resp.Header.Get("Cache-Control"); resp.Header.Get("ETag") != "" || cc != "" && cc != "no-store" {
 			t.Errorf("GET %s: a 500 carries the page's ETag %q / Cache-Control %q", p, resp.Header.Get("ETag"), resp.Header.Get("Cache-Control"))
 		}
 	}
