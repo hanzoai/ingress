@@ -2,6 +2,8 @@
 
 # Hanzo Ingress
 
+[![Open in Hanzo](https://hanzo.app/badges/open-in-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/ingress&ref=main&action=open) [![Edit with Hanzo](https://hanzo.app/badges/edit-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/ingress&ref=main&action=edit) [![Deploy with Hanzo](https://hanzo.app/badges/deploy-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/ingress&ref=main&action=deploy)
+
 [![CI](https://github.com/hanzoai/ingress/actions/workflows/ci.yml/badge.svg)](https://github.com/hanzoai/ingress/actions/workflows/ci.yml)
 [![Go](https://img.shields.io/badge/go-1.25-00ADD8.svg)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
