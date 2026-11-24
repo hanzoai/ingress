@@ -2918,6 +2918,75 @@ spec:
                     minimum: 0
                     type: integer
                 type: object
+              iamAuth:
+                description: |-
+                  IAMAuth holds the Hanzo IAM OIDC PKCE + JWKS edge authentication middleware
+                  configuration. It validates Bearer JWTs and HttpOnly session cookies at the
+                  ingress layer, handles browser OIDC PKCE redirects against Hanzo IAM, strips
+                  untrusted incoming identity headers, and injects verified HIP-0026 identity
+                  headers upstream.
+                properties:
+                  audience:
+                    description: Audience, when set, requires the JWT aud claim to match.
+                    type: string
+                  authorizeURL:
+                    description: AuthorizeURL overrides the OAuth2 authorize URL.
+                    type: string
+                  browserRedirect:
+                    description: BrowserRedirect controls whether unauthenticated HTML
+                      browser requests 302-redirect to loginPath (default true).
+                    type: boolean
+                  callbackPath:
+                    description: CallbackPath redeems the OAuth2 authorization code (default
+                      "/callback").
+                    type: string
+                  clientID:
+                    description: ClientID is the OAuth2 client ID registered in Hanzo IAM.
+                    type: string
+                  clientSecret:
+                    description: ClientSecret is optional; PKCE S256 works without a client
+                      secret.
+                    type: string
+                  cookieDomain:
+                    description: CookieDomain optionally sets the Domain attribute on session
+                      cookies.
+                    type: string
+                  cookieName:
+                    description: CookieName is the HttpOnly session cookie name (default
+                      "hanzo_iam_session").
+                    type: string
+                  issuer:
+                    description: Issuer is the OIDC issuer URL (default "https://hanzo.id").
+                    type: string
+                  jwksURL:
+                    description: JWKSURL overrides the JWKS URL.
+                    type: string
+                  loginPath:
+                    description: LoginPath starts the OIDC PKCE flow (default "/auth/login").
+                    type: string
+                  logoutPath:
+                    description: LogoutPath clears the session cookie (default "/auth/logout").
+                    type: string
+                  optional:
+                    description: Optional allows unauthenticated requests through after stripping
+                      spoofed identity headers.
+                    type: boolean
+                  redirectURI:
+                    description: RedirectURI overrides the OAuth2 callback URL.
+                    type: string
+                  scopes:
+                    description: Scopes defaults to "openid profile email".
+                    type: string
+                  skipPaths:
+                    description: SkipPaths are exact paths or prefixes (ending in "/") allowed
+                      without auth.
+                    items:
+                      type: string
+                    type: array
+                  tokenURL:
+                    description: TokenURL overrides the OAuth2 token URL.
+                    type: string
+                type: object
               inFlightReq:
                 description: |-
                   InFlightReq holds the in-flight request middleware configuration.
