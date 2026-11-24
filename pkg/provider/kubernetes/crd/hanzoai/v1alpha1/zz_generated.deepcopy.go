@@ -1060,6 +1060,11 @@ func (in *MiddlewareSpec) DeepCopyInto(out *MiddlewareSpec) {
 		*out = new(dynamic.StaticFiles)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.IAMAuth != nil {
+		in, out := &in.IAMAuth, &out.IAMAuth
+		*out = new(dynamic.IAMAuth)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.GeoBlock != nil {
 		in, out := &in.GeoBlock, &out.GeoBlock
 		*out = new(dynamic.GeoBlock)

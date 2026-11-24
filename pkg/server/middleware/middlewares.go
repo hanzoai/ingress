@@ -219,6 +219,16 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 		}
 	}
 
+	// IAMAuth
+	if config.IAMAuth != nil {
+		if middleware != nil {
+			return nil, badConf
+		}
+		middleware = func(next http.Handler) (http.Handler, error) {
+			return auth.NewIAM(ctx, next, *config.IAMAuth, middlewareName)
+		}
+	}
+
 	// GrpcWeb
 	if config.GrpcWeb != nil {
 		if middleware != nil {

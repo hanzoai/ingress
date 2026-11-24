@@ -320,6 +320,7 @@ func (p *Provider) loadConfigurationFromCRD(ctx context.Context, client Client) 
 			BasicAuth:         basicAuth,
 			DigestAuth:        digestAuth,
 			ForwardAuth:       forwardAuth,
+			IAMAuth:           middleware.Spec.IAMAuth,
 			InFlightReq:       middleware.Spec.InFlightReq,
 			Buffering:         createBufferingMiddleware(middleware.Spec.Buffering),
 			CircuitBreaker:    circuitBreaker,

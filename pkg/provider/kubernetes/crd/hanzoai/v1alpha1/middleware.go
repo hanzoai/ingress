@@ -44,6 +44,7 @@ type MiddlewareSpec struct {
 	BasicAuth         *BasicAuth                 `json:"basicAuth,omitempty"`
 	DigestAuth        *DigestAuth                `json:"digestAuth,omitempty"`
 	ForwardAuth       *ForwardAuth               `json:"forwardAuth,omitempty"`
+	IAMAuth           *dynamic.IAMAuth           `json:"iamAuth,omitempty"`
 	InFlightReq       *dynamic.InFlightReq       `json:"inFlightReq,omitempty"`
 	Buffering         *Buffering                 `json:"buffering,omitempty"`
 	CircuitBreaker    *CircuitBreaker            `json:"circuitBreaker,omitempty"`

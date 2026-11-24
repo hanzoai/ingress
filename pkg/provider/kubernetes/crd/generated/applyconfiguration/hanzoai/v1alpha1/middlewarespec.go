@@ -51,6 +51,7 @@ type MiddlewareSpecApplyConfiguration struct {
 	BasicAuth         *BasicAuthApplyConfiguration      `json:"basicAuth,omitempty"`
 	DigestAuth        *DigestAuthApplyConfiguration     `json:"digestAuth,omitempty"`
 	ForwardAuth       *ForwardAuthApplyConfiguration    `json:"forwardAuth,omitempty"`
+	IAMAuth           *dynamic.IAMAuth                  `json:"iamAuth,omitempty"`
 	InFlightReq       *dynamic.InFlightReq              `json:"inFlightReq,omitempty"`
 	Buffering         *BufferingApplyConfiguration      `json:"buffering,omitempty"`
 	CircuitBreaker    *CircuitBreakerApplyConfiguration `json:"circuitBreaker,omitempty"`
@@ -274,6 +275,14 @@ func (b *MiddlewareSpecApplyConfiguration) WithGrpcWeb(value dynamic.GrpcWeb) *M
 // If called multiple times, the StaticFiles field is set to the value of the last call.
 func (b *MiddlewareSpecApplyConfiguration) WithStaticFiles(value dynamic.StaticFiles) *MiddlewareSpecApplyConfiguration {
 	b.StaticFiles = &value
+	return b
+}
+
+// WithIAMAuth sets the IAMAuth field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the IAMAuth field is set to the value of the last call.
+func (b *MiddlewareSpecApplyConfiguration) WithIAMAuth(value dynamic.IAMAuth) *MiddlewareSpecApplyConfiguration {
+	b.IAMAuth = &value
 	return b
 }
 

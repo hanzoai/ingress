@@ -40,6 +40,7 @@ type Middleware struct {
 	BasicAuth         *BasicAuth         `json:"basicAuth,omitempty" toml:"basicAuth,omitempty" yaml:"basicAuth,omitempty" export:"true"`
 	DigestAuth        *DigestAuth        `json:"digestAuth,omitempty" toml:"digestAuth,omitempty" yaml:"digestAuth,omitempty" export:"true"`
 	ForwardAuth       *ForwardAuth       `json:"forwardAuth,omitempty" toml:"forwardAuth,omitempty" yaml:"forwardAuth,omitempty" export:"true"`
+	IAMAuth           *IAMAuth           `json:"iamAuth,omitempty" toml:"iamAuth,omitempty" yaml:"iamAuth,omitempty" export:"true"`
 	InFlightReq       *InFlightReq       `json:"inFlightReq,omitempty" toml:"inFlightReq,omitempty" yaml:"inFlightReq,omitempty" export:"true"`
 	Buffering         *Buffering         `json:"buffering,omitempty" toml:"buffering,omitempty" yaml:"buffering,omitempty" export:"true"`
 	CircuitBreaker    *CircuitBreaker    `json:"circuitBreaker,omitempty" toml:"circuitBreaker,omitempty" yaml:"circuitBreaker,omitempty" export:"true"`
@@ -71,6 +72,51 @@ type GrpcWeb struct {
 	// AllowOrigins is a list of allowable origins.
 	// Can also be a wildcard origin "*".
 	AllowOrigins []string `json:"allowOrigins,omitempty" toml:"allowOrigins,omitempty" yaml:"allowOrigins,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// IAMAuth holds the Hanzo IAM OIDC PKCE + JWKS edge authentication middleware
+// configuration. It validates Bearer JWTs and HttpOnly session cookies at the
+// ingress layer, handles browser OIDC PKCE redirects against Hanzo IAM, strips
+// untrusted incoming identity headers, and injects verified HIP-0026 identity
+// headers upstream.
+type IAMAuth struct {
+	// Issuer is the OIDC issuer URL (default "https://hanzo.id").
+	Issuer string `json:"issuer,omitempty" toml:"issuer,omitempty" yaml:"issuer,omitempty" export:"true"`
+	// JWKSURL overrides the JWKS URL (default "<issuer>/v1/iam/.well-known/jwks").
+	JWKSURL string `json:"jwksURL,omitempty" toml:"jwksURL,omitempty" yaml:"jwksURL,omitempty" export:"true"`
+	// AuthorizeURL overrides the OAuth2 authorize URL (default "<issuer>/v1/iam/oauth/authorize").
+	AuthorizeURL string `json:"authorizeURL,omitempty" toml:"authorizeURL,omitempty" yaml:"authorizeURL,omitempty" export:"true"`
+	// TokenURL overrides the OAuth2 token URL (default "<issuer>/v1/iam/oauth/token").
+	TokenURL string `json:"tokenURL,omitempty" toml:"tokenURL,omitempty" yaml:"tokenURL,omitempty" export:"true"`
+	// ClientID is the OAuth2 client ID registered in Hanzo IAM.
+	ClientID string `json:"clientID,omitempty" toml:"clientID,omitempty" yaml:"clientID,omitempty" export:"true"`
+	// ClientSecret is optional; PKCE S256 works without a client secret.
+	ClientSecret string `json:"clientSecret,omitempty" toml:"clientSecret,omitempty" yaml:"clientSecret,omitempty"`
+	// RedirectURI overrides the OAuth2 callback URL (default derived from request host + callbackPath).
+	RedirectURI string `json:"redirectURI,omitempty" toml:"redirectURI,omitempty" yaml:"redirectURI,omitempty" export:"true"`
+	// Audience, when set, requires the JWT `aud` claim to match.
+	Audience string `json:"audience,omitempty" toml:"audience,omitempty" yaml:"audience,omitempty" export:"true"`
+	// Scopes defaults to "openid profile email".
+	Scopes string `json:"scopes,omitempty" toml:"scopes,omitempty" yaml:"scopes,omitempty" export:"true"`
+	// CookieName is the HttpOnly session cookie name (default "hanzo_iam_session").
+	CookieName string `json:"cookieName,omitempty" toml:"cookieName,omitempty" yaml:"cookieName,omitempty" export:"true"`
+	// CookieDomain optionally sets the Domain attribute on session cookies.
+	CookieDomain string `json:"cookieDomain,omitempty" toml:"cookieDomain,omitempty" yaml:"cookieDomain,omitempty" export:"true"`
+	// LoginPath starts the OIDC PKCE flow (default "/auth/login").
+	LoginPath string `json:"loginPath,omitempty" toml:"loginPath,omitempty" yaml:"loginPath,omitempty" export:"true"`
+	// CallbackPath redeems the OAuth2 authorization code (default "/callback").
+	CallbackPath string `json:"callbackPath,omitempty" toml:"callbackPath,omitempty" yaml:"callbackPath,omitempty" export:"true"`
+	// LogoutPath clears the session cookie (default "/auth/logout").
+	LogoutPath string `json:"logoutPath,omitempty" toml:"logoutPath,omitempty" yaml:"logoutPath,omitempty" export:"true"`
+	// SkipPaths are exact paths or prefixes (ending in "/") allowed without auth.
+	SkipPaths []string `json:"skipPaths,omitempty" toml:"skipPaths,omitempty" yaml:"skipPaths,omitempty" export:"true"`
+	// Optional allows unauthenticated requests through after stripping spoofed identity headers.
+	Optional bool `json:"optional,omitempty" toml:"optional,omitempty" yaml:"optional,omitempty" export:"true"`
+	// BrowserRedirect controls whether unauthenticated HTML browser requests 302-redirect
+	// to LoginPath (default true). API requests always receive 401 JSON.
+	BrowserRedirect *bool `json:"browserRedirect,omitempty" toml:"browserRedirect,omitempty" yaml:"browserRedirect,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true
